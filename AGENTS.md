@@ -12,7 +12,7 @@ These instructions apply to the entire repository. They describe project constra
 ## Current baseline
 
 - Unity **2022.3.13f1**, Windows x64, Mono, built-in render pipeline.
-- NGO **1.8.1**, glTFast **6.0.1**, protocol string **PinefallReserve/7**, maximum eight players including bots.
+- NGO **1.8.1**, glTFast **6.0.1**, protocol string **PinefallReserve/8**, maximum eight players including bots.
 - The repository root is the Unity project. Never depend on the original author's `outputs/` or `work/` directories.
 - The scene is committed at `Assets/Scenes/Reserve.unity`; generated assets and all `.meta` files are intentional source inputs.
 - Use `BuildReserve.BuildCurrent` for routine builds. `BuildReserve.Setup` / `BuildReserve.Build` regenerate assets and scene content.

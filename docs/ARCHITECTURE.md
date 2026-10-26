@@ -32,6 +32,8 @@ flowchart TD
 5. The owning human drives camera/input and owner-authoritative movement through `OwnerTransform`. Host logic owns health, hit/damage decisions, inventory mutations, wildlife and vehicle simulation. This mixed authority has security limits; it is not hardened competitive networking.
 6. Leaving uses `LeaveRoutine`: release input/cursor, stop voice/narration state, remove population directors, clear interest registries, shut down NGO and restore the vista/preview. Static terrain and atlas stay loaded. Rehosting reuses them.
 
+0.8 adds a replicated `ConstructionWorld`, network `BuildPiece` and `RocketProjectile` prefabs, bounded `ShotHistory`, and voice jitter/device playback. [Fieldcraft](FIELDCRAFT.md) describes their contracts and limits. `BuildReserve.BuildCurrent` prepares new resources without regenerating terrain.
+
 ## Main boundaries
 
 ### Session and match

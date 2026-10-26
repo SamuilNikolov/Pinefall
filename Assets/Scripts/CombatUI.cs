@@ -6,7 +6,7 @@ namespace Pinefall
     {
         int inventoryWeapon;
         readonly Color panelColor=new Color(.055f,.075f,.105f,.88f),shieldColor=new Color(.62f,.58f,.91f),healthColor=new Color(.35f,.83f,.64f);
-        void HUD()
+        void PreviousHUD()
         {
             if(RuntimePerformance.HideHud||panel!=""&&panel!="pause")return;var match=WildfrontMatch.Current;var weapon=WeaponData.Get(P.Weapon.Value);bool scoped=P.ScopedView;
             if(scoped){float s=760,x=420,y=70;Rect(0,0,x,900,Color.black);Rect(x+s,0,x,900,Color.black);Rect(x,0,s,y,Color.black);Rect(x,y+s,s,y,Color.black);GUI.DrawTexture(new Rect(x,y,s,s),scope);Rect(799,190,2,520,Color.black);Rect(540,449,520,2,Color.black);for(int i=1;i<5;i++)Rect(791,450+i*32,18,2,Color.black);}
@@ -24,8 +24,9 @@ namespace Pinefall
             if(PlayerPrefs.GetInt("perf.overlay",1)==1&&RuntimePerformance.Current)Text(1280,75,285,25,Mathf.RoundToInt(1000/RuntimePerformance.Current.FrameMs)+" FPS · "+RuntimePerformance.Current.FrameMs.ToString("0.0")+" ms",small,14,muted);
             var narrator=FieldNarrator.Current;if(narrator&&narrator.Captions&&narrator.Subtitle!=""){Rect(410,200,780,65,panelColor);Text(425,208,750,52,narrator.Subtitle,Centered(small),18,paper);}if(ProximityVoice.Current&&ProximityVoice.Current.Transmitting)Text(32,571,300,28,"Voice · transmitting nearby",small,16,ally);
             var car=P.CurrentVehicle;if(car){Rect(515,741,570,45,panelColor);Text(525,751,550,32,Mathf.RoundToInt(Mathf.Abs(car.Speed.Value)*3.6f)+" km/h     Engine "+car.Condition.Value+"%     Fuel "+Mathf.RoundToInt(car.Fuel.Value)+"%     Boost "+Mathf.RoundToInt(car.Charge.Value)+"%",Centered(small),17,paper);}Text(410,859,560,28,GameBindings.Label("Inventory")+" Inventory     "+GameBindings.Label("Camera")+" Camera     Esc Menu",small,13,muted);
+            FieldcraftOverlay();
         }
-        void Loadout()
+        void PreviousCombatLoadout()
         {
             if(!P){OldLoadout();return;}if(!P.Owns(inventoryWeapon))inventoryWeapon=P.Weapon.Value;Rect(0,0,1600,900,new Color(.045f,.065f,.09f,.98f));Text(60,34,1000,60,"Equipment",type,40,paper);Text(62,104,1440,34,"Select a weapon, then fit compatible parts from your attachment pack. Drag weapon headers to reorder slots.",small,20,muted);
             var ev=Event.current;if(ev.type==EventType.MouseDrag&&dragSlot>=0)draggingWeapon=true;if(ev.type==EventType.MouseUp&&dragSlot>=0){if(draggingWeapon)for(int i=0;i<3;i++)if(new Rect(60+i*500,160,480,120).Contains(ev.mousePosition))P.SwapSlotsServerRpc(dragSlot,i);dragSlot=-1;draggingWeapon=false;}for(int slot=0;slot<3;slot++){float x=60+slot*500;int gun=P.SlotWeapon(slot);bool owned=gun>=0;Color rarity=owned?WeaponData.RarityColor(P.Rarity(gun)):muted;Rect(x,160,480,231,inventoryWeapon==gun&&owned?new Color(.15f,.20f,.27f):new Color(.09f,.13f,.18f));Rect(x,160,480,4,rarity);Text(x+16,177,350,34,owned?WeaponData.Get(gun).name:"Empty weapon slot",type,24,paper);Text(x+395,179,70,25,GameBindings.Label("Weapon "+(slot+1)),small,15,muted);if(owned){GunIcon(x+25,227,180,45,gun,rarity);Text(x+248,225,215,60,WeaponData.Rarities[P.Rarity(gun)]+"\n"+P.MagazineFor(gun)+" loaded",small,17,rarity);if(ev.type==EventType.MouseDown&&new Rect(x,160,480,120).Contains(ev.mousePosition))dragSlot=slot;if(GUI.Button(new Rect(x,166,480,113),GUIContent.none,GUIStyle.none)){inventoryWeapon=gun;inventoryKind=0;inventoryItem=gun;}for(int modSlot=0;modSlot<3;modSlot++){int id=P.Mod(gun,modSlot);float y=293+modSlot*30;Text(x+17,y+3,93,27,WeaponMods.SlotName(modSlot),small,14,muted);if(Button(x+113,y,350,27,id>0?WeaponMods.Names[id]+"  ×":"Empty "+WeaponMods.SlotName(modSlot).ToLowerInvariant()+" slot")){inventoryWeapon=gun;if(id>0)P.DetachModServerRpc(gun,modSlot);}}}}

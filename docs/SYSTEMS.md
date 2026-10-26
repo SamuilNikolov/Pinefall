@@ -8,7 +8,12 @@ All runtime files below are under `Assets/Scripts/` unless otherwise stated. Nam
 | Round, storm, victory | `WildfrontMatch.cs`, `StormView.cs`, `FieldNarrator.cs` | Team state, server timing, supply events, global announcements |
 | Landing draft | `SpawnDraft.cs`, `FreeSpawn.cs` | Per-player turn/bid/kit, intent previews, safe ground validation |
 | Player identity / core combat | `Ranger.cs`, `OwnerTransform.cs`, `NetworkSeed.cs` | Owner motion, replicated state, hit validation and global player registry |
-| Gun timing and equipment | `RangerGunHandling.cs`, `RangerEquipment.cs`, `WeaponData.cs`, `WeaponMods.cs` | Seven positional weapon IDs, magazine/ammo state, packed attachments, bots and drops |
+| Hits and confirmation | `RangerCombat.cs`, `ShotHistory.cs`, `PlayerHitboxes.cs`, `CombatFeedback.cs`, `RangerDamageSignals.cs` | Rewind timeline, anatomical hit regions, current cover, owner-only confirmations, separate damage/equip events |
+| Building and harvesting | `RangerConstruction.cs`, `ConstructionWorld.cs`, `BuildPiece.cs`, `HarvestResources.cs` | Validated materials/cost/support, masks/doors, deterministic sparse foliage destruction |
+| Mobility and spectating | `RangerMovement.cs`, `RangerSpectator.cs`, `RangerWeaponPose.cs` | Controller/visible stance, slide momentum, team restrictions, interest viewpoint, cached arm IK |
+| Rockets | `RocketProjectile.cs` | Authoritative traveling projectile, blast falloff and cover, launcher model |
+| Storm bosses | `StormMutation.cs` | Closing-phase roll, cap, scale/HP, organic rewards |
+| Gun timing and equipment | `RangerGunHandling.cs`, `RangerEquipment.cs`, `WeaponData.cs`, `WeaponMods.cs` | Eight positional weapon IDs, magazine/ammo state, packed attachments, bots and drops |
 | Inventory / survival / armor | `RangerSlots.cs`, `RangerSurvival.cs`, `RangerArmor.cs`, `RangerRescue.cs` | Transactions, food, damage source filtering, plates, downing/revive conditions |
 | Player presentation | `RangerCamera.cs`, `RangerWater.cs`, `WeaponView.cs`, `AvatarStyle.cs`, `CharacterPreview.cs`, `CinematicView.cs`, `VisualRig.cs` | Viewmodel layer, camera modes, body animations and customization |
 | Population / animals | `WildlifeDirector.cs`, `Wildlife.cs`, `NativeFauna.cs`, `SharkLife.cs` | Habitat tables, peaceful/hostile rules, storm changes, harvest, bounded distant simulation |
@@ -18,9 +23,10 @@ All runtime files below are under `Assets/Scripts/` unless otherwise stated. Nam
 | Geography | `ExpeditionLayout.cs`, `ReserveBiomes.cs`, `ReserveWater.cs`, `VillageFootprints.cs` | Region indices, roads, house count, lakes, bridges, spawn/loot/vehicle locations |
 | Terrain and foliage | `ReserveWorld.cs`, `ReserveUnderstory.cs`, `TerrainSampling.cs`, `SoftGeometry.cs`, `AutumnCanopy.cs` | Cached TerrainData, instancing, culling/shadows; editor generation shares analytic layout |
 | Weather / atmosphere | `ReserveWeather.cs`, `WeatherState.cs`, `AmbientBirds.cs`, `Soundscape.cs`, `ReserveAudio.cs` | Shared time/weather, positional calls, recorded banks and procedural layers |
-| Voice | `ProximityVoice.cs` | Opt-in mic warmup, speech gate, synthetic tests, server distance routing, receive buffers |
+| Voice | `ProximityVoice.cs`, `VoiceJitterBuffer.cs` | Opt-in mic warmup, speech gate, synthetic tests, server distance routing, receive buffers |
 | Network interest | `WorldInterest.cs`, `TransportMap.cs` | Observer budgets, delayed show cancellation, team-filtered 1 Hz map feed |
 | Runtime performance | `RuntimePerformance.cs`, `PresentationBudget.cs` | Frame-time feedback, detail/shadows, deferred model creation; never remove authority |
+| 0.8 active presentation | `BattleHUD.cs`, `FieldcraftUI.cs`, `FieldAtlasPanel.cs` | Translucent panels, squad cards, confirmed enemy HP, world edit grid; old panel methods retained under legacy names |
 | Menus / HUD | `ReserveUI.cs`, `PolishedMenus.cs`, `CombatUI.cs`, `ReadableUI.cs`, `RasterIcons.cs`, `FieldHUD.cs`, `ExpeditionUI.cs` | IMGUI event types, input ownership, style/icon cache, HUD repaint-only path |
 | Atlas and handbook | `FieldAtlas.cs`, `GuideUI.cs`, `TransportMap.cs`, `WorldSign.cs` | Baked 4K base, label zoom/collision, privacy, handbook content |
 | Input | `GameBindings.cs` | Rebinding, default control definitions, gameplay/menu focus |
@@ -33,7 +39,7 @@ Under `Assets/Editor/`, `BuildReserve.cs` contains `Setup`, `Build`, `BuildCurre
 
 Important entry points:
 
-- `BuildReserve.BuildCurrent`: compile the committed `Reserve.unity` into the requested Windows player path.
+- `BuildReserve.BuildCurrent`: prepare missing Fieldcraft prefabs/materials, export handbook data and compile the committed `Reserve.unity` into the requested Windows player path.
 - `BuildReserve.Setup`: regenerate scene/prefabs/derived content and `handbook-data.json`.
 - `BuildReserve.Build`: call Setup, then BuildCurrent.
 - `PrepareRoadCoverage`: private helper; returns immediately if the PNG already exists. The repository adds an explicit regeneration menu for geography work.

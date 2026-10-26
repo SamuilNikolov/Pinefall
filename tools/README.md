@@ -41,6 +41,16 @@ $env:UNITY_EDITOR = 'C:\Program Files\Unity\Hub\Editor\2022.3.13f1\Editor\Unity.
 
 The suite opens hidden headless children, drives the actual integration probes, checks exits/reports and cleans up only its own process handles. A failed/empty/missing report is an error. It never records a microphone. A new run cannot accidentally consume old JSON. See [test coverage and limits](../docs/TESTING.md).
 
+## Construction, combat, voice and native UI (0.8)
+
+```powershell
+.\tools\Test-Fieldcraft.ps1
+.\tools\Test-Visual.ps1
+.\tools\Test-Visual.ps1 -Width 1280 -Height 720 -OutputPath artifacts/visual-small
+```
+
+The Fieldcraft suite starts three headless players, then a late joiner; default UDP port 18100. It checks new gameplay and synthetic voice without recording a microphone. Native visual QA uses UDP 7798 and opens a normal game window. Run rendered performance separately from other test groups to avoid distorting timings.
+
 ## Graphics performance
 
 ```powershell

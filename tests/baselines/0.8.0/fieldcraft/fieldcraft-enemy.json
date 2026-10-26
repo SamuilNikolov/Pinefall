@@ -1,0 +1,11 @@
+{
+    "passed": [
+        "Remote delayed shots receive server-confirmed hit feedback",
+        "Remote peers receive multiple player-built shapes",
+        "Remote peers receive edited geometry state",
+        "Remote peers display the boss's larger model",
+        "Remote fieldcraft checks do not record voice"
+    ],
+    "failed": [],
+    "errors": []
+}

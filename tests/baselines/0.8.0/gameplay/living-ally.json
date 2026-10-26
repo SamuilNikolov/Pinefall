@@ -1,0 +1,14 @@
+{
+    "passed": [
+        "Survey warns every connected player",
+        "Only the activating team receives enemy position snapshots",
+        "Survey pings and exposure warning expire",
+        "No microphone capture"
+    ],
+    "failed": [],
+    "errors": [],
+    "villages": 0,
+    "houses": 0,
+    "vehicles": 0,
+    "animals": 0
+}

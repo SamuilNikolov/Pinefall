@@ -38,3 +38,7 @@ No GPU vendor/device-name tuning or system power/driver edits are involved. Any 
 6. Keep the report/raw data locally under `artifacts`; add a versioned baseline only when releasing reviewed evidence.
 
 See [TESTING](TESTING.md) and `tools/Measure-Performance.ps1`. Other GPUs, weak integrated systems, eight-human matches, physical voice devices and long public-internet games remain important follow-up measurements.
+
+## Fieldcraft additions
+
+0.8 keeps resource destruction sparse: existing foliage collider/matrix handles are registered once, changed HP is replicated, and there is no per-tree Update or network actor. Built pieces combine visible parts into one render mesh, cap at 80/player and 512/world, and traverse a spatial support grid only after removal. Shot history has bounded rings; voice receive/device playback uses preallocated buffers. See [0.8 verification](VERIFICATION-0.8.md) for a graphics-enabled release run. The route does not stress a saturated 512-piece arena.

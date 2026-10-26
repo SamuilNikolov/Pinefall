@@ -1,0 +1,9 @@
+{
+  "version": "0.8.0",
+  "protocol": "PinefallReserve/8",
+  "unity": "2022.3.13f1",
+  "date": "2026-10-26",
+  "target": "Windows x64 / Mono",
+  "runtimeAssemblySha256": "8b070da4c3aecb41c2de8bfb71974487c364683458ca15bc4fd1d355e543b5b5",
+  "playerExeSha256": "8a9b25cfbb8a839b097d3e059b4dec2bac2b7bf1833f380e41c352aa6d8708ea"
+}

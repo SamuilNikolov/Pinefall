@@ -1,3 +1,16 @@
+# Wildfront 0.8.0 — Fieldcraft — 2026-10-26
+
+- Added pickaxe harvesting, finite wood/stone/metal, discovered/shareable materials, replicated walls/floors/stairs/pyramids, grid edits, doors, repairs and support collapse.
+- Corrected remote hit recognition with bounded server history matched to NGO rendering delay; added stance-aware anatomical player regions, owner-confirmed damage numbers, armor/hit/elimination feedback and discreet damaged-enemy HP.
+- Added eight explicit weapon classes and class-specific firing/range behavior, including a traveling RPG with blast falloff and cover protection.
+- Added larger storm alpha mutations with bounded population, enhanced HP/attacks and organic rewards.
+- Increased sprint speed, reduced fatigue, added replicated sliding/crouch poses and weapon grip IK; increased vehicle speed and fixed boat lake/river level transitions. Settings keep gravity and world simulation running.
+- Added server-validated spectating: any survivor in Solo; teammates while the team survives in Duos/Squads, then any survivor.
+- Reworked voice capture/resampling, burst acceptance, sequencing, receive jitter/loss handling and device-block playback. Physical microphone capture remains opt-in.
+- Replaced the main HUD/inventory/map/settings with clearer translucent layouts, icons and minimal squad health/armor/distance/voice cards. Vest changes use blue positive feedback; real damage retains the hurt effect. Character material contrast is restrained and respects occlusion.
+- Bumped approval/discovery to protocol 8. All peers need 0.8; older clients are incompatible.
+- Added separate multiplayer and rendered UI checks, current handbook content and developer documentation. See docs/VERIFICATION-0.8.md for actual release results and remaining limits.
+
 # Repository handoff — 2026-10-25
 
 - Added the importable 0.7.1 Unity source, stable asset metadata and package lock to the Pinefall repository.

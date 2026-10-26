@@ -11,7 +11,7 @@ namespace Pinefall
             if(ReserveUI.Instance&&ReserveUI.Instance.ControlsActive&&GameBindings.Down("Camera"))ThirdPerson=!ThirdPerson;
             if(ReserveSession.Arg("--smoke")!=""||ReserveSession.Arg("--capture")!="")return;
             var rotation=owner.transform.rotation*Quaternion.Euler(owner.LookPitch,owner.VehicleLook,0);transform.rotation=rotation;
-            Vector3 head=owner.transform.position+Vector3.up*(owner.Crouched.Value?1.17f:1.7f);
+            Vector3 head=owner.transform.position+Vector3.up*(owner.Sliding.Value?.78f:owner.Crouched.Value?1.17f:1.7f);
             if(ExternalView)
             {
                 Vector3 offset=rotation*(owner.CurrentVehicle?new Vector3(.5f,1.1f,-5.5f):new Vector3(.65f,.25f,owner.Aiming?-1.65f:-3.5f));float length=offset.magnitude;

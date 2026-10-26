@@ -7,7 +7,7 @@ namespace Pinefall
     {
         public NetworkVariable<bool> IsBot=new NetworkVariable<bool>(false);
         public NetworkVariable<int> Owned=new NetworkVariable<int>(1<<3),RarityBits=new NetworkVariable<int>(0),OtherUpgrades=new NetworkVariable<int>(0);
-        public NetworkVariable<int> RifleReserve=new NetworkVariable<int>(0),LightReserve=new NetworkVariable<int>(0),ShellReserve=new NetworkVariable<int>(0),PistolReserve=new NetworkVariable<int>(24),Medkits=new NetworkVariable<int>(0),FuelCans=new NetworkVariable<int>(0);
+        public NetworkVariable<int> RifleReserve=new NetworkVariable<int>(0),RocketReserve=new NetworkVariable<int>(0),LightReserve=new NetworkVariable<int>(0),ShellReserve=new NetworkVariable<int>(0),PistolReserve=new NetworkVariable<int>(24),Medkits=new NetworkVariable<int>(0),FuelCans=new NetworkVariable<int>(0);
         public NetworkVariable<int> Appearance=new NetworkVariable<int>(0),Palette=new NetworkVariable<int>(0),Headgear=new NetworkVariable<int>(0);
         public NetworkVariable<ulong> VehicleId=new NetworkVariable<ulong>(RoadVehicle.Empty);
         public NetworkVariable<int> VehicleSeat=new NetworkVariable<int>(-1);
@@ -16,16 +16,16 @@ namespace Pinefall
         public bool CanAct {get{return !Downed.Value&&(!WildfrontMatch.Current||WildfrontMatch.Current.Phase.Value<2);}}
         public float LookPitch {get{return pitch-cameraKick;}}
         public bool Owns(int index){return index>=0&&index<WeaponData.All.Length&&(Owned.Value&(1<<index))!=0;}
-        public int Rarity(int index){return (RarityBits.Value>>(Mathf.Clamp(index,0,6)*3))&7;}
-        public int ReserveFor(int type){return type==0?RifleReserve.Value:type==1?LightReserve.Value:type==2?ShellReserve.Value:PistolReserve.Value;}
-        void SetReserve(int type,int value){value=Mathf.Clamp(value,0,400);if(type==0)RifleReserve.Value=value;else if(type==1)LightReserve.Value=value;else if(type==2)ShellReserve.Value=value;else PistolReserve.Value=value;}
+        public int Rarity(int index){return (RarityBits.Value>>(Mathf.Clamp(index,0,WeaponData.All.Length-1)*3))&7;}
+        public int ReserveFor(int type){return type==0?RifleReserve.Value:type==1?LightReserve.Value:type==2?ShellReserve.Value:type==4?RocketReserve.Value:PistolReserve.Value;}
+        void SetReserve(int type,int value){value=Mathf.Clamp(value,0,type==4?12:400);if(type==0)RifleReserve.Value=value;else if(type==1)LightReserve.Value=value;else if(type==2)ShellReserve.Value=value;else if(type==4)RocketReserve.Value=value;else PistolReserve.Value=value;}
         public RoadVehicle CurrentVehicle
         {get{NetworkObject obj;return VehicleId.Value!=RoadVehicle.Empty&&NetworkManager&&NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(VehicleId.Value,out obj)?obj.GetComponent<RoadVehicle>():null;}}
         public void InitializeEquipment(bool sandbox)
         {
-            if(!IsServer)return;ResetSurvey();magazines=WeaponData.All.Select(w=>w.magazine).ToArray();
-            Optics.Value=Barrels.Value=Handling.Value=0;ModBag.Value=0;Owned.Value=sandbox?((1<<Mathf.Clamp(ReserveSession.Instance.SelectedWeapon,0,6))|(1<<3)):1<<3;RarityBits.Value=0;RifleReserve.Value=LightReserve.Value=ShellReserve.Value=sandbox?100:0;PistolReserve.Value=sandbox?120:24;
-            Weapon.Value=sandbox?Mathf.Clamp(ReserveSession.Instance.SelectedWeapon,0,6):3;Ammo.Value=magazines[Weapon.Value];Medkits.Value=sandbox?2:0;FuelCans.Value=sandbox?1:0;Food.Value=1;Hunger.Value=85;ArmorTier.Value=0;Armor.Value=0;ArmorPlates.Value=0;InitialSlots(Weapon.Value);
+            if(!IsServer)return;ResetBuildingMaterials();ResetCombatCadence();ResetSurvey();magazines=WeaponData.All.Select(w=>w.magazine).ToArray();
+            Optics.Value=Barrels.Value=Handling.Value=0;ModBag.Value=0;Owned.Value=sandbox?((1<<Mathf.Clamp(ReserveSession.Instance.SelectedWeapon,0,WeaponData.All.Length-1))|(1<<3)):1<<3;RarityBits.Value=0;RifleReserve.Value=LightReserve.Value=ShellReserve.Value=sandbox?100:0;PistolReserve.Value=sandbox?120:24;RocketReserve.Value=sandbox?3:0;
+            Weapon.Value=sandbox?Mathf.Clamp(ReserveSession.Instance.SelectedWeapon,0,WeaponData.All.Length-1):3;Ammo.Value=magazines[Weapon.Value];Medkits.Value=sandbox?2:0;FuelCans.Value=sandbox?1:0;Food.Value=1;Hunger.Value=85;ArmorTier.Value=0;Armor.Value=0;ArmorPlates.Value=0;InitialSlots(Weapon.Value);
         }
         public void ApplyKit(int kitIndex,int unspent)
         {
@@ -49,7 +49,7 @@ namespace Pinefall
             var loot=obj.GetComponent<WorldLoot>();if(!loot||Vector3.Distance(transform.position,loot.transform.position)>4)return;string collected=loot.Description;
             if(loot.Kind.Value==0)
             {
-                int index=Mathf.Clamp(loot.Item.Value,0,6);int old=Rarity(index);bool fresh=!Owns(index);Owned.Value|=1<<index;
+                int index=Mathf.Clamp(loot.Item.Value,0,WeaponData.All.Length-1);int old=Rarity(index);bool fresh=!Owns(index);Owned.Value|=1<<index;
                 if(fresh&&WeaponCount>3){Owned.Value&=~(1<<index);FeedbackClientRpc("Three weapon slots are full. Drop a gun in your inventory first.");return;}
                 if(fresh||loot.Rarity.Value>old){int mask=7<<(index*3);RarityBits.Value=(RarityBits.Value&~mask)|(loot.Rarity.Value<<(index*3));}
                 if(loot.Amount.Value<0)SetReserve(WeaponData.Get(index).ammoType,ReserveFor(WeaponData.Get(index).ammoType)+WeaponData.Get(index).magazine);
@@ -58,15 +58,16 @@ namespace Pinefall
                 if(fresh){if(Weapon.Value>=0)magazines[Weapon.Value]=Ammo.Value;magazines[index]=rounds;Weapon.Value=index;Ammo.Value=rounds;Reloading.Value=false;}
                 else {SetReserve(WeaponData.Get(index).ammoType,ReserveFor(WeaponData.Get(index).ammoType)+rounds);for(int slot=0;slot<3;slot++){int modId=(loot.Tuning.Value>>(slot*4))&15;if(!WeaponMods.Compatible(index,modId))continue;if(ModCount(modId)<5)SetModCountServer(modId,ModCount(modId)+1);else ExpeditionLoot.Spawn(loot.transform.position+Vector3.right*.3f,8,modId,0,1);}}
             }
+            else if(loot.Kind.Value==13){int material=loot.Item.Value;if(material<0||material>2)return;int accepted=Mathf.Min(999-BuildingMaterial(material),loot.Amount.Value);if(accepted<=0)return;AddBuildingMaterial(material,accepted);loot.Amount.Value-=accepted;if(loot.Amount.Value>0)return;}
             else if(loot.Kind.Value==12){if(SurveyCharges.Value>=2){FeedbackClientRpc("Survey beacon pack full (two). Use or share one.");return;}SurveyCharges.Value++;}
             else if(loot.Kind.Value==11){var at=loot.transform.position;ExpeditionLoot.Spawn(at+Vector3.left*.65f,8,UnityEngine.Random.Range(1,10),2,1);ExpeditionLoot.Spawn(at+Vector3.right*.65f,2,0,0,1);ExpeditionLoot.Spawn(at+Vector3.forward*.65f,7,0,1,2);FeedbackClientRpc("Field cache opened: an attachment, medicine and armor plates.");}
             else if(loot.Kind.Value==9){if(Health.Value>=100&&Hunger.Value>=100){FeedbackClientRpc("You are already well fed and healthy. Leave the rich meat for a teammate.");return;}Health.Value=Mathf.Min(100,Health.Value+20);Hunger.Value=Mathf.Min(100,Hunger.Value+15);}
             else if(loot.Kind.Value==8){int modId=loot.Item.Value;if(modId<1||modId>9||ModCount(modId)>=5){FeedbackClientRpc("Attachment stack full.");return;}SetModCountServer(modId,ModCount(modId)+1);}
-            else if(loot.Kind.Value==6){if(ArmorTier.Value>0)DropItem(6,0,1);ArmorTier.Value=Mathf.Clamp(loot.Item.Value,1,3);Armor.Value=Mathf.Clamp(loot.Amount.Value,0,ArmorMaximum(ArmorTier.Value));}
+            else if(loot.Kind.Value==6){if(ArmorTier.Value>0)DropItem(6,0,1);ArmorTier.Value=Mathf.Clamp(loot.Item.Value,1,3);Armor.Value=Mathf.Clamp(loot.Amount.Value,0,ArmorMaximum(ArmorTier.Value));VestEquippedClientRpc();}
             else
             {
                 int kind=loot.Kind.Value,type=loot.Item.Value,have=kind==1?ReserveFor(type):kind==2?Medkits.Value:kind==3?Craft.Value:kind==4?FuelCans.Value:kind==7?ArmorPlates.Value:Food.Value;
-                int capacity=kind==1?400:kind==2||kind==4?5:kind==3?50:kind==7?6:8;int accepted=Mathf.Min(Mathf.Max(0,capacity-have),loot.Amount.Value);
+                int capacity=kind==1?(type==4?12:400):kind==2||kind==4?5:kind==3?50:kind==7?6:8;int accepted=Mathf.Min(Mathf.Max(0,capacity-have),loot.Amount.Value);
                 if(accepted<=0){FeedbackClientRpc("That inventory stack is full. Drop or use some first.");return;}
                 if(kind==1)SetReserve(type,have+accepted);else if(kind==2)Medkits.Value+=accepted;else if(kind==3)Craft.Value+=accepted;else if(kind==4)FuelCans.Value+=accepted;else if(kind==7)ArmorPlates.Value+=accepted;else Food.Value+=accepted;
                 loot.Amount.Value-=accepted;if(loot.Amount.Value>0){FeedbackClientRpc("Collected "+accepted+". The rest stays on the ground.");return;}
@@ -110,6 +111,6 @@ namespace Pinefall
             string use=GameBindings.Label("Interact");if(CurrentVehicle)return use+" Exit   "+GameBindings.Label("Forward")+"/"+GameBindings.Label("Backward")+" Drive   Mouse Look   "+GameBindings.Label("Sprint")+" Boost";
             var friend=NearbyDowned();if(friend)return "Hold "+use+" · Revive "+friend.DisplayName.Value;var supply=SupplyDrop.Near(transform.position);if(supply)return use+" · Open supply crate";var loot=WorldLoot.Near(transform.position);if(loot)return use+" · "+loot.Description;var reward=NearestPickup();if(reward)return use+" · Collect harvest";var car=RoadVehicle.Near(transform.position);if(car)return car.Label+" · "+use+" Enter · "+GameBindings.Label("Repair")+" Repair · "+GameBindings.Label("Refuel")+" Refuel · "+GameBindings.Label("Vehicle upgrade")+" Upgrade";return "";
         }
-        public void BotShoot(Vector3 direction){if(IsServer&&Alive)FireServerRpc(transform.position+Vector3.up*1.5f,direction.normalized,Weapon.Value);}
+        public void BotShoot(Vector3 direction){if(IsServer&&Alive)ServerBotFire(transform.position+Vector3.up*1.5f,direction.normalized);}
     }
 }

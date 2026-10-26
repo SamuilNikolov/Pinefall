@@ -34,10 +34,10 @@ namespace Pinefall
         }
         void OldLoadout()
         {
-            if(!P){Heading("Field equipment","Seven weapon types. Battle royale equipment comes from your draft budget and scavenging.");for(int i=0;i<7;i++){int row=i/2,col=i%2;float x=100+col*720,y=270+row*122;var w=WeaponData.All[i];if(Button(x,y,680,52,w.name+" · "+w.cartridge,S.SelectedWeapon==i)){S.SelectedWeapon=i;PlayerPrefs.SetInt("weapon",i);}Text(x+10,y+61,660,47,w.description,small,16);}if(Link(950,804,500,"Customize your ranger")){panel="character";returnPanel="loadout";}return;}
+            if(!P){Heading("Field equipment","Eight distinct weapon classes. Battle royale equipment comes from your draft budget and scavenging.");for(int i=0;i<WeaponData.All.Length;i++){int row=i/2,col=i%2;float x=100+col*720,y=270+row*122;var w=WeaponData.All[i];if(Button(x,y,680,52,w.name+" · "+w.cartridge,S.SelectedWeapon==i)){S.SelectedWeapon=i;PlayerPrefs.SetInt("weapon",i);}Text(x+10,y+61,660,47,w.description,small,16);}if(Link(950,804,500,"Customize your ranger")){panel="character";returnPanel="loadout";}return;}
             Heading("Field inventory","I closes inventory · three weapon slots in battle royale · dropped supplies can be picked up by anyone nearby.");
             int rowIndex=0;
-            for(int i=0;i<7;i++)if(P.Owns(i))
+            for(int i=0;i<WeaponData.All.Length;i++)if(P.Owns(i))
             {
                 float y=254+rowIndex*64;int index=i;Color rarity=WeaponData.RarityColor(P.Rarity(i));Rect(100,y,760,57,new Color(.12f,.22f,.25f));Rect(100,y,4,57,rarity);
                 Text(120,y+7,340,45,(P.Weapon.Value==i?"▸ ":"")+WeaponData.Get(i).name,body,22,rarity);Text(440,y+12,165,35,P.MagazineFor(i)+" loaded",small,17);

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Pinefall
 {
     // Opt-in visual and session lifecycle verification in the actual packaged renderer.
-    public sealed class CaptureProbe : MonoBehaviour
+    public sealed partial class CaptureProbe : MonoBehaviour
     {
         public static bool Running;
         string folder;
@@ -20,6 +20,7 @@ namespace Pinefall
             ReserveSession.Instance.SelectedWeapon=0;ReserveSession.Instance.BattleMode=false;ReserveSession.Instance.Port="7798";ReserveSession.Instance.PlayerName="FieldTest";ReserveSession.Instance.Host();
             yield return new WaitForSecondsRealtime(3);
             if(!Ranger.Local){Debug.LogError("CAPTURE_HOST_FAILED");Application.Quit();yield break;}
+            if(ReserveSession.Arg("--fieldcraft-capture")=="1"){yield return FieldcraftShots();Application.Quit();yield break;}
             ReserveUI.Instance.VerificationPanel("");yield return Shot("play");Ranger.Local.SetModCountServer(2,1);Ranger.Local.SetModCountServer(4,1);Ranger.Local.SetModCountServer(7,1);ReserveUI.Instance.VerificationPanel("loadout");yield return Shot("inventory");ReserveUI.Instance.VerificationPanel("bindings");yield return Shot("controls");ReserveUI.Instance.VerificationPanel("guide");yield return Shot("guide");ReserveUI.Instance.VerificationPanel("");
             var animal=ReserveSession.Instance.Animals.First(a=>!a.Dead);
             Ranger.Local.SmokeMoveTo(ReserveWorld.OnGround(animal.transform.position.x,animal.transform.position.z-7,.2f));Ranger.Local.SmokeAimAt(animal);

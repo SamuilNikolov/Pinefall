@@ -1,4 +1,4 @@
-# Pinefall Wildfront 0.7.1 — Player handbook
+# Pinefall Wildfront 0.8.0 — Player handbook
 
 Explore 6.1 km of terrain, six core biomes plus the Amberwood autumn floodplain, 48 settlements, 304 searchable buildings, 71 road links, 35 repair lay-bys, 91 vehicles and 10 boats.
 
@@ -16,7 +16,7 @@ The last surviving team wins. Late arrivals spectate until the next draft. A com
 
 ## Guns and attachments
 
-Ridgeline: bolt-action hunting rifle. Trail Scout: versatile carbine. Brushmaster: close-range shotgun. Service Nine: sidearm. Kestrel: fast SMG. Longwatch: scoped precision rifle. Sawmill: sustained automatic fire. All use finite magazines and four ammunition families.
+Ridgeline: bolt-action hunting rifle. Trail Scout: versatile carbine. Brushmaster: close-range shotgun. Service Nine: sidearm. Kestrel: fast SMG. Longwatch: scoped precision rifle. Sawmill: sustained automatic fire. Stormbreak RPG launches an explosive projectile. Eight weapon classes use finite magazines and five ammunition families including rockets. Pistols/marksman rifles are semi-auto; SMGs/assault/support guns automatic; snipers bolt-action; shotguns pump-action with pellets. Class-specific range falloff makes close-range guns lose damage sooner. Inventory shows each class, firing mode and fitted attachments.
 
 Three weapon slots accept an optic, a barrel attachment, and a handling attachment. Find mods in settlements, select a gun in Inventory, then choose a compatible attachment from your pack. Replaced mods return to your pack. Attachments travel with a dropped gun.
 
@@ -24,11 +24,21 @@ Reflex / Ranger / Marksman optics give 1.5× / 3× / 6× aim. The 6× optic fits
 
 Rarity improves base weapon damage. Crouching, aiming, movement and sustained fire also affect accuracy. There is no hidden materials-based gun tuning.
 
+## Building and harvesting
+
+Spawn with 80 wood, 40 stone and 20 metal. Select the pickaxe with backquote (`), then swing with left mouse. Trees yield wood, rocks stone and metallic ore yields metal. Resource HP appears only while targeted. Destroyed resources disappear for everyone, including late joiners; gunfire can destroy them but grants no harvest payout. Material stacks can also be found, dropped and shared. Vehicle repair parts remain a separate supply.
+
+Z toggles build mode. F1 wall, F2 floor, F3 stairs, F4 pyramid; left mouse places/repeats; right mouse cycles material; R rotates. A preview shows valid placement and its cost. Each piece costs ten materials and has 300/450/600 wood/stone/metal maximum HP, building up from 80 over six seconds. Attach to ground, static structures or existing pieces. Removing support collapses unsupported sections. Limits: 80 pieces per player, 512 in the reserve.
+
+Aim at an allied piece and press H to edit. Paint cells on the visible world grid or right-side panel; H confirms, right mouse resets, R rotates stair/pyramid edits, Escape cancels. Walls offer windows, doors, low sections and diagonal cuts; floors/stairs use a 2×2 grid and pyramid corners change height. E opens/closes a door. G repairs an allied piece for two matching materials per 50 HP. Edits preserve HP and enemies cannot edit your team’s pieces. These are Pinefall’s original grid mechanics; some complex competitive-game edit variants and automatic stair reshaping are not implemented.
+
 ## Wildlife and biomes
 
 Lush valley: deer, stags, hares, boar and elk among fields and forest. Dune basin: foxes, hares, pronghorn and horses. Ice desert: wolves, arctic foxes, snowshoe hares and elk. High Rockies: ibex, alpacas, stags, wolves and hares. Rainforest: forest boar, deer, wild oxen, hares and foxes. Reedwater marsh: boar, deer, hares, foxes and wild oxen near the shoreline.
 
 Wolves and boar are naturally hostile. Deer, rabbits and other non-hostile wildlife flee during ordinary conditions. While the storm closes, every animal gains a violet tint and attacks nearby players. Their chance of dropping restorative rich meat rises from 8% to 65%.
+
+Each closing cycle can mutate nearby enraged land animals into storm alphas: 1.7× size, three times maximum HP, faster movement and stronger attacks, with at most four living alphas. They retain their size and HP after the closing interval; normally peaceful species return to their usual behavior. Boss kills grant additional food and restorative meat.
 
 Animals drop food and occasionally rich meat, which restores 20 health and 15 hunger on collection. They do not drop guns, ammunition, fuel or manufactured attachments.
 
@@ -36,13 +46,13 @@ Sharks patrol five lakes. They hunt swimmers, and cannot attack players seated i
 
 ## Travel and survival
 
-Estate wagons, dune buggies, service pickups, utility vans, trail motorcycles and motor launches have different top speeds and seating. WASD drives and steers; mouse-look is independent. Reverse steering follows the direction of travel. Brake before tight turns. Boost recharges but consumes more fuel.
+Estate wagons, dune buggies, service pickups, utility vans, trail motorcycles and motor launches have different top speeds and seating. WASD drives and steers; mouse-look is independent. Reverse steering follows the direction of travel. Brake before tight turns. Boost recharges but consumes more fuel. Boats follow the queried water surface through lake/river junctions instead of treating water-level seams as land grades. Sprinting reaches 9.4 m/s; press crouch while running to slide. Slide momentum, crouch and shortened hit regions replicate. Opening Settings keeps gravity and the shared world running.
 
 Engine condition reduces speed. Repair costs two materials; refuelling uses one can; a vehicle upgrade costs three materials. Some engines begin dead. Repair lay-bys along the roads have extra transport, fuel, parts and a sealed cache. Additional launches wait on every lake and along the river. Boats need sufficiently deep water; stepping out begins swimming. Boat occupants and car passengers can fire. Use bridges for road crossings.
 
 The HUD separates health, armor, a ten-segment hunger meter and stamina, with icons, values and a food key reminder. Early warnings begin below 40 hunger. Hunger drains faster when running and more slowly while riding. Below 20 you cannot sprint; below 10 you slow down; at zero you take starvation damage. Food restores 35 hunger and 5 health. Medkits restore 45 health.
 
-Light / Field / Heavy vests absorb 25% / 35% / 50% of bullet and animal damage while durability remains. Storm and hunger bypass them. Plates restore 30 durability. Inventory drops can be shared and float on water.
+Light / Field / Heavy vests absorb 25% / 35% / 50% of bullet and animal damage while durability remains. Storm and hunger bypass them. Plates restore 30 durability. Inventory drops can be shared and float on water. Equipping a vest gives a brief blue armor pulse; only real damage gives a hurt flash.
 
 ## Teams and controls
 
@@ -50,7 +60,9 @@ The lobby supports ready checks and team selection. In Duos and Squads, an activ
 
 The map shows teammates, names, nearby living animals within 160 metres, supply drops and both storm rings. Enemy positions disappear after deployment. Survey beacons from supply crates reveal position snapshots to the activating team for twelve seconds, pulsing every four seconds. Everyone receives an exposure warning. Q activates a beacon; carry up to two, drop or share them in Inventory. Live car, motorcycle and boat icons update once per second across the whole map, including vehicles beyond render range. Hover to see engine condition and fuel. Vehicles occupied by enemies disappear from your map. Scroll zooms and dragging pans. Site names grow clearer as you zoom; hovering a marker shows its details.
 
-Voice is disabled initially. Enable push-to-talk or open mic in Settings. All nearby players, including rivals, hear one another within 75 metres with distance attenuation. Headphones reduce feedback.
+Duos/Squads show compact teammate health, armor, distance and speaking indicators at the lower left, including while the map is open. After elimination, Solo players may spectate any survivor. Team players spectate only surviving teammates until their entire team is eliminated, then anyone. Left/right mouse or arrow keys cycle targets.
+
+Voice is disabled initially. Enable push-to-talk or open mic in Settings. All nearby players, including rivals, hear one another within 75 metres with distance attenuation. Speech uses sequenced frames, a short receive jitter buffer and continuous device-rate playback. Headphones reduce feedback.
 
 Rebind gameplay keys and mouse buttons in Settings → Key bindings. Escape remains available for the menu. A flashlight helps during the five-minute day/night cycle. Internet guests need the host address and a reachable UDP port; nearby sessions can be discovered on the local network.
 
@@ -61,12 +73,15 @@ Damage is the common-tier base per bullet or pellet before attachments and heads
 | Weapon | Ammo | Magazine | Base damage | Pellets | Reload | Range |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | Ridgeline | .308 | 5 | 80 | 1 | 2.5 s | 650 m |
-| Trail Scout | .223 | 15 | 30 | 1 | 1.9 s | 350 m |
+| Trail Scout | .223 | 15 | 27 | 1 | 1.9 s | 350 m |
 | Brushmaster | 12-gauge | 6 | 12 | 8 | 2.8 s | 85 m |
-| Service Nine | 9 mm | 12 | 23 | 1 | 1.4 s | 120 m |
-| Kestrel | 9 mm | 28 | 18 | 1 | 1.8 s | 160 m |
+| Service Nine | 9 mm | 12 | 23 | 1 | 1.4 s | 110 m |
+| Kestrel | 9 mm | 28 | 18 | 1 | 1.8 s | 125 m |
 | Longwatch | .308 | 10 | 52 | 1 | 2.4 s | 550 m |
 | Sawmill | .223 | 40 | 27 | 1 | 3.3 s | 330 m |
+| Stormbreak RPG | Rockets | 1 | 110 blast peak | 1 | 3.8 s | ~295 m flight |
+
+RPG rockets travel at 44 m/s with a 6 m blast radius and 6.7-second lifetime. Cover protects targets; damage falls off from the blast center. Self-damage is possible. Speed loader is the compatible launcher attachment. Confirmed hits show damage numbers and a short sound; enemy HP only appears briefly after your damage and when visible.
 
 ## Attachment reference
 
@@ -196,11 +211,13 @@ On the same home network, use the local address or nearby-session browser. From 
 
 WASD move/drive/steer; mouse look; Shift sprint/boost; Ctrl crouch; Space jump/brake; left mouse fire; right mouse aim; R reload; E interact/hold to revive; 1–3 weapon slots; 4 food; 5 medkit; B armor plate; G repair; F refuel; T vehicle upgrade; X flashlight; I inventory; M map; V camera; L lobby; Tab roster; N push-to-talk. Escape always opens the menu and cancels rebinding.
 
+Z build; backquote pickaxe; F1–F4 build shape; H edit/confirm; R blueprint rotation; right mouse material/reset; G structure repair; left/right mouse or arrow keys cycle spectators. Construction controls take precedence while building/editing.
+
 Settings → Key bindings changes gameplay keys and mouse buttons. The mouse wheel cycles carried guns. Open mic and speech sensitivity are available in audio settings. Disabling voice stops local capture; tests never enable the microphone.
 
 ## Current production limits
 
-This is an expanded playable development build. The art mixes textured assets with stylized characters, procedural props, adapted animal models, simple vehicle handling and a procedural shark model. Weapon animations and bot navigation remain basic. Internet connectivity across households, microphone hardware, latency, long human matches and lower-end hardware need further testing. Aircraft are supply flyovers, not pilotable planes. Birds are ambient.
+This is an expanded playable development build. The art mixes textured assets with stylized characters, procedural props, adapted animal models, simple vehicle handling and a procedural shark model. Weapon animations and bot navigation remain basic. Public-internet reachability, physical microphone hardware, severe jitter, long human matches, heavily saturated construction and lower-end hardware need further testing. Lag compensation is bounded at 500 ms, uses current environmental cover and retains owner-driven movement. The building system covers the four main forms and grid edits, not every Fortnite pattern/interaction or its art/animations. Aircraft are supply flyovers, not pilotable planes. Birds are ambient.
 
 ## Performance and frame rate
 

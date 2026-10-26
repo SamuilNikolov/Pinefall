@@ -18,14 +18,15 @@ namespace Pinefall
             var rng=new System.Random(Guid.NewGuid().GetHashCode());
             for(int r=0;r<ExpeditionLayout.Regions.Length;r++)
             {
-                var district=ExpeditionLayout.Regions[r];
+                var district=ExpeditionLayout.Regions[r];if(!district.minor)for(int material=0;material<3;material++)Spawn(ReserveWorld.OnGround(district.center.x-6+material*2,district.center.y-10,.4f),13,material,0,30);
                 for(int house=0;house<ExpeditionLayout.HouseCount(district);house++)for(int n=0;n<6;n++)
                 {
                     var p=district.center+VillageFootprints.Offset(district,house)+new Vector2(-2+(n%3)*2,-1+(n/3)*2.5f);
                     int kind=n==0?0:n==1?1:n==2?5:n==3?3:n==5?(house%2==0?6:7):8;int weapon=district.biome==1||district.biome==2||district.biome==3?new[]{0,1,5,6}[rng.Next(4)]:new[]{1,2,3,4,6}[rng.Next(5)];
+                    if(rng.NextDouble()<.02)weapon=7;
                     // Every region can roll each rarity; high-value sites shift the probabilities.
                     double roll=rng.NextDouble();int tier=roll<.53-district.quality*.055?0:roll<.82-district.quality*.025?1:roll<.955-district.quality*.012?2:roll<.995-district.quality*.004?3:4;
-                    int armorTier=Mathf.Clamp(tier+1,1,3);Spawn(ReserveWorld.OnGround(p.x,p.y,.4f),kind,kind==0?weapon:kind==1?WeaponData.Get(weapon).ammoType:kind==6?armorTier:kind==8?rng.Next(1,10):0,tier,kind==0?-1:kind==1?WeaponData.Get(weapon).magazine*2:kind==3?2:kind==6?Ranger.ArmorMaximum(armorTier):kind==7?2:1);
+                    if(weapon==7)tier=Mathf.Max(2,tier);int armorTier=Mathf.Clamp(tier+1,1,3);Spawn(ReserveWorld.OnGround(p.x,p.y,.4f),kind,kind==0?weapon:kind==1?WeaponData.Get(weapon).ammoType:kind==6?armorTier:kind==8?rng.Next(1,10):0,tier,kind==0?-1:kind==1?WeaponData.Get(weapon).magazine*2:kind==3?2:kind==6?Ranger.ArmorMaximum(armorTier):kind==7?2:1);
                 }
                 if(district.minor)Spawn(ReserveWorld.OnGround(district.center.x+7,district.center.y-9,.4f),11,0,2,1);
                 if(r%2==0)Spawn(ReserveWorld.OnGround(district.center.x+5,district.center.y-12,.4f),4,0,0,1);

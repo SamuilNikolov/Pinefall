@@ -53,7 +53,8 @@ namespace Pinefall
             if(index==3){root.localScale=new Vector3(.9f,.95f,.43f);Part(root,PrimitiveType.Cube,new Vector3(0,.09f,.2f),new Vector3(.082f,.09f,.48f),metal);}
             if(index==4)root.localScale=new Vector3(.95f,1,.74f);
             if(index==6){Part(root,PrimitiveType.Cube,new Vector3(0,-.17f,.15f),new Vector3(.18f,.22f,.18f),metal);for(int rib=0;rib<9;rib++)Part(root,PrimitiveType.Cube,new Vector3(0,.07f,.2f+rib*.027f),new Vector3(.085f,.025f,.012f),metal);}
-            var detailed=Resources.Load<GameObject>(index==3||index==4?"RealPistol":"RealRifle");
+            if(index==7){Destroy(root.gameObject);root=new GameObject("Rocket launcher assembly").transform;root.SetParent(model,false);LauncherModel.Create(root);}
+            var detailed=index==7?null:Resources.Load<GameObject>(index==3||index==4?"RealPistol":"RealRifle");
             if(detailed)
             {
                 Destroy(root.gameObject);root=Instantiate(detailed,model,false).transform;root.localPosition=new Vector3(0,.025f,index==3||index==4?.13f:.10f);
@@ -86,7 +87,7 @@ namespace Pinefall
             if(!owner)return;
             if(equipped!=owner.Weapon.Value||attachmentStamp!=owner.PackedMods(owner.Weapon.Value))Equip(owner.Weapon.Value);if(!model)return;
             bool scoped=owner.ScopedView;var camera=GetComponent<RangerCamera>();
-            model.gameObject.SetActive(owner.Fighting&&(!owner.CurrentVehicle||owner.CurrentVehicle.Type.Value==4||owner.VehicleSeat.Value>0)&&!scoped&&!(camera&&camera.ExternalView));
+            model.gameObject.SetActive(owner.ToolMode.Value==0&&owner.Fighting&&(!owner.CurrentVehicle||owner.CurrentVehicle.Type.Value==4||owner.VehicleSeat.Value>0)&&!scoped&&!(camera&&camera.ExternalView));
             float bob=owner.Velocity.Value>.2f?Mathf.Sin(Time.time*owner.Velocity.Value*2.2f)*.007f:0;
             var basePos=owner.Aiming?new Vector3(.02f,-.14f,.32f):new Vector3(.28f,-.27f,.46f);
             if(owner.Reloading.Value)basePos+=new Vector3(.12f,-.22f,-.09f);

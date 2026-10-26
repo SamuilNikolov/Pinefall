@@ -15,6 +15,7 @@ namespace Pinefall
  }
  public sealed partial class WildfrontMatch
  {
+ [Unity.Netcode.ClientRpc]public void MutationAlertClientRpc(){if(Ranger.Local)Ranger.Local.ShowNotice("Storm mutation: a larger animal has emerged. Hunt it for rich meat and restorative rewards.",6);}
  [Unity.Netcode.ClientRpc]public void NarrateClientRpc(string key,string caption=""){if(FieldNarrator.Current)FieldNarrator.Current.Announce(key,caption);}
  float nextBanter;void BanterTick(){if(!IsServer||!Active||Time.time<nextBanter)return;nextBanter=Time.time+Random.Range(75,115);if(!Closing)NarrateClientRpc("banter"+Random.Range(0,4));}
  }

@@ -1,7 +1,6 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pinefall 0.7.1 — Player handbook</title><style>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pinefall 0.8 — Player handbook</title><style>
 :root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#101a24;color:#eef1ea;font:17px/1.65 system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:52px 32px 100px}h1{font:600 clamp(32px,5vw,54px)/1.15 Georgia,serif;max-width:850px;margin:0 0 26px}h2{font-size:27px;margin:60px 0 18px;color:#d8c391;scroll-margin-top:25px}p,li{max-width:850px}a{color:#91c8e1}table{border-collapse:collapse;width:100%;font-size:15px;margin:26px 0;display:block;overflow:auto}th,td{text-align:left;vertical-align:top;padding:13px 16px;border-bottom:1px solid #35434e}th{background:#20313e;white-space:nowrap;color:#b5d8d9}tr:nth-child(even) td{background:#162431}strong{color:#c7e6d8}code,pre{white-space:pre-wrap}nav{display:flex;gap:12px;flex-wrap:wrap;margin:32px 0;padding:22px 0;border-block:1px solid #35434e}nav a{text-decoration:none;padding:5px 12px;background:#223441}footer{margin-top:65px;color:#91a4b2}@media(max-width:650px){main{padding:30px 18px}table{font-size:13px}}
-</style><main><nav><a href="#match-and-storm">Match</a><a href="#guns-and-attachments">Equipment</a><a href="#wildlife-and-biomes">Wildlife</a><a href="#travel-and-survival">Travel</a><a href="#places-to-explore">Locations</a><a href="#hosting-over-the-internet">Joining</a></nav>
-<h1 id="pinefall-wildfront-0-7-player-handbook">Pinefall Wildfront 0.7.1 — Player handbook</h1>
+</style><main><nav><a href="#match-and-storm">Match</a><a href="#guns-and-attachments">Equipment</a><a href="#building-and-harvesting">Building</a><a href="#wildlife-and-biomes">Wildlife</a><a href="#travel-and-survival">Travel</a><a href="#teams-and-controls">Teams</a><a href="#places-to-explore">Locations</a><a href="#hosting-over-the-internet">Joining</a></nav><h1 id="pinefall-wildfront-0-8-0-player-handbook">Pinefall Wildfront 0.8.0 — Player handbook</h1>
 <p>Explore 6.1 km of terrain, six core biomes plus the Amberwood autumn floodplain, 48 settlements, 304 searchable buildings, 71 road links, 35 repair lay-bys, 91 vehicles and 10 boats.</p>
 <h2 id="match-and-storm">Match and storm</h2>
 <p>Solo, Duos, or Squads support eight participants. Practice opponents fill empty slots. Everyone marks ready before the host starts the draft.</p>
@@ -10,49 +9,179 @@
 <p>Seven storm cycles alternate waiting and closing. The current ring is violet; the next safe zone is gold. Damage rises from 2 to 14 health each second outside the ring and bypasses armor. Closing periods enrage all wildlife. Supply flyovers deliver contestable high-tier crates. Each claimed crate also has a 35% motorcycle bonus chance, 25% survey-beacon chance, or 40% ordinary reward outcome. A motorcycle needs safe dry space nearby; an aquatic or blocked delivery substitutes a beacon.</p>
 <p>The last surviving team wins. Late arrivals spectate until the next draft. A complete day and night passes every five minutes while in a reserve.</p>
 <h2 id="guns-and-attachments">Guns and attachments</h2>
-<p>Ridgeline: bolt-action hunting rifle. Trail Scout: versatile carbine. Brushmaster: close-range shotgun. Service Nine: sidearm. Kestrel: fast SMG. Longwatch: scoped precision rifle. Sawmill: sustained automatic fire. All use finite magazines and four ammunition families.</p>
+<p>Ridgeline: bolt-action hunting rifle. Trail Scout: versatile carbine. Brushmaster: close-range shotgun. Service Nine: sidearm. Kestrel: fast SMG. Longwatch: scoped precision rifle. Sawmill: sustained automatic fire. Stormbreak RPG launches an explosive projectile. Eight weapon classes use finite magazines and five ammunition families including rockets. Pistols/marksman rifles are semi-auto; SMGs/assault/support guns automatic; snipers bolt-action; shotguns pump-action with pellets. Class-specific range falloff makes close-range guns lose damage sooner. Inventory shows each class, firing mode and fitted attachments.</p>
 <p>Three weapon slots accept an optic, a barrel attachment, and a handling attachment. Find mods in settlements, select a gun in Inventory, then choose a compatible attachment from your pack. Replaced mods return to your pack. Attachments travel with a dropped gun.</p>
 <p>Reflex / Ranger / Marksman optics give 1.5× / 3× / 6× aim. The 6× optic fits rifles and the support gun. Reinforced barrel: +12% damage. Precision barrel: 25% tighter spread. Muzzle brake: 30% less recoil. Speed loader: 20% faster reload. Steady grip: 20% tighter spread and 15% less recoil. Balanced stock: 25% less recoil.</p>
 <p>Rarity improves base weapon damage. Crouching, aiming, movement and sustained fire also affect accuracy. There is no hidden materials-based gun tuning.</p>
+<h2 id="building-and-harvesting">Building and harvesting</h2>
+<p>Spawn with 80 wood, 40 stone and 20 metal. Select the pickaxe with backquote (`), then swing with left mouse. Trees yield wood, rocks stone and metallic ore yields metal. Resource HP appears only while targeted. Destroyed resources disappear for everyone, including late joiners; gunfire can destroy them but grants no harvest payout. Material stacks can also be found, dropped and shared. Vehicle repair parts remain a separate supply.</p>
+<p>Z toggles build mode. F1 wall, F2 floor, F3 stairs, F4 pyramid; left mouse places/repeats; right mouse cycles material; R rotates. A preview shows valid placement and its cost. Each piece costs ten materials and has 300/450/600 wood/stone/metal maximum HP, building up from 80 over six seconds. Attach to ground, static structures or existing pieces. Removing support collapses unsupported sections. Limits: 80 pieces per player, 512 in the reserve.</p>
+<p>Aim at an allied piece and press H to edit. Paint cells on the visible world grid or right-side panel; H confirms, right mouse resets, R rotates stair/pyramid edits, Escape cancels. Walls offer windows, doors, low sections and diagonal cuts; floors/stairs use a 2×2 grid and pyramid corners change height. E opens/closes a door. G repairs an allied piece for two matching materials per 50 HP. Edits preserve HP and enemies cannot edit your team’s pieces. These are Pinefall’s original grid mechanics; some complex competitive-game edit variants and automatic stair reshaping are not implemented.</p>
 <h2 id="wildlife-and-biomes">Wildlife and biomes</h2>
 <p>Lush valley: deer, stags, hares, boar and elk among fields and forest. Dune basin: foxes, hares, pronghorn and horses. Ice desert: wolves, arctic foxes, snowshoe hares and elk. High Rockies: ibex, alpacas, stags, wolves and hares. Rainforest: forest boar, deer, wild oxen, hares and foxes. Reedwater marsh: boar, deer, hares, foxes and wild oxen near the shoreline.</p>
 <p>Wolves and boar are naturally hostile. Deer, rabbits and other non-hostile wildlife flee during ordinary conditions. While the storm closes, every animal gains a violet tint and attacks nearby players. Their chance of dropping restorative rich meat rises from 8% to 65%.</p>
+<p>Each closing cycle can mutate nearby enraged land animals into storm alphas: 1.7× size, three times maximum HP, faster movement and stronger attacks, with at most four living alphas. They retain their size and HP after the closing interval; normally peaceful species return to their usual behavior. Boss kills grant additional food and restorative meat.</p>
 <p>Animals drop food and occasionally rich meat, which restores 20 health and 15 hunger on collection. They do not drop guns, ammunition, fuel or manufactured attachments.</p>
 <p>Sharks patrol five lakes. They hunt swimmers, and cannot attack players seated in boats. Birds are ambient flocks. Nearby boar, canids, ibex and elk have spatial calls; smaller prey has quiet rustling. Wildlife is denser and small herds replenish near players outside their forward view. Subtle paw markers identify visible animals within 95 metres without showing them through cover. Several land species share adapted models.</p>
 <h2 id="travel-and-survival">Travel and survival</h2>
-<p>Estate wagons, dune buggies, service pickups, utility vans, trail motorcycles and motor launches have different top speeds and seating. WASD drives and steers; mouse-look is independent. Reverse steering follows the direction of travel. Brake before tight turns. Boost recharges but consumes more fuel.</p>
+<p>Estate wagons, dune buggies, service pickups, utility vans, trail motorcycles and motor launches have different top speeds and seating. WASD drives and steers; mouse-look is independent. Reverse steering follows the direction of travel. Brake before tight turns. Boost recharges but consumes more fuel. Boats follow the queried water surface through lake/river junctions instead of treating water-level seams as land grades. Sprinting reaches 9.4 m/s; press crouch while running to slide. Slide momentum, crouch and shortened hit regions replicate. Opening Settings keeps gravity and the shared world running.</p>
 <p>Engine condition reduces speed. Repair costs two materials; refuelling uses one can; a vehicle upgrade costs three materials. Some engines begin dead. Repair lay-bys along the roads have extra transport, fuel, parts and a sealed cache. Additional launches wait on every lake and along the river. Boats need sufficiently deep water; stepping out begins swimming. Boat occupants and car passengers can fire. Use bridges for road crossings.</p>
 <p>The HUD separates health, armor, a ten-segment hunger meter and stamina, with icons, values and a food key reminder. Early warnings begin below 40 hunger. Hunger drains faster when running and more slowly while riding. Below 20 you cannot sprint; below 10 you slow down; at zero you take starvation damage. Food restores 35 hunger and 5 health. Medkits restore 45 health.</p>
-<p>Light / Field / Heavy vests absorb 25% / 35% / 50% of bullet and animal damage while durability remains. Storm and hunger bypass them. Plates restore 30 durability. Inventory drops can be shared and float on water.</p>
+<p>Light / Field / Heavy vests absorb 25% / 35% / 50% of bullet and animal damage while durability remains. Storm and hunger bypass them. Plates restore 30 durability. Inventory drops can be shared and float on water. Equipping a vest gives a brief blue armor pulse; only real damage gives a hurt flash.</p>
 <h2 id="teams-and-controls">Teams and controls</h2>
 <p>The lobby supports ready checks and team selection. In Duos and Squads, an active teammate allows downing before elimination. Hold Interact within three metres for three seconds to revive. Taking damage interrupts the rescue; bleed-out lasts 30 seconds.</p>
 <p>The map shows teammates, names, nearby living animals within 160 metres, supply drops and both storm rings. Enemy positions disappear after deployment. Survey beacons from supply crates reveal position snapshots to the activating team for twelve seconds, pulsing every four seconds. Everyone receives an exposure warning. Q activates a beacon; carry up to two, drop or share them in Inventory. Live car, motorcycle and boat icons update once per second across the whole map, including vehicles beyond render range. Hover to see engine condition and fuel. Vehicles occupied by enemies disappear from your map. Scroll zooms and dragging pans. Site names grow clearer as you zoom; hovering a marker shows its details.</p>
-<p>Voice is disabled initially. Enable push-to-talk or open mic in Settings. All nearby players, including rivals, hear one another within 75 metres with distance attenuation. Headphones reduce feedback.</p>
+<p>Duos/Squads show compact teammate health, armor, distance and speaking indicators at the lower left, including while the map is open. After elimination, Solo players may spectate any survivor. Team players spectate only surviving teammates until their entire team is eliminated, then anyone. Left/right mouse or arrow keys cycle targets.</p>
+<p>Voice is disabled initially. Enable push-to-talk or open mic in Settings. All nearby players, including rivals, hear one another within 75 metres with distance attenuation. Speech uses sequenced frames, a short receive jitter buffer and continuous device-rate playback. Headphones reduce feedback.</p>
 <p>Rebind gameplay keys and mouse buttons in Settings → Key bindings. Escape remains available for the menu. A flashlight helps during the five-minute day/night cycle. Internet guests need the host address and a reachable UDP port; nearby sessions can be discovered on the local network.</p>
 <h2 id="weapon-reference">Weapon reference</h2>
 <p>Damage is the common-tier base per bullet or pellet before attachments and headshots. Rarity adds 6.5% per tier, up to 26%.</p>
-<table><thead><tr><th>Weapon</th><th>Ammo</th><th>Magazine</th><th>Base damage</th><th>Pellets</th><th>Reload</th><th>Range</th></tr></thead><tbody>
-<tr><td>Ridgeline</td><td>.308</td><td>5</td><td>80</td><td>1</td><td>2.5 s</td><td>650 m</td></tr>
-<tr><td>Trail Scout</td><td>.223</td><td>15</td><td>30</td><td>1</td><td>1.9 s</td><td>350 m</td></tr>
-<tr><td>Brushmaster</td><td>12-gauge</td><td>6</td><td>12</td><td>8</td><td>2.8 s</td><td>85 m</td></tr>
-<tr><td>Service Nine</td><td>9 mm</td><td>12</td><td>23</td><td>1</td><td>1.4 s</td><td>120 m</td></tr>
-<tr><td>Kestrel</td><td>9 mm</td><td>28</td><td>18</td><td>1</td><td>1.8 s</td><td>160 m</td></tr>
-<tr><td>Longwatch</td><td>.308</td><td>10</td><td>52</td><td>1</td><td>2.4 s</td><td>550 m</td></tr>
-<tr><td>Sawmill</td><td>.223</td><td>40</td><td>27</td><td>1</td><td>3.3 s</td><td>330 m</td></tr>
-</tbody></table>
+<table>
+<thead>
+<tr>
+  <th>Weapon</th>
+  <th>Ammo</th>
+  <th style="text-align:right">Magazine</th>
+  <th style="text-align:right">Base damage</th>
+  <th style="text-align:right">Pellets</th>
+  <th style="text-align:right">Reload</th>
+  <th style="text-align:right">Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Ridgeline</td>
+  <td>.308</td>
+  <td style="text-align:right">5</td>
+  <td style="text-align:right">80</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">2.5 s</td>
+  <td style="text-align:right">650 m</td>
+</tr>
+<tr>
+  <td>Trail Scout</td>
+  <td>.223</td>
+  <td style="text-align:right">15</td>
+  <td style="text-align:right">27</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">1.9 s</td>
+  <td style="text-align:right">350 m</td>
+</tr>
+<tr>
+  <td>Brushmaster</td>
+  <td>12-gauge</td>
+  <td style="text-align:right">6</td>
+  <td style="text-align:right">12</td>
+  <td style="text-align:right">8</td>
+  <td style="text-align:right">2.8 s</td>
+  <td style="text-align:right">85 m</td>
+</tr>
+<tr>
+  <td>Service Nine</td>
+  <td>9 mm</td>
+  <td style="text-align:right">12</td>
+  <td style="text-align:right">23</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">1.4 s</td>
+  <td style="text-align:right">110 m</td>
+</tr>
+<tr>
+  <td>Kestrel</td>
+  <td>9 mm</td>
+  <td style="text-align:right">28</td>
+  <td style="text-align:right">18</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">1.8 s</td>
+  <td style="text-align:right">125 m</td>
+</tr>
+<tr>
+  <td>Longwatch</td>
+  <td>.308</td>
+  <td style="text-align:right">10</td>
+  <td style="text-align:right">52</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">2.4 s</td>
+  <td style="text-align:right">550 m</td>
+</tr>
+<tr>
+  <td>Sawmill</td>
+  <td>.223</td>
+  <td style="text-align:right">40</td>
+  <td style="text-align:right">27</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">3.3 s</td>
+  <td style="text-align:right">330 m</td>
+</tr>
+<tr>
+  <td>Stormbreak RPG</td>
+  <td>Rockets</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">110 blast peak</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">3.8 s</td>
+  <td style="text-align:right">~295 m flight</td>
+</tr>
+</tbody>
+</table>
+<p>RPG rockets travel at 44 m/s with a 6 m blast radius and 6.7-second lifetime. Cover protects targets; damage falls off from the blast center. Self-damage is possible. Speed loader is the compatible launcher attachment. Confirmed hits show damage numbers and a short sound; enemy HP only appears briefly after your damage and when visible.</p>
 <h2 id="attachment-reference">Attachment reference</h2>
 <p>Choose a weapon header in Inventory, select an attachment in the pack, then choose <strong>Fit to selected weapon</strong>. Click the × on an installed slot to remove it. Replacing an attachment returns the old one to the pack, which holds five of each type. A dropped gun keeps its installed parts and loaded rounds.</p>
-<table><thead><tr><th>Attachment</th><th>Slot</th><th>Effect</th></tr></thead><tbody>
-<tr><td>Reflex optic</td><td>Optic</td><td>1.5× aim; 10% tighter aimed spread</td></tr>
-<tr><td>Ranger optic</td><td>Optic</td><td>3× aim; 15% tighter aimed spread</td></tr>
-<tr><td>Marksman optic</td><td>Optic</td><td>6× aim; 20% tighter aimed spread</td></tr>
-<tr><td>Reinforced barrel</td><td>Barrel</td><td>12% more bullet damage</td></tr>
-<tr><td>Precision barrel</td><td>Barrel</td><td>25% tighter spread</td></tr>
-<tr><td>Muzzle brake</td><td>Barrel</td><td>30% less recoil</td></tr>
-<tr><td>Speed loader</td><td>Handling</td><td>20% faster reload</td></tr>
-<tr><td>Steady grip</td><td>Handling</td><td>20% tighter spread; 15% less recoil</td></tr>
-<tr><td>Balanced stock</td><td>Handling</td><td>25% less recoil</td></tr>
-</tbody></table>
+<table>
+<thead>
+<tr>
+  <th>Attachment</th>
+  <th>Slot</th>
+  <th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Reflex optic</td>
+  <td>Optic</td>
+  <td>1.5× aim; 10% tighter aimed spread</td>
+</tr>
+<tr>
+  <td>Ranger optic</td>
+  <td>Optic</td>
+  <td>3× aim; 15% tighter aimed spread</td>
+</tr>
+<tr>
+  <td>Marksman optic</td>
+  <td>Optic</td>
+  <td>6× aim; 20% tighter aimed spread</td>
+</tr>
+<tr>
+  <td>Reinforced barrel</td>
+  <td>Barrel</td>
+  <td>12% more bullet damage</td>
+</tr>
+<tr>
+  <td>Precision barrel</td>
+  <td>Barrel</td>
+  <td>25% tighter spread</td>
+</tr>
+<tr>
+  <td>Muzzle brake</td>
+  <td>Barrel</td>
+  <td>30% less recoil</td>
+</tr>
+<tr>
+  <td>Speed loader</td>
+  <td>Handling</td>
+  <td>20% faster reload</td>
+</tr>
+<tr>
+  <td>Steady grip</td>
+  <td>Handling</td>
+  <td>20% tighter spread; 15% less recoil</td>
+</tr>
+<tr>
+  <td>Balanced stock</td>
+  <td>Handling</td>
+  <td>25% less recoil</td>
+</tr>
+</tbody>
+</table>
 <h2 id="sound-mix">Sound mix</h2>
 <p>Settings → Sound mix independently adjusts footsteps, weapons, wildlife and ambience. Footsteps use varied surface recordings with a quieter local mix. Firearms use recorded reports with positional distance falloff and muffling through cover. The engine and weather retain procedural layers.</p>
 <h2 id="places-to-explore">Places to explore</h2>
@@ -109,6 +238,10 @@
 <p>On the same home network, use the local address or nearby-session browser. From another household, use the public address and ensure UDP 7777 is forwarded to the hosting computer. Allow the actual game copy in Windows Firewall when prompted. Permissions for another folder/version may not cover this copy. This game does not yet include a hosted relay or automatic router configuration.</p>
 <h2 id="controls">Controls</h2>
 <p>WASD move/drive/steer; mouse look; Shift sprint/boost; Ctrl crouch; Space jump/brake; left mouse fire; right mouse aim; R reload; E interact/hold to revive; 1–3 weapon slots; 4 food; 5 medkit; B armor plate; G repair; F refuel; T vehicle upgrade; X flashlight; I inventory; M map; V camera; L lobby; Tab roster; N push-to-talk. Escape always opens the menu and cancels rebinding.</p>
+<p>Z build; backquote pickaxe; F1–F4 build shape; H edit/confirm; R blueprint rotation; right mouse material/reset; G structure repair; left/right mouse or arrow keys cycle spectators. Construction controls take precedence while building/editing.</p>
 <p>Settings → Key bindings changes gameplay keys and mouse buttons. The mouse wheel cycles carried guns. Open mic and speech sensitivity are available in audio settings. Disabling voice stops local capture; tests never enable the microphone.</p>
 <h2 id="current-production-limits">Current production limits</h2>
-<p>This is an expanded playable development build. The art mixes textured assets with stylized characters, procedural props, adapted animal models, simple vehicle handling and a procedural shark model. Weapon animations and bot navigation remain basic. Internet connectivity across households, microphone hardware, latency, long human matches and lower-end hardware need further testing. Aircraft are supply flyovers, not pilotable planes. Birds are ambient.</p><h2 id="performance-and-frame-rate">Performance and frame rate</h2><p>Settings → Performance &amp; frame rate shows the active graphics device. Auto adjusts distant detail and shadows based on frame time. Choose 60, 90, 120, 144 FPS or uncapped. Background rendering is limited to 30 FPS while hosting and voice continue. The FPS overlay can be toggled. No GPU vendor is hardcoded.</p></main></html>
+<p>This is an expanded playable development build. The art mixes textured assets with stylized characters, procedural props, adapted animal models, simple vehicle handling and a procedural shark model. Weapon animations and bot navigation remain basic. Public-internet reachability, physical microphone hardware, severe jitter, long human matches, heavily saturated construction and lower-end hardware need further testing. Lag compensation is bounded at 500 ms, uses current environmental cover and retains owner-driven movement. The building system covers the four main forms and grid edits, not every Fortnite pattern/interaction or its art/animations. Aircraft are supply flyovers, not pilotable planes. Birds are ambient.</p>
+<h2 id="performance-and-frame-rate">Performance and frame rate</h2>
+<p>Settings → Performance &amp; frame rate shows the active graphics device. Auto adjusts distant detail and shadows based on frame time. Choose 60, 90, 120, 144 FPS or uncapped; background rendering is limited to 30 FPS while hosting and voice continue. The FPS overlay can be toggled. No GPU vendor is hardcoded.</p>
+</main></html>

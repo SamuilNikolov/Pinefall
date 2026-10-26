@@ -4,7 +4,7 @@
 
 Pinefall uses a listen server over **UDP**, via Unity Transport and NGO 1.8.1. One player's process is both server and local client. The default game port is **7777** and can be changed in the host/join UI. The host listens on `0.0.0.0`; joining currently accepts IPv4 addresses. Eight slots include practice bots, with a bot removable when a human joins a full practice session.
 
-`ReserveSession` configures a 20 Hz network tick, explicit network prefab registration and connection approval using `PinefallReserve/7`. NGO scene management is disabled; all players load the same committed static reserve. Do not assume remote scene loading will repair mismatched terrain/assets.
+`ReserveSession` configures a 20 Hz network tick, explicit network prefab registration and connection approval using `PinefallReserve/8`. NGO scene management is disabled; all players load the same committed static reserve. Do not assume remote scene loading will repair mismatched terrain/assets.
 
 LAN discovery uses UDP **47776** with a versioned query and a host response. This is separate from the game port and is not an internet server browser. The public address lookup on the host card is informational. There is no relay, NAT traversal guarantee, encrypted voice service, persistent lobby backend or account authentication in this build.
 
@@ -16,6 +16,8 @@ LAN discovery uses UDP **47776** with a versioned query and a host response. Thi
 | Health, damage, inventory, food/armor, weapon actions | Server state mutations through gameplay methods/RPCs |
 | Vehicle motion/occupancy/fuel and wildlife | Host simulation with replicated state/poses |
 | Match phases, storm, draft, supplies, weather | Server time and replicated match/manager state |
+| Builds and harvested nodes | Host validates placement/cost/edits; networked pieces and sparse reliable resource changes with late-join snapshots |
+| Spectator target | Host validates team restrictions; selected target supplies camera and interest viewpoint |
 | Player appearance and choices | Client requests validated and applied to replicated state |
 | Voice | Opt-in local capture, unreliable custom messages through the host, alive/proximity filtering and positional playback |
 | Vehicle map pins | Server-generated targeted team feed once a second; independent of visual range |
@@ -42,9 +44,15 @@ Never turn off the entire firewall as a development step. A PowerShell TCP conne
 
 ## Compatibility and schema changes
 
-0.7 and 0.7.1 use protocol 7; their host/client compatibility was explicitly tested. 0.6 uses another protocol. During development prefer the same build on all peers.
+0.8 uses protocol 8 and rejects older clients. Protocol 7 compatibility between 0.7 and 0.7.1 is historical evidence only. Player network variables, combat RPCs, voice frame format and registered construction/rocket prefabs changed for 0.8. Use matching builds on all peers.
 
-Review a protocol bump whenever network variable ordering/types, RPC signatures, registered prefab hashes, item/weapon/vehicle IDs, packed layouts or serialized map structs change. If bumping, update both approval payload and comparison, discovery query/version, visible error text/docs, and affected tests. Reject incompatible clients clearly instead of allowing partially decoded state. Search for `PinefallReserve/7` and `PINEFALL_FIND_7`; do not replace unrelated numeric 7 values globally.
+Review a protocol bump whenever network variable ordering/types, RPC signatures, registered prefab hashes, item/weapon/vehicle IDs, packed layouts or serialized map structs change. If bumping, update both approval payload and comparison, discovery query/version, visible error text/docs, and affected tests. Reject incompatible clients clearly instead of allowing partially decoded state. Search for `PinefallReserve/8` and `PINEFALL_FIND_8`; do not replace unrelated numeric 7 values globally.
+
+## Shot validation and voice playback
+
+See [Fieldcraft](FIELDCRAFT.md) for the implementation and limits. Shots carry a sequence, server-time stamp, aim state and bounded render-smoothing allowance. The server rejects replays, invalid clocks/origins and cadence violations, then queries a 500 ms history without moving live colliders. Player regions follow stance/yaw; current world geometry still blocks shots. Environment destruction is not rewound.
+
+Voice uses sequenced 20 ms, 16 kHz mu-law frames. A burst token budget replaces rejection based on individual RPC arrival intervals. An 80 ms receive buffer reorders frames and conceals losses; audio is resampled into small device DSP blocks. Physical capture remains explicitly opt-in.
 
 ## Required multiplayer checks
 

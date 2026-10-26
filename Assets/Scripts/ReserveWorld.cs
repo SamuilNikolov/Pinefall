@@ -45,7 +45,7 @@ namespace Pinefall
         }
         void Awake()
         {
-            Instance=this;CacheTerrainHeights();
+            Instance=this;HarvestResources.Clear();CacheTerrainHeights();
             spawn=OnGround(0,-160, .2f);
             CreateFoliage();CreateUnderstory();gameObject.AddComponent<ReserveWater>();gameObject.AddComponent<AmbientBirds>();
             map=Resources.Load<Texture2D>("DetailedAtlas");if(!map)map=MakeMap();
@@ -55,7 +55,7 @@ namespace Pinefall
             broadleafMesh=MakeBroadleaf();crownMesh=MakePine(); trunkMesh=MakeTrunk(); rockMesh=MakeRock();palmMesh=MakePalm();cactusMesh=MakeCactus();
             autumn=new Material(pine);autumn.color=new Color(.72f,.39f,.12f);fineAssets.Add(autumn);var rng=new System.Random(Seed);
             var groups=new Dictionary<int,List<Matrix4x4>>();
-            var rocks=new Dictionary<int,List<Matrix4x4>>();
+            var rocks=new Dictionary<int,List<Matrix4x4>>();var treeNodes=new Dictionary<int,List<HarvestNode>>();var rockNodes=new Dictionary<int,List<HarvestNode>>();
             for(int i=0;i<88000;i++)
             {
                 float x=(float)(rng.NextDouble()-.5)*(Size-56), z=(float)(rng.NextDouble()-.5)*(Size-56);
@@ -70,33 +70,33 @@ namespace Pinefall
                 int key=Cell(x,z)+(ReserveBiomes.Autumn(x,z)?6:biome)*4096; if(!groups.ContainsKey(key))groups[key]=new List<Matrix4x4>();
                 groups[key].Add(Matrix4x4.TRS(pos,Quaternion.Euler(0,(float)rng.NextDouble()*360,0),new Vector3(s,s*(.9f+(float)rng.NextDouble()*.3f),s)));
                 var go=new GameObject("Pine trunk"); go.transform.SetParent(transform); go.transform.position=pos;
-                var col=go.AddComponent<CapsuleCollider>(); col.radius=.32f*s; col.height=10*s; col.center=new Vector3(0,5*s,0);
+                var col=go.AddComponent<CapsuleCollider>(); col.radius=.32f*s; col.height=10*s; col.center=new Vector3(0,5*s,0);if(!treeNodes.ContainsKey(key))treeNodes[key]=new List<HarvestNode>();treeNodes[key].Add(HarvestResources.Register(col,0,150));
             }
             for(int i=0;i<5600;i++)
             {
                 float x=(float)(rng.NextDouble()-.5)*(Size-80),z=(float)(rng.NextDouble()-.5)*(Size-80);
                 if(Clearing(x,z)) continue;
-                int key=Cell(x,z); if(!rocks.ContainsKey(key))rocks[key]=new List<Matrix4x4>();
+                int key=Cell(x,z)+(i%7==0?4096:0); if(!rocks.ContainsKey(key))rocks[key]=new List<Matrix4x4>();
                 float s=.6f+(float)rng.NextDouble()*2.8f;
                 var p=OnGround(x,z,-.2f); rocks[key].Add(Matrix4x4.TRS(p,Quaternion.Euler((float)rng.NextDouble()*20,(float)rng.NextDouble()*360,0),new Vector3(s,s*.65f,s*.8f)));
                 var g=new GameObject("Boulder");g.transform.SetParent(transform);g.transform.position=p;
-                var c=g.AddComponent<SphereCollider>();c.radius=s*.75f;c.center=Vector3.up*s*.3f;
+                var c=g.AddComponent<SphereCollider>();c.radius=s*.75f;c.center=Vector3.up*s*.3f;if(!rockNodes.ContainsKey(key))rockNodes[key]=new List<HarvestNode>();rockNodes[key].Add(HarvestResources.Register(c,i%7==0?2:1,i%7==0?210:135));
             }
             foreach(var pair in groups)
             {
                 int biome=pair.Key/4096;
-                if(biome==1)AddBatch(cactusMesh,cactus,pair.Value,650);
-                else {if(biome!=2)AddBatch(biome==6?broadleafMesh:biome==4?palmMesh:crownMesh,biome==6?autumn:biome==4?palm:pine,pair.Value,850);AddBatch(trunkMesh,bark,pair.Value,620);}
+                if(biome==1)AddBatch(cactusMesh,cactus,pair.Value,650,treeNodes[pair.Key]);
+                else {if(biome!=2)AddBatch(biome==6?broadleafMesh:biome==4?palmMesh:crownMesh,biome==6?autumn:biome==4?palm:pine,pair.Value,850,treeNodes[pair.Key]);AddBatch(trunkMesh,bark,pair.Value,620,treeNodes[pair.Key]);}
             }
-            foreach(var pair in rocks) AddBatch(rockMesh,stone,pair.Value,650);
+            foreach(var pair in rocks) AddBatch(rockMesh,pair.Key>=4096?BuildGeometry.Surface(2):stone,pair.Value,650,rockNodes[pair.Key]);
         }
         int Cell(float x,float z) { return Mathf.FloorToInt((x+Size/2)/128)+Mathf.FloorToInt((z+Size/2)/128)*64; }
-        void AddBatch(Mesh m,Material mat,List<Matrix4x4> list,float distance)
+        void AddBatch(Mesh m,Material mat,List<Matrix4x4> list,float distance,List<HarvestNode> nodes=null)
         {
             if(!mat.enableInstancing)mat.enableInstancing=true;
             for(int start=0;start<list.Count;start+=1023)
             {
-                int count=Mathf.Min(1023,list.Count-start);var a=list.GetRange(start,count).ToArray();
+                int count=Mathf.Min(1023,list.Count-start);var a=list.GetRange(start,count).ToArray();HarvestResources.Bind(nodes,start,count,a);
                 Vector3 c=Vector3.zero;foreach(var tr in a)c+=(Vector3)tr.GetColumn(3);c/=count;
                 var bounds=new Bounds(c,Vector3.zero);foreach(var matrix in a)bounds.Encapsulate((Vector3)matrix.GetColumn(3));bounds.Expand(36);batches.Add(new Batch{mesh=m,mat=mat,matrices=a,center=c,distance=distance,bounds=bounds});
             }

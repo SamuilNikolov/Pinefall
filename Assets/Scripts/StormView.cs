@@ -26,7 +26,7 @@ namespace Pinefall
             if(match&&match.Active)
             {
                 wall.position=match.Center.Value;wall.localScale=new Vector3(Mathf.Max(1,match.Radius.Value),1,Mathf.Max(1,match.Radius.Value));
-                if(Ranger.Local&&match.Outside(Ranger.Local.transform.position)){RenderSettings.fogDensity=.012f;RenderSettings.fogColor=new Color(.27f,.33f,.45f);}
+                if(Ranger.Local&&match.Outside(Ranger.Local.ObserverPosition)){RenderSettings.fogDensity=.012f;RenderSettings.fogColor=new Color(.27f,.33f,.45f);}
             }
         }
         void OnDestroy(){if(wall)Destroy(wall.gameObject);if(mesh)Destroy(mesh);}

@@ -9,7 +9,7 @@ namespace Pinefall
     // Only local-network discovery. Internet guests retain the explicit address/port join path.
     public sealed class LanDiscovery:MonoBehaviour
     {
-        const int DiscoveryPort=47776;const string Query="PINEFALL_FIND_7";
+        const int DiscoveryPort=47776;const string Query="PINEFALL_FIND_8";
         [Serializable]public class SessionInfo{public string name,address,phase;public int port,players,teamSize;[NonSerialized]public float seen;}
         public static LanDiscovery Current;public readonly List<SessionInfo> Sessions=new List<SessionInfo>();
         public string Status="Search your local network for reserves.";UdpClient host,browser;float nextSearch;bool searching;

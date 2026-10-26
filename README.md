@@ -4,7 +4,7 @@
 
 ![Pinefall reserve map](docs/images/reserve-map.png)
 
-**Current source baseline:** 0.7.1 · **Unity:** 2022.3.13f1 · **Player target:** Windows x64 · **Network protocol:** 7 · **Players:** up to eight, including practice bots.
+**Current source baseline:** 0.8.0 · **Unity:** 2022.3.13f1 · **Player target:** Windows x64 · **Network protocol:** 8 · **Players:** up to eight, including practice bots.
 
 This repository contains the editable game, imported assets, generated scene, pinned packages, and collaboration tooling. Open the repository root in Unity Hub. The game is playable and still in development; character art, animation, vehicle handling, balance, and online infrastructure have room to improve.
 
@@ -30,11 +30,15 @@ The first clone is substantial because the imported source art, extracted animat
 | --- | --- |
 | Match | Solo, duo and squad teams; practice bots; lobby/readiness; per-player spawn bidding and free-point landing; shrinking storm stages; downing, revives and victory |
 | World | 6,144 m square reserve; six core biomes plus an autumn floodplain variant; 48 named settlements, 304 searchable buildings, 71 road links, five lakes |
-| Equipment | Seven firearms, rarity-based loot, three attachment categories with nine mods, slot inventory, shareable drops, armor, hunger, food and healing |
+| Equipment | Eight weapon classes including a projectile RPG, rarity-based loot, three attachment categories with nine mods, slot inventory, shareable drops, armor, hunger, food and healing |
 | Travel | 91 starting vehicles including motorcycles and boats; condition, fuel, repairs and boost; live vehicle map icons |
-| Wildlife | Biome-based procedural populations; normally peaceful prey and hostile predators; storm aggression; hunting rewards; swimming sharks |
+| Wildlife | Biome-based populations; peaceful prey and predators; storm aggression and larger alpha mutations; organic hunting rewards; swimming sharks |
+| Construction | Pickaxe harvesting, wood/stone/metal, replicated walls/floors/stairs/pyramids, cell editing, doors, repairs and support collapse |
+| Combat | Stance-aware anatomical hit regions, bounded server rewind, confirmed damage feedback, class-specific firing/range, team-aware spectating |
 | Presentation | First/third person, character options, weather and five-minute day cycle, map zoom/labels, recorded sound banks, event narration, opt-in proximity voice |
 | Performance | Cached terrain sampling, sleeping parked vehicles, bounded distant simulation, visual/network work budgets, cached HUD icons and hardware-independent automatic detail |
+
+![Fieldcraft squad HUD](docs/images/fieldcraft-hud.png)
 
 Read the [player handbook](GAME-GUIDE.md) for rules and controls. These are current development features, not a promise that every asset or mechanic is production finished.
 
@@ -42,13 +46,14 @@ Read the [player handbook](GAME-GUIDE.md) for rules and controls. These are curr
 
 The host's session card shows its address and **UDP 7777** by default. LAN guests can use discovery or the host's local IPv4 address. Internet guests need the public IPv4 address, a reachable forwarded UDP port and an executable-specific firewall allowance. There is **no relay or account service**. A displayed public address does not prove reachability; carrier-grade NAT and double NAT can require another approach. See [networking](docs/NETWORKING.md).
 
-Use matching builds while developing. The 0.7.1 host was tested with 0.7 clients; 0.6 uses an incompatible protocol. Local automation uses separate ports and never needs your router settings.
+**All friends must use 0.8 builds.** Protocol 8 changes player state, combat requests, voice packets and network prefabs; 0.7/0.7.1 clients are incompatible. Local automation uses separate ports and never needs your router settings.
 
 ## Start contributing
 
 | You want to… | Read this |
 | --- | --- |
 | Import, run and build | [Setup](docs/SETUP.md) |
+| Understand the 0.8 systems and controls | [Fieldcraft update](docs/FIELDCRAFT.md) |
 | Understand the code and scene | [Architecture](docs/ARCHITECTURE.md) and [system/file map](docs/SYSTEMS.md) |
 | Continue work as an AI agent | [AGENTS.md](AGENTS.md), then [current handoff](docs/HANDOFF.md) |
 | Add a gun, animal, settlement, biome or vehicle | [Content extension recipes](docs/CONTENT.md) |
@@ -75,7 +80,9 @@ Pinefall/
 └── .github/                 # Repository-check CI and contribution templates
 ```
 
-## Validation baseline
+## Validation history
+
+The 0.8 build passed **219 gameplay assertions** across fourteen reports, including four-player Fieldcraft/late-join checks. Native UI was inspected at 1600×900 and 1280×720. A rendered host with two clients averaged **102.5–118.5 FPS** in HUD-on scenes at 1600×900 on one i5-13450HX / RTX 4060 Laptop. See [0.8 verification](docs/VERIFICATION-0.8.md) for frame-time tails, build hashes and limits. Physical microphones and public-internet conditions remain human playtests. Historical results below describe the older build.
 
 The 0.7.1 Windows player passed **146 gameplay assertions** and **32 cross-version compatibility assertions** on October 25, 2026. Graphics-enabled host tests with two clients averaged **89–99 FPS** across the sampled scenes at 1600×900 on one i5-13450HX / RTX 4060 Laptop system. See [the original performance report](PERFORMANCE.md), [verification](VERIFICATION.md), and [stored evidence](tests/baselines/0.7.1/README.md) for procedure and limits. Other hardware and public-internet play remain unverified.
 
@@ -85,6 +92,6 @@ This collaboration-ready checkout was also imported and built from scratch, then
 
 ## Project status and licensing
 
-The source handoff preserves the tested 0.7.1 game; repository setup only changes the default build location/version metadata in editor code. It does not replace the runtime architecture in one large refactor. Existing source files include compact formatting and several partial classes; [the roadmap](docs/ROADMAP.md) describes a gradual path to clearer modules.
+The 0.8 update builds on the tested 0.7.1 reserve, retaining its static terrain, art, atlas, content IDs and performance budgets. See [Fieldcraft](docs/FIELDCRAFT.md) for the new construction, combat, voice and UI boundaries. Existing source files include compact formatting and several partial classes; [the roadmap](docs/ROADMAP.md) describes a gradual path to clearer modules.
 
 The repository owner has not selected a project-wide open-source license. Do not assume MIT or apply a blanket license to third-party assets. See [LICENSE.md](LICENSE.md); credits and source selections are retained in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and [AUDIO-SOURCES.json](AUDIO-SOURCES.json).

@@ -16,7 +16,7 @@ namespace Pinefall
             mapLabels.Add(label);if(Mathf.Abs(label.center.y-point.y)>40)Line(point,new Vector2(label.center.x,label.center.y),new Color(1,1,1,.42f),1);
             Color ink=new Color(.02f,.03f,.04f,.95f);Text(label.x-1,label.y,label.width,label.height,text,style,font,ink);Text(label.x+1,label.y,label.width,label.height,text,style,font,ink);Text(label.x,label.y-1,label.width,label.height,text,style,font,ink);Text(label.x,label.y+1,label.width,label.height,text,style,font,ink);Text(label.x,label.y,label.width,label.height,text,style,font,water?new Color(.74f,.89f,.96f):Color.white);return label;
         }
-        void Map()
+        void PreviousAtlasMap()
         {
             Rect(0,0,1600,900,new Color(.035f,.075f,.09f));float span=ReserveWorld.Size/mapZoom;var bounds=new Rect(40,75,790,790);var ev=Event.current;
             if(bounds.Contains(ev.mousePosition)&&ev.type==EventType.ScrollWheel){float old=span;Vector2 uv=new Vector2((ev.mousePosition.x-bounds.x)/bounds.width-.5f,.5f-(ev.mousePosition.y-bounds.y)/bounds.height);mapZoom=Mathf.Clamp(mapZoom*Mathf.Pow(1.18f,-ev.delta.y),1,16);span=ReserveWorld.Size/mapZoom;mapCenter+=uv*(old-span);ev.Use();}

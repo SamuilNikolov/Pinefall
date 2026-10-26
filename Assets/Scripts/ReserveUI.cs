@@ -44,6 +44,7 @@ namespace Pinefall
             if(bindingCapture!="")return;
             if(!S||!S.Playing)return;
             if(WildfrontMatch.Current&&WildfrontMatch.Current.Battle.Value&&WildfrontMatch.Current.Phase.Value==2&&panel==""){panel="result";Unlock();}
+            if(panel=="build-edit"&&P&&P.EditTarget){if(GameBindings.Down("Aim"))P.PreviewBuildEdit(BuildPiece.FullMask(P.EditTarget.Kind.Value));if(GameBindings.Down("Edit build")){P.ConfirmBuildEdit();return;}if(GameBindings.Down("Reload")){P.BuildTurn=(P.BuildTurn+1)%4;P.PreviewBuildEdit(P.EditMask);}}
             int phase=WildfrontMatch.Current?WildfrontMatch.Current.Phase.Value:0;
             if(phase==0&&panel=="result"){panel="lobby";Unlock();}
             if(phase==3||phase==4){panel="draft";Unlock();return;}if(panel=="draft"){panel="";Lock();}
@@ -62,13 +63,14 @@ namespace Pinefall
             if(S.Playing&&P&&Event.current.type==EventType.Repaint){HUD();if(panel==""&&GameBindings.Held("Roster"))Roster(1120,120);}
             if(panel=="main")Main();
             else if(panel=="host"||panel=="join")Connect();
-            else if(panel=="loadout")Loadout();
+            else if(panel=="loadout")Loadout();else if(panel=="build-edit")BuildEditPanel();
             else if(panel=="pause")Pause();
-            else if(panel=="settings")Settings();else if(panel=="audio")AudioPage();else if(panel=="performance")PerformancePage();
+            else if(panel=="settings")Settings();else if(panel=="audio")AudioPage();else if(panel=="voice")VoiceSettings();else if(panel=="performance")PerformancePage();
             else if(panel=="map")Map();
             else if(panel=="weather")Weather();
             else if(panel=="result")Result();else if(panel=="lobby")Lobby();else if(panel=="browser")Browser();
             else if(panel=="bindings")BindingsPage();else if(panel=="guide")Guide();else if(panel=="draft")Draft();else if(panel=="session")SessionCard();else if(panel=="character")Character();
+            if(S.Playing&&P&&panel=="map"&&Event.current.type==EventType.Repaint)TeamCards(28,520);
             if(S.Connecting)
             {
                 Rect(0,0,1600,900,new Color(.04f,.1f,.13f,.94f));Text(110,350,1000,90,"Opening the reserve…",title,56);Text(115,450,800,45,"Establishing your connection. This can take a few seconds.",body);
@@ -90,7 +92,7 @@ namespace Pinefall
             Text(1050,706,450,46,"Six habitats. One closing storm.",type,25);
             Text(1050,756,450,72,"Solo · Duos · Squads  /  Predators & prey\nWeather, wildlife, and rival hunters",small);
             if(S.Message!="")Text(104,715,760,66,S.Message,small,17,new Color(1,.78f,.51f));
-            Text(1310,849,220,24,"Wildfront  •  v0.6",small,14);
+            Text(1310,849,220,24,"Wildfront  •  v0.8.0",small,14);
         }
         void Back(){panel=returnPanel;if(panel=="")Lock();}
         void Heading(string name,string desc)
@@ -158,7 +160,7 @@ namespace Pinefall
             if(kind==1){Rect(x+136,y+20,17,33,col);Rect(x+150,y-17,22,15,col);}
             if(kind==2){Rect(x+180,y+5,120,5,col);Rect(x+175,y+8,60,16,col);}
         }
-        void Pause()
+        void LegacyPause()
         {
             GUI.DrawTexture(new Rect(0,0,1250,900),fade);Rect(0,0,1600,900,new Color(0,0,0,.15f));
             Text(100,135,720,100,"A moment in the field",title,58);
@@ -186,14 +188,14 @@ namespace Pinefall
                 Text(x,y+65+i*50,300,35,"T"+(player.Team.Value+1)+"  "+n,body,18);Text(x+310,y+65+i*50,150,35,player.Kills.Value+" K / "+player.Score.Value+" H",small,15);i++;
             }
         }
-        void Settings()
+        void LegacySettings()
         {
             Heading("Make yourself comfortable","Settings apply immediately and stay on this computer.");
             if(Button(104,235,285,44,"Sound mix"))Open("audio");if(Button(404,235,290,44,"Performance & frame rate"))Open("performance");Text(104,300,600,40,"Mouse sensitivity",type);Sensitivity=Slider(104,358,590,Sensitivity,.5f,5);Text(740,346,170,45,Sensitivity.ToString("0.0"),type);
             float volume=AudioListener.volume;Text(104,445,600,40,"Sound volume",type);volume=Slider(104,503,590,volume,0,1);AudioListener.volume=volume;Text(740,491,170,45,Mathf.RoundToInt(volume*100)+"%",type);
             Text(104,595,600,40,"Landscape quality",type);
             for(int i=0;i<3;i++)if(Button(104+i*220,656,205,56,new[]{"Light","Balanced","High"}[i],!RuntimePerformance.Automatic&&PlayerPrefs.GetInt("quality",1)==i)){RuntimePerformance.Automatic=false;ApplyQuality(i);RuntimePerformance.ApplyDetail();}
-            PlayerPrefs.SetFloat("sensitivity",Sensitivity);PlayerPrefs.SetFloat("volume",volume);
+            if(ReserveSession.Arg("--smoke")==""&&ReserveSession.Arg("--capture")==""){PlayerPrefs.SetFloat("sensitivity",Sensitivity);PlayerPrefs.SetFloat("volume",volume);}
             var voice=ProximityVoice.Current;if(voice){if(Button(900,300,550,56,voice.Enabled?"Microphone enabled":"Enable microphone",voice.Enabled))voice.Enabled=!voice.Enabled;Text(904,373,550,85,"Choose push-to-talk or open mic. Only nearby players hear you. Disable the microphone to stop capture. Headphones reduce speaker feedback.",small,18);Text(904,485,550,35,"Nearby voice volume",small);voice.ReceiveVolume=Slider(904,540,480,voice.ReceiveVolume,0,1);if(Button(904,588,235,46,"Push to talk · "+GameBindings.Label("Talk"),!voice.OpenMic))voice.OpenMic=false;if(Button(1154,588,235,46,"Open mic",voice.OpenMic))voice.OpenMic=true;Text(904,652,490,31,"Open-mic noise gate",small,17);voice.GateThreshold=Slider(904,692,480,voice.GateThreshold,.005f,.06f);}
             var narrator=FieldNarrator.Current;if(narrator){Text(104,745,550,30,"Narrator volume",small,18);narrator.Volume=Slider(104,785,590,narrator.Volume,0,1);if(Button(724,765,147,40,narrator.Captions?"Captions on":"Captions off"))narrator.Captions=!narrator.Captions;}
             if(FieldNarrator.Current&&Button(904,822,545,38,FieldNarrator.Current.Playful?"Occasional commentary: on":"Occasional commentary: off"))FieldNarrator.Current.Playful=!FieldNarrator.Current.Playful;
@@ -258,7 +260,7 @@ namespace Pinefall
             var p=MapPoint(center,0,0,520);float r=radius/ReserveWorld.Size*520;
             for(int i=0;i<90;i++){float a=i/90f*Mathf.PI*2,b=(i+1)/90f*Mathf.PI*2;Line(p+new Vector2(Mathf.Cos(a),Mathf.Sin(a))*r,p+new Vector2(Mathf.Cos(b),Mathf.Sin(b))*r,color,2);}
         }
-        void Result()
+        void PreviousResult()
         {
             var match=WildfrontMatch.Current;if(!match)return;
             string winner=match.Winner.Value>=0?"Team "+(match.Winner.Value+1)+" outlasted the wild":"The wild claimed everyone";

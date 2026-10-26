@@ -7,7 +7,7 @@ namespace Pinefall
     {
         void Awake(){NetworkSeed.Initialize(this);WorldInterest.Install(this);}
         public static readonly System.Collections.Generic.List<RoadVehicle> All=new System.Collections.Generic.List<RoadVehicle>();
-        public const ulong Empty=ulong.MaxValue;static readonly float[] topSpeeds={20f,32f,26f,18f,23f,36f};
+        public const ulong Empty=ulong.MaxValue;static readonly float[] topSpeeds={29f,43f,35f,25f,29f,48f};
         public static readonly string[] Names={"Estate wagon","Dune buggy","Service pickup","Utility van","Motor launch","Trail motorcycle"};
         public NetworkVariable<int> Type=new NetworkVariable<int>(0),Condition=new NetworkVariable<int>(65),Tune=new NetworkVariable<int>(0);
         public NetworkVariable<float> Fuel=new NetworkVariable<float>(35),Charge=new NetworkVariable<float>(60),Speed=new NetworkVariable<float>(0);
@@ -53,8 +53,8 @@ namespace Pinefall
             bool turbo=boost&&Charge.Value>1&&Fuel.Value>0&&Condition.Value>20&&throttle>0;
             if(turbo){top*=1.4f;Charge.Value=Mathf.Max(0,Charge.Value-Time.fixedDeltaTime*18);}else Charge.Value=Mathf.Min(100,Charge.Value+Time.fixedDeltaTime*3.5f);
             float target=Condition.Value<=0||Fuel.Value<=0?0:throttle>=0?top*throttle:top*.33f*throttle;
-            speed=Mathf.MoveTowards(speed,target,Time.fixedDeltaTime*(brake?34:throttle!=0?11f:3.2f));
-            wheelAngle=Mathf.MoveTowards(wheelAngle,steer*Mathf.Lerp(34,19,Mathf.Clamp01(Mathf.Abs(speed)/top)),Time.fixedDeltaTime*150);Steering.Value=wheelAngle;
+            speed=Mathf.MoveTowards(speed,target,Time.fixedDeltaTime*(brake?34:throttle!=0?16f:3.8f));
+            wheelAngle=Mathf.MoveTowards(wheelAngle,steer*Mathf.Lerp(34,19,Mathf.Clamp01(Mathf.Abs(speed)/top)),Time.fixedDeltaTime*190);Steering.Value=wheelAngle;
             float yawRate=Type.Value==4?steer*90*Mathf.Clamp01(Mathf.Abs(speed)/3)*Mathf.Sign(speed):Mathf.Clamp(speed/2.45f*Mathf.Tan(wheelAngle*Mathf.Deg2Rad)*Mathf.Rad2Deg,-105,105);
             heading=Mathf.Repeat(heading+yawRate*Time.fixedDeltaTime,360);Quaternion rotation=Quaternion.Euler(0,heading,0);Vector3 delta=rotation*Vector3.forward*speed*Time.fixedDeltaTime;
             if(Mathf.Abs(speed)>.2f)
@@ -63,9 +63,9 @@ namespace Pinefall
                 if(blocked){if(Mathf.Abs(speed)>5&&Time.time>impactAt){Condition.Value=Mathf.Max(0,Condition.Value-Mathf.RoundToInt(Mathf.Abs(speed)));impactAt=Time.time+1;}speed=0;delta=Vector3.zero;}
             }
             Vector3 next=transform.position+delta;next.x=Mathf.Clamp(next.x,-ReserveWorld.Edge,ReserveWorld.Edge);next.z=Mathf.Clamp(next.z,-ReserveWorld.Edge,ReserveWorld.Edge);
-            float y=ReserveWorld.Height(next.x,next.z)+.65f;if(Type.Value==4){if(ReserveWater.Depth(next.x,next.z)<.8f){next=transform.position;speed=0;}y=ReserveWater.Level(next.x,next.z)+.23f;}else foreach(var hit in Physics.RaycastAll(new Vector3(next.x,transform.position.y+5,next.z),Vector3.down,14,~((1<<8)|(1<<9)|(1<<10)),QueryTriggerInteraction.Ignore))if(hit.collider.GetComponentInParent<BridgeSurface>())y=Mathf.Max(y,hit.point.y+.65f);
-            if(Mathf.Abs(y-transform.position.y)>Mathf.Max(.12f,delta.magnitude*.65f)){speed=0;next=transform.position;y=transform.position.y;}
-            next.y=y;Vector3 normal=new Vector3(ReserveWorld.Height(next.x-.8f,next.z)-ReserveWorld.Height(next.x+.8f,next.z),1.6f,ReserveWorld.Height(next.x,next.z-.8f)-ReserveWorld.Height(next.x,next.z+.8f)).normalized;normal=Vector3.RotateTowards(Vector3.up,normal,28*Mathf.Deg2Rad,0);if(Type.Value==4)normal=Vector3.up;normal=Vector3.Slerp(transform.up,normal,.18f);rotation=Quaternion.FromToRotation(Vector3.up,normal)*rotation;transform.SetPositionAndRotation(next,rotation);Speed.Value=speed;
+            float y=ReserveWorld.Height(next.x,next.z)+.65f;if(Type.Value==4){if(!ReserveWater.HasSurface(next.x,next.z)||ReserveWater.Depth(next.x,next.z)<.35f){next=transform.position;speed=0;}y=ReserveWater.Level(next.x,next.z)+.23f;}else foreach(var hit in Physics.RaycastAll(new Vector3(next.x,transform.position.y+5,next.z),Vector3.down,14,~((1<<8)|(1<<9)|(1<<10)),QueryTriggerInteraction.Ignore))if(hit.collider.GetComponentInParent<BridgeSurface>())y=Mathf.Max(y,hit.point.y+.65f);
+            if(Type.Value!=4&&Mathf.Abs(y-transform.position.y)>Mathf.Max(.12f,delta.magnitude*.65f)){speed=0;next=transform.position;y=transform.position.y;}
+            next.y=Type.Value==4?Mathf.MoveTowards(transform.position.y,y,Time.fixedDeltaTime*5):y;Vector3 normal=new Vector3(ReserveWorld.Height(next.x-.8f,next.z)-ReserveWorld.Height(next.x+.8f,next.z),1.6f,ReserveWorld.Height(next.x,next.z-.8f)-ReserveWorld.Height(next.x,next.z+.8f)).normalized;normal=Vector3.RotateTowards(Vector3.up,normal,28*Mathf.Deg2Rad,0);if(Type.Value==4)normal=Vector3.up;normal=Vector3.Slerp(transform.up,normal,.18f);rotation=Quaternion.FromToRotation(Vector3.up,normal)*rotation;transform.SetPositionAndRotation(next,rotation);Speed.Value=speed;
             if(Mathf.Abs(speed)>1)Fuel.Value=Mathf.Max(0,Fuel.Value-Time.fixedDeltaTime*(.025f+Mathf.Abs(speed)*.012f)*(turbo?1.5f:1));
         }
         public void Damage(int amount){if(IsServer)Condition.Value=Mathf.Max(0,Condition.Value-Mathf.Max(1,amount/9));}

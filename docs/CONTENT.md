@@ -27,7 +27,7 @@ The baseline has 48 places, 14 major villages and 34 smaller hamlets. Adding a m
 
 ## A firearm or attachment
 
-Seven gun IDs currently participate in arrays, three held slots, packed upgrade fields and four-bit-per-weapon mod state. The ninth/eighth/etc entry must not be assumed safe without auditing every capacity and shift. Existing mod IDs 1–9 are shared by bags, loot, UI and serialization.
+Eight gun IDs currently participate in arrays, three held slots, packed upgrade fields and four-bit-per-weapon mod state. Eight consumes all 32 bits of each installed-mod category; a ninth weapon requires a packing/schema migration. Loaded magazines use six bits each in an unsigned 64-bit field. There are five ammunition families including rockets. Define the explicit `WeaponClass` and `WeaponFireMode`, falloff and projectile behavior; do not rely on a display name to determine firing rules. Existing mod IDs 1–9 are shared by bags, loot, UI and serialization.
 
 Start with `WeaponData`, then inspect `Ranger`, `RangerEquipment`, `RangerGunHandling`, `RangerSlots`, `WeaponMods`, `WeaponView`, `WorldLoot`, `ExpeditionLoot`, draft kits, icons and bot choices. Define ammo type, damage, fire/reload timing, spread/recoil, range, rarity weights and compatible attachments. Preserve simultaneous aim/fire and server fire cadence validation.
 

@@ -27,7 +27,7 @@ namespace Pinefall
         }
         void Update()
         {
-            if(!IsSpawned)return;if(rig&&rig.gameObject.activeInHierarchy)rig.Pose(MoveSpeed.Value,Dead,State.Value==4&&MoveSpeed.Value<.15f);FrenzyVisual();if(!IsServer||Dead)return;Enraged.Value=WildfrontMatch.Current&&WildfrontMatch.Current.Closing;if(Aquatic){AquaticTick();return;}if(Time.time>nextRelevance){nextRelevance=Time.time+.65f+(NetworkObjectId%7)*.02f;nearPlayer=false;foreach(var human in Ranger.Players)if(human&&human.Alive&&(human.transform.position-transform.position).sqrMagnitude<420*420){nearPlayer=true;break;}}if(!nearPlayer&&Time.time<nextSimulation)return;simulationStep=nearPlayer?Time.deltaTime:Mathf.Min(.5f,Time.time-simulatedAt);simulatedAt=Time.time;nextSimulation=Time.time+.25f;
+            if(!IsSpawned)return;MutationTick();if(rig&&rig.gameObject.activeInHierarchy)rig.Pose(MoveSpeed.Value,Dead,State.Value==4&&MoveSpeed.Value<.15f);FrenzyVisual();if(!IsServer||Dead)return;Enraged.Value=WildfrontMatch.Current&&WildfrontMatch.Current.Closing;if(Aquatic){AquaticTick();return;}if(Time.time>nextRelevance){nextRelevance=Time.time+.65f+(NetworkObjectId%7)*.02f;nearPlayer=false;foreach(var human in Ranger.Players)if(human&&human.Alive&&(human.transform.position-transform.position).sqrMagnitude<420*420){nearPlayer=true;break;}}if(!nearPlayer&&Time.time<nextSimulation)return;simulationStep=nearPlayer?Time.deltaTime:Mathf.Min(.5f,Time.time-simulatedAt);simulatedAt=Time.time;nextSimulation=Time.time+.25f;
             if(Time.time>=decision)
             {
                 decision=Time.time+.45f;Ranger threat=null;float distance=9999;
@@ -40,7 +40,7 @@ namespace Pinefall
                     if(kind==3&&State.Value!=4){if(State.Value!=5){warningUntil=Time.time+1.7f;State.Value=5;}if(distance<8||Time.time>warningUntil){State.Value=4;charging=true;aggroUntil=Time.time+4;}}
                     else if(kind!=3||Enraged.Value){State.Value=4;aggroUntil=Time.time+8;}
                     if(State.Value==4&&distance<(kind==3?2.35f:1.85f)&&Time.time>nextAttack)
-                    {nextAttack=Time.time+(kind==3?1.7f:1.35f);if(Sees(threat))threat.TakeDamageServer(kind==3?22:16,-2);if(kind==3){State.Value=5;warningUntil=Time.time+1.5f;charging=false;}}
+                    {nextAttack=Time.time+(kind==3?1.7f:1.35f);if(Sees(threat))threat.TakeDamageServer(Mathf.RoundToInt((kind==3?22:16)*(Boss.Value?1.7f:1)),-2);if(kind==3){State.Value=5;warningUntil=Time.time+1.5f;charging=false;}}
                 }
                 else if(threat)Flee(threat.transform.position);
                 else if(Time.time>fleeUntil&&Time.time>aggroUntil)
@@ -51,7 +51,7 @@ namespace Pinefall
                 }
             }
             float speed=State.Value==4?(kind==3?charging?7.8f:3.8f:6.7f):State.Value==2?(Small?9.2f:8.2f):State.Value==6?1.8f:State.Value==1?Small?.9f:1.15f:0;
-            var dir=target-transform.position;dir.y=0;
+            speed*=Boss.Value?1.15f:1;var dir=target-transform.position;dir.y=0;
             if(State.Value==5&&dir.sqrMagnitude>1)transform.rotation=Quaternion.Slerp(transform.rotation,Quaternion.LookRotation(dir),simulationStep*2);
             if(speed>0&&dir.sqrMagnitude>(State.Value==4?2.0f:1))
             {

@@ -11,8 +11,8 @@ namespace Pinefall
         float hungerTick,starveAt;int lastHungerBand=3;
         public bool CanSprint{get{return Hunger.Value>=20;}}
         public string HungerStatus{get{return Hunger.Value<=0?"Starving · losing health":Hunger.Value<20?"Hungry · sprint locked":Hunger.Value<40?"Find food soon":Hunger.Value>=75?"Well fed":"Fed";}}
-        public int WeaponCount{get{int count=0;for(int i=0;i<7;i++)if(Owns(i))count++;return count;}}
-        public int MagazineFor(int i){return i==Weapon.Value?Ammo.Value:IsServer?magazines[Mathf.Clamp(i,0,6)]:(int)((MagazineState.Value>>(Mathf.Clamp(i,0,6)*6))&63);}
+        public int WeaponCount{get{int count=0;for(int i=0;i<WeaponData.All.Length;i++)if(Owns(i))count++;return count;}}
+        public int MagazineFor(int i){return i==Weapon.Value?Ammo.Value:IsServer?magazines[Mathf.Clamp(i,0,WeaponData.All.Length-1)]:(int)((MagazineState.Value>>(Mathf.Clamp(i,0,WeaponData.All.Length-1)*6))&63);}
         void SurvivalTick()
         {
             if(!IsServer||!Alive||!CanAct||Time.time<hungerTick||WildfrontMatch.Current&&WildfrontMatch.Current.Battle.Value&&!WildfrontMatch.Current.Active)return;hungerTick=Time.time+1;
@@ -37,15 +37,16 @@ namespace Pinefall
         {if(!Alive||!CanAct||CurrentVehicle)return;DropItem(kind,item,quantity);}
         void DropItem(int kind,int item,int quantity)
         {
-            int amount=0,rarity=0,tuning=0;quantity=Mathf.Clamp(quantity,1,400);
+            int amount=0,rarity=0,tuning=0;quantity=Mathf.Clamp(quantity,1,kind==13?999:400);
             if(kind==0)
             {
                 if(!Owns(item))return;tuning=PackedMods(item);ImportMods(item,0);rarity=Rarity(item);amount=MagazineFor(item);Owned.Value&=~(1<<item);ClearSlot(item);magazines[item]=0;
                 if(Weapon.Value==item){Weapon.Value=CycleWeapon(1);if(!Owns(Weapon.Value))Weapon.Value=-1;Ammo.Value=Weapon.Value>=0?magazines[Weapon.Value]:0;Reloading.Value=false;}
             }
+            else if(kind==13){if(item<0||item>2)return;amount=Mathf.Min(quantity,BuildingMaterial(item));AddBuildingMaterial(item,-amount);}
             else if(kind==12){amount=Mathf.Min(quantity,SurveyCharges.Value);SurveyCharges.Value-=amount;}
             else if(kind==8){if(item<1||item>9||ModCount(item)==0)return;amount=1;SetModCountServer(item,ModCount(item)-1);}
-            else if(kind==1){if(item<0||item>3)return;amount=Mathf.Min(quantity,ReserveFor(item));SetReserve(item,ReserveFor(item)-amount);}
+            else if(kind==1){if(item<0||item>=WeaponData.AmmoNames.Length)return;amount=Mathf.Min(quantity,ReserveFor(item));SetReserve(item,ReserveFor(item)-amount);}
             else if(kind==2){amount=Mathf.Min(quantity,Medkits.Value);Medkits.Value-=amount;}
             else if(kind==3){amount=Mathf.Min(quantity,Craft.Value);Craft.Value-=amount;}
             else if(kind==4){amount=Mathf.Min(quantity,FuelCans.Value);FuelCans.Value-=amount;}
@@ -57,9 +58,9 @@ namespace Pinefall
         void DropBackpack()
         {
             for(int id=1;id<=9;id++)while(ModCount(id)>0)DropItem(8,id,1);
-            for(int i=0;i<7;i++)if(Owns(i))DropItem(0,i,1);
-            for(int i=0;i<4;i++)DropItem(1,i,400);
-            DropItem(12,0,2);DropItem(2,0,5);DropItem(3,0,400);DropItem(4,0,5);DropItem(5,0,8);DropItem(6,0,1);DropItem(7,0,6);
+            for(int i=0;i<WeaponData.All.Length;i++)if(Owns(i))DropItem(0,i,1);
+            for(int i=0;i<WeaponData.AmmoNames.Length;i++)DropItem(1,i,400);
+            for(int material=0;material<3;material++)DropItem(13,material,999);DropItem(12,0,2);DropItem(2,0,5);DropItem(3,0,400);DropItem(4,0,5);DropItem(5,0,8);DropItem(6,0,1);DropItem(7,0,WeaponData.All.Length-1);
         }
     }
 }

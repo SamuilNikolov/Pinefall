@@ -59,7 +59,7 @@ namespace Pinefall
                 var entry=SpawnDraft.Current.ForPlayer(p.NetworkObjectId);p.ResetRound(entry.hasPoint?entry.point:ExpeditionLayout.Spawn(entry.region,0));p.ApplyKit(entry.kit,10-entry.bid);p.SetFieldOrders(entry.region);
             }
             foreach(var drop in FindObjectsOfType<FieldPickup>())if(drop.IsSpawned)drop.NetworkObject.Despawn();
-            WildlifeDirector.Current.Repopulate();ExpeditionLoot.Populate();
+            if(ConstructionWorld.Current)ConstructionWorld.Current.ResetWorld();WildlifeDirector.Current.Repopulate();ExpeditionLoot.Populate();
             startingTeams=Ranger.Players.Where(p=>p&&p.IsSpawned&&p.Alive).Select(p=>p.Team.Value).Distinct().Count();
             Stage.Value=0;Winner.Value=-1;Center.Value=Vector3.zero;Radius.Value=4320;Phase.Value=1;ResetSupplies();PlanStage();
             Debug.Log("PINEFALL_ROUND_START "+Round.Value);

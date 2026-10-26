@@ -7,12 +7,12 @@ namespace Pinefall
         public static readonly string[] Names={"Empty","Reflex optic","Ranger optic","Marksman optic","Reinforced barrel","Precision barrel","Muzzle brake","Speed loader","Steady grip","Balanced stock"};
         public static readonly string[] Effects={"No attachment","1.5× aim; 10% tighter aimed spread","3× aim; 15% tighter aimed spread","6× aim; 20% tighter aimed spread","12% more bullet damage","25% tighter spread","30% less recoil","20% faster reload","20% tighter spread; 15% less recoil","25% less recoil"};
         public static int Slot(int id){return id<=3?0:id<=6?1:2;}public static string SlotName(int slot){return slot==0?"Optic":slot==1?"Barrel":"Handling";}
-        public static bool Compatible(int weapon,int id){return weapon>=0&&weapon<7&&id>=1&&id<=9&&(id!=3||weapon==0||weapon==1||weapon==5||weapon==6);}
+        public static bool Compatible(int weapon,int id){return weapon>=0&&weapon<WeaponData.All.Length&&id>=1&&id<=9&&(WeaponData.Get(weapon).category!=WeaponClass.Launcher||id==7)&&(id!=3||weapon==0||weapon==1||weapon==5||weapon==6);}
     }
     public sealed partial class Ranger
     {
         public NetworkVariable<uint> Optics=new NetworkVariable<uint>(0),Barrels=new NetworkVariable<uint>(0),Handling=new NetworkVariable<uint>(0);public NetworkVariable<ulong> ModBag=new NetworkVariable<ulong>(0);
-        public int Mod(int weapon,int slot){if(weapon<0||weapon>6)return 0;uint bits=slot==0?Optics.Value:slot==1?Barrels.Value:Handling.Value;return (int)((bits>>(weapon*4))&15);}
+        public int Mod(int weapon,int slot){if(weapon<0||weapon>=WeaponData.All.Length)return 0;uint bits=slot==0?Optics.Value:slot==1?Barrels.Value:Handling.Value;return (int)((bits>>(weapon*4))&15);}
         void SetMod(int weapon,int slot,int id){uint mask=15u<<(weapon*4),value=(uint)id<<(weapon*4);if(slot==0)Optics.Value=(Optics.Value&~mask)|value;else if(slot==1)Barrels.Value=(Barrels.Value&~mask)|value;else Handling.Value=(Handling.Value&~mask)|value;}
         public int ModCount(int id){return id<1||id>9?0:(int)((ModBag.Value>>((id-1)*4))&15);}public void SetModCountServer(int id,int count){if(!IsServer||id<1||id>9)return;int shift=(id-1)*4;ModBag.Value=(ModBag.Value&~(15ul<<shift))|((ulong)Mathf.Clamp(count,0,5)<<shift);}
         public int PackedMods(int weapon){return Mod(weapon,0)|(Mod(weapon,1)<<4)|(Mod(weapon,2)<<8);}

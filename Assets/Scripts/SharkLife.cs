@@ -5,8 +5,8 @@ namespace Pinefall
 {
     public sealed partial class Wildlife
     {
-        Renderer[] frenzyRenderers;MaterialPropertyBlock frenzyBlock;bool lastFrenzy;bool colored;Vector3 aquaticTarget;
-        void FrenzyVisual(){if(colored&&lastFrenzy==Enraged.Value)return;lastFrenzy=Enraged.Value;colored=true;if(frenzyRenderers==null)frenzyRenderers=GetComponentsInChildren<Renderer>(true);if(frenzyBlock==null)frenzyBlock=new MaterialPropertyBlock();foreach(var r in frenzyRenderers){if(Enraged.Value){r.GetPropertyBlock(frenzyBlock);var mat=r.sharedMaterial;Color normal=mat&&mat.HasProperty("_BaseColor")?mat.GetColor("_BaseColor"):mat&&mat.HasProperty("_Color")?mat.color:Color.white;Color tint=Color.Lerp(normal,new Color(.72f,.43f,.78f),.40f);frenzyBlock.SetColor("_BaseColor",tint);frenzyBlock.SetColor("_Color",tint);r.SetPropertyBlock(frenzyBlock);}else r.SetPropertyBlock(null);}}
+        Renderer[] frenzyRenderers;MaterialPropertyBlock frenzyBlock;bool lastFrenzy,lastBoss;bool colored;Vector3 aquaticTarget;
+        void FrenzyVisual(){if(colored&&lastFrenzy==Enraged.Value&&lastBoss==Boss.Value)return;lastBoss=Boss.Value;lastFrenzy=Enraged.Value;colored=true;if(frenzyRenderers==null)frenzyRenderers=GetComponentsInChildren<Renderer>(true);if(frenzyBlock==null)frenzyBlock=new MaterialPropertyBlock();foreach(var r in frenzyRenderers){if(Enraged.Value){r.GetPropertyBlock(frenzyBlock);var mat=r.sharedMaterial;Color normal=mat&&mat.HasProperty("_BaseColor")?mat.GetColor("_BaseColor"):mat&&mat.HasProperty("_Color")?mat.color:Color.white;Color tint=Color.Lerp(normal,Boss.Value?new Color(1,.53f,.17f):new Color(.72f,.43f,.78f),Boss.Value?.65f:.40f);frenzyBlock.SetColor("_BaseColor",tint);frenzyBlock.SetColor("_Color",tint);r.SetPropertyBlock(frenzyBlock);}else r.SetPropertyBlock(null);}}
         void AquaticTick()
         {
             var prey=Ranger.Players.Where(p=>p&&p.Fighting&&p.Swimming.Value&&!p.CurrentVehicle&&(p.transform.position-transform.position).sqrMagnitude<65*65).OrderBy(p=>(p.transform.position-transform.position).sqrMagnitude).FirstOrDefault();

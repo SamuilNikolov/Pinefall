@@ -51,6 +51,16 @@ Useful options:
 
 See `tools/README.md` for all parameters. Avoid changing role/team arguments without reading the probe; some checks intentionally wait for exactly the expected teammates/enemies. Timeouts, absent late join markers and missing reports are failures.
 
+## Fieldcraft multiplayer checks (0.8)
+
+```powershell
+.\tools\Test-Fieldcraft.ps1
+```
+
+Runs a host, allied/enemy clients, then a late joiner on a separate port. Exercises delayed remote shots against a moving host, anatomical head/body misses, crouch replication, construction cost/edits/doors/stairs/support collapse, harvesting, late-join state, boss mutation, material drops, boat seams, slide/menu gravity, spectator restrictions, blue vest feedback, RPG travel/blast/cover and synthetic voice burst/reordering/device-rate playback. No real microphone is opened. `-PlayerPath`, `-Port` and `-OutputPath` are configurable.
+
+Use `Test-Visual.ps1` for the rendered Fieldcraft panels and geometry. `-Width 1280 -Height 720` exercises the smaller layout; default is 1600×900. It opens a normal game window briefly and captures inventory, HUD, map, edit grid, crouch, boss, launcher and spectating.
+
 ## Graphics performance
 
 ```powershell

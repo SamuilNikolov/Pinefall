@@ -36,5 +36,6 @@ Possible small objectives include timed repair stations, signal towers with a de
 - Stylized/adapted models and simple animation/vehicle physics remain in parts of the game.
 - Six core biome IDs plus an autumn variant; this is not seven fully independent simulation biomes.
 - Some weather/engine audio is procedural; not every call is a species-specific field recording.
-- Existing 0.7.1 performance measurements cover one laptop and short scripted scenes; long human games, real microphone devices and public-internet latency are unverified.
+- Recorded release performance measurements cover one laptop and short scripted scenes; long human games, real microphone devices and public-internet latency are unverified.
+- Construction covers the four common forms and grid edits, with a bounded piece count; advanced edit patterns, replacement contests and saturated-build stress testing remain follow-ups.
 - Project-wide code licensing and a long-term large-asset/LFS policy remain owner decisions.

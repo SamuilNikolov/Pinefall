@@ -59,6 +59,7 @@ namespace Pinefall
             if(!instance)return;if(instance.rainSource)instance.rainSource.volume=wet*.30f*Soundscape.Level("Ambience");if(instance.ambient)instance.ambient.volume=(.12f+cloud*.12f)*Soundscape.Level("Ambience");
         }
         public static void Thunder(){if(instance)Play(instance.thunder,Camera.main?Camera.main.transform.position+Vector3.up*15:Vector3.zero,1,1,300);}
+        public static void Blast(Vector3 point){if(instance)Play(instance.thunder,point,.8f,1.4f,220);Soundscape.Cue("shotgun",point,.7f);}
         static void Play(AudioClip clip,Vector3 pos,float volume,float pitch,float distance)
         {
             var g=new GameObject(clip.name);g.transform.position=pos;var source=g.AddComponent<AudioSource>();source.clip=clip;source.volume=volume;source.pitch=pitch;source.spatialBlend=1;source.minDistance=3;source.maxDistance=distance;source.rolloffMode=AudioRolloffMode.Linear;source.Play();Destroy(g,clip.length+1);

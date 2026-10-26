@@ -53,7 +53,7 @@ namespace Pinefall
             Network.AddNetworkPrefab(Resources.Load<GameObject>("Wolf"));
             Network.AddNetworkPrefab(Resources.Load<GameObject>("Fox"));
             Network.AddNetworkPrefab(Resources.Load<GameObject>("Ox"));
-            foreach(string prefab in new[]{"SpawnDraft","WorldLoot","RoadVehicle","Hare","Boar","Ibex","Antelope","ArcticFox","SnowHare","JungleBoar","Elk","Horse","Alpaca","SupplyDrop","Shark"})Network.AddNetworkPrefab(Resources.Load<GameObject>(prefab));
+            foreach(string prefab in new[]{"SpawnDraft","WorldLoot","RoadVehicle","Hare","Boar","Ibex","Antelope","ArcticFox","SnowHare","JungleBoar","Elk","Horse","Alpaca","SupplyDrop","Shark","ConstructionWorld","BuildPiece","Rocket"})Network.AddNetworkPrefab(Resources.Load<GameObject>(prefab));
             Network.ConnectionApprovalCallback=Approve;
             Network.OnServerStarted+=PopulateWildlife;
             Network.OnClientConnectedCallback+=Connected;
@@ -63,7 +63,7 @@ namespace Pinefall
         void Start()
         {
             ReserveAudio.Ensure();if(Arg("--silence")=="1")AudioListener.volume=0;
-            gameObject.AddComponent<RuntimePerformance>();gameObject.AddComponent<PresentationBudget>();gameObject.AddComponent<FieldNarrator>();gameObject.AddComponent<ProximityVoice>();gameObject.AddComponent<LanDiscovery>();gameObject.AddComponent<WorldInterest>();
+            gameObject.AddComponent<ShotHistory>();gameObject.AddComponent<RuntimePerformance>();gameObject.AddComponent<PresentationBudget>();gameObject.AddComponent<FieldNarrator>();gameObject.AddComponent<ProximityVoice>();gameObject.AddComponent<LanDiscovery>();gameObject.AddComponent<WorldInterest>();
             if(Arg("--bake-atlas")!="")gameObject.AddComponent<AtlasBakeProbe>();
             string mode=Arg("--mode");
             if(Arg("--name")!="")PlayerName=Arg("--name");
@@ -74,7 +74,8 @@ namespace Pinefall
             if(Arg("--teamsize")!="")int.TryParse(Arg("--teamsize"),out TeamSize);
             PracticeBots=Arg("--bots")=="1";
             if(mode=="host"||mode=="solo")Host();else if(mode=="client")Join();
-            if(Arg("--smoke")=="performance")gameObject.AddComponent<PerformanceProbe>();
+            if(Arg("--smoke")=="fieldcraft")gameObject.AddComponent<FieldcraftProbe>();
+            else if(Arg("--smoke")=="performance")gameObject.AddComponent<PerformanceProbe>();
             else if(Arg("--smoke")=="living")gameObject.AddComponent<LivingReserveProbe>();
             else if(Arg("--smoke")=="polish")gameObject.AddComponent<PolishProbe>();
             else if(Arg("--smoke").StartsWith("expedition"))gameObject.AddComponent<ExpeditionProbe>();
@@ -94,10 +95,10 @@ namespace Pinefall
         void Approve(NetworkManager.ConnectionApprovalRequest req,NetworkManager.ConnectionApprovalResponse res)
         {
             string protocol=Encoding.UTF8.GetString(req.Payload??new byte[0]);
-            if(protocol=="PinefallReserve/7"&&Ranger.Players.Count>=8){var bot=Ranger.Players.Find(p=>p&&p.IsBot.Value);if(bot)bot.NetworkObject.Despawn();}
-            res.Approved=protocol=="PinefallReserve/7"&&Ranger.Players.Count<8;
+            if(protocol=="PinefallReserve/8"&&Ranger.Players.Count>=8){var bot=Ranger.Players.Find(p=>p&&p.IsBot.Value);if(bot)bot.NetworkObject.Despawn();}
+            res.Approved=protocol=="PinefallReserve/8"&&Ranger.Players.Count<8;
             res.CreatePlayerObject=true;res.Pending=false;
-            if(!res.Approved)res.Reason=protocol!="PinefallReserve/7"?"Game versions differ. Use the same demo build.":"This reserve already has eight players (including practice bots).";
+            if(!res.Approved)res.Reason=protocol!="PinefallReserve/8"?"Game versions differ. Use the same demo build.":"This reserve already has eight players (including practice bots).";
             int index=Network.ConnectedClientsIds.Count;
             res.Position=ReserveWorld.OnGround(index*2.5f,-160,.3f);res.Rotation=Quaternion.identity;
         }
@@ -109,7 +110,7 @@ namespace Pinefall
             PlayerName=CleanName(PlayerName);
             if(Arg("--smoke")==""&&Arg("--capture")==""){PlayerPrefs.SetInt("team",RequestedTeam);
             PlayerPrefs.SetString("rangerName",PlayerName);PlayerPrefs.SetInt("weapon",SelectedWeapon);PlayerPrefs.SetString("address",Address);PlayerPrefs.Save();}
-            Network.NetworkConfig.ConnectionData=Encoding.UTF8.GetBytes("PinefallReserve/7");
+            Network.NetworkConfig.ConnectionData=Encoding.UTF8.GetBytes("PinefallReserve/8");
             Network.GetComponent<UnityTransport>().SetConnectionData(Address.Trim(),port,"0.0.0.0");
             Message="";Connecting=true;connectStarted=Time.unscaledTime;return true;
         }
@@ -157,12 +158,13 @@ namespace Pinefall
             leaving=true;Playing=false;Connecting=false;Cursor.lockState=CursorLockMode.None;Cursor.visible=true;
             if(ProximityVoice.Current)ProximityVoice.Current.ResetSession();if(FieldNarrator.Current)FieldNarrator.Current.ResetSession();
             var director=GetComponent<WildlifeDirector>();if(director)Destroy(director);var aquatic=GetComponent<SharkDirector>();if(aquatic)Destroy(aquatic);
-            GetComponent<WorldInterest>().ResetSession();Network.Shutdown();float deadline=Time.realtimeSinceStartup+5;while(Network.ShutdownInProgress&&Time.realtimeSinceStartup<deadline)yield return null;yield return null;
+            if(ShotHistory.Current)ShotHistory.Current.ResetSession();GetComponent<WorldInterest>().ResetSession();Network.Shutdown();float deadline=Time.realtimeSinceStartup+5;while(Network.ShutdownInProgress&&Time.realtimeSinceStartup<deadline)yield return null;yield return null;
             Animals.Clear();vistaCamera.gameObject.SetActive(true);if(previewHerd)previewHerd.SetActive(true);Message=message;leaving=false;ReserveUI.Instance.ReturnToMain();
 
         }
         void PopulateWildlife()
         {
+            Instantiate(Resources.Load<GameObject>("ConstructionWorld")).GetComponent<NetworkObject>().Spawn();
             var weather=Instantiate(Resources.Load<GameObject>("ReserveWeather")).GetComponent<WeatherState>();
             weather.Mode.Value=ReserveWeather.PreviewMode;weather.Cycling.Value=ReserveWeather.AutoCycle;weather.Hour.Value=ReserveWeather.PreviewHour;weather.GetComponent<NetworkObject>().Spawn();
             var match=Instantiate(Resources.Load<GameObject>("WildfrontMatch")).GetComponent<WildfrontMatch>();match.Battle.Value=BattleMode;match.BotsEnabled.Value=PracticeBots;match.TeamSize.Value=TeamSize==1?1:TeamSize==4?4:2;match.GetComponent<NetworkObject>().Spawn();
