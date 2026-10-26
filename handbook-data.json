@@ -1,0 +1,512 @@
+{
+  "version": "0.7.1",
+  "roadLinks": 71,
+  "serviceStops": 35,
+  "boats": 10,
+  "vehicles": 91,
+  "locations": [
+    {
+      "name": "Ranger Refuge",
+      "biome": "Lush valley",
+      "description": "Medical supplies and modest weapons. Central access, with several teams likely to rotate past.",
+      "x": -260.0,
+      "z": -740.0,
+      "hamlet": false
+    },
+    {
+      "name": "Sunwash Sands",
+      "biome": "Dune basin",
+      "description": "Long desert sightlines. Rooms hide ammunition and occasional rare rifles; an old buggy sits outside.",
+      "x": -2040.0,
+      "z": -1320.0,
+      "hamlet": false
+    },
+    {
+      "name": "Windpump Works",
+      "biome": "Dune basin",
+      "description": "Fuel, tools, and a service pickup. A useful departure point when the storm moves east.",
+      "x": -1880.0,
+      "z": 100.0,
+      "hamlet": false
+    },
+    {
+      "name": "Frostwatch Flats",
+      "biome": "Ice desert",
+      "description": "High-quality rifle odds and exposed approaches. The utility van needs repairs before it will run.",
+      "x": -1340.0,
+      "z": 1960.0,
+      "hamlet": false
+    },
+    {
+      "name": "Quarry Quarters",
+      "biome": "High Rockies",
+      "description": "Weapon cases and repair salvage among work sheds. Strong equipment odds, difficult terrain.",
+      "x": 1660.0,
+      "z": 1680.0,
+      "hamlet": false
+    },
+    {
+      "name": "Ridgeline Roost",
+      "biome": "High Rockies",
+      "description": "A visible landmark with precision weapons and limited vehicle fuel. Plan a route off the ridge.",
+      "x": 600.0,
+      "z": 1600.0,
+      "hamlet": false
+    },
+    {
+      "name": "Fernwood Falls",
+      "biome": "Rainforest",
+      "description": "Close cover, medicine, and fast-firing weapons. The abandoned van may be worth restoring.",
+      "x": 2080.0,
+      "z": -1140.0,
+      "hamlet": false
+    },
+    {
+      "name": "Cedar Crossing",
+      "biome": "Lush valley",
+      "description": "Reliable ammunition and tool crates. Good woodland cover, with roads into the valley and rainforest.",
+      "x": 1140.0,
+      "z": 60.0,
+      "hamlet": false
+    },
+    {
+      "name": "Reedwater Reach",
+      "biome": "Reedwater marsh",
+      "description": "A marsh landing with medical supplies, fishing cabins, and a motor launch.",
+      "x": 560.0,
+      "z": -2240.0,
+      "hamlet": false
+    },
+    {
+      "name": "Lakeside Landing",
+      "biome": "Lush valley",
+      "description": "Shoreline supplies, wooded approaches, and a launch on the lake.",
+      "x": -500.0,
+      "z": 480.0,
+      "hamlet": false
+    },
+    {
+      "name": "Saltwind Strip",
+      "biome": "Dune basin",
+      "description": "An exposed desert strip with valuable equipment and fast transport.",
+      "x": -2640.0,
+      "z": -480.0,
+      "hamlet": false
+    },
+    {
+      "name": "Northpass Nursery",
+      "biome": "Ice desert",
+      "description": "Flat farm clearings and dependable supplies on the northern approach.",
+      "x": -400.0,
+      "z": 1040.0,
+      "hamlet": false
+    },
+    {
+      "name": "Willow Warren",
+      "biome": "Lush valley",
+      "description": "A quiet woodland hamlet with food, spare parts and a sealed field cache.",
+      "x": -1160.0,
+      "z": -400.0,
+      "hamlet": true
+    },
+    {
+      "name": "Prairie Patch",
+      "biome": "Lush valley",
+      "description": "Farm buildings and a survey cache beside the southern meadow road.",
+      "x": -560.0,
+      "z": -1520.0,
+      "hamlet": true
+    },
+    {
+      "name": "Thistle Thicket",
+      "biome": "Lush valley",
+      "description": "A forest stop with medical supplies and short trails into the valley.",
+      "x": -400.0,
+      "z": -120.0,
+      "hamlet": true
+    },
+    {
+      "name": "Birch Borough",
+      "biome": "Lush valley",
+      "description": "A logging hamlet overlooking the river. Search its sealed cache.",
+      "x": 280.0,
+      "z": 680.0,
+      "hamlet": true
+    },
+    {
+      "name": "Copper Canyon",
+      "biome": "Dune basin",
+      "description": "Desert workshops with attachments, ammunition and a salvage cache.",
+      "x": -2640.0,
+      "z": -1720.0,
+      "hamlet": true
+    },
+    {
+      "name": "Dusty Dwellings",
+      "biome": "Dune basin",
+      "description": "A remote desert village with food, tools and rough road access.",
+      "x": -2120.0,
+      "z": -2440.0,
+      "hamlet": true
+    },
+    {
+      "name": "Cactus Court",
+      "biome": "Ice desert",
+      "description": "An exposed roadside trading stop. Long sightlines reward careful approaches.",
+      "x": -2720.0,
+      "z": 800.0,
+      "hamlet": true
+    },
+    {
+      "name": "Glacier Grove",
+      "biome": "Ice desert",
+      "description": "A snowbound relay hamlet with medical stock and rifle supplies.",
+      "x": -2080.0,
+      "z": 2560.0,
+      "hamlet": true
+    },
+    {
+      "name": "Polar Post",
+      "biome": "Ice desert",
+      "description": "Cold-weather cabins and a protected supply cache on the western road.",
+      "x": -2320.0,
+      "z": 1560.0,
+      "hamlet": true
+    },
+    {
+      "name": "Shiver Station",
+      "biome": "Ice desert",
+      "description": "Abandoned utility housing near the ice desert boundary.",
+      "x": -400.0,
+      "z": 2600.0,
+      "hamlet": true
+    },
+    {
+      "name": "Boulder Borough",
+      "biome": "High Rockies",
+      "description": "Rocky work cabins and a cache near high mountain passes.",
+      "x": 2480.0,
+      "z": 2480.0,
+      "hamlet": true
+    },
+    {
+      "name": "Granite Gulch",
+      "biome": "High Rockies",
+      "description": "A small quarry settlement with precision attachments and repair materials.",
+      "x": 2600.0,
+      "z": 1200.0,
+      "hamlet": true
+    },
+    {
+      "name": "Summit Shacks",
+      "biome": "High Rockies",
+      "description": "A remote mountain refuge with valuable salvage and exposed ridges.",
+      "x": 1080.0,
+      "z": 2600.0,
+      "hamlet": true
+    },
+    {
+      "name": "Canopy Crossing",
+      "biome": "Rainforest",
+      "description": "Dense jungle housing and close approaches to a field cache.",
+      "x": 2720.0,
+      "z": -720.0,
+      "hamlet": true
+    },
+    {
+      "name": "Mossy Market",
+      "biome": "Rainforest",
+      "description": "An overgrown market camp with food and fast-firing weapon odds.",
+      "x": 2160.0,
+      "z": -2040.0,
+      "hamlet": true
+    },
+    {
+      "name": "Tangle Town",
+      "biome": "Rainforest",
+      "description": "Forest huts and a supply stop between jungle and wetlands.",
+      "x": 1360.0,
+      "z": -1400.0,
+      "hamlet": true
+    },
+    {
+      "name": "Heron Haven",
+      "biome": "Reedwater marsh",
+      "description": "Marsh-edge cabins, reeds and a sealed medical cache.",
+      "x": 1720.0,
+      "z": -2640.0,
+      "hamlet": true
+    },
+    {
+      "name": "Sedge Settlement",
+      "biome": "Reedwater marsh",
+      "description": "A southern wetland village with hunting supplies and road access.",
+      "x": 160.0,
+      "z": -2600.0,
+      "hamlet": true
+    },
+    {
+      "name": "Amberwood Acres",
+      "biome": "Amberwood floodplain",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": 800.0,
+      "z": 680.0,
+      "hamlet": false
+    },
+    {
+      "name": "Maple Mill",
+      "biome": "Amberwood floodplain",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": 1168.369873046875,
+      "z": 1004.9948120117188,
+      "hamlet": true
+    },
+    {
+      "name": "Oak Orchard",
+      "biome": "Ice desert",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": 200.0,
+      "z": 1520.0,
+      "hamlet": true
+    },
+    {
+      "name": "Juniper Junction",
+      "biome": "Lush valley",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": -1320.0,
+      "z": 440.0,
+      "hamlet": true
+    },
+    {
+      "name": "Aspen Annex",
+      "biome": "Ice desert",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": -1040.0,
+      "z": 1080.0,
+      "hamlet": true
+    },
+    {
+      "name": "Clover Commons",
+      "biome": "Dune basin",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": -1200.0,
+      "z": -1840.0,
+      "hamlet": true
+    },
+    {
+      "name": "Hayfield Hollow",
+      "biome": "Dune basin",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": -1440.0,
+      "z": -960.0,
+      "hamlet": true
+    },
+    {
+      "name": "Brookside Bend",
+      "biome": "Lush valley",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": 578.25341796875,
+      "z": -776.192138671875,
+      "hamlet": true
+    },
+    {
+      "name": "Canyon Camp",
+      "biome": "Dune basin",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": -2720.0,
+      "z": -2680.0,
+      "hamlet": true
+    },
+    {
+      "name": "Dune Depot",
+      "biome": "Dune basin",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": -2600.0,
+      "z": 80.0,
+      "hamlet": true
+    },
+    {
+      "name": "Sandy Springs",
+      "biome": "Dune basin",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": -1520.0,
+      "z": -2640.0,
+      "hamlet": true
+    },
+    {
+      "name": "Frozen Ford",
+      "biome": "Ice desert",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": -2720.0,
+      "z": 2640.0,
+      "hamlet": false
+    },
+    {
+      "name": "Snowdrift Shelters",
+      "biome": "Ice desert",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": -2240.0,
+      "z": 920.0,
+      "hamlet": true
+    },
+    {
+      "name": "Tundra Terrace",
+      "biome": "High Rockies",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": 320.0,
+      "z": 2400.0,
+      "hamlet": true
+    },
+    {
+      "name": "Pinnacle Point",
+      "biome": "Rainforest",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": 2600.0,
+      "z": 240.0,
+      "hamlet": true
+    },
+    {
+      "name": "Craggy Crossing",
+      "biome": "Rainforest",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": 1672.7513427734375,
+      "z": 423.13421630859375,
+      "hamlet": true
+    },
+    {
+      "name": "Bamboo Borough",
+      "biome": "Reedwater marsh",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": 2600.0,
+      "z": -2600.0,
+      "hamlet": true
+    },
+    {
+      "name": "Mangrove Market",
+      "biome": "Rainforest",
+      "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
+      "x": 1440.0,
+      "z": -320.0,
+      "hamlet": true
+    }
+  ],
+  "guns": [
+    {
+      "name": "Ridgeline",
+      "ammo": ".308",
+      "description": "Accurate long-range rifle. Slow follow-up shots; powerful against large wildlife.",
+      "magazine": 5,
+      "damage": 80,
+      "pellets": 1,
+      "reload": 2.5,
+      "range": 650.0
+    },
+    {
+      "name": "Trail Scout",
+      "ammo": ".223",
+      "description": "A versatile semi-automatic carbine with a clear red-dot sight.",
+      "magazine": 15,
+      "damage": 30,
+      "pellets": 1,
+      "reload": 1.899999976158142,
+      "range": 350.0
+    },
+    {
+      "name": "Brushmaster",
+      "ammo": "12-gauge",
+      "description": "Eight-pellet shotgun. Strong in close cover; limited reach.",
+      "magazine": 6,
+      "damage": 12,
+      "pellets": 8,
+      "reload": 2.799999952316284,
+      "range": 85.0
+    },
+    {
+      "name": "Service Nine",
+      "ammo": "9 mm",
+      "description": "Compact, dependable pistol. A modest start that leaves more budget for spawn priority.",
+      "magazine": 12,
+      "damage": 23,
+      "pellets": 1,
+      "reload": 1.399999976158142,
+      "range": 120.0
+    },
+    {
+      "name": "Kestrel",
+      "ammo": "9 mm",
+      "description": "Fast automatic fire for interiors and jungle cover. Shares ammunition with the pistol.",
+      "magazine": 28,
+      "damage": 18,
+      "pellets": 1,
+      "reload": 1.7999999523162842,
+      "range": 160.0
+    },
+    {
+      "name": "Longwatch",
+      "ammo": ".308",
+      "description": "Scoped semi-automatic rifle. Flexible at range, but heavy on scarce ammunition.",
+      "magazine": 10,
+      "damage": 52,
+      "pellets": 1,
+      "reload": 2.4000000953674316,
+      "range": 550.0
+    },
+    {
+      "name": "Sawmill",
+      "ammo": ".223",
+      "description": "Heavy automatic weapon. A large magazine trades quick handling for sustained fire.",
+      "magazine": 40,
+      "damage": 27,
+      "pellets": 1,
+      "reload": 3.299999952316284,
+      "range": 330.0
+    }
+  ],
+  "mods": [
+    {
+      "name": "Reflex optic",
+      "slot": "Optic",
+      "effect": "1.5\u00d7 aim; 10% tighter aimed spread"
+    },
+    {
+      "name": "Ranger optic",
+      "slot": "Optic",
+      "effect": "3\u00d7 aim; 15% tighter aimed spread"
+    },
+    {
+      "name": "Marksman optic",
+      "slot": "Optic",
+      "effect": "6\u00d7 aim; 20% tighter aimed spread"
+    },
+    {
+      "name": "Reinforced barrel",
+      "slot": "Barrel",
+      "effect": "12% more bullet damage"
+    },
+    {
+      "name": "Precision barrel",
+      "slot": "Barrel",
+      "effect": "25% tighter spread"
+    },
+    {
+      "name": "Muzzle brake",
+      "slot": "Barrel",
+      "effect": "30% less recoil"
+    },
+    {
+      "name": "Speed loader",
+      "slot": "Handling",
+      "effect": "20% faster reload"
+    },
+    {
+      "name": "Steady grip",
+      "slot": "Handling",
+      "effect": "20% tighter spread; 15% less recoil"
+    },
+    {
+      "name": "Balanced stock",
+      "slot": "Handling",
+      "effect": "25% less recoil"
+    }
+  ]
+}

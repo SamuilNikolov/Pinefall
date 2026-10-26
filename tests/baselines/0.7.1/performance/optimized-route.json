@@ -1,0 +1,58 @@
+{
+    "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "cpu": "13th Gen Intel(R) Core(TM) i5-13450HX",
+    "width": 1600,
+    "height": 900,
+    "microphoneStarts": 0,
+    "samples": [
+        {
+            "scene": "Meadow HUD",
+            "frames": 1020,
+            "averageFps": 101.9592056274414,
+            "medianMs": 9.630599975585938,
+            "p95Ms": 11.936699867248536,
+            "p99Ms": 13.254900932312012
+        },
+        {
+            "scene": "Meadow without HUD",
+            "frames": 1113,
+            "averageFps": 111.23119354248047,
+            "medianMs": 8.706999778747559,
+            "p95Ms": 11.660999298095704,
+            "p99Ms": 13.456899642944336
+        },
+        {
+            "scene": "Named village",
+            "frames": 865,
+            "averageFps": 86.4116439819336,
+            "medianMs": 11.32140064239502,
+            "p95Ms": 15.017800331115723,
+            "p99Ms": 17.108600616455079
+        },
+        {
+            "scene": "Autumn woods",
+            "frames": 990,
+            "averageFps": 98.97090911865235,
+            "medianMs": 9.9443998336792,
+            "p95Ms": 12.523799896240235,
+            "p99Ms": 14.041099548339844
+        },
+        {
+            "scene": "Rainforest",
+            "frames": 948,
+            "averageFps": 94.66780853271485,
+            "medianMs": 10.30210018157959,
+            "p95Ms": 13.145400047302246,
+            "p99Ms": 18.126800537109376
+        },
+        {
+            "scene": "Waterfront",
+            "frames": 966,
+            "averageFps": 96.5071029663086,
+            "medianMs": 10.128599166870118,
+            "p95Ms": 12.965999603271485,
+            "p99Ms": 14.676400184631348
+        }
+    ],
+    "errors": []
+}

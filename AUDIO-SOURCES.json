@@ -1,0 +1,401 @@
+[
+  {
+    "asset": "grass0",
+    "source": "work\\audio07\\impact\\Audio\\footstep_grass_000.ogg",
+    "seconds": 0.775,
+    "peak": 0.16885729560139548,
+    "rms": 0.008922232376552264
+  },
+  {
+    "asset": "grass1",
+    "source": "work\\audio07\\impact\\Audio\\footstep_grass_001.ogg",
+    "seconds": 0.671,
+    "peak": 0.2546424236604129,
+    "rms": 0.014651245563296002
+  },
+  {
+    "asset": "grass2",
+    "source": "work\\audio07\\impact\\Audio\\footstep_grass_002.ogg",
+    "seconds": 0.69,
+    "peak": 0.17992096873320118,
+    "rms": 0.01176354881588198
+  },
+  {
+    "asset": "grass3",
+    "source": "work\\audio07\\impact\\Audio\\footstep_grass_003.ogg",
+    "seconds": 0.666,
+    "peak": 0.12607849070762303,
+    "rms": 0.008356118644707745
+  },
+  {
+    "asset": "grass4",
+    "source": "work\\audio07\\impact\\Audio\\footstep_grass_004.ogg",
+    "seconds": 0.587,
+    "peak": 0.13669077837382618,
+    "rms": 0.009803728800095338
+  },
+  {
+    "asset": "snow0",
+    "source": "work\\audio07\\impact\\Audio\\footstep_snow_000.ogg",
+    "seconds": 0.371,
+    "peak": 0.55,
+    "rms": 0.047328379262563315
+  },
+  {
+    "asset": "snow1",
+    "source": "work\\audio07\\impact\\Audio\\footstep_snow_001.ogg",
+    "seconds": 0.371,
+    "peak": 0.55,
+    "rms": 0.07206765440928092
+  },
+  {
+    "asset": "snow2",
+    "source": "work\\audio07\\impact\\Audio\\footstep_snow_002.ogg",
+    "seconds": 0.371,
+    "peak": 0.55,
+    "rms": 0.07080776526566918
+  },
+  {
+    "asset": "snow3",
+    "source": "work\\audio07\\impact\\Audio\\footstep_snow_003.ogg",
+    "seconds": 0.371,
+    "peak": 0.376204207294937,
+    "rms": 0.03999511465074561
+  },
+  {
+    "asset": "snow4",
+    "source": "work\\audio07\\impact\\Audio\\footstep_snow_004.ogg",
+    "seconds": 0.371,
+    "peak": 0.55,
+    "rms": 0.050910703198818935
+  },
+  {
+    "asset": "wood0",
+    "source": "work\\audio07\\impact\\Audio\\footstep_wood_000.ogg",
+    "seconds": 0.271,
+    "peak": 0.31548361544752546,
+    "rms": 0.03413472181751272
+  },
+  {
+    "asset": "wood1",
+    "source": "work\\audio07\\impact\\Audio\\footstep_wood_001.ogg",
+    "seconds": 0.249,
+    "peak": 0.34455473989235974,
+    "rms": 0.04348970464733004
+  },
+  {
+    "asset": "wood2",
+    "source": "work\\audio07\\impact\\Audio\\footstep_wood_002.ogg",
+    "seconds": 0.248,
+    "peak": 0.38704237225370225,
+    "rms": 0.048544056608466724
+  },
+  {
+    "asset": "wood3",
+    "source": "work\\audio07\\impact\\Audio\\footstep_wood_003.ogg",
+    "seconds": 0.249,
+    "peak": 0.2861920828731122,
+    "rms": 0.03014389526497408
+  },
+  {
+    "asset": "wood4",
+    "source": "work\\audio07\\impact\\Audio\\footstep_wood_004.ogg",
+    "seconds": 0.245,
+    "peak": 0.39912201773645584,
+    "rms": 0.047638459472584896
+  },
+  {
+    "asset": "sand0",
+    "source": "work\\audio07\\rpg\\Audio\\footstep00.ogg",
+    "seconds": 0.249,
+    "peak": 0.5,
+    "rms": 0.053832616559187606
+  },
+  {
+    "asset": "sand1",
+    "source": "work\\audio07\\rpg\\Audio\\footstep01.ogg",
+    "seconds": 0.282,
+    "peak": 0.5,
+    "rms": 0.053371808031483815
+  },
+  {
+    "asset": "sand2",
+    "source": "work\\audio07\\rpg\\Audio\\footstep02.ogg",
+    "seconds": 0.242,
+    "peak": 0.5,
+    "rms": 0.052911701225791495
+  },
+  {
+    "asset": "sand3",
+    "source": "work\\audio07\\rpg\\Audio\\footstep03.ogg",
+    "seconds": 0.269,
+    "peak": 0.5,
+    "rms": 0.04816333603924867
+  },
+  {
+    "asset": "sand4",
+    "source": "work\\audio07\\rpg\\Audio\\footstep04.ogg",
+    "seconds": 0.323,
+    "peak": 0.5,
+    "rms": 0.04685144210875261
+  },
+  {
+    "asset": "gravel0",
+    "source": "work\\audio07\\rpg\\Audio\\footstep00.ogg",
+    "seconds": 0.249,
+    "peak": 0.5,
+    "rms": 0.05136000447895328
+  },
+  {
+    "asset": "gravel1",
+    "source": "work\\audio07\\rpg\\Audio\\footstep01.ogg",
+    "seconds": 0.282,
+    "peak": 0.5,
+    "rms": 0.05142595892945177
+  },
+  {
+    "asset": "gravel2",
+    "source": "work\\audio07\\rpg\\Audio\\footstep02.ogg",
+    "seconds": 0.242,
+    "peak": 0.5,
+    "rms": 0.046976410963049504
+  },
+  {
+    "asset": "gravel3",
+    "source": "work\\audio07\\rpg\\Audio\\footstep03.ogg",
+    "seconds": 0.269,
+    "peak": 0.5,
+    "rms": 0.045726010125654
+  },
+  {
+    "asset": "gravel4",
+    "source": "work\\audio07\\rpg\\Audio\\footstep04.ogg",
+    "seconds": 0.323,
+    "peak": 0.49999999999999994,
+    "rms": 0.04692767125092206
+  },
+  {
+    "asset": "rifle0",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\Mosin Nagant\\M_21P.wav",
+    "seconds": 1.8,
+    "peak": 0.85,
+    "rms": 0.030668885194120032
+  },
+  {
+    "asset": "rifle1",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\Mosin Nagant\\M_26P.wav",
+    "seconds": 1.8,
+    "peak": 0.8499999999999999,
+    "rms": 0.03441950147802805
+  },
+  {
+    "asset": "carbine0",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\AR-15\\D_24P.wav",
+    "seconds": 1.25,
+    "peak": 0.85,
+    "rms": 0.03860666671066961
+  },
+  {
+    "asset": "carbine1",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\AR-15\\D_32P.wav",
+    "seconds": 1.25,
+    "peak": 0.85,
+    "rms": 0.029599232979061956
+  },
+  {
+    "asset": "shotgun0",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\Mossberg\\N_26P.wav",
+    "seconds": 1.5,
+    "peak": 0.85,
+    "rms": 0.035584360015936005
+  },
+  {
+    "asset": "shotgun1",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\Mossberg\\N_30P.wav",
+    "seconds": 1.5,
+    "peak": 0.85,
+    "rms": 0.028308277674459745
+  },
+  {
+    "asset": "pistol0",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\1911\\A_34P.wav",
+    "seconds": 1.0,
+    "peak": 0.85,
+    "rms": 0.06552890612203581
+  },
+  {
+    "asset": "pistol1",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\1911\\A_42P.wav",
+    "seconds": 1.0,
+    "peak": 0.8499999999999999,
+    "rms": 0.035908301795218596
+  },
+  {
+    "asset": "smg0",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\Carl Gustav M45\\G_20P.wav",
+    "seconds": 0.75,
+    "peak": 0.8500000000000001,
+    "rms": 0.031241904960034768
+  },
+  {
+    "asset": "smg1",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\Carl Gustav M45\\G_22P.wav",
+    "seconds": 0.75,
+    "peak": 0.85,
+    "rms": 0.05974950836651022
+  },
+  {
+    "asset": "smg2",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\Carl Gustav M45\\G_24P.wav",
+    "seconds": 0.75,
+    "peak": 0.85,
+    "rms": 0.07516831491982338
+  },
+  {
+    "asset": "smg3",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\Carl Gustav M45\\G_31P.wav",
+    "seconds": 0.75,
+    "peak": 0.85,
+    "rms": 0.03680085701543581
+  },
+  {
+    "asset": "support0",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\AK-47\\C_27P.wav",
+    "seconds": 1.25,
+    "peak": 0.85,
+    "rms": 0.06910146797927454
+  },
+  {
+    "asset": "support1",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\AK-47\\C_28P.wav",
+    "seconds": 1.25,
+    "peak": 0.85,
+    "rms": 0.03952272583831425
+  },
+  {
+    "asset": "support2",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\AK-47\\C_29P.wav",
+    "seconds": 1.25,
+    "peak": 0.85,
+    "rms": 0.06383136071625577
+  },
+  {
+    "asset": "support3",
+    "source": "work\\audio07\\firearms\\Prepared SFX Library\\AK-47\\C_31P.wav",
+    "seconds": 1.25,
+    "peak": 0.85,
+    "rms": 0.027433504479994462
+  },
+  {
+    "asset": "pig0",
+    "source": "work\\audio07\\pig1.mp3",
+    "seconds": 0.959,
+    "peak": 0.58,
+    "rms": 0.05121718935845051
+  },
+  {
+    "asset": "pig1",
+    "source": "work\\audio07\\pig2.mp3",
+    "seconds": 0.374,
+    "peak": 0.58,
+    "rms": 0.07048556065469316
+  },
+  {
+    "asset": "pig2",
+    "source": "work\\audio07\\pig3.mp3",
+    "seconds": 0.351,
+    "peak": 0.58,
+    "rms": 0.05237249898781701
+  },
+  {
+    "asset": "pig3",
+    "source": "work\\audio07\\pig4.mp3",
+    "seconds": 1.146,
+    "peak": 0.58,
+    "rms": 0.02570176775824758
+  },
+  {
+    "asset": "canid0",
+    "source": "work\\audio07\\dog\\0.ogg",
+    "seconds": 0.477,
+    "peak": 0.55,
+    "rms": 0.08923983127787448
+  },
+  {
+    "asset": "canid1",
+    "source": "work\\audio07\\dog\\1.ogg",
+    "seconds": 0.668,
+    "peak": 0.55,
+    "rms": 0.1642546689813787
+  },
+  {
+    "asset": "canid2",
+    "source": "work\\audio07\\dog\\2.ogg",
+    "seconds": 0.964,
+    "peak": 0.55,
+    "rms": 0.1529681807379276
+  },
+  {
+    "asset": "canid3",
+    "source": "work\\audio07\\dog\\3.ogg",
+    "seconds": 1.008,
+    "peak": 0.55,
+    "rms": 0.15243991395927797
+  },
+  {
+    "asset": "goat0",
+    "source": "work\\audio07\\goat.wav",
+    "seconds": 1.499,
+    "peak": 0.5,
+    "rms": 0.07216405709292004
+  },
+  {
+    "asset": "elk0",
+    "source": "work\\audio07\\elk.mp3",
+    "seconds": 5.0,
+    "peak": 0.55,
+    "rms": 0.08267517360531008
+  },
+  {
+    "asset": "cloth0",
+    "source": "work\\audio07\\rpg\\Audio\\cloth1.ogg",
+    "seconds": 0.661,
+    "peak": 0.38,
+    "rms": 0.035496577153153075
+  },
+  {
+    "asset": "cloth1",
+    "source": "work\\audio07\\rpg\\Audio\\cloth2.ogg",
+    "seconds": 0.415,
+    "peak": 0.38,
+    "rms": 0.04236800640023931
+  },
+  {
+    "asset": "cloth2",
+    "source": "work\\audio07\\rpg\\Audio\\cloth3.ogg",
+    "seconds": 0.477,
+    "peak": 0.37999999999999995,
+    "rms": 0.04353346200223321
+  },
+  {
+    "asset": "reload0",
+    "source": "work\\audio07\\rpg\\Audio\\metalLatch.ogg",
+    "seconds": 0.261,
+    "peak": 0.4,
+    "rms": 0.027936465251604165
+  },
+  {
+    "asset": "radio0",
+    "source": "work\\audio07\\rpg\\Audio\\metalClick.ogg",
+    "seconds": 0.3,
+    "peak": 0.20832485969518144,
+    "rms": 0.017847959803845813
+  },
+  {
+    "asset": "birds0",
+    "source": "work\\audio07\\birds.ogg",
+    "seconds": 30.0,
+    "peak": 0.48,
+    "rms": 0.03418353795131628
+  }
+]

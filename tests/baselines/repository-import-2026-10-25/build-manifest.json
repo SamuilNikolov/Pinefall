@@ -1,0 +1,70 @@
+{
+  "checkpoint": "repository-import-2026-10-25",
+  "gameVersion": "0.7.1",
+  "editor": "2022.3.13f1",
+  "target": "StandaloneWindows64 / Mono",
+  "entryPoint": "BuildReserve.BuildCurrent",
+  "runtimeChange": "No behavior changes; normalized trailing whitespace in four runtime source files.",
+  "gameplay": {
+    "suite": "All",
+    "portBase": 17930,
+    "reports": [
+      {
+        "name": "client-a.json",
+        "passed": 3
+      },
+      {
+        "name": "client-b.json",
+        "passed": 3
+      },
+      {
+        "name": "host.json",
+        "passed": 69
+      },
+      {
+        "name": "late-join.json",
+        "passed": 2
+      },
+      {
+        "name": "living-ally.json",
+        "passed": 4
+      },
+      {
+        "name": "living-enemy.json",
+        "passed": 4
+      },
+      {
+        "name": "living-host.json",
+        "passed": 24
+      },
+      {
+        "name": "polish.json",
+        "passed": 24
+      },
+      {
+        "name": "practice-1.json",
+        "passed": 6
+      },
+      {
+        "name": "practice-4.json",
+        "passed": 7
+      }
+    ],
+    "passed": 146,
+    "failed": 0,
+    "capturedRuntimeErrors": 0
+  },
+  "playerHashes": {
+    "Pinefall.exe": "8a9b25cfbb8a839b097d3e059b4dec2bac2b7bf1833f380e41c352aa6d8708ea",
+    "UnityPlayer.dll": "20b67cb1ac9d26f51344d6065a0d933e361cee14b355b343d3012c7539c725f7",
+    "Pinefall_Data/Managed/Assembly-CSharp.dll": "de140a771ed968e7fab84a387c25b860028a576c9f4487a81c783b4e117b6772"
+  },
+  "renderedWrapperCheck": {
+    "players": 3,
+    "width": 1600,
+    "height": 900,
+    "samples": 6,
+    "errors": 0,
+    "microphoneStarts": 0
+  }
+}

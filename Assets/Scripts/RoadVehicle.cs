@@ -1,0 +1,75 @@
+using System.Linq;
+using Unity.Netcode;
+using UnityEngine;
+namespace Pinefall
+{
+    public sealed class RoadVehicle:NetworkBehaviour
+    {
+        void Awake(){NetworkSeed.Initialize(this);WorldInterest.Install(this);}
+        public static readonly System.Collections.Generic.List<RoadVehicle> All=new System.Collections.Generic.List<RoadVehicle>();
+        public const ulong Empty=ulong.MaxValue;static readonly float[] topSpeeds={20f,32f,26f,18f,23f,36f};
+        public static readonly string[] Names={"Estate wagon","Dune buggy","Service pickup","Utility van","Motor launch","Trail motorcycle"};
+        public NetworkVariable<int> Type=new NetworkVariable<int>(0),Condition=new NetworkVariable<int>(65),Tune=new NetworkVariable<int>(0);
+        public NetworkVariable<float> Fuel=new NetworkVariable<float>(35),Charge=new NetworkVariable<float>(60),Speed=new NetworkVariable<float>(0);
+        public NetworkVariable<ulong> Seat0=new NetworkVariable<ulong>(Empty),Seat1=new NetworkVariable<ulong>(Empty),Seat2=new NetworkVariable<ulong>(Empty),Seat3=new NetworkVariable<ulong>(Empty);
+        public NetworkVariable<float> Steering=new NetworkVariable<float>(0);float parkedAt;float heading,wheelAngle;float throttle,steer,lastInput,impactAt;bool brake,boost;
+        public int Capacity {get{return Type.Value==1||Type.Value==5?2:4;}}
+        public string Label {get{return Names[Mathf.Clamp(Type.Value,0,5)]+(Condition.Value<=0?" · engine dead":Fuel.Value<=0?" · empty tank":Condition.Value<40?" · damaged":"");}}
+        public ulong Occupant(int index){return index==0?Seat0.Value:index==1?Seat1.Value:index==2?Seat2.Value:Seat3.Value;}
+        void SetSeat(int i,ulong value){if(i==0)Seat0.Value=value;else if(i==1)Seat1.Value=value;else if(i==2)Seat2.Value=value;else Seat3.Value=value;}
+        public override void OnNetworkSpawn(){All.Add(this);heading=transform.eulerAngles.y;var visual=gameObject.AddComponent<VehicleVisual>();PresentationBudget.Register(visual,480);var box=GetComponent<BoxCollider>();if(Type.Value==4){box.size=new Vector3(2,1.1f,4.6f);box.center=new Vector3(0,.1f,0);}else if(Type.Value==5){box.size=new Vector3(.70f,1.35f,2.5f);box.center=new Vector3(0,.25f,0);}}
+        public override void OnNetworkDespawn(){WorldInterest.Forget(NetworkObject);All.Remove(this);}
+        public Vector3 SeatPosition(int index){return Type.Value==5?transform.TransformPoint(new Vector3(0,-.55f,index==0?-.1f:-.65f)):transform.TransformPoint(new Vector3(index%2==0?-.43f:.43f,-.45f,index<2?.32f:-.75f));}
+        public bool Enter(Ranger player)
+        {
+            if(!IsServer||!player.Alive||player.VehicleId.Value!=Empty||Vector3.Distance(player.transform.position,transform.position)>5||Condition.Value<=0||!player.CanAct)return false;
+            var driver=Ranger.Players.FirstOrDefault(p=>p&&p.NetworkObjectId==Seat0.Value);
+            if(driver&&driver.Team.Value!=player.Team.Value)return false;
+            for(int i=0;i<Capacity;i++)if(Occupant(i)==Empty){SetSeat(i,player.NetworkObjectId);player.VehicleId.Value=NetworkObjectId;player.VehicleSeat.Value=i;return true;}return false;
+        }
+        public void Remove(Ranger player){if(!IsServer)return;for(int i=0;i<4;i++)if(Occupant(i)==player.NetworkObjectId)SetSeat(i,Empty);player.VehicleId.Value=Empty;player.VehicleSeat.Value=-1;}
+        public Vector3 ExitPoint(int seat)
+        {
+            float side=seat%2==0?-1:1;
+            foreach(var local in new[]{new Vector3(side*2.2f,0,0),new Vector3(-side*2.2f,0,0),new Vector3(0,0,-3)})
+            {Vector3 p=transform.TransformPoint(local);float water;if(Type.Value==4&&ReserveWater.Surface(p.x,p.z,out water))return new Vector3(p.x,water-.8f,p.z);p=ReserveWorld.OnGround(p.x,p.z,.2f);if(!Physics.CheckCapsule(p+Vector3.up*.4f,p+Vector3.up*1.45f,.34f,~((1<<9)|(1<<10)),QueryTriggerInteraction.Ignore))return p;}
+            return ReserveWorld.OnGround(transform.position.x,transform.position.z-3,.4f);
+        }
+        [ServerRpc(RequireOwnership=false,Delivery=RpcDelivery.Unreliable)]public void DriveServerRpc(float gas,float turn,bool stop,bool turbo,ServerRpcParams rpc=default)
+        {
+            var p=Ranger.Players.FirstOrDefault(q=>q&&q.OwnerClientId==rpc.Receive.SenderClientId&&!q.IsBot.Value&&q.NetworkObjectId==Seat0.Value);
+            if(!p||!p.Alive||!p.CanAct||p.VehicleId.Value!=NetworkObjectId)return;
+            throttle=Mathf.Clamp(gas,-1,1);steer=Mathf.Clamp(turn,-1,1);brake=stop;boost=turbo;lastInput=Time.time;
+        }
+        void FixedUpdate()
+        {
+            if(!IsServer||!IsSpawned)return;
+            for(int i=0;i<4;i++)if(Occupant(i)!=Empty&&!Ranger.Players.Any(p=>p&&p.NetworkObjectId==Occupant(i)&&p.Alive))SetSeat(i,Empty);
+            if(Time.time-lastInput>.35f||Seat0.Value==Empty){throttle=0;boost=false;}
+            bool parked=Seat0.Value==Empty&&Seat1.Value==Empty&&Seat2.Value==Empty&&Seat3.Value==Empty&&Mathf.Abs(Speed.Value)<.02f&&throttle==0;
+            if(parked){if(parkedAt==0)parkedAt=Time.time;return;}if(parkedAt>0){Charge.Value=Mathf.Min(100,Charge.Value+(Time.time-parkedAt)*3.5f);parkedAt=0;}
+            float speed=Speed.Value;
+            float top=topSpeeds[Mathf.Clamp(Type.Value,0,5)]*(.3f+.7f*Condition.Value/100f)*(1+Tune.Value*.12f);
+            bool turbo=boost&&Charge.Value>1&&Fuel.Value>0&&Condition.Value>20&&throttle>0;
+            if(turbo){top*=1.4f;Charge.Value=Mathf.Max(0,Charge.Value-Time.fixedDeltaTime*18);}else Charge.Value=Mathf.Min(100,Charge.Value+Time.fixedDeltaTime*3.5f);
+            float target=Condition.Value<=0||Fuel.Value<=0?0:throttle>=0?top*throttle:top*.33f*throttle;
+            speed=Mathf.MoveTowards(speed,target,Time.fixedDeltaTime*(brake?34:throttle!=0?11f:3.2f));
+            wheelAngle=Mathf.MoveTowards(wheelAngle,steer*Mathf.Lerp(34,19,Mathf.Clamp01(Mathf.Abs(speed)/top)),Time.fixedDeltaTime*150);Steering.Value=wheelAngle;
+            float yawRate=Type.Value==4?steer*90*Mathf.Clamp01(Mathf.Abs(speed)/3)*Mathf.Sign(speed):Mathf.Clamp(speed/2.45f*Mathf.Tan(wheelAngle*Mathf.Deg2Rad)*Mathf.Rad2Deg,-105,105);
+            heading=Mathf.Repeat(heading+yawRate*Time.fixedDeltaTime,360);Quaternion rotation=Quaternion.Euler(0,heading,0);Vector3 delta=rotation*Vector3.forward*speed*Time.fixedDeltaTime;
+            if(Mathf.Abs(speed)>.2f)
+            {
+                bool blocked=Physics.BoxCastAll(transform.position+Vector3.up*.4f,new Vector3(Type.Value==5?.34f:Type.Value==4?.95f:.8f,.55f,Type.Value==5?1.15f:Type.Value==4?2.15f:1.7f),delta.normalized,rotation,delta.magnitude+.18f,~((1<<9)|(1<<10)),QueryTriggerInteraction.Ignore).Any(h=>h.collider&&!h.collider.transform.IsChildOf(transform)&&h.collider.gameObject!=ReserveWorld.Instance.ground.gameObject&&(!h.collider.GetComponentInParent<BridgeSurface>()||h.collider.name.Contains("rail")||h.collider.name.Contains("post")));
+                if(blocked){if(Mathf.Abs(speed)>5&&Time.time>impactAt){Condition.Value=Mathf.Max(0,Condition.Value-Mathf.RoundToInt(Mathf.Abs(speed)));impactAt=Time.time+1;}speed=0;delta=Vector3.zero;}
+            }
+            Vector3 next=transform.position+delta;next.x=Mathf.Clamp(next.x,-ReserveWorld.Edge,ReserveWorld.Edge);next.z=Mathf.Clamp(next.z,-ReserveWorld.Edge,ReserveWorld.Edge);
+            float y=ReserveWorld.Height(next.x,next.z)+.65f;if(Type.Value==4){if(ReserveWater.Depth(next.x,next.z)<.8f){next=transform.position;speed=0;}y=ReserveWater.Level(next.x,next.z)+.23f;}else foreach(var hit in Physics.RaycastAll(new Vector3(next.x,transform.position.y+5,next.z),Vector3.down,14,~((1<<8)|(1<<9)|(1<<10)),QueryTriggerInteraction.Ignore))if(hit.collider.GetComponentInParent<BridgeSurface>())y=Mathf.Max(y,hit.point.y+.65f);
+            if(Mathf.Abs(y-transform.position.y)>Mathf.Max(.12f,delta.magnitude*.65f)){speed=0;next=transform.position;y=transform.position.y;}
+            next.y=y;Vector3 normal=new Vector3(ReserveWorld.Height(next.x-.8f,next.z)-ReserveWorld.Height(next.x+.8f,next.z),1.6f,ReserveWorld.Height(next.x,next.z-.8f)-ReserveWorld.Height(next.x,next.z+.8f)).normalized;normal=Vector3.RotateTowards(Vector3.up,normal,28*Mathf.Deg2Rad,0);if(Type.Value==4)normal=Vector3.up;normal=Vector3.Slerp(transform.up,normal,.18f);rotation=Quaternion.FromToRotation(Vector3.up,normal)*rotation;transform.SetPositionAndRotation(next,rotation);Speed.Value=speed;
+            if(Mathf.Abs(speed)>1)Fuel.Value=Mathf.Max(0,Fuel.Value-Time.fixedDeltaTime*(.025f+Mathf.Abs(speed)*.012f)*(turbo?1.5f:1));
+        }
+        public void Damage(int amount){if(IsServer)Condition.Value=Mathf.Max(0,Condition.Value-Mathf.Max(1,amount/9));}
+        public static RoadVehicle Near(Vector3 p,float distance=4.7f)
+        {RoadVehicle best=null;foreach(var v in All){float d=Vector3.Distance(v.transform.position,p);if(d<distance){distance=d;best=v;}}return best;}
+    }
+}

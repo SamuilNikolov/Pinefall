@@ -1,0 +1,25 @@
+* text=auto
+*.cs text eol=lf
+*.shader text eol=lf
+*.cginc text eol=lf
+*.meta text eol=lf whitespace=-blank-at-eol
+*.unity text eol=lf whitespace=-blank-at-eol
+*.prefab text eol=lf whitespace=-blank-at-eol
+*.asset whitespace=-blank-at-eol
+*.anim text eol=lf
+*.mat text eol=lf whitespace=-blank-at-eol
+*.txt whitespace=-blank-at-eol
+*.md text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.py text eol=lf
+*.ps1 text eol=crlf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ttf binary
+*.glb binary
+*.wav binary
+*.ogg binary
+*.fbx binary

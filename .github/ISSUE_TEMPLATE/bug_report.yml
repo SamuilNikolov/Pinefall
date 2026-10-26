@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a reproducible Pinefall problem.
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: "0.7.1 / commit hash; note if peers use different builds"
+    validations:
+      required: true
+  - type: dropdown
+    id: role
+    attributes:
+      label: Where does it happen?
+      options:
+        - Host only
+        - Client only
+        - Host and clients
+        - Editor or build
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps, expected behavior and actual behavior
+      description: Include team mode, player count, location and how often it occurs.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and environment
+      description: "Logs/screenshots and CPU/GPU, resolution/settings for performance. Remove private IPs, tokens, router credentials and microphone recordings."

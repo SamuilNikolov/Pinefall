@@ -1,0 +1,114 @@
+{
+  "version": "0.7.1",
+  "width": 1600,
+  "height": 900,
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "cpu": "13th Gen Intel(R) Core(TM) i5-13450HX",
+  "fixedViewIncludingStartupAverageFps": {
+    "0.6": 28.43389892578125,
+    "0.7": 8.75330924987793,
+    "0.7.1": 55.52901840209961
+  },
+  "soloUncapped": [
+    {
+      "scene": "Meadow HUD",
+      "frames": 1020,
+      "averageFps": 101.9592056274414,
+      "medianMs": 9.630599975585938,
+      "p95Ms": 11.936699867248535,
+      "p99Ms": 13.254900932312012
+    },
+    {
+      "scene": "Meadow without HUD",
+      "frames": 1113,
+      "averageFps": 111.23119354248047,
+      "medianMs": 8.706999778747559,
+      "p95Ms": 11.660999298095703,
+      "p99Ms": 13.456899642944336
+    },
+    {
+      "scene": "Named village",
+      "frames": 865,
+      "averageFps": 86.4116439819336,
+      "medianMs": 11.32140064239502,
+      "p95Ms": 15.017800331115723,
+      "p99Ms": 17.108600616455078
+    },
+    {
+      "scene": "Autumn woods",
+      "frames": 990,
+      "averageFps": 98.97090911865234,
+      "medianMs": 9.9443998336792,
+      "p95Ms": 12.523799896240234,
+      "p99Ms": 14.041099548339844
+    },
+    {
+      "scene": "Rainforest",
+      "frames": 948,
+      "averageFps": 94.66780853271484,
+      "medianMs": 10.30210018157959,
+      "p95Ms": 13.145400047302246,
+      "p99Ms": 18.126800537109375
+    },
+    {
+      "scene": "Waterfront",
+      "frames": 966,
+      "averageFps": 96.5071029663086,
+      "medianMs": 10.128599166870117,
+      "p95Ms": 12.965999603271484,
+      "p99Ms": 14.676400184631348
+    }
+  ],
+  "hostWithTwoClientsUncapped": [
+    {
+      "scene": "Meadow HUD",
+      "frames": 989,
+      "averageFps": 98.7722396850586,
+      "medianMs": 9.716400146484375,
+      "p95Ms": 13.480299949645996,
+      "p99Ms": 20.004398345947266
+    },
+    {
+      "scene": "Meadow without HUD",
+      "frames": 1154,
+      "averageFps": 115.32708740234375,
+      "medianMs": 8.458600044250488,
+      "p95Ms": 11.177599906921387,
+      "p99Ms": 15.389200210571289
+    },
+    {
+      "scene": "Named village",
+      "frames": 924,
+      "averageFps": 92.33409118652344,
+      "medianMs": 10.708300590515137,
+      "p95Ms": 12.915999412536621,
+      "p99Ms": 14.090799331665039
+    },
+    {
+      "scene": "Autumn woods",
+      "frames": 945,
+      "averageFps": 94.42232513427734,
+      "medianMs": 10.31570053100586,
+      "p95Ms": 13.277100563049316,
+      "p99Ms": 17.8346004486084
+    },
+    {
+      "scene": "Rainforest",
+      "frames": 972,
+      "averageFps": 97.1705551147461,
+      "medianMs": 9.990500450134277,
+      "p95Ms": 13.261099815368652,
+      "p99Ms": 16.765300750732422
+    },
+    {
+      "scene": "Waterfront",
+      "frames": 890,
+      "averageFps": 88.98074340820312,
+      "medianMs": 10.981399536132812,
+      "p95Ms": 14.290800094604492,
+      "p99Ms": 19.004899978637695
+    }
+  ],
+  "runtimeErrors": [],
+  "microphoneStarts": 0
+}

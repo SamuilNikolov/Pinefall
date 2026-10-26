@@ -1,0 +1,19 @@
+{
+  "version": "0.7.1",
+  "createdUTC": "2026-10-26T01:07:52.889721+00:00",
+  "gameplayAssertions": 146,
+  "compatibilityAssertions": 32,
+  "failures": 0,
+  "runtimeErrorsCaptured": 0,
+  "world": {
+    "villages": 48,
+    "houses": 304,
+    "vehicles": 91,
+    "animals": 210
+  },
+  "sha256": {
+    "Pinefall.exe": "8a9b25cfbb8a839b097d3e059b4dec2bac2b7bf1833f380e41c352aa6d8708ea",
+    "UnityPlayer.dll": "20b67cb1ac9d26f51344d6065a0d933e361cee14b355b343d3012c7539c725f7",
+    "Pinefall_Data/Managed/Assembly-CSharp.dll": "bf4d98e5ad457a59aaa0df8410f7780d88ac5a28d0d8b6b8203cb6c3ada2ae44"
+  }
+}

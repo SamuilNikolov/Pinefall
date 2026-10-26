@@ -1,0 +1,22 @@
+name: Feature or structural improvement
+description: Propose an addition or focused architecture change.
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Player or developer problem
+      description: Explain the desired outcome and a concrete use case.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed slice and affected systems
+      description: Describe a reviewable first step, dependencies and content/network changes.
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Acceptance and verification
+      description: What would demonstrate this works for host, clients and performance?

@@ -1,0 +1,15 @@
+{
+    "role": "client 1",
+    "passed": [
+        "Synthetic proximity voice received",
+        "Client receives global narrator announcements",
+        "Microphone remains off"
+    ],
+    "failed": [],
+    "errors": [],
+    "voiceFrames": 1261,
+    "animals": 0,
+    "loot": 0,
+    "vehicles": 0,
+    "fps": 77.57601928710938
+}
