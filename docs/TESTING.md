@@ -94,3 +94,18 @@ This is a graphics-enabled window, not a hidden/headless proof. `CaptureProbe` i
 The baseline separately tested a 0.7.1 host with two 0.7 clients: 32 assertions. Old binaries are not committed here, so the default suite does not reproduce that cross-version claim. A fresh compatibility run must name each build/commit and retain their hashes.
 
 Historical reports are in [tests/baselines/0.7.1](../tests/baselines/0.7.1/README.md). New runs belong in ignored `artifacts`, with a summary attached to the PR. When producing a release, copy reviewed results into a new versioned baseline, document hardware and skipped checks, hash the build and retain notices. Never overwrite old JSON to make it appear newly tested.
+
+
+## Living Wildfront checks (0.9)
+
+Run tools/Test-Frontier.ps1 against the built player. It exercises arena boundaries/freeze, population bounds, hold inventory, a 37-degree build frame and four connected wall turns, floor launchpad transactions/removal, actual launch/glide/landing, all six cave floor/ceiling collisions and underground rescue/drop rules, oriented animal body hits/misses, usable boss rewards, twenty authoritative participants/duo teams and simultaneous approval-slot reservations. It never captures a microphone. This is not a twenty-independent-client stress test.
+
+Test-Visual.ps1 enables --layout-audit 1 and captures the real renderer. Text labels are checked with actual GUIStyle metrics. The expanded sequence includes main/host/join/browser/lobby/character, every handbook page, audio/performance/controls, draft, HUD/inventory/map, editing, stance/boss/spectator and cave/crystal/ground-cover views. Review UI_TEXT_OVERFLOW diagnostics and screenshots at 1600×900 and 1280×720. A completed capture sequence alone does not imply good layout.
+
+The mountain road check compares graded cross-slope with the unmodified natural terrain (including water carving), rather than banning steep natural mountain slopes introduced deliberately in 0.9. It detects an added road ridge; it does not certify every road as easy to drive.
+
+Run test groups sequentially for final evidence and keep the tested build directory immutable. Editor imports and multiple simultaneous Unity groups can interfere with startup and invalidate performance comparisons. Keep failed development evidence separate from release evidence.
+
+Frontier also checks emote directional/center selection, hold release, click commit, visible raised-hand posing, damage/motion rejection and expiry. Fieldcraft checks an actual remote owner and host observing replicated emote state. Native captures include the wheel and a visible wave.
+
+The final movement checks verify that stationary crouch cannot slide, fast travel can slide, holding jump produces repeated real controller jumps, and chained hops gain substantial capped speed.

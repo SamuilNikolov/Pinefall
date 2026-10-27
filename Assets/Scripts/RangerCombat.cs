@@ -51,10 +51,11 @@ namespace Pinefall
                 foreach (var target in ReserveSession.Instance.Animals)
                 {
                     if (!target || target.Dead || (target.transform.position - origin).sqrMagnitude > (data.range + 5) * (data.range + 5)) continue;
-                    var capsule = target.GetComponent<CapsuleCollider>(); if (!capsule) continue;
-                    double animalAt = System.Math.Max(now-ShotHistory.Window,stamp - (OwnerClientId == NetworkManager.ServerClientId ? 0 : 1.0 / NetworkManager.NetworkConfig.TickRate+smoothing));
-                    var pose = ShotHistory.Current.Get(target.NetworkObjectId, animalAt, target.transform.TransformPoint(capsule.center) - Vector3.up * capsule.height * target.transform.lossyScale.y * .5f, capsule.height * target.transform.lossyScale.y, capsule.radius * target.transform.lossyScale.x);
-                    if (ShotHistory.RayCapsule(origin, ray, pose, nearest, out float distance)) { nearest = distance; animal = target; victim = null; }
+                    double animalAt=System.Math.Max(now-ShotHistory.Window,stamp-(OwnerClientId==NetworkManager.ServerClientId?0:1.0/NetworkManager.NetworkConfig.TickRate+smoothing));
+                    var fallback=WildlifeHitboxes.Pose(target,animalAt);
+                    var pose=ShotHistory.Current?ShotHistory.Current.Get(target.NetworkObjectId,animalAt,fallback.bottom,fallback.height,fallback.radius):fallback;
+                    if(pose.extent.sqrMagnitude<.01f)pose=fallback;
+                    if(WildlifeHitboxes.Ray(origin,ray,pose,nearest,out float distance)){nearest=distance;animal=target;victim=null;}
                 }
                 impact = origin + ray * nearest;
                 if (victim)
@@ -75,6 +76,7 @@ namespace Pinefall
                     int amount = Mathf.RoundToInt(data.damage * DamageFactor(weapon));
                     if (piece) { int before = piece.Health.Value; piece.Damage(amount); ConfirmDamage(impact, Mathf.Min(before, amount), 0, piece.Health.Value, piece.Maximum, piece.Health.Value == 0, false, piece.NetworkObjectId, false); }
                     else if (node != null && ConstructionWorld.Current) { int dealt = ConstructionWorld.Current.DamageNode(node, amount, null); ConfirmDamage(impact, dealt, 0, node.health, node.maximum, node.health == 0, false, ulong.MaxValue, false); }
+                    var pad=cover.collider.GetComponentInParent<LaunchPad>();if(pad)pad.Damage(amount);
                     var car = cover.collider.GetComponentInParent<RoadVehicle>(); if (car) car.Damage(amount);
                     var range = cover.collider.GetComponent<RangeTarget>(); if (range) range.Hit();
                 }

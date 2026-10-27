@@ -29,14 +29,16 @@ namespace Pinefall
             float hill = 23 + n*31 + fine*4 + edge*(30+55*Mathf.PerlinNoise(x*.003f+8,z*.003f+3));
             float meadow = Mathf.Exp(-Mathf.Pow(x/130,2)) * Mathf.Exp(-Mathf.Pow((z+65)/260,2));
             hill = Mathf.Lerp(hill, 35 + Mathf.Sin(z*.007f)*3 + fine*2, meadow*.88f);
-            float desert=31+n*17+Mathf.Sin(x*.032f+z*.019f)*4;
+            float mesa=Mathf.SmoothStep(0,1,Mathf.InverseLerp(.48f,.68f,Mathf.PerlinNoise(wx*.003f+71,wz*.003f+12)));float desert=31+n*17+Mathf.Sin(x*.032f+z*.019f)*4+mesa*47;
             float ice=52+n*15+fine*3;
-            float rockies=56+Mathf.Pow(1-Mathf.Abs(n*2-1),1.8f)*94+fine*12;
+            float ridge=1-Mathf.Abs(Mathf.PerlinNoise(wx*.0026f+12,wz*.0026f+42)*2-1);float rockies=60+Mathf.Pow(ridge,3)*150+fine*18;
+            rockies+=110*Mathf.Exp(-((wx-1850)*(wx-1850)+(wz-1900)*(wz-1900))/145000f);
             float jungle=31+n*45+fine*8;
             float a,b,c,d,e,f;ReserveBiomes.Weights(wx,wz,out a,out b,out c,out d,out e,out f);hill=hill*a+desert*b+ice*c+rockies*d+jungle*e+(32+n*8+fine)*f;float rough=(Mathf.PerlinNoise(wx*.035f+6,wz*.035f+19)-.5f)*2.8f;hill+=rough*(.25f+d*.9f+e*.5f);
             float camp = 1-Mathf.SmoothStep(0, 1, Mathf.InverseLerp(14,48,Vector2.Distance(new Vector2(x,z),new Vector2(0,-160))));
-            return Mathf.Lerp(hill, 36, camp);
+            return Mathf.Lerp(hill, 36, camp)+CaveLayout.ExteriorLift(wx,wz);
         }
+        public static float UnmodifiedHeight(float x,float z){return NaturalHeight(x,z);}
         public static Vector3 OnGround(float x, float z, float offset=0) { return new Vector3(x, Height(x,z)+offset,z); }
         public static float PathX(float z) { return Mathf.Sin((z+160)*.011f)*13; }
         public static bool Clearing(float x, float z)
@@ -47,7 +49,7 @@ namespace Pinefall
         {
             Instance=this;HarvestResources.Clear();CacheTerrainHeights();
             spawn=OnGround(0,-160, .2f);
-            CreateFoliage();CreateUnderstory();gameObject.AddComponent<ReserveWater>();gameObject.AddComponent<AmbientBirds>();
+            CreateFoliage();CreateUnderstory();PrepareLowGrass();gameObject.AddComponent<ReserveWater>();gameObject.AddComponent<AmbientBirds>();
             map=Resources.Load<Texture2D>("DetailedAtlas");if(!map)map=MakeMap();
         }
         void CreateFoliage()
@@ -86,7 +88,7 @@ namespace Pinefall
             {
                 int biome=pair.Key/4096;
                 if(biome==1)AddBatch(cactusMesh,cactus,pair.Value,650,treeNodes[pair.Key]);
-                else {if(biome!=2)AddBatch(biome==6?broadleafMesh:biome==4?palmMesh:crownMesh,biome==6?autumn:biome==4?palm:pine,pair.Value,850,treeNodes[pair.Key]);AddBatch(trunkMesh,bark,pair.Value,620,treeNodes[pair.Key]);}
+                else {if((biome==0||biome==3||biome==5)&&Resources.Load<Material>("LivingFir"))AddLivingFirs(pair.Value,treeNodes[pair.Key]);else if(biome!=2)AddBatch(biome==6?broadleafMesh:biome==4?palmMesh:crownMesh,biome==6?autumn:biome==4?palm:pine,pair.Value,850,treeNodes[pair.Key]);AddBatch(trunkMesh,bark,pair.Value,620,treeNodes[pair.Key]);}
             }
             foreach(var pair in rocks) AddBatch(rockMesh,pair.Key>=4096?BuildGeometry.Surface(2):stone,pair.Value,650,rockNodes[pair.Key]);
         }
@@ -107,16 +109,17 @@ namespace Pinefall
             DrawFoliage(cam,null);
         }
         public void DrawAtlasFoliage(Camera camera)
-        {foreach(var batch in batches)if(batch.distance>=500)Graphics.DrawMeshInstanced(batch.mesh,0,batch.mat,batch.matrices,batch.matrices.Length,null,ShadowCastingMode.On,true,0,camera,LightProbeUsage.Off);}
+        {DrawLivingFirs(camera,camera,true);foreach(var batch in batches)if(batch.distance>=500)Graphics.DrawMeshInstanced(batch.mesh,0,batch.mat,batch.matrices,batch.matrices.Length,null,ShadowCastingMode.On,true,0,camera,LightProbeUsage.Off);}
         readonly Plane[] drawPlanes=new Plane[6];
         public void DrawFoliage(Camera cam,Camera renderCamera)
         {
             if(!SystemInfo.supportsInstancing)return;
             float q=(PlayerPrefs.GetInt("quality",1)==0?.65f:1)*(.5f+RuntimePerformance.Detail*.5f);GeometryUtility.CalculateFrustumPlanes(cam,drawPlanes);float shadowRange=QualitySettings.shadowDistance+128;Vector3 cameraPosition=cam.transform.position;
+            DrawLivingFirs(cam,renderCamera);DrawLowGrass(cam,renderCamera);
             foreach(var b in batches)
             {
                 float distanceSquared=(b.center-cameraPosition).sqrMagnitude,range=b.distance*q+95;if(distanceSquared>range*range)continue;if((b.distance<=260||distanceSquared>shadowRange*shadowRange)&&!GeometryUtility.TestPlanesAABB(drawPlanes,b.bounds))continue;
-                Graphics.DrawMeshInstanced(b.mesh,0,b.mat,b.matrices,b.matrices.Length,null,b.distance<=260?ShadowCastingMode.Off:ShadowCastingMode.On,true,0,renderCamera,LightProbeUsage.Off);
+                Graphics.DrawMeshInstanced(b.mesh,0,b.mat,b.matrices,b.matrices.Length,null,b.distance<=260||distanceSquared>shadowRange*shadowRange?ShadowCastingMode.Off:ShadowCastingMode.On,true,0,renderCamera,LightProbeUsage.Off);
             }
         }
         public Texture2D MakeMap()

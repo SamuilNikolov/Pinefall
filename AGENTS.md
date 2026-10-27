@@ -12,7 +12,7 @@ These instructions apply to the entire repository. They describe project constra
 ## Current baseline
 
 - Unity **2022.3.13f1**, Windows x64, Mono, built-in render pipeline.
-- NGO **1.8.1**, glTFast **6.0.1**, protocol string **PinefallReserve/8**, maximum eight players including bots.
+- NGO **1.8.1**, glTFast **6.0.1**, protocol string **PinefallReserve/9**, maximum twenty players including bots.
 - The repository root is the Unity project. Never depend on the original author's `outputs/` or `work/` directories.
 - The scene is committed at `Assets/Scenes/Reserve.unity`; generated assets and all `.meta` files are intentional source inputs.
 - Use `BuildReserve.BuildCurrent` for routine builds. `BuildReserve.Setup` / `BuildReserve.Build` regenerate assets and scene content.
@@ -23,7 +23,7 @@ These instructions apply to the entire repository. They describe project constra
 - No ordinary enemy map tracking. Team-only survey snapshots are a deliberate timed exception. Enemy-occupied vehicle pins must stay hidden.
 - The display culling budget and the authoritative simulation are separate concerns. Turning off a visual must not disable collision, gameplay, loot or map state.
 - Preserve opt-in voice: no microphone capture in automated checks. Synthetic voice data is permitted in tests. Maintain 75 m routing/falloff and warm-up-on-enable behavior.
-- Normally peaceful prey flees outside closing storm phases. Animals do not drop guns, ammo or fuel. Sharks cannot damage a player protected aboard a boat.
+- Normally peaceful prey flees outside closing storm phases. The user explicitly changed animal rewards for 0.9: kills may drop regular equipment, ammo, armor, attachments and launchpads. Do not add pelts, bones, trophies or a crafting economy. Sharks cannot damage a player protected aboard a boat.
 - Session exit/rehost must stop microphone capture, clear network registries and cancel queued visibility work while retaining the static world/atlas.
 - Changes to network variables, RPC signatures, prefab registration, IDs or serialized structs require a protocol review. Do not silently promise compatibility because the version string is unchanged.
 

@@ -397,5 +397,245 @@
     "seconds": 30.0,
     "peak": 0.48,
     "rms": 0.03418353795131628
+  },
+  {
+    "asset": "Announcer/lobby",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Welcome to Wildfront. Spend wisely, land boldly, and try not to become a cautionary tale.",
+    "sha256": "0bea903c957076cab7fe0abdc5579c06f000a1014bbe85b39c4f8597ac0b7b0e"
+  },
+  {
+    "asset": "Announcer/deploy",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "The reserve is open. Find a weapon, find a route, and remember: stealth is cheaper than ammunition.",
+    "sha256": "bd5ecba1232c5e6f5f2840231c3f99c7032564de07f7a3b89c78ead90bc6e3f1"
+  },
+  {
+    "asset": "Announcer/warning",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Storm movement in twelve seconds. If your plan begins with one more chest, revise it.",
+    "sha256": "a71b4247c2d875c1e5ae3d89f0e12d70cea2df617b444f422960b461832497bb"
+  },
+  {
+    "asset": "Announcer/closing",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "The storm is moving. Wildlife is enraged. Apparently we have upset the entire food chain.",
+    "sha256": "4283901a3b44d10b0e1f2ebed001b5493f00f373ca747872197c7765669716a2"
+  },
+  {
+    "asset": "Announcer/safe",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "New safe zone marked. Your old hiding place has been rezoned as a terrible idea.",
+    "sha256": "6059fbf213fc2263735e8ee83e5e960869d6184050e6ecc5e7bd24f499a912d8"
+  },
+  {
+    "asset": "Announcer/inbound",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Supply aircraft inbound. Look up, then look around. You are unlikely to be the only customer.",
+    "sha256": "b875735b4f38ea6e70e5b9e854d92bb7d1ec8df85934d1c47eae5c7e25b986c9"
+  },
+  {
+    "asset": "Announcer/landed",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Supply crate on the ground. Premium equipment. Extremely competitive parking.",
+    "sha256": "0a268ea82f93503ae4b8f253f2ea1e8a52e56731bea5afe1def5093bb9f9b476"
+  },
+  {
+    "asset": "Announcer/claimed",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Supply crate claimed. That was either excellent timing, or somebody else was reloading.",
+    "sha256": "fadb3bf30f2152c8488950eed11362b1cbc46727518863aed14447bcc7c5b272"
+  },
+  {
+    "asset": "Announcer/victory",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "We have our survivors. Well played. The reserve would like its ammunition back, but we understand.",
+    "sha256": "d4a93032bacf8f67b15084362932be244716538d2234475b0071e5c0d5da2ba2"
+  },
+  {
+    "asset": "Announcer/elim0",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Hunter eliminated. Their equipment is now available for a very informal inheritance process.",
+    "sha256": "6e4417d3957c8598869be3fbf98650076936d617ecbbec36f52ef99a34778609"
+  },
+  {
+    "asset": "Announcer/elim1",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Another hunter down. A brief, ambitious contribution to the local economy.",
+    "sha256": "5bebd464f7ab6beb147adb97f369b1f11508514503e212749939d59766d300c7"
+  },
+  {
+    "asset": "Announcer/elim2",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Elimination confirmed. A moment of silence. Preferably behind cover.",
+    "sha256": "e21121156d4b6972d799607c0542a6456e4b1dd60805d58497fcc8f8cee8009b"
+  },
+  {
+    "asset": "Announcer/banter0",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "A useful field tip: every shortcut through an open field comes with complimentary long-range attention.",
+    "sha256": "ace7e78f3716d0fa28d850efac4771f539f1d534418ae1d86b28926b2fcaafe1"
+  },
+  {
+    "asset": "Announcer/banter1",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "If a rabbit starts chasing you, stop checking the guidebook and start running.",
+    "sha256": "d2ae47e1766b1a5ff0faf4910f55a692b2a8789c4272e95417977d492d49f482"
+  },
+  {
+    "asset": "Announcer/banter2",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "You can hoard supplies, or you can reach the safe zone. Ideally, both. The storm is not sentimental.",
+    "sha256": "6ccf7cc83c1f46fe0c59f0cacd0782374ca6a547ef9f120b0ee580e8e270920e"
+  },
+  {
+    "asset": "Announcer/banter3",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Nothing says subtle approach quite like a motorcycle arriving through a kitchen.",
+    "sha256": "62bb2ea4c1aec42b9693f24867663b217f0a034adc317770f1fd24181c1bfd3c"
+  },
+  {
+    "asset": "Announcer/warning1",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Twelve seconds until the storm moves. Please conclude any unnecessary arguments with the scenery.",
+    "sha256": "27c591d22a5bd5d91cdeaa6531e0e8a74a8a5a26e9938e23c5aebef78c846e68"
+  },
+  {
+    "asset": "Announcer/closing1",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "The ring is closing. The animals are angry, and the weather is taking their side.",
+    "sha256": "3be6dbd0d7f83418c9aed44d6c769b801f52dd30ee2c9cf6c7480f70a19f699a"
+  },
+  {
+    "asset": "Announcer/safe1",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Next safe zone marked. A fresh destination for all your questionable decisions.",
+    "sha256": "44b3f613d1c7b213ffa34d907e29cf573bbbb739e702449d037f237f04bd9386"
+  },
+  {
+    "asset": "Announcer/inbound1",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Supply flight approaching. A box full of opportunities, descending into a neighborhood full of opinions.",
+    "sha256": "218a32cadf5ab04021e9356bc8437e12a981f5839a49a44f3335f28c202ea3cd"
+  },
+  {
+    "asset": "Announcer/landed1",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Crate landed. It contains valuable equipment and absolutely no guarantee of personal safety.",
+    "sha256": "4cb88fa77a3cd1be1d7e2a510e926b8e943f954656fdd23fd01254b8953a90e6"
+  },
+  {
+    "asset": "Announcer/claimed1",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Supplies secured. Remember to reload before celebrating. We have had incidents.",
+    "sha256": "af889125e2f0e71f2cd0d3cf107dc6b956becc87cdccf54f0275a04ffa52550d"
+  },
+  {
+    "asset": "Announcer/elim3",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "One fewer hunter. More loot per square metre. Nature loves efficiency.",
+    "sha256": "dd106b403a19690f4ae9acc035c1231062f9fdda2d46420d7db1a8f15e4eee0c"
+  },
+  {
+    "asset": "Announcer/elim4",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Hunter eliminated. Their rotation has become a permanent stop.",
+    "sha256": "e1232a0a13e5d69428806d03ff447b0c1d9d42bcb794a27ca9ed9a82d361440f"
+  },
+  {
+    "asset": "Announcer/banter4",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Those abandoned houses have survived years of storms. Let us see how they handle your driving.",
+    "sha256": "4eac618774222004e26c9d47c4e1f32b48d62c8e53c20ce8da717b5bbe3e686e"
+  },
+  {
+    "asset": "Announcer/banter5",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "A launchpad is a wonderful way to leave a problem. Landing is where the next problem begins.",
+    "sha256": "b8098f098b678191b2dad054ff937077aad1898191023f994d458d2363c88768"
+  },
+  {
+    "asset": "Announcer/banter6",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "The mountains offer spectacular views of people who forgot to bring ammunition.",
+    "sha256": "8eed5c8166731b36c2201f9b043869a69c499c51de46c9e7424d2a4f1ac17e01"
+  },
+  {
+    "asset": "Announcer/banter7",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "In the caves, footsteps echo. So do bad decisions. Travel accordingly.",
+    "sha256": "5117cb425a4380e49eeb02d78c6c607c2f6823800c8adc8f6520046b305e7f99"
+  },
+  {
+    "asset": "Announcer/mutation",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "Storm mutation detected. A larger animal has entered the reserve. Better loot, considerably worse manners.",
+    "sha256": "120b78281e0f0232662ad24e984c7ab19dea096397a0b40b2037bb8dd8fd9884"
+  },
+  {
+    "asset": "Announcer/relay",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "generator": "kokoro-onnx, af_heart, speed 1.02, offline",
+    "modelLicense": "Apache-2.0",
+    "script": "A supply relay has been activated. Incoming flight marked. This invitation was not team exclusive.",
+    "sha256": "157b85988cc0e3aa4a72e63b028f594f6ff3b512613c59167931cd56d7214392"
   }
 ]

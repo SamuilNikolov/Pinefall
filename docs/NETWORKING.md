@@ -4,7 +4,7 @@
 
 Pinefall uses a listen server over **UDP**, via Unity Transport and NGO 1.8.1. One player's process is both server and local client. The default game port is **7777** and can be changed in the host/join UI. The host listens on `0.0.0.0`; joining currently accepts IPv4 addresses. Eight slots include practice bots, with a bot removable when a human joins a full practice session.
 
-`ReserveSession` configures a 20 Hz network tick, explicit network prefab registration and connection approval using `PinefallReserve/8`. NGO scene management is disabled; all players load the same committed static reserve. Do not assume remote scene loading will repair mismatched terrain/assets.
+`ReserveSession` configures a 20 Hz network tick, explicit network prefab registration and connection approval using `PinefallReserve/9`. NGO scene management is disabled; all players load the same committed static reserve. Do not assume remote scene loading will repair mismatched terrain/assets.
 
 LAN discovery uses UDP **47776** with a versioned query and a host response. This is separate from the game port and is not an internet server browser. The public address lookup on the host card is informational. There is no relay, NAT traversal guarantee, encrypted voice service, persistent lobby backend or account authentication in this build.
 
@@ -44,9 +44,9 @@ Never turn off the entire firewall as a development step. A PowerShell TCP conne
 
 ## Compatibility and schema changes
 
-0.8 uses protocol 8 and rejects older clients. Protocol 7 compatibility between 0.7 and 0.7.1 is historical evidence only. Player network variables, combat RPCs, voice frame format and registered construction/rocket prefabs changed for 0.8. Use matching builds on all peers.
+0.9 uses protocol 9 and rejects older clients. Build GridYaw/GridOrigin, match ArenaTier, player launchpad count/GlideState, LaunchPad prefab and transport pin type 6 require matching builds. The capacity is twenty, including bots; pending approvals reserve slots. Protocol 7 compatibility between 0.7 and 0.7.1 is historical evidence only. Player network variables, combat RPCs, voice frame format and registered construction/rocket prefabs changed for 0.8. Use matching builds on all peers.
 
-Review a protocol bump whenever network variable ordering/types, RPC signatures, registered prefab hashes, item/weapon/vehicle IDs, packed layouts or serialized map structs change. If bumping, update both approval payload and comparison, discovery query/version, visible error text/docs, and affected tests. Reject incompatible clients clearly instead of allowing partially decoded state. Search for `PinefallReserve/8` and `PINEFALL_FIND_8`; do not replace unrelated numeric 7 values globally.
+Review a protocol bump whenever network variable ordering/types, RPC signatures, registered prefab hashes, item/weapon/vehicle IDs, packed layouts or serialized map structs change. If bumping, update both approval payload and comparison, discovery query/version, visible error text/docs, and affected tests. Reject incompatible clients clearly instead of allowing partially decoded state. Search for `PinefallReserve/9` and `PINEFALL_FIND_9`; do not replace unrelated numeric 7 values globally.
 
 ## Shot validation and voice playback
 
@@ -57,3 +57,6 @@ Voice uses sequenced 20 ms, 16 kHz mu-law frames. A burst token budget replaces 
 ## Required multiplayer checks
 
 Exercise host-local and remote-owner actions, a friendly and enemy team, late join, network hide/show followed by despawn, return to reserve and rehost. Voice automation uses synthetic packets; physical microphones and real internet jitter require a separate consenting human session. Connection success through the developer's router has not been established by the repository's localhost probes.
+
+
+The final 0.9 player schema also includes EmoteId, EmoteStarted and EmoteUntil. Requests are owner-authorized ServerRpcs with on-foot/stationary/state checks and a cooldown. Pose animation is cosmetic; damage/movement remain active and interrupt it. Emotes do not change damage capsules or grant protection.

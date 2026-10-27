@@ -32,14 +32,14 @@ namespace Pinefall
         {
             if(!IsServer||!Battle.Value||Phase.Value==1||Phase.Value>=3)return;
             if(BotsEnabled.Value)AddPracticeBots();
-            Round.Value++;Winner.Value=-1;SpawnDraft.Current.Begin();
+            SelectArena();Round.Value++;Winner.Value=-1;SpawnDraft.Current.Begin();
         }
         public int AssignTeam(Ranger player,int requested)
         {
-            if(TeamSize.Value==1)return Enumerable.Range(0,8).FirstOrDefault(t=>!Ranger.Players.Any(p=>p&&p!=player&&p.Team.Value==t));
-            requested=Mathf.Clamp(requested,0,TeamSize.Value==4?1:3);
+            if(TeamSize.Value==1)return Enumerable.Range(0,RoundArena.MaximumPlayers).FirstOrDefault(t=>!Ranger.Players.Any(p=>p&&p!=player&&p.Team.Value==t));
+            requested=Mathf.Clamp(requested,0,RoundArena.MaximumPlayers/TeamSize.Value-1);
             if(Ranger.Players.Count(p=>p&&p!=player&&p.Team.Value==requested)<TeamSize.Value)return requested;
-            return Enumerable.Range(0,8/TeamSize.Value).FirstOrDefault(t=>Ranger.Players.Count(p=>p&&p!=player&&p.Team.Value==t)<TeamSize.Value);
+            return Enumerable.Range(0,RoundArena.MaximumPlayers/TeamSize.Value).FirstOrDefault(t=>Ranger.Players.Count(p=>p&&p!=player&&p.Team.Value==t)<TeamSize.Value);
         }
         void AddPracticeBots()
         {
@@ -61,7 +61,7 @@ namespace Pinefall
             foreach(var drop in FindObjectsOfType<FieldPickup>())if(drop.IsSpawned)drop.NetworkObject.Despawn();
             if(ConstructionWorld.Current)ConstructionWorld.Current.ResetWorld();WildlifeDirector.Current.Repopulate();ExpeditionLoot.Populate();
             startingTeams=Ranger.Players.Where(p=>p&&p.IsSpawned&&p.Alive).Select(p=>p.Team.Value).Distinct().Count();
-            Stage.Value=0;Winner.Value=-1;Center.Value=Vector3.zero;Radius.Value=4320;Phase.Value=1;ResetSupplies();PlanStage();
+            Stage.Value=0;Winner.Value=-1;Center.Value=Vector3.zero;Radius.Value=RoundArena.Size*.704f;Phase.Value=1;ResetSupplies();PlanStage();
             Debug.Log("PINEFALL_ROUND_START "+Round.Value);
         }
         public static Vector3 TeamStart(int team)
@@ -71,11 +71,11 @@ namespace Pinefall
         }
         void PlanStage()
         {
-            int index=Mathf.Clamp(Stage.Value,0,radii.Length-1);float radius=radii[index];
+            int index=Mathf.Clamp(Stage.Value,0,radii.Length-1);float radius=radii[index]*(RoundArena.Size/ReserveWorld.Size);
             float angle=(float)random.NextDouble()*Mathf.PI*2;
             float drift=Mathf.Max(0,Radius.Value-radius)*.52f;
             Vector3 next=Center.Value+new Vector3(Mathf.Cos(angle)*drift,0,Mathf.Sin(angle)*drift);
-            float centerLimit=ReserveWorld.Edge*.71f;next.x=Mathf.Clamp(next.x,-centerLimit+radius*.25f,centerLimit-radius*.25f);next.z=Mathf.Clamp(next.z,-centerLimit+radius*.25f,centerLimit-radius*.25f);
+            float centerLimit=RoundArena.Half*.71f;next.x=Mathf.Clamp(next.x,-centerLimit+radius*.25f,centerLimit-radius*.25f);next.z=Mathf.Clamp(next.z,-centerLimit+radius*.25f,centerLimit-radius*.25f);
             if(index==0)next=Vector3.zero;
             NextCenter.Value=next;NextRadius.Value=radius;
             double now=NetworkManager.ServerTime.Time;float[] waiting={90,60,55,45,40,30,20},closing={100,140,125,110,85,60,45};ShrinkAt.Value=now+waiting[index]/pacing;StageEnds.Value=ShrinkAt.Value+closing[index]/pacing;
@@ -84,7 +84,7 @@ namespace Pinefall
         void Update()
         {
             TransportTick();
-            LobbyTick();SupplyTick();BanterTick();if(!IsServer||!Active)return;
+            if(IsServer&&Phase.Value==0)SelectArena();LobbyTick();SupplyTick();BanterTick();if(!IsServer||!Active)return;
             double now=NetworkManager.ServerTime.Time;
             if(Time.time>nextTick)
             {
@@ -103,10 +103,10 @@ namespace Pinefall
                 foreach(var p in Ranger.Players)if(p&&p.IsSpawned&&p.Alive&&Outside(p.transform.position))p.TakeDamageServer(2+Stage.Value*2,-1);
                 var teams=Ranger.Players.Where(p=>p&&p.IsSpawned&&p.Alive).Select(p=>p.Team.Value).Distinct().ToArray();
                 if(teams.Length==0 || startingTeams>1&&teams.Length==1)
-                {Winner.Value=teams.Length==1?teams[0]:-1;Phase.Value=2;NarrateClientRpc("victory");Debug.Log("PINEFALL_ROUND_END "+Winner.Value);}
+                {Winner.Value=teams.Length==1?teams[0]:-1;Phase.Value=2;NarrateEvent("victory");Debug.Log("PINEFALL_ROUND_END "+Winner.Value);}
             }
         }
-        public bool Outside(Vector3 p){return new Vector2(p.x-Center.Value.x,p.z-Center.Value.z).magnitude>Radius.Value;}
+        public bool Outside(Vector3 p){return !RoundArena.Contains(p)||new Vector2(p.x-Center.Value.x,p.z-Center.Value.z).magnitude>Radius.Value;}
         public Vector3 EscapePoint(Vector3 p)
         {
             var dir=p-Center.Value;dir.y=0;return Center.Value+dir.normalized*Mathf.Max(8,Radius.Value-65);
@@ -114,8 +114,8 @@ namespace Pinefall
         public void DropReward(Vector3 position,int animalKind,bool frenzy=false)
         {
             if(!IsServer)return;
-            ExpeditionLoot.Spawn(ReserveWater.LootPosition(position.x+.6f,position.z),5,0,0,animalKind>=2?3:2);
-            if(UnityEngine.Random.value<(frenzy?.65f:.08f))ExpeditionLoot.Spawn(ReserveWater.LootPosition(position.x-.6f,position.z),9,0,frenzy?2:0,1);
+            ExpeditionLoot.Spawn(CaveLayout.LootPosition(position,Vector3.right*.6f),5,0,0,animalKind>=2?3:2);
+            if(UnityEngine.Random.value<(frenzy?.65f:.08f))ExpeditionLoot.Spawn(CaveLayout.LootPosition(position,Vector3.left*.6f),9,0,frenzy?2:0,1);
         }
         public void CaptureLateJoin(Ranger player)
         {

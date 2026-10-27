@@ -45,13 +45,13 @@ namespace Pinefall
         {if(Sender(rpc.Receive.SenderClientId))Pick(region);}
         void Pick(int region)
         {
-            if(WildfrontMatch.Current.Phase.Value!=4||region<0||region>=ExpeditionLayout.Regions.Length||Claimed(region))return;
+            if(WildfrontMatch.Current.Phase.Value!=4||region<0||region>=ExpeditionLayout.Regions.Length||!RoundArena.Includes(ExpeditionLayout.Regions[region])||Claimed(region))return;
             var e=Entries[turn];e.region=region;Entries[turn]=e;turn++;NextTurn();
         }
         [ServerRpc(RequireOwnership=false)]public void PreviewPointServerRpc(Vector3 requested,ServerRpcParams rpc=default)
-        {if(!Sender(rpc.Receive.SenderClientId)||!FreeSpawn.Finite(requested))return;var e=Entries[turn];e.preview=new Vector3(Mathf.Clamp(requested.x,-ReserveWorld.Edge,ReserveWorld.Edge),0,Mathf.Clamp(requested.z,-ReserveWorld.Edge,ReserveWorld.Edge));e.hasPreview=true;e.intent=ExpeditionLayout.Nearest(e.preview);Entries[turn]=e;}
+        {if(!Sender(rpc.Receive.SenderClientId)||!FreeSpawn.Finite(requested))return;var e=Entries[turn];e.preview=RoundArena.Clamp(new Vector3(requested.x,0,requested.z));e.hasPreview=true;e.intent=ExpeditionLayout.Nearest(e.preview);Entries[turn]=e;}
         [ServerRpc(RequireOwnership=false)]public void PickPointServerRpc(Vector3 requested,ServerRpcParams rpc=default)
-        {var player=Sender(rpc.Receive.SenderClientId);if(!player||WildfrontMatch.Current.Phase.Value!=4)return;foreach(var chosen in Entries){if(chosen.region<0||chosen.player==player.NetworkObjectId)continue;var claimed=chosen.hasPoint?chosen.point:ExpeditionLayout.Spawn(chosen.region,0);var difference=requested-claimed;difference.y=0;if(chosen.team!=player.Team.Value&&difference.sqrMagnitude<60*60){player.InformServer("An opposing landing reserves this 60 m area. Choose outside its ring.");return;}}Vector3 resolved;if(!FreeSpawn.Resolve(requested,out resolved)){player.InformServer("That surface is obstructed. Choose another point nearby.");return;}var e=Entries[turn];e.point=resolved;e.hasPoint=true;e.region=ExpeditionLayout.Nearest(resolved);Entries[turn]=e;turn++;NextTurn();}
+        {var player=Sender(rpc.Receive.SenderClientId);if(!player||WildfrontMatch.Current.Phase.Value!=4)return;foreach(var chosen in Entries){if(chosen.region<0||chosen.player==player.NetworkObjectId)continue;var claimed=chosen.hasPoint?chosen.point:ExpeditionLayout.Spawn(chosen.region,0);var difference=requested-claimed;difference.y=0;if(chosen.team!=player.Team.Value&&difference.sqrMagnitude<60*60){player.InformServer("An opposing landing reserves this 60 m area. Choose outside its ring.");return;}}Vector3 resolved;if(!RoundArena.Contains(requested,12)||!FreeSpawn.Resolve(requested,out resolved)){player.InformServer("That surface is obstructed. Choose another point nearby.");return;}var e=Entries[turn];e.point=resolved;e.hasPoint=true;e.region=ExpeditionLayout.Nearest(resolved);Entries[turn]=e;turn++;NextTurn();}
         void Rank()
         {
             int rotation=WildfrontMatch.Current.Round.Value;var sorted=new List<DraftEntry>();foreach(var e in Entries)sorted.Add(e);
@@ -70,7 +70,7 @@ namespace Pinefall
             var p=Ranger.Players.FirstOrDefault(q=>q&&q.NetworkObjectId==TurnPlayer.Value);
             if(p&&!p.IsBot.Value&&NetworkManager.ServerTime.Time<=Deadline.Value)return;
             if(phase==3){int bid=p&&p.IsBot.Value?(Entries[turn].order+WildfrontMatch.Current.Round.Value)%5:Entries[turn].bid;int kit=p&&p.IsBot.Value?2:Entries[turn].kit;SetBid(bid,kit,Entries[turn].order%ExpeditionLayout.Regions.Length,true);}
-            else {int preferred=Entries[turn].intent<0?Entries[turn].order:Entries[turn].intent;for(int i=0;i<ExpeditionLayout.Regions.Length;i++){int r=(preferred+i)%ExpeditionLayout.Regions.Length;if(!Claimed(r)){Pick(r);break;}}}
+            else {int preferred=Entries[turn].intent<0?Entries[turn].order:Entries[turn].intent;for(int i=0;i<ExpeditionLayout.Regions.Length;i++){int r=(preferred+i)%ExpeditionLayout.Regions.Length;if(RoundArena.Includes(ExpeditionLayout.Regions[r])&&!Claimed(r)){Pick(r);break;}}}
         }
     }
 }

@@ -1,0 +1,10 @@
+{
+    "passed": [
+        "Late join receives harvested-node state",
+        "Late join receives edited structures",
+        "Late join receives boss scale and health state",
+        "Late joining never starts microphone capture"
+    ],
+    "failed": [],
+    "errors": []
+}

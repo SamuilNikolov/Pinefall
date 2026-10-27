@@ -80,17 +80,26 @@ namespace Pinefall
             var weapon = WeaponData.Get(P.Weapon.Value);
             if (P.Alive && panel != "build-edit")
             {
-                Rect(1190, 721, 374, 73, glass); Text(1205, 731, 220, 28, P.ToolMode.Value == 1 ? "Field pickaxe" : P.ToolMode.Value == 2 ? "Blueprint" : weapon.name, small, 21, ice);
-                if (P.ToolMode.Value == 0) { Text(1442, 724, 110, 43, P.Reloading.Value ? "…" : P.Ammo.Value.ToString("00"), number, 35, paper); Text(1205, 766, 340, 23, weapon.ClassLabel + " / " + WeaponData.AmmoNames[weapon.ammoType] + " / " + P.ReserveFor(weapon.ammoType) + " spare", small, 14, muted); }
-                if (P.Reloading.Value) Bar(1205, 790, 340, P.ReloadFraction, ice);
-                for (int slot = 0; slot < 5; slot++)
+                Rect(1190,656,374,73,glass);Text(1205,666,220,28,P.ToolMode.Value==1?"Field pickaxe":P.ToolMode.Value==2?"Blueprint":weapon.name,small,21,ice);
+                if(P.ToolMode.Value==0){Text(1442,659,110,43,P.Reloading.Value?"…":P.Ammo.Value.ToString("00"),number,35,paper);Text(1205,701,340,23,weapon.ClassLabel+" / "+WeaponData.AmmoNames[weapon.ammoType]+" / "+P.ReserveFor(weapon.ammoType)+" spare",small,14,muted);}
+                if(P.Reloading.Value)Bar(1205,725,340,P.ReloadFraction,ice);
+                Rect(1030,744,100,54,glass);Glyph(1040,757,23,"launchpad",ice);Text(1070,750,57,22,GameBindings.Label("Launchpad"),small,14,ice);Text(1070,775,57,20,"Pad ×"+P.LaunchPads.Value,small,12,paper);
+                for(int shape=0;shape<4;shape++)
                 {
-                    float x = 1014 + slot * 111; int gun = slot < 3 ? P.SlotWeapon(slot) : -1; Color rarity = gun >= 0 ? WeaponData.RarityColor(P.Rarity(gun)) : slot == 3 ? prey : healthColor;
-                    Rect(x, 811, 103, 68, gun >= 0 && gun == P.Weapon.Value && P.ToolMode.Value == 0 ? raisedGlass : glass); Rect(x, 811, 103, 3, rarity);
-                    if (gun >= 0) GunIcon(x + 10, 828, 83, 24, gun, rarity); else if (slot >= 3) SupplyIcon(x + 52, 839, slot == 3 ? 5 : 2, 0, rarity);
-                    Text(x + 7, 858, 94, 20, slot < 3 ? GameBindings.Label("Weapon " + (slot + 1)) : slot == 3 ? GameBindings.Label("Food") + " ×" + P.Food.Value : GameBindings.Label("Heal") + " ×" + P.Medkits.Value, small, 12, paper);
+                    float x=1140+shape*106;bool selected=P.Building&&P.BuildKind==shape;
+                    Rect(x,744,100,54,selected?raisedGlass:glass);if(selected)Rect(x,744,100,3,ice);
+                    Glyph(x+9,757,25,new[]{"build-wall","build-floor","build-stairs","build-pyramid"}[shape],selected?ice:paper);
+                    Text(x+42,750,55,22,GameBindings.Label("Build "+BuildPiece.Shapes[shape]),small,14,ice);Text(x+42,775,57,20,shape==2?"Stairs":BuildPiece.Shapes[shape],small,12,paper);
                 }
-                Text(410, 854, 580, 28, GameBindings.Label("Inventory")+" Inventory   "+GameBindings.Label("Build")+" Build   "+GameBindings.Label("Pickaxe")+" Pickaxe   "+GameBindings.Label("Camera")+" Camera", small, 14, muted);
+                for(int slot=0;slot<6;slot++)
+                {
+                    float x=904+slot*111;int gun=slot>=1&&slot<=3?P.SlotWeapon(slot-1):-1;bool active=slot==0?P.PickaxeSelected:gun>=0&&gun==P.Weapon.Value&&P.ToolMode.Value==0;
+                    Color rarity=slot==0?ice:gun>=0?WeaponData.RarityColor(P.Rarity(gun)):slot==4?prey:healthColor;
+                    Rect(x,811,103,68,active?raisedGlass:glass);Rect(x,811,103,3,rarity);if(active){Rect(x,811,2,68,rarity);Rect(x+101,811,2,68,rarity);}
+                    if(slot==0)Glyph(x+35,824,32,"pickaxe",ice);else if(gun>=0)GunIcon(x+10,828,83,24,gun,rarity);else if(slot>=4)Glyph(x+39,827,26,slot==4?"food":"health",rarity);
+                    Text(x+7,858,94,20,slot==0?GameBindings.Label("Pickaxe")+" Pickaxe":slot<4?GameBindings.Label("Weapon "+slot):slot==4?GameBindings.Label("Food")+" ×"+P.Food.Value:GameBindings.Label("Heal")+" ×"+P.Medkits.Value,small,12,paper);
+                }
+                Text(410,854,480,28,GameBindings.Label("Inventory")+" hold inventory   "+GameBindings.Label("Emotes")+" emotes   "+GameBindings.Label("Build")+" build   "+GameBindings.Label("Camera")+" camera",small,14,muted);
                 FieldcraftOverlay();
             }
             if (P.Downed.Value) Text(500, 537, 600, 58, "Downed  " + Clock(P.BleedEnds.Value - S.Network.ServerTime.Time) + "\nA teammate can revive you", Centered(type), 24, danger);

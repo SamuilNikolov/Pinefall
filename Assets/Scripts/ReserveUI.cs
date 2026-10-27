@@ -8,7 +8,7 @@ namespace Pinefall
         public static ReserveUI Instance;
         public Font serif,sans;
         public float Sensitivity=1.8f;
-        public bool ControlsActive {get{return ReserveSession.Instance&&ReserveSession.Instance.Playing&&panel==""&&Application.isFocused&&ReserveSession.Arg("--smoke")==""&&ReserveSession.Arg("--capture")=="";}}
+        public bool ControlsActive {get{return ReserveSession.Instance&&ReserveSession.Instance.Playing&&panel==""&&inputConsumedFrame!=Time.frameCount&&Application.isFocused&&ReserveSession.Arg("--smoke")==""&&ReserveSession.Arg("--capture")=="";}}
         string panel="main",returnPanel="main";
         GUIStyle type,title,body,small,field,button,number;
         Texture2D white,fade,scope;
@@ -20,7 +20,7 @@ namespace Pinefall
         void Start()
         {
             if(SessionNotice.Text!=""){S.Message=SessionNotice.Text;SessionNotice.Text="";}
-            ApplyQuality(PlayerPrefs.GetInt("quality",1));Unlock();
+            ApplyQuality(PlayerPrefs.GetInt("quality",1));if(S.vistaCamera){S.vistaCamera.transform.position=ReserveWorld.OnGround(-560,150,11);S.vistaCamera.transform.LookAt(new Vector3(-20,55,650));S.vistaCamera.fieldOfView=58;var vista=S.vistaCamera.GetComponent<VistaCamera>();if(vista)vista.SetView(S.vistaCamera.transform.position,new Vector3(-20,55,650));}Unlock();
         }
         void Init()
         {
@@ -32,15 +32,23 @@ namespace Pinefall
             fade=new Texture2D(256,1,TextureFormat.RGBA32,false);
             for(int i=0;i<256;i++){float t=i/255f;fade.SetPixel(i,0,new Color(ink.r,ink.g,ink.b,Mathf.Lerp(.97f,0,Mathf.SmoothStep(0,1,t))));}fade.Apply();
             scope=new Texture2D(256,256,TextureFormat.RGBA32,false);
-            for(int y=0;y<256;y++)for(int x=0;x<256;x++){float r=Vector2.Distance(new Vector2(x,y),new Vector2(127.5f,127.5f))/127;float a=Mathf.Clamp01((r-.94f)/.055f);scope.SetPixel(x,y,new Color(.015f,.02f,.018f,a));}scope.Apply();
+            for(int y=0;y<256;y++)for(int x=0;x<256;x++){float r=Vector2.Distance(new Vector2(x,y),new Vector2(127.5f,127.5f))/127;float a=Mathf.Clamp01((r-.94f)/.055f);scope.SetPixel(x,y,new Color(.015f,.02f,.018f,a));}scope.Apply();PrepareEmoteWheel();
         }
         GUIStyle Style(int size,Color color,Font font){var s=new GUIStyle(GUI.skin.label){font=font,fontSize=size,wordWrap=true,richText=false};s.normal.textColor=color;return s;}
         public void BeginPlay(){panel=WildfrontMatch.Current&&WildfrontMatch.Current.Battle.Value&&WildfrontMatch.Current.Phase.Value==0?"lobby":"";if(S.IsHost&&!inviteShown&&ReserveSession.Arg("--smoke")==""&&ReserveSession.Arg("--capture")==""){panel="session";inviteShown=true;if(!S.GetComponent<SessionAddress>())S.gameObject.AddComponent<SessionAddress>();}if(panel==""&&ReserveSession.Arg("--smoke")==""&&ReserveSession.Arg("--capture")=="")Lock();else Unlock();}
         public void VerificationPanel(string value){panel=value;returnPanel=S.Playing?"pause":"main";Unlock();}
         public void Open(string which){returnPanel=S.Playing?"pause":"main";panel=which;Unlock();}
+        bool inventoryWasHeld, heldInventoryOpen;
+        public void TickInventoryHold(bool held)
+        {
+            if(held && !inventoryWasHeld && S && S.Playing && P && P.Alive && panel==""){heldInventoryOpen=true;panel="loadout";returnPanel="";Unlock();}
+            if(!held && heldInventoryOpen){heldInventoryOpen=false;if(panel=="loadout"){panel="";if(ReserveSession.Arg("--smoke")==""&&ReserveSession.Arg("--capture")=="")Lock();}}
+            inventoryWasHeld=held;
+        }
+        public bool InventoryVisible {get{return panel=="loadout";}}
         void Update()
         {
-            frameAverage=Mathf.Lerp(frameAverage,Time.unscaledDeltaTime,.04f);if(outfit&&panel!="character")outfit.Hide();
+            frameAverage=Mathf.Lerp(frameAverage,Time.unscaledDeltaTime,.04f);if(outfit&&panel!="character"&&panel!="main"&&panel!="lobby")outfit.Hide();
             if(bindingCapture!="")return;
             if(!S||!S.Playing)return;
             if(WildfrontMatch.Current&&WildfrontMatch.Current.Battle.Value&&WildfrontMatch.Current.Phase.Value==2&&panel==""){panel="result";Unlock();}
@@ -49,9 +57,10 @@ namespace Pinefall
             if(phase==0&&panel=="result"){panel="lobby";Unlock();}
             if(phase==3||phase==4){panel="draft";Unlock();return;}if(panel=="draft"){panel="";Lock();}
             if(GameBindings.Down("Lobby")&&WildfrontMatch.Current&&WildfrontMatch.Current.Phase.Value==0){panel="lobby";Unlock();}
+            if(EmoteWheelOpen){EmoteWheelInput();return;}TickEmoteHold(GameBindings.Held("Emotes"));if(EmoteWheelOpen)return;
             if(Input.GetKeyDown(KeyCode.Escape)) {if(panel==""){panel="pause";Unlock();}else{panel="";Lock();}}
             if(GameBindings.Down("Map")){panel=panel=="map"?"":"map";returnPanel="pause";if(panel=="")Lock();else Unlock();}
-            if(GameBindings.Down("Inventory")){panel=panel=="loadout"?"":"loadout";returnPanel="pause";if(panel=="")Lock();else Unlock();}
+            TickInventoryHold(Application.isFocused&&GameBindings.Held("Inventory"));
             if(panel==""&&Application.isFocused&&Cursor.lockState!=CursorLockMode.Locked&&ReserveSession.Arg("--smoke")==""&&ReserveSession.Arg("--capture")=="")Lock();
         }
         void OnApplicationFocus(bool focus){if(!focus&&S&&S.Playing&&panel==""&&ReserveSession.Arg("--smoke")==""&&ReserveSession.Arg("--capture")==""){panel="pause";Unlock();}}
@@ -60,8 +69,9 @@ namespace Pinefall
         void OnGUI()
         {
             if(!S||Event.current.type==EventType.Layout)return;Init();GUI.matrix=Matrix4x4.TRS(Vector3.zero,Quaternion.identity,new Vector3(Screen.width/1600f,Screen.height/900f,1));
-            if(S.Playing&&P&&Event.current.type==EventType.Repaint){HUD();if(panel==""&&GameBindings.Held("Roster"))Roster(1120,120);}
-            if(panel=="main")Main();
+            if(S.Playing&&P&&panel!="lobby"&&panel!="session"&&Event.current.type==EventType.Repaint){HUD();if(panel==""&&GameBindings.Held("Roster"))Roster(1120,120);}
+            if(panel=="emotes")EmoteWheel();
+            else if(panel=="main")Main();
             else if(panel=="host"||panel=="join")Connect();
             else if(panel=="loadout")Loadout();else if(panel=="build-edit")BuildEditPanel();
             else if(panel=="pause")Pause();
@@ -77,7 +87,7 @@ namespace Pinefall
                 if(Button(115,530,280,56,"Cancel connection"))S.CancelConnect();
             }
         }
-        void Main()
+        void LegacyMain()
         {
             GUI.DrawTexture(new Rect(0,0,1150,900),fade);
             Text(96,115,600,140,"Pinefall",title);
@@ -92,7 +102,7 @@ namespace Pinefall
             Text(1050,706,450,46,"Six habitats. One closing storm.",type,25);
             Text(1050,756,450,72,"Solo · Duos · Squads  /  Predators & prey\nWeather, wildlife, and rival hunters",small);
             if(S.Message!="")Text(104,715,760,66,S.Message,small,17,new Color(1,.78f,.51f));
-            Text(1310,849,220,24,"Wildfront  •  v0.8.0",small,14);
+            Text(1310,849,220,24,"Wildfront  •  v0.9.0",small,14);
         }
         void Back(){panel=returnPanel;if(panel=="")Lock();}
         void Heading(string name,string desc)
@@ -101,7 +111,7 @@ namespace Pinefall
             Text(96,70,1300,95,name,title,64);Text(100,170,1330,65,desc,body);
             if(Link(100,806,250,"Back"))Back();
         }
-        void Connect()
+        void LegacyConnect()
         {
             bool host=panel=="host";
             Heading(host?"Open your reserve":"Meet in the meadow",host?"Your computer runs the shared world while you play.":"Enter your friend's address and port to join their reserve.");
@@ -324,11 +334,21 @@ namespace Pinefall
             }
         }
         readonly System.Collections.Generic.Dictionary<GUIStyle,GUIStyle> centeredStyles=new System.Collections.Generic.Dictionary<GUIStyle,GUIStyle>();
-        readonly System.Collections.Generic.Dictionary<(GUIStyle,int,Color),GUIStyle> textStyles=new System.Collections.Generic.Dictionary<(GUIStyle,int,Color),GUIStyle>();
+        sealed class TextDrawStyle{public GUIStyle style;public float height;}
+        readonly System.Collections.Generic.Dictionary<(GUIStyle,int,Color),TextDrawStyle> textStyles=new System.Collections.Generic.Dictionary<(GUIStyle,int,Color),TextDrawStyle>();Vector2Int textScreen;
         GUIStyle Centered(GUIStyle source){GUIStyle result;if(!centeredStyles.TryGetValue(source,out result)){result=new GUIStyle(source){alignment=TextAnchor.MiddleCenter};centeredStyles.Add(source,result);}return result;}
+        static readonly bool auditText=ReserveSession.Arg("--layout-audit")=="1";
+        readonly System.Collections.Generic.HashSet<string> textIssues=new System.Collections.Generic.HashSet<string>();
         public void Text(float x,float y,float w,float h,string text,GUIStyle style,int size=0,Color? color=null)
         {
-            var key=(style,size,color??style.normal.textColor);GUIStyle s;if(!textStyles.TryGetValue(key,out s)){s=new GUIStyle(style);if(size>0)s.fontSize=size;s.normal.textColor=key.Item3;textStyles.Add(key,s);}GUI.Label(new Rect(x,y,w,h),text,s);
+            if(textScreen.x!=Screen.width||textScreen.y!=Screen.height){textStyles.Clear();textScreen=new Vector2Int(Screen.width,Screen.height);}
+            Color tint=color??style.normal.textColor;tint=new Color(Mathf.Round(tint.r*64)/64,Mathf.Round(tint.g*64)/64,Mathf.Round(tint.b*64)/64,Mathf.Round(tint.a*64)/64);
+            var key=(style,size,tint);if(!textStyles.TryGetValue(key,out var draw)){var copy=new GUIStyle(style);if(size>0)copy.fontSize=size;copy.normal.textColor=tint;draw=new TextDrawStyle{style=copy,height=copy.lineHeight+copy.padding.vertical+2};textStyles.Add(key,draw);}var s=draw.style;h=Mathf.Max(h,draw.height);
+            if(auditText&&Event.current.type==EventType.Repaint&&text!="")
+            {
+                float needed=s.CalcHeight(new GUIContent(text),w);if(needed>h+1){string issue=panel+" "+x+","+y+" "+w+"x"+h+" need="+needed+" "+text.Replace("\n"," / ");if(textIssues.Add(issue))Debug.Log("UI_TEXT_OVERFLOW "+issue);}
+            }
+            GUI.Label(new Rect(x,y,w,h),text,s);
         }
         public void Rect(float x,float y,float w,float h,Color color){var old=GUI.color;GUI.color=color;GUI.DrawTexture(new Rect(x,y,w,h),white);GUI.color=old;}
         bool Button(float x,float y,float w,float h,string label,bool primary=false)

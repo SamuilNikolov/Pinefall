@@ -31,4 +31,5 @@ if (-not (Test-Path -LiteralPath $OutputPath -PathType Leaf)) { throw "No player
 if (-not (Select-String -LiteralPath $logPath -SimpleMatch 'PINEFALL_BUILD Succeeded' -Quiet)) {
     throw "Build success marker missing. Inspect $logPath"
 }
+if (Select-String -LiteralPath $logPath -SimpleMatch "Shader error" -Quiet) { throw "A shader failed to compile. Inspect $logPath" }
 Write-Host "BUILD_OK $OutputPath"

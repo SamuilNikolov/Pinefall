@@ -24,19 +24,27 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Forest:
-        m_Texture: {fileID: 2800000, guid: 2584b5f4397287c47b4c5844b944ee0b, type: 3}
+        m_Texture: {fileID: 2800000, guid: e403aa16ebeaea64fa4982cb5a89d540, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ForestArm:
+        m_Texture: {fileID: 2800000, guid: 282bc952183244b4db4b01849affadc2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ForestNormal:
-        m_Texture: {fileID: 2800000, guid: 82a0875af7431e54a8698807f74bd65b, type: 3}
+        m_Texture: {fileID: 2800000, guid: e815cdb3ca8a92e4481b8c7f0dbf579f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Meadow:
-        m_Texture: {fileID: 2800000, guid: 29e33bb1e1e5f0c469119ed7b35eb05c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 939b41e93a82a394c8955e579663c942, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MeadowArm:
+        m_Texture: {fileID: 2800000, guid: e61a8f001967bf24189fb61dc24f7f7c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MeadowNormal:
-        m_Texture: {fileID: 2800000, guid: e05e7191574bd8040a4f7b2443e29196, type: 3}
+        m_Texture: {fileID: 2800000, guid: c294030b33d807243a355eff2eb3ff07, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Rock:
@@ -63,7 +71,12 @@ Material:
         m_Texture: {fileID: 2800000, guid: f716041aecf78ec48a49ebc3be5971ec, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _TerrainHolesTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _CavePatch: 0
     m_Colors: []
   m_BuildTextureStacks: []

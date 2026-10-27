@@ -7,15 +7,15 @@ namespace Pinefall
     {
         CharacterPreview outfit;readonly Queue<string> events=new Queue<string>();float eventUntil;int inventoryKind,inventoryItem;bool lobbyEntered;int dragSlot=-1;bool draggingWeapon;
         public void AddEvent(string message){events.Enqueue(message);while(events.Count>3)events.Dequeue();eventUntil=Time.time+7;}
-        void Lobby()
+        void LegacyLobby()
         {
             var m=WildfrontMatch.Current;if(!m||!P)return;
             Rect(0,0,1600,900,ink);Text(75,44,1400,85,S.PlayerName+"'s expedition",title,58);Text(80,140,1400,42,"Choose your team and outfit, then mark yourself ready. Everyone sees the draft once the host starts.",body,21);
-            int row=0;foreach(var p in Ranger.Players.Where(p=>p&&!p.IsBot.Value).OrderBy(p=>p.Team.Value).ThenBy(p=>p.NetworkObjectId))
-            {float y=230+row*49;Rect(80,y,870,43,new Color(.12f,.22f,.25f));Text(102,y+7,420,32,p.DisplayName.Value.ToString()+(p==P?" (you)":""),body,21);Text(540,y+8,160,30,"Team "+(p.Team.Value+1),small,19);Text(725,y+8,210,30,p.Ready.Value?"Ready":"Choosing…",small,19,p.Ready.Value?ally:gold);row++;}
+            int row=0;foreach(var player in Ranger.Players.Where(p=>p&&!p.IsBot.Value).OrderBy(p=>p.Team.Value).ThenBy(p=>p.NetworkObjectId))
+            {float x=80+(row/10)*445,y=230+(row%10)*39;Rect(x,y,425,35,new Color(.12f,.22f,.25f));Text(x+12,y+4,220,28,player.DisplayName.Value.ToString()+(player==P?" (you)":""),small,18);Text(x+235,y+5,76,26,"T"+(player.Team.Value+1),small,16);Text(x+311,y+5,108,26,player.Ready.Value?"Ready":"Choosing",small,16,player.Ready.Value?ally:gold);row++;}
             Text(1020,239,510,45,m.TeamSize.Value==1?"Solo":m.TeamSize.Value==2?"Duos":"Squads",number,40);
-            Text(1022,303,470,65,(m.BotsEnabled.Value?"Practice opponents fill empty slots.":"Friends only. Up to eight players.")+"\n6.1 km reserve · seven storm cycles",small,20);
-            if(m.TeamSize.Value>1){Text(1022,409,470,32,"Your team",small,20);for(int t=0;t<8/m.TeamSize.Value;t++)if(Button(1020+(t%2)*225,460+(t/2)*54,210,46,"Team "+(t+1),P.Team.Value==t))P.ChangeTeamServerRpc(t);}
+            Text(1022,303,470,65,(m.BotsEnabled.Value?"Practice opponents fill empty slots.":"Friends only. Up to twenty players.")+"\n"+RoundArena.Label+" · seven storm cycles",small,20);
+            if(m.TeamSize.Value>1){Text(1022,409,470,32,"Your team",small,20);for(int t=0;t<RoundArena.MaximumPlayers/m.TeamSize.Value;t++)if(Button(1020+(t%5)*97,460+(t/5)*50,91,42,"T"+(t+1),P.Team.Value==t))P.ChangeTeamServerRpc(t);}
             if(S.IsHost)
             {Text(80,820,600,32,"Host settings",small,16);for(int i=0;i<3;i++){int size=new[]{1,2,4}[i];if(Button(235+i*155,811,140,42,new[]{"Solo","Duos","Squads"}[i],m.TeamSize.Value==size))m.RulesServerRpc(size,m.BotsEnabled.Value);}if(Button(720,811,300,42,m.BotsEnabled.Value?"Practice bots: on":"Practice bots: off"))m.RulesServerRpc(m.TeamSize.Value,!m.BotsEnabled.Value);}
             if(Button(80,710,350,62,P.Ready.Value?"Unready":"Ready for the draft",!P.Ready.Value))P.ReadyServerRpc(!P.Ready.Value);
@@ -24,12 +24,12 @@ namespace Pinefall
             if(S.IsHost&&Button(1050,710,450,62,m.CountdownEnds.Value>0?"Starting in "+Mathf.CeilToInt((float)(m.CountdownEnds.Value-S.Network.ServerTime.Time))+"…":"Start the draft",m.EveryoneReady))m.RequestStartServerRpc();
             Text(82,646,1400,45,m.StartReason,body,21,gold);if(Link(1055,811,220,"Explore warmup"))ClosePanel();if(Link(1300,811,210,"Leave reserve"))S.Leave();
         }
-        void Browser()
+        void LegacyBrowser()
         {
             Heading("Join a reserve","Nearby sessions appear here. For a friend on the internet, enter the address and port they share with you.");returnPanel="main";
             var discovery=LanDiscovery.Current;int row=0;
             if(discovery)foreach(var game in discovery.Sessions.Take(5))
-            {float y=270+row*84;Rect(100,y,1330,70,new Color(.13f,.23f,.26f));Text(123,y+9,460,50,game.name,type,25);Text(600,y+20,530,37,game.players+" / 8 · "+game.phase+" · "+(game.teamSize==1?"Solo":game.teamSize==2?"Duos":"Squads"),small,20);if(Button(1190,y+8,220,54,"Choose session")){S.Address=game.address;S.Port=game.port.ToString();panel="join";}row++;}
+            {float y=270+row*84;Rect(100,y,1330,70,new Color(.13f,.23f,.26f));Text(123,y+9,460,50,game.name,type,25);Text(600,y+20,530,37,game.players+" / 20 · "+game.phase+" · "+(game.teamSize==1?"Solo":game.teamSize==2?"Duos":"Squads"),small,20);if(Button(1190,y+8,220,54,"Choose session")){S.Address=game.address;S.Port=game.port.ToString();panel="join";}row++;}
             if(row==0)Text(105,310,1250,90,"No local reserves found yet. Ask your friend to open their reserve, or use their address below.",body,27);
             if(discovery)Text(105,699,1250,40,discovery.Status,small,18);
             if(Button(105,748,390,56,"Refresh nearby sessions")){if(discovery)discovery.Search();}if(Button(520,748,580,56,"Enter a friend's address and port",true))panel="join";

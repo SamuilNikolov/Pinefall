@@ -35,7 +35,7 @@ public static partial class BuildReserve
     [MenuItem("Pinefall/Build current scene")]
     public static void BuildCurrent()
     {
-        PrepareFieldcraft();PrepareRoadCoverage();PlayerSettings.bundleVersion="0.8.0";
+        PrepareFieldcraft();PrepareRoadCoverage();PlayerSettings.bundleVersion="0.9.0";
         string requested=ReserveSession.Arg("-pinefallBuildPath");
         string path=string.IsNullOrEmpty(requested)?Path.GetFullPath(Path.Combine(Application.dataPath,"../Builds/Windows/Pinefall.exe")):Path.GetFullPath(requested);
         Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -60,7 +60,7 @@ public static partial class BuildReserve
         world.bark.SetTexture("_MainTex",AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Art/Terrain/Bark.jpg"));
         world.stone.SetTexture("_MainTex",AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Art/Terrain/Rock.jpg"));
         var wear=MaterialAsset("Vehicle wear",Color.white);Save(new Material(wear),R+"VehicleWear.mat");
-        Outpost();Settlements();RoadsideStops();Bridges();ExtraDocks();Backdrop();
+        Outpost();Settlements();RoadsideStops();Bridges();ExtraDocks();Backdrop();PrepareLivingResources();CreateCaves(terrain);CreateSettlementDetail();RegenerateRoadCoverage();
         RenderSettings.ambientMode=AmbientMode.Trilight;RenderSettings.ambientSkyColor=new Color(.55f,.64f,.70f);RenderSettings.ambientEquatorColor=new Color(.48f,.5f,.43f);RenderSettings.ambientGroundColor=new Color(.29f,.30f,.23f);RenderSettings.ambientIntensity=1;
         var sky=new Material(Shader.Find("Skybox/Procedural"));sky.SetColor("_SkyTint",new Color(.48f,.57f,.67f));sky.SetColor("_GroundColor",new Color(.48f,.47f,.37f));sky.SetFloat("_SunSize",.025f);sky.SetFloat("_AtmosphereThickness",.85f);sky.SetFloat("_Exposure",1.15f);Save(sky,"Assets/Generated/ReserveSky.mat");RenderSettings.skybox=sky;
         RenderSettings.fog=true;RenderSettings.fogMode=FogMode.ExponentialSquared;RenderSettings.fogColor=new Color(.67f,.73f,.70f);RenderSettings.fogDensity=.00105f;
@@ -77,7 +77,7 @@ public static partial class BuildReserve
         var app=new GameObject("Reserve application");var session=app.AddComponent<ReserveSession>();session.vistaCamera=camera;session.previewHerd=herd;
         var ui=app.AddComponent<ReserveUI>();ui.serif=serif;ui.sans=sans;
         var dust=new Material(Shader.Find("Particles/Standard Unlit"));dust.SetColor("_Color",new Color(.6f,.55f,.4f,.8f));Save(dust,R+"Dust.mat");
-        PlayerSettings.companyName="Pinefall";PlayerSettings.productName="Pinefall Wildfront";PlayerSettings.bundleVersion="0.8.0";
+        PlayerSettings.companyName="Pinefall";PlayerSettings.productName="Pinefall Wildfront";PlayerSettings.bundleVersion="0.9.0";
         PlayerSettings.defaultScreenWidth=1280;PlayerSettings.defaultScreenHeight=720;PlayerSettings.fullScreenMode=FullScreenMode.Windowed;PlayerSettings.resizableWindow=true;PlayerSettings.runInBackground=true;PlayerSettings.colorSpace=ColorSpace.Linear;
         PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone,ScriptingImplementation.Mono2x);PlayerSettings.allowFullscreenSwitch=true;
         var tags=new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);var layers=tags.FindProperty("layers");layers.GetArrayElementAtIndex(8).stringValue="Wildlife";layers.GetArrayElementAtIndex(9).stringValue="Rangers";layers.GetArrayElementAtIndex(10).stringValue="Viewmodel";tags.ApplyModifiedProperties();
@@ -179,11 +179,12 @@ public static partial class BuildReserve
         if(surface!=""){string path="Assets/Art/Terrain/"+surface;var normalImporter=AssetImporter.GetAtPath(path+"Normal.jpg") as TextureImporter;if(normalImporter){normalImporter.textureType=TextureImporterType.NormalMap;normalImporter.SaveAndReimport();}m.mainTexture=AssetDatabase.LoadAssetAtPath<Texture2D>(path+".jpg");m.mainTextureScale=new Vector2(2,1);m.SetTexture("_BumpMap",AssetDatabase.LoadAssetAtPath<Texture2D>(path+"Normal.jpg"));m.EnableKeyword("_NORMALMAP");m.SetFloat("_BumpScale",.5f);}
         Save(m,"Assets/Generated/"+name+".mat");return m;
     }
-    static void Save(UnityEngine.Object obj,string path){if(AssetDatabase.LoadMainAssetAtPath(path))AssetDatabase.DeleteAsset(path);AssetDatabase.CreateAsset(obj,path);}
+    static void Save(UnityEngine.Object obj,string path){AssetDatabase.CreateAsset(obj,path);}
+
     static Terrain CreateTerrain()
     {
-        var data=new TerrainData{heightmapResolution=1025,size=new Vector3(ReserveWorld.Size,180,ReserveWorld.Size),alphamapResolution=512,baseMapResolution=1024};
-        var h=new float[1025,1025];for(int z=0;z<1025;z++)for(int x=0;x<1025;x++)h[z,x]=ReserveWorld.Height((x/1024f-.5f)*ReserveWorld.Size,(z/1024f-.5f)*ReserveWorld.Size)/180;
+        var data=new TerrainData{heightmapResolution=1025,size=new Vector3(ReserveWorld.Size,360,ReserveWorld.Size),alphamapResolution=512,baseMapResolution=1024};
+        var h=new float[1025,1025];for(int z=0;z<1025;z++)for(int x=0;x<1025;x++)h[z,x]=ReserveWorld.Height((x/1024f-.5f)*ReserveWorld.Size,(z/1024f-.5f)*ReserveWorld.Size)/360;
         data.SetHeights(0,0,h);
         Color[] colors={new Color(.39f,.43f,.21f),new Color(.27f,.31f,.19f),new Color(.43f,.43f,.36f),new Color(.45f,.37f,.24f),new Color(.68f,.55f,.30f),new Color(.82f,.87f,.89f),new Color(.17f,.29f,.13f)};
         var layers=new TerrainLayer[7];
@@ -229,7 +230,7 @@ public static partial class BuildReserve
             int biome=ReserveBiomes.At(wx,wz);
             if((biome==0||biome==4||biome==5)&&!ReserveWorld.Clearing(wx,wz)&&data.GetSteepness(x/1023f,z/1023f)<24)detail[z,x]=Mathf.PerlinNoise(wx*.07f+21,wz*.07f+1)>.4f?5:2;
         }
-        data.SetDetailLayer(0,0,0,detail);Save(data,"Assets/Generated/ReserveTerrain.asset");
+        data.SetDetailLayer(0,0,0,detail);Save(data,"Assets/Generated/ReserveTerrain.asset");data=AssetDatabase.LoadAssetAtPath<TerrainData>("Assets/Generated/ReserveTerrain.asset");
         // Creating a TerrainData asset initializes its control textures. Paint after persistence.
         data.SetAlphamaps(0,0,weights);data.SyncTexture(TerrainData.AlphamapTextureName);EditorUtility.SetDirty(data);AssetDatabase.SaveAssets();
         Debug.Log("PINEFALL_GENERATED_SNOW_WEIGHT "+weights[422,146,5]);

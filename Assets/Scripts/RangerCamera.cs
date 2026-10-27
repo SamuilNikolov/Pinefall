@@ -4,7 +4,7 @@ namespace Pinefall
     public sealed class RangerCamera:MonoBehaviour
     {
         public Ranger owner;public bool ThirdPerson;
-        public bool ExternalView{get{return owner&&(ThirdPerson||owner.CurrentVehicle)&&!(owner.ScopedView);}}
+        public bool ExternalView{get{return owner&&(ThirdPerson||owner.CurrentVehicle||owner.Gliding||owner.IsEmoting||ReserveUI.Instance&&ReserveUI.Instance.EmoteWheelOpen)&&!(owner.ScopedView);}}
         void LateUpdate()
         {
             if(!owner||!owner.Alive||owner.Downed.Value)return;

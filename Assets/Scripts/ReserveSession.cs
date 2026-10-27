@@ -29,6 +29,7 @@ namespace Pinefall
         public GameObject previewHerd;
         float connectStarted;
         bool leaving;
+        readonly HashSet<ulong> pendingApprovals=new HashSet<ulong>();
 
         void Awake()
         {
@@ -53,7 +54,7 @@ namespace Pinefall
             Network.AddNetworkPrefab(Resources.Load<GameObject>("Wolf"));
             Network.AddNetworkPrefab(Resources.Load<GameObject>("Fox"));
             Network.AddNetworkPrefab(Resources.Load<GameObject>("Ox"));
-            foreach(string prefab in new[]{"SpawnDraft","WorldLoot","RoadVehicle","Hare","Boar","Ibex","Antelope","ArcticFox","SnowHare","JungleBoar","Elk","Horse","Alpaca","SupplyDrop","Shark","ConstructionWorld","BuildPiece","Rocket"})Network.AddNetworkPrefab(Resources.Load<GameObject>(prefab));
+            foreach(string prefab in new[]{"SpawnDraft","WorldLoot","RoadVehicle","Hare","Boar","Ibex","Antelope","ArcticFox","SnowHare","JungleBoar","Elk","Horse","Alpaca","SupplyDrop","Shark","ConstructionWorld","BuildPiece","Rocket","LaunchPad"})Network.AddNetworkPrefab(Resources.Load<GameObject>(prefab));
             Network.ConnectionApprovalCallback=Approve;
             Network.OnServerStarted+=PopulateWildlife;
             Network.OnClientConnectedCallback+=Connected;
@@ -74,7 +75,8 @@ namespace Pinefall
             if(Arg("--teamsize")!="")int.TryParse(Arg("--teamsize"),out TeamSize);
             PracticeBots=Arg("--bots")=="1";
             if(mode=="host"||mode=="solo")Host();else if(mode=="client")Join();
-            if(Arg("--smoke")=="fieldcraft")gameObject.AddComponent<FieldcraftProbe>();
+            if(Arg("--smoke")=="frontier")gameObject.AddComponent<LivingFrontierProbe>();
+            else if(Arg("--smoke")=="fieldcraft")gameObject.AddComponent<FieldcraftProbe>();
             else if(Arg("--smoke")=="performance")gameObject.AddComponent<PerformanceProbe>();
             else if(Arg("--smoke")=="living")gameObject.AddComponent<LivingReserveProbe>();
             else if(Arg("--smoke")=="polish")gameObject.AddComponent<PolishProbe>();
@@ -95,10 +97,11 @@ namespace Pinefall
         void Approve(NetworkManager.ConnectionApprovalRequest req,NetworkManager.ConnectionApprovalResponse res)
         {
             string protocol=Encoding.UTF8.GetString(req.Payload??new byte[0]);
-            if(protocol=="PinefallReserve/8"&&Ranger.Players.Count>=8){var bot=Ranger.Players.Find(p=>p&&p.IsBot.Value);if(bot)bot.NetworkObject.Despawn();}
-            res.Approved=protocol=="PinefallReserve/8"&&Ranger.Players.Count<8;
+            if(protocol=="PinefallReserve/9"&&Ranger.Players.Count+pendingApprovals.Count>=RoundArena.MaximumPlayers){var bot=Ranger.Players.Find(p=>p&&p.IsBot.Value);if(bot)bot.NetworkObject.Despawn();}
+            res.Approved=protocol=="PinefallReserve/9"&&Ranger.Players.Count+pendingApprovals.Count<RoundArena.MaximumPlayers;
+            if(res.Approved)pendingApprovals.Add(req.ClientNetworkId);
             res.CreatePlayerObject=true;res.Pending=false;
-            if(!res.Approved)res.Reason=protocol!="PinefallReserve/8"?"Game versions differ. Use the same demo build.":"This reserve already has eight players (including practice bots).";
+            if(!res.Approved)res.Reason=protocol!="PinefallReserve/9"?"Game versions differ. Use the same demo build.":"This reserve already has twenty players (including practice bots).";
             int index=Network.ConnectedClientsIds.Count;
             res.Position=ReserveWorld.OnGround(index*2.5f,-160,.3f);res.Rotation=Quaternion.identity;
         }
@@ -110,7 +113,7 @@ namespace Pinefall
             PlayerName=CleanName(PlayerName);
             if(Arg("--smoke")==""&&Arg("--capture")==""){PlayerPrefs.SetInt("team",RequestedTeam);
             PlayerPrefs.SetString("rangerName",PlayerName);PlayerPrefs.SetInt("weapon",SelectedWeapon);PlayerPrefs.SetString("address",Address);PlayerPrefs.Save();}
-            Network.NetworkConfig.ConnectionData=Encoding.UTF8.GetBytes("PinefallReserve/8");
+            Network.NetworkConfig.ConnectionData=Encoding.UTF8.GetBytes("PinefallReserve/9");
             Network.GetComponent<UnityTransport>().SetConnectionData(Address.Trim(),port,"0.0.0.0");
             Message="";Connecting=true;connectStarted=Time.unscaledTime;return true;
         }
@@ -131,7 +134,7 @@ namespace Pinefall
         public void CancelConnect(){Network.Shutdown();Connecting=false;Message="Connection cancelled.";}
         void Connected(ulong id)
         {
-            Debug.Log("PINEFALL_CONNECTED "+id);
+            pendingApprovals.Remove(id);Debug.Log("PINEFALL_CONNECTED "+id);
             if(id!=Network.LocalClientId)return;
             EnterLocalPlayer();
         }
@@ -142,7 +145,7 @@ namespace Pinefall
         }
         void Disconnected(ulong id)
         {
-            Debug.Log("PINEFALL_DISCONNECTED "+id);
+            pendingApprovals.Remove(id);Debug.Log("PINEFALL_DISCONNECTED "+id);
             if(leaving)return;
             if(id==Network.LocalClientId || !Network.IsListening)
             {
@@ -155,7 +158,7 @@ namespace Pinefall
         public void Leave(){if(!leaving)StartCoroutine(LeaveRoutine(""));}
         IEnumerator LeaveRoutine(string message)
         {
-            leaving=true;Playing=false;Connecting=false;Cursor.lockState=CursorLockMode.None;Cursor.visible=true;
+            pendingApprovals.Clear();ReserveEffects.Reset();leaving=true;Playing=false;Connecting=false;Cursor.lockState=CursorLockMode.None;Cursor.visible=true;
             if(ProximityVoice.Current)ProximityVoice.Current.ResetSession();if(FieldNarrator.Current)FieldNarrator.Current.ResetSession();
             var director=GetComponent<WildlifeDirector>();if(director)Destroy(director);var aquatic=GetComponent<SharkDirector>();if(aquatic)Destroy(aquatic);
             if(ShotHistory.Current)ShotHistory.Current.ResetSession();GetComponent<WorldInterest>().ResetSession();Network.Shutdown();float deadline=Time.realtimeSinceStartup+5;while(Network.ShutdownInProgress&&Time.realtimeSinceStartup<deadline)yield return null;yield return null;

@@ -1,0 +1,19 @@
+{
+    "role": "host",
+    "passed": [
+        "Practice draft deploys",
+        "One player plus seven practice opponents",
+        "Team size 4 enforced",
+        "Practice opponents navigate the map",
+        "Downed practice opponents stop moving",
+        "Practice opponents swim at the water surface",
+        "Microphone stays off"
+    ],
+    "failed": [],
+    "errors": [],
+    "voiceFrames": 0,
+    "animals": 0,
+    "loot": 0,
+    "vehicles": 0,
+    "fps": 71.63182067871094
+}

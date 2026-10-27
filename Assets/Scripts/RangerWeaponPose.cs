@@ -8,7 +8,7 @@ namespace Pinefall
         readonly Dictionary<Transform, List<ArmChain>> weaponArms = new Dictionary<Transform, List<ArmChain>>();
         public void ApplyWeaponPose(Transform model, Transform held)
         {
-            if (!model || !held || !Alive || Downed.Value) return;
+            if (!model || !held || !Alive || Downed.Value || IsEmoting) return;
             if (!weaponArms.TryGetValue(model, out var arms))
             {
                 arms = new List<ArmChain>();

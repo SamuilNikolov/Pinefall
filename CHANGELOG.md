@@ -1,5 +1,20 @@
 # Wildfront 0.8.0 — Fieldcraft — 2026-10-26
 
+## 0.9.0 — Living Wildfront — 2026-10-26
+
+- Buffered/held bunny-hop chaining with substantial speed gain, air steering and momentum-preserving fast crouch slides.
+- Six replicated original gestures and a rebindable hold/release/click emote wheel with center cancellation.
+- Character-focused main/host/join/lobby screens, font-height-safe labels and measured complete handbook scrolling.
+- Hold-Alt inventory, explicit pickaxe hotbar and four shape shortcuts; player-relative connected build frames and quarter turns.
+- Lobby-sized 2 / 4 / 6.1 km arenas for 1–5 / 6–12 / 13–20 participants. Protocol 9, twenty-player capacity including bots.
+- Fixed and lootable floor-mounted launchpads, owner launch motion and replicated steerable gliders.
+- Sixty named settlements, 444 buildings, 89 road links, supply relays, expanded travel and stronger mountain/mesa elevation.
+- Six terrain-integrated branching cave systems with chambers, a loop route, underground caches and emissive crystal clusters.
+- Photographic ground/foliage detail, three-level fir rendering, distant village silhouettes and a 900 m default view budget.
+- Animal bounds fitted to the model, directional body hit tests and ordinary usable item rewards; bosses guarantee two equipment rolls.
+- Pooled hit particles/tracers, separate blue shield cues, expanded original event scripts and offline Kokoro narration.
+
+
 - Added pickaxe harvesting, finite wood/stone/metal, discovered/shareable materials, replicated walls/floors/stairs/pyramids, grid edits, doors, repairs and support collapse.
 - Corrected remote hit recognition with bounded server history matched to NGO rendering delay; added stance-aware anatomical player regions, owner-confirmed damage numbers, armor/hit/elimination feedback and discreet damaged-enemy HP.
 - Added eight explicit weapon classes and class-specific firing/range behavior, including a traveling RPG with blast falloff and cover protection.

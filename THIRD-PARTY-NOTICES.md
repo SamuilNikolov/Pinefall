@@ -61,7 +61,7 @@ Announcer WAV files were generated locally with the Windows System.Speech synthe
 
 ## Version 0.6 neural narration
 
-The earlier Windows System.Speech recordings were replaced. The current event recordings use original game text synthesized offline with Piper 1.8.0 and the en_US-ljspeech-high voice. Voice model card: https://huggingface.co/rhasspy/piper-voices/blob/main/en/en_US/ljspeech/high/MODEL_CARD . The card identifies training from scratch on the public-domain LJ Speech dataset: https://keithito.com/LJ-Speech-Dataset/ . Piper source and generator license: https://github.com/OHF-Voice/piper1-gpl . Only generated WAV audio is shipped; the generator and ONNX model are not bundled or linked into the game. No paid account, microphone recording or celebrity imitation was used. Shark geometry, roadside shelters, map additions and UI are original procedural/code assets. Weapon thumbnails are renders of the previously credited Poly Haven gun assets.
+The earlier Windows System.Speech recordings were replaced. The 0.6–0.8 event recordings used original game text synthesized offline with Piper 1.8.0 and the en_US-ljspeech-high voice. Voice model card: https://huggingface.co/rhasspy/piper-voices/blob/main/en/en_US/ljspeech/high/MODEL_CARD . The card identifies training from scratch on the public-domain LJ Speech dataset: https://keithito.com/LJ-Speech-Dataset/ . Piper source and generator license: https://github.com/OHF-Voice/piper1-gpl . Only generated WAV audio is shipped; the generator and ONNX model are not bundled or linked into the game. No paid account, microphone recording or celebrity imitation was used. Shark geometry, roadside shelters, map additions and UI are original procedural/code assets. Weapon thumbnails are renders of the previously credited Poly Haven gun assets.
 
 
 ## Version 0.7 recorded sound design
@@ -75,3 +75,14 @@ The earlier Windows System.Speech recordings were replaced. The current event re
 - Quiet bird ambience: Ambient Bird Sounds by isaiah658, CC0. https://opengameart.org/content/ambient-bird-sounds . Excerpted, filtered, level-balanced and faded.
 
 Original sound downloads and decoding tools remain in work/ and are not bundled. Only processed clips used by the game are shipped. The project records the processed filenames/source selection in AUDIO-SOURCES.json. Procedural wind, rain, thunder and vehicle-engine layers remain original code. No paid sound assets or subscriptions were used.
+
+
+## Version 0.9 scanned detail and neural narration
+
+Additional Poly Haven assets, CC0 (https://polyhaven.com/license): Aerial Grass Rock (https://polyhaven.com/a/aerial_grass_rock), Forest Floor (https://polyhaven.com/a/forest_floor), Grass Medium 01 (https://polyhaven.com/a/grass_medium_01), and the twig diffuse/opacity/normal atlas from Fir Sapling Medium (https://polyhaven.com/a/fir_sapling_medium). Ground maps are 2K; grass uses the selected mid-size mesh variant and 1K maps. Fir atlases are mapped onto original bounded branch meshes with three distance levels. The million-triangle reference tree is not bundled. Normal/roughness/opacity import settings, tint and wind are adapted for Unity. Asset downloads were verified against the source API checksums; the game makes no asset API requests. Powered by Poly Haven.
+
+All 30 current announcer WAVs are original event text synthesized offline using Kokoro-82M / Kokoro ONNX, af_heart voice, speed 1.02. Model: https://huggingface.co/hexgrad/Kokoro-82M ; voice documentation: https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md ; generator: https://github.com/thewh1teagle/kokoro-onnx . The model and published voice assets identify Apache-2.0 licensing. Audio is normalized, faded and saved as mono 24 kHz WAV. Only generated audio is included; the neural model, voice pack and generator are not shipped or linked at runtime. The speaker is a synthetic fictional narrator, not a hired actor or an imitation of a named person. Original scripts and output hashes are recorded in AUDIO-SOURCES.json.
+
+Cave density/meshing, branching layouts, crystal geometry/materials, launchpads, glider geometry and HUD pictograms are original project code/assets. No Fortnite or Apex assets, audio or source code were copied.
+
+The six social emotes use original procedural skeletal poses on the previously credited characters. Wheel silhouettes, sector textures and input behavior are original code; no commercial dance animations were imported.

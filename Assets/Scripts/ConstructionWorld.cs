@@ -62,11 +62,6 @@ namespace Pinefall
         [ClientRpc] void RestoreNodesClientRpc() { HarvestResources.Restore(); }
         public static Vector3 Snap(Vector3 requested)
         { return new Vector3(Mathf.Round(requested.x / 4) * 4, Mathf.Round(requested.y / .75f) * .75f, Mathf.Round(requested.z / 4) * 4); }
-        static bool Connected(BuildPiece a, Vector3 b)
-        {
-            Vector3 d = a.transform.position - b;
-            return Mathf.Abs(d.y) <= 3.05f && ((Mathf.Abs(d.x) < .1f && Mathf.Abs(d.z) < 4.1f) || (Mathf.Abs(d.z) < .1f && Mathf.Abs(d.x) < 4.1f));
-        }
         public static bool Grounded(Vector3 point)
         {
             float ground = ReserveWorld.Height(point.x, point.z);
@@ -75,16 +70,16 @@ namespace Pinefall
                 if (!(hit.collider is TerrainCollider) && !hit.collider.GetComponentInParent<BuildPiece>() && HarvestResources.Find(hit.collider) == null && (hit.collider.gameObject.isStatic || hit.collider.GetComponentInParent<BridgeSurface>())) return true;
             return false;
         }
-        public static string PlacementError(Ranger player, int kind, int material, Vector3 requested, int turn)
+        public static string PlacementError(Ranger player, int kind, int material, Vector3 requested, int turn, float gridYaw = 0, Vector3 gridOrigin = default)
         {
             if (!player || !player.Alive || !player.CanAct || player.CurrentVehicle) return "Build on foot while alive.";
-            if (kind < 0 || kind > 3 || material < 0 || material > 2 || turn < 0 || turn > 3 || !Ranger.FiniteVector(requested)) return "Invalid blueprint.";
-            Vector3 point = Snap(requested);
+            if (kind < 0 || kind > 3 || material < 0 || material > 2 || turn < 0 || turn > 3 || !Ranger.FiniteVector(requested) || !Ranger.FiniteVector(gridOrigin) || float.IsNaN(gridYaw) || float.IsInfinity(gridYaw) || gridYaw < 0 || gridYaw >= 360) return "Invalid blueprint.";
+            Vector3 point = gridOrigin == Vector3.zero && gridYaw == 0 ? Snap(requested) : BuildGrid.Snap(requested, gridOrigin, gridYaw);
             if ((point - requested).sqrMagnitude > .02f || (point - player.transform.position).sqrMagnitude > 12 * 12) return "Move closer to the blueprint.";
-            if (Mathf.Abs(point.x) > ReserveWorld.Edge || Mathf.Abs(point.z) > ReserveWorld.Edge || point.y < -30 || point.y > 400) return "Outside the reserve.";
+            if (Mathf.Abs(point.x) > ReserveWorld.Edge || Mathf.Abs(point.z) > ReserveWorld.Edge || point.y < -30 || point.y > 650) return "Outside the reserve.";
             if (BuildPiece.All.Count >= 512 || BuildPiece.All.Count(p => p && p.Builder.Value == player.NetworkObjectId) >= 80) return "Structure limit reached.";
             if (player.BuildingMaterial(material) < 10) return "Need 10 " + BuildPiece.Materials[material].ToLowerInvariant() + ".";
-            Quaternion rotation = Quaternion.Euler(0, turn * 90, 0);
+            Quaternion rotation = Quaternion.Euler(0, gridYaw + turn * 90, 0);
             Vector3 center = point + rotation * new Vector3(0, kind == 0 ? 1.5f : .08f, kind == 0 ? 2 : 0);
             foreach (var piece in BuildPiece.All)
             {
@@ -93,7 +88,7 @@ namespace Pinefall
                 { if ((piece.Center - center).sqrMagnitude < .05f && Mathf.Abs(Vector3.Dot(piece.transform.forward, rotation * Vector3.forward)) > .95f) return "Already built here."; }
                 else if ((piece.transform.position - point).sqrMagnitude < .05f) return "Already built here.";
             }
-            bool support = Grounded(point) || BuildPiece.All.Any(p => p && Connected(p, point));
+            bool support = Grounded(point) || BuildPiece.All.Any(p => p && BuildGrid.Connected(p, point));
             if (!support) return "Attach to ground or an existing structure.";
             // Conservative obstruction test against existing world, excluding ground and actors.
             Vector3 half = kind == 0 ? new Vector3(1.87f, 1.36f, .08f) : kind == 1 ? new Vector3(1.85f, .045f, 1.85f) : new Vector3(1.75f, 1.15f, 1.75f);
@@ -112,13 +107,14 @@ namespace Pinefall
             }
             return "";
         }
-        public bool TryPlace(Ranger player, int kind, int material, Vector3 point, int turn)
+        public bool TryPlace(Ranger player, int kind, int material, Vector3 point, int turn, float gridYaw = 0, Vector3 gridOrigin = default)
         {
             if (!IsServer) return false;
-            string reason = PlacementError(player, kind, material, point, turn);
+            string reason = PlacementError(player, kind, material, point, turn, gridYaw, gridOrigin);
             if (reason != "") { player.InformServer(reason); return false; }
-            var go = Instantiate(Resources.Load<GameObject>("BuildPiece"), point, Quaternion.Euler(0, turn * 90, 0));
+            var go = Instantiate(Resources.Load<GameObject>("BuildPiece"), point, Quaternion.Euler(0, gridYaw + turn * 90, 0));
             var piece = go.GetComponent<BuildPiece>(); piece.Kind.Value = kind; piece.Material.Value = material; piece.Mask.Value = BuildPiece.FullMask(kind);
+            piece.GridYaw.Value = gridYaw; piece.GridOrigin.Value = gridOrigin;
             piece.Builder.Value = player.NetworkObjectId; piece.Team.Value = player.Team.Value; piece.Health.Value = 80; piece.BuiltAt.Value = NetworkManager.ServerTime.Time;
             player.AddBuildingMaterial(material, -10); go.GetComponent<NetworkObject>().Spawn(); return true;
         }
@@ -142,7 +138,7 @@ namespace Pinefall
                     }
                 }
             // Rotation of wall/floor edits would move collision through opponents; only ramps/cones rotate in place.
-            if (piece.Kind.Value >= 2) piece.transform.rotation = Quaternion.Euler(0, quarterTurn * 90, 0);
+            if (piece.Kind.Value >= 2) piece.transform.rotation = Quaternion.Euler(0, piece.GridYaw.Value + quarterTurn * 90, 0);
             piece.Mask.Value = mask; piece.DoorOpen.Value = false; return true;
         }
         public static bool CanModify(Ranger player, BuildPiece piece)
@@ -163,11 +159,11 @@ namespace Pinefall
             {
                 var next = frontier.Dequeue();
                 var center = CellKey(next.transform.position);
-                for (int y = -4; y <= 4; y++) for (int side = 0; side < 5; side++)
+                for (int y = -4; y <= 4; y++) for (int x = -2; x <= 2; x++) for (int z = -2; z <= 2; z++)
                 {
-                    var offset = side == 0 ? Vector3Int.zero : side == 1 ? Vector3Int.right : side == 2 ? Vector3Int.left : side == 3 ? new Vector3Int(0, 0, 1) : new Vector3Int(0, 0, -1);
-                    if (!cells.TryGetValue(center + offset + new Vector3Int(0, y, 0), out var group)) continue;
-                    foreach (var piece in group) if (piece && !supported.Contains(piece)) { supported.Add(piece); frontier.Enqueue(piece); }
+                    if (!cells.TryGetValue(center + new Vector3Int(x, y, z), out var group)) continue;
+                    foreach (var piece in group)
+                        if (piece && !supported.Contains(piece) && BuildGrid.Connected(next, piece.transform.position)) { supported.Add(piece); frontier.Enqueue(piece); }
                 }
             }
             foreach (var piece in BuildPiece.All.ToArray()) if (piece && !supported.Contains(piece) && piece.IsSpawned) piece.NetworkObject.Despawn();

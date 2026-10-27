@@ -65,3 +65,8 @@ The script verifies connections, six positive samples, no captured runtime error
 ## World generation and screenshots
 
 Explicit refresh commands are under the Unity **Pinefall** menu. [CONTENT](../docs/CONTENT.md) describes road mask, atlas photography and handbook export. [TESTING](../docs/TESTING.md) describes native screenshot capture, its reserved port and visual/audio review. Screenshots and reports stay in ignored `artifacts`; curated release evidence can be committed under a new baseline after review.
+
+
+## Living Wildfront
+
+Run Test-Frontier.ps1 for the new arena/build-frame/launchpad/cave/animal-reward/capacity checks. Test-Visual.ps1 includes all front-end and handbook pages with a text-layout audit. Inspect UI_TEXT_OVERFLOW messages as well as native images at both supported review sizes. Keep editor builds and final test groups sequential; do not replace files under a running probe.

@@ -5,14 +5,15 @@ namespace Pinefall
     public sealed partial class ReserveUI
     {
         readonly List<Rect> mapLabels=new List<Rect>();
+        readonly GUIStyle[] mapLabelStyles=new GUIStyle[3];
         public void VerificationAtlas(Vector2 center,float zoom){mapCenter=center;mapZoom=zoom;}
         Rect MapLabel(Vector2 point,string text,float size,int ordinal,bool water=false)
         {
             if(point.x<0||point.y<0||point.x>size||point.y>size)return default;
-            bool major=!water&&(ordinal<12||ordinal==30||ordinal==41),hovering=Vector2.Distance(point,Event.current.mousePosition)<18;
+            bool major=!water&&(RoundArena.Size<3000||ordinal<12||ordinal==30||ordinal==41),hovering=Vector2.Distance(point,Event.current.mousePosition)<18;
             if(!water&&!major&&mapZoom<1.65f&&!hovering)return default;
-            int font=water?13:major?17:14;var style=new GUIStyle(small){fontSize=font,fontStyle=major?FontStyle.Bold:FontStyle.Normal,wordWrap=false,alignment=TextAnchor.MiddleCenter};float width=Mathf.Clamp(style.CalcSize(new GUIContent(text)).x+16,85,260);Rect label=new Rect(0,0,width,25);
-            for(int attempt=0;attempt<13;attempt++){float dy=attempt==0?0:(attempt%2==0?-1:1)*((attempt+1)/2)*26;label.x=Mathf.Clamp(point.x-width*.5f,3,size-width-3);label.y=Mathf.Clamp(point.y+10+dy,3,size-27);bool collision=false;foreach(var used in mapLabels)if(used.Overlaps(label)){collision=true;break;}if(!collision)break;if(attempt==12&&!hovering)return default;}
+            int font=water?13:major?17:14;int styleIndex=water?0:major?1:2;var style=mapLabelStyles[styleIndex];if(style==null){style=new GUIStyle(small){fontSize=font,fontStyle=major?FontStyle.Bold:FontStyle.Normal,wordWrap=false,alignment=TextAnchor.MiddleCenter};mapLabelStyles[styleIndex]=style;}float width=Mathf.Clamp(style.CalcSize(new GUIContent(text)).x+16,85,260);Rect label=new Rect(0,0,width,30);
+            for(int attempt=0;attempt<13;attempt++){float dy=attempt==0?0:(attempt%2==0?-1:1)*((attempt+1)/2)*32;label.x=Mathf.Clamp(point.x-width*.5f,3,size-width-3);label.y=Mathf.Clamp(point.y+10+dy,3,size-33);bool collision=false;foreach(var used in mapLabels)if(used.Overlaps(label)){collision=true;break;}if(!collision)break;if(attempt==12&&!hovering)return default;}
             mapLabels.Add(label);if(Mathf.Abs(label.center.y-point.y)>40)Line(point,new Vector2(label.center.x,label.center.y),new Color(1,1,1,.42f),1);
             Color ink=new Color(.02f,.03f,.04f,.95f);Text(label.x-1,label.y,label.width,label.height,text,style,font,ink);Text(label.x+1,label.y,label.width,label.height,text,style,font,ink);Text(label.x,label.y-1,label.width,label.height,text,style,font,ink);Text(label.x,label.y+1,label.width,label.height,text,style,font,ink);Text(label.x,label.y,label.width,label.height,text,style,font,water?new Color(.74f,.89f,.96f):Color.white);return label;
         }

@@ -56,7 +56,20 @@ namespace Pinefall
             new District("Pinnacle Point",650,60,3,2,2,"An abandoned village with stocked houses, transport and a sealed supply cache.",true),
             new District("Craggy Crossing",400,140,3,2,5,"An abandoned village with stocked houses, transport and a sealed supply cache.",true),
             new District("Bamboo Borough",650,-650,4,2,0,"An abandoned village with stocked houses, transport and a sealed supply cache.",true),
-            new District("Mangrove Market",360,-80,5,2,1,"An abandoned village with stocked houses, transport and a sealed supply cache.",true)
+            new District("Mangrove Market",360,-80,5,2,1,"An abandoned village with stocked houses, transport and a sealed supply cache.",true),
+            new District("Foxglove Fields",-40,-90,0,2,0,"Open farmland, a supply relay and routes into the central reserve.",true),
+            new District("Riverside Rest",80,-80,0,2,5,"A riverside stop with close cover and quick transport.",true),
+            new District("Bracken Borough",-200,-200,0,2,2,"Woodland houses, stocked sheds and a supply relay.",true),
+            new District("Cedar Camp",200,-70,0,2,0,"Abandoned logging cabins beside the central ridge.",true),
+            new District("Orchid Outlook",430,-80,4,3,3,"A jungle outpost with strong loot and a contested supply relay.",true),
+            new District("Dustfall Depot",-420,-80,1,2,1,"A desert depot with vehicle supplies and rooftop sightlines.",true),
+            new District("Snowmelt Station",-450,300,2,2,3,"An ice-road station with a supply relay and mountain access.",true),
+            new District("Raven Ridge",70,550,3,3,5,"A high mountain settlement overlooking long rotations.",true),
+            new District("Larch Lookout",510,240,3,3,2,"A ridge-side hamlet above the eastern lake.",true),
+            new District("Icecap Inn",-180,650,2,2,3,"A snowbound inn and utility cabins near the northern edge.",true),
+            new District("Marshland Market",340,-600,5,2,0,"Wetland trade sheds and a contestable supply relay.",true),
+            new District("Sparrow Springs",-150,-600,0,2,5,"A southern hunting hamlet with stocked homes and a trail launch.",true)
+
         };
         static ExpeditionLayout()
         {
@@ -73,7 +86,7 @@ namespace Pinefall
         static Vector2[] ComputeMobilityStops(){var stops=new System.Collections.Generic.List<Vector2>();for(int road=0;road<Roads.GetLength(0);road+=2){Vector2 a=Regions[Roads[road,0]].center,c=Regions[Roads[road,1]].center,side=new Vector2(-(c-a).y,(c-a).x).normalized;var p=Vector2.Lerp(a,c,.5f)+side*10;if(!ReserveWater.HasSurface(p.x,p.y)&&!ReserveWater.HasSurface(p.x+side.x*8,p.y+side.y*8))stops.Add(p);}return stops.ToArray();}
         public static Vector3[] BoatStops(){var stops=new System.Collections.Generic.List<Vector3>();foreach(var lake in ReserveWater.Lakes)stops.Add(new Vector3(lake.center.x+lake.radius.x*.6f,lake.level+.23f,lake.center.y));foreach(float z in new[]{-400f,-1100f,-1800f})stops.Add(new Vector3(ReserveWater.RiverX(z),ReserveWater.Level(ReserveWater.RiverX(z),z)+.23f,z));return stops.ToArray();}
         public static readonly Vector2[] HouseOffsets={new Vector2(-14,3),new Vector2(14,8),new Vector2(-14,40),new Vector2(-38,24),new Vector2(38,30),new Vector2(14,58),new Vector2(-62,-5),new Vector2(62,3),new Vector2(-62,50),new Vector2(62,55),new Vector2(-30,75),new Vector2(30,80)};
-        public static int HouseCount(District district){return district.minor?4:12;}
+        public static int HouseCount(District district){return district.minor?6:12;}
         public static Vector2 VehiclePoint(int region){return Regions[region].center+new Vector2(17,-18);}
         public static Vector3 Spawn(int region,int member)
         {var p=Regions[Mathf.Clamp(region,0,Regions.Length-1)].center+new Vector2((member%2)*3-1.5f,-29-(member/2)*3);return ReserveWorld.OnGround(p.x,p.y,.4f);}

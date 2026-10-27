@@ -46,6 +46,7 @@ namespace Pinefall
             else if(kind==13){if(item<0||item>2)return;amount=Mathf.Min(quantity,BuildingMaterial(item));AddBuildingMaterial(item,-amount);}
             else if(kind==12){amount=Mathf.Min(quantity,SurveyCharges.Value);SurveyCharges.Value-=amount;}
             else if(kind==8){if(item<1||item>9||ModCount(item)==0)return;amount=1;SetModCountServer(item,ModCount(item)-1);}
+            else if(kind==14){amount=Mathf.Min(quantity,LaunchPads.Value);LaunchPads.Value-=amount;}
             else if(kind==1){if(item<0||item>=WeaponData.AmmoNames.Length)return;amount=Mathf.Min(quantity,ReserveFor(item));SetReserve(item,ReserveFor(item)-amount);}
             else if(kind==2){amount=Mathf.Min(quantity,Medkits.Value);Medkits.Value-=amount;}
             else if(kind==3){amount=Mathf.Min(quantity,Craft.Value);Craft.Value-=amount;}
@@ -53,14 +54,14 @@ namespace Pinefall
             else if(kind==5){amount=Mathf.Min(quantity,Food.Value);Food.Value-=amount;}else if(kind==6){if(ArmorTier.Value<=0)return;item=ArmorTier.Value;amount=Armor.Value;ArmorTier.Value=0;Armor.Value=0;}else if(kind==7){amount=Mathf.Min(quantity,ArmorPlates.Value);ArmorPlates.Value-=amount;}else return;
             if(kind!=0&&kind!=6&&amount==0)return;
             var p=transform.position+transform.forward*1.25f+transform.right*UnityEngine.Random.Range(-.65f,.65f);
-            ExpeditionLoot.Spawn(ReserveWater.LootPosition(p.x,p.z),kind,item,rarity,amount,tuning);
+            ExpeditionLoot.Spawn(CaveLayout.LootPosition(transform.position,p-transform.position),kind,item,rarity,amount,tuning);
         }
         void DropBackpack()
         {
             for(int id=1;id<=9;id++)while(ModCount(id)>0)DropItem(8,id,1);
             for(int i=0;i<WeaponData.All.Length;i++)if(Owns(i))DropItem(0,i,1);
             for(int i=0;i<WeaponData.AmmoNames.Length;i++)DropItem(1,i,400);
-            for(int material=0;material<3;material++)DropItem(13,material,999);DropItem(12,0,2);DropItem(2,0,5);DropItem(3,0,400);DropItem(4,0,5);DropItem(5,0,8);DropItem(6,0,1);DropItem(7,0,WeaponData.All.Length-1);
+            DropItem(14,0,3);for(int material=0;material<3;material++)DropItem(13,material,999);DropItem(12,0,2);DropItem(2,0,5);DropItem(3,0,400);DropItem(4,0,5);DropItem(5,0,8);DropItem(6,0,1);DropItem(7,0,WeaponData.All.Length-1);
         }
     }
 }

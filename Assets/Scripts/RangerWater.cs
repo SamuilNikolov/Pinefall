@@ -11,7 +11,7 @@ namespace Pinefall
         {
             float level;bool water=ReserveWater.Surface(transform.position.x,transform.position.z,out level)&&ReserveWater.Depth(transform.position.x,transform.position.z)>1.1f&&transform.position.y<level+.4f;
             if(Swimming.Value!=water)Swimming.Value=water;if(!water)return false;
-            float y=Mathf.Clamp((level-.85f-transform.position.y)*5,-3,3);controller.Move((direction.normalized*(sprint?4:2.7f)+Vector3.up*y)*Time.deltaTime);vertical=0;return true;
+            float y=Mathf.Clamp((level-.85f-transform.position.y)*5,-3,3);controller.Move((direction.normalized*(sprint?4:2.7f)+Vector3.up*y)*Time.deltaTime);vertical=0;ResetHopMomentum();return true;
         }
         public bool SwimServerBot(Vector3 direction){return IsServer&&IsBot.Value&&SwimMove(direction,false);}
         void MountedLook(bool controls)

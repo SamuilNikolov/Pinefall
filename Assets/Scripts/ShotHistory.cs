@@ -10,7 +10,7 @@ namespace Pinefall
     {
         public const double Window = .5;
         public static ShotHistory Current;
-        public struct Pose { public double time; public Vector3 bottom; public float height, radius, yaw; }
+        public struct Pose { public double time; public Vector3 bottom, extent; public float height, radius, yaw; }
         sealed class Track { public readonly Pose[] poses = new Pose[32]; public int count, head; }
         readonly Dictionary<ulong, Track> tracks = new Dictionary<ulong, Track>();
         readonly List<ulong> stale = new List<ulong>();
@@ -26,9 +26,8 @@ namespace Pinefall
             foreach (var animal in session.Animals)
             {
                 if (!animal || !animal.IsSpawned || animal.Dead) continue;
-                var capsule = animal.GetComponent<CapsuleCollider>();
-                if (capsule) Record(animal.NetworkObjectId, animal.transform.TransformPoint(capsule.center) - Vector3.up * capsule.height * animal.transform.lossyScale.y * .5f,
-                    capsule.height * animal.transform.lossyScale.y, capsule.radius * Mathf.Max(animal.transform.lossyScale.x, animal.transform.lossyScale.z), now);
+                var pose=WildlifeHitboxes.Pose(animal,now);
+                Record(animal.NetworkObjectId,pose.bottom,pose.height,pose.radius,now,pose.yaw,pose.extent);
             }
             if (Time.time < nextPrune) return;
             nextPrune = Time.time + 2; stale.Clear();
@@ -36,10 +35,10 @@ namespace Pinefall
                 if (pair.Value.count > 0 && now - pair.Value.poses[(pair.Value.head + 31) % 32].time > 1) stale.Add(pair.Key);
             foreach (ulong id in stale) tracks.Remove(id);
         }
-        public void Record(ulong id, Vector3 bottom, float height, float radius, double now, float yaw = 0)
+        public void Record(ulong id, Vector3 bottom, float height, float radius, double now, float yaw = 0, Vector3 extent = default)
         {
             if (!tracks.TryGetValue(id, out var track)) { track = new Track(); tracks.Add(id, track); }
-            track.poses[track.head] = new Pose { time = now, bottom = bottom, height = height, radius = radius, yaw = yaw };
+            track.poses[track.head] = new Pose { time = now, bottom = bottom, height = height, radius = radius, yaw = yaw, extent = extent };
             track.head = (track.head + 1) % 32; track.count = Math.Min(32, track.count + 1);
         }
         public Pose Get(ulong id, double time, Vector3 fallback, float height, float radius)
@@ -56,7 +55,7 @@ namespace Pinefall
                     float t = Mathf.Clamp01((float)((time - older.time) / Math.Max(.0001, newer.time - older.time)));
                     // Teleports are discontinuities, not a sweep through intervening cover.
                     if ((newer.bottom - older.bottom).sqrMagnitude > 100) return t < .5f ? older : newer;
-                    return new Pose { time = time, bottom = Vector3.Lerp(older.bottom, newer.bottom, t), height = Mathf.Lerp(older.height, newer.height, t), radius = Mathf.Lerp(older.radius, newer.radius, t), yaw = Mathf.LerpAngle(older.yaw, newer.yaw, t) };
+                    return new Pose { time = time, bottom = Vector3.Lerp(older.bottom, newer.bottom, t), height = Mathf.Lerp(older.height, newer.height, t), radius = Mathf.Lerp(older.radius, newer.radius, t), yaw = Mathf.LerpAngle(older.yaw, newer.yaw, t), extent=Vector3.Lerp(older.extent,newer.extent,t) };
                 }
                 newer = older;
             }

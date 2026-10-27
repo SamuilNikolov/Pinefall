@@ -54,6 +54,7 @@ public static partial class BuildReserve
         {
             var district=ExpeditionLayout.Regions[r];var site=new GameObject(district.name).transform;site.position=ReserveWorld.OnGround(district.center.x,district.center.y);
             var plaster=MaterialAsset(district.name+" cladding",district.biome==1?new Color(.63f,.48f,.32f):district.biome==2?new Color(.51f,.60f,.62f):district.biome==4?new Color(.31f,.35f,.23f):new Color(.4f,.36f,.28f));
+            plaster.mainTexture=AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Art/Terrain/WeatheredWood.jpg");plaster.SetTexture("_BumpMap",AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Art/Terrain/WeatheredWoodNormal.jpg"));plaster.EnableKeyword("_NORMALMAP");
             for(int house=0;house<ExpeditionLayout.HouseCount(district);house++)
             {
                 var offset=VillageFootprints.Offset(district,house);var h=new GameObject("Abandoned cabin").transform;h.SetParent(site,false);h.localPosition=new Vector3(offset.x,ReserveWorld.Height(district.center.x+offset.x,district.center.y+offset.y)-site.position.y,offset.y);

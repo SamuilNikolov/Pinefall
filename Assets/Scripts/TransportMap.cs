@@ -19,7 +19,7 @@ namespace Pinefall
             if(!IsServer||Time.unscaledTime<nextTransport)return;nextTransport=Time.unscaledTime+1;
             foreach(var group in Ranger.Players.Where(p=>p&&p.IsSpawned&&!p.IsBot.Value).GroupBy(p=>p.Team.Value))
             {
-                int team=group.Key;var pins=RoadVehicle.All.Where(car=>car&&car.IsSpawned&&VisibleTransport(car,team)).Select(car=>new TransportPin{id=car.NetworkObjectId,position=car.transform.position,type=(byte)car.Type.Value,condition=(byte)Mathf.Clamp(car.Condition.Value,0,100),fuel=(byte)Mathf.Clamp(Mathf.RoundToInt(car.Fuel.Value),0,100)}).ToArray();
+                int team=group.Key;var pins=RoadVehicle.All.Where(car=>car&&car.IsSpawned&&VisibleTransport(car,team)).Select(car=>new TransportPin{id=car.NetworkObjectId,position=car.transform.position,type=(byte)car.Type.Value,condition=(byte)Mathf.Clamp(car.Condition.Value,0,100),fuel=(byte)Mathf.Clamp(Mathf.RoundToInt(car.Fuel.Value),0,100)}).Concat(LaunchPad.All.Where(pad=>pad&&pad.IsSpawned&&pad.Fixed.Value).Select(pad=>new TransportPin{id=pad.NetworkObjectId,position=pad.transform.position,type=6,condition=(byte)Mathf.Clamp(pad.Health.Value/5,0,100),fuel=100})).ToArray();
                 TransportMapClientRpc(pins,new ClientRpcParams{Send=new ClientRpcSendParams{TargetClientIds=group.Select(p=>p.OwnerClientId).Distinct().ToArray()}});
             }
         }

@@ -87,7 +87,7 @@ namespace Pinefall
             if(!owner)return;
             if(equipped!=owner.Weapon.Value||attachmentStamp!=owner.PackedMods(owner.Weapon.Value))Equip(owner.Weapon.Value);if(!model)return;
             bool scoped=owner.ScopedView;var camera=GetComponent<RangerCamera>();
-            model.gameObject.SetActive(owner.ToolMode.Value==0&&owner.Fighting&&(!owner.CurrentVehicle||owner.CurrentVehicle.Type.Value==4||owner.VehicleSeat.Value>0)&&!scoped&&!(camera&&camera.ExternalView));
+            model.gameObject.SetActive((!ReserveUI.Instance||!ReserveUI.Instance.FrontPanelVisible)&&!owner.IsEmoting&&owner.ToolMode.Value==0&&owner.Fighting&&(!owner.CurrentVehicle||owner.CurrentVehicle.Type.Value==4||owner.VehicleSeat.Value>0)&&!scoped&&!(camera&&camera.ExternalView));
             float bob=owner.Velocity.Value>.2f?Mathf.Sin(Time.time*owner.Velocity.Value*2.2f)*.007f:0;
             var basePos=owner.Aiming?new Vector3(.02f,-.14f,.32f):new Vector3(.28f,-.27f,.46f);
             if(owner.Reloading.Value)basePos+=new Vector3(.12f,-.22f,-.09f);

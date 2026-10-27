@@ -11,7 +11,7 @@ namespace Pinefall
         [ServerRpc]public void ChangeTeamServerRpc(int team)
         {
             var m=WildfrontMatch.Current;if(!m||m.Phase.Value!=0||m.TeamSize.Value==1)return;
-            team=Mathf.Clamp(team,0,8/m.TeamSize.Value-1);if(Team.Value==team)return;
+            team=Mathf.Clamp(team,0,RoundArena.MaximumPlayers/m.TeamSize.Value-1);if(Team.Value==team)return;
             if(Players.Count(p=>p&&p!=this&&!p.IsBot.Value&&p.Team.Value==team)>=m.TeamSize.Value){FeedbackClientRpc("That team is full. Choose another team.");return;}
             Team.Value=team;Ready.Value=false;m.CancelCountdown();
         }
@@ -27,7 +27,7 @@ namespace Pinefall
         public bool TryStartRound()
         {
             if(!IsServer||!Battle.Value||Phase.Value!=0||!EveryoneReady||CountdownEnds.Value>0)return false;
-            CountdownEnds.Value=NetworkManager.ServerTime.Time+5;NarrateClientRpc("lobby");return true;
+            CountdownEnds.Value=NetworkManager.ServerTime.Time+5;NarrateEvent("lobby");return true;
         }
         [ServerRpc(RequireOwnership=false)]public void RequestStartServerRpc(ServerRpcParams rpc=default)
         {if(rpc.Receive.SenderClientId==Unity.Netcode.NetworkManager.ServerClientId)TryStartRound();}

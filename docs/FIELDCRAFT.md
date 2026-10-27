@@ -1,5 +1,7 @@
 # Fieldcraft systems — 0.8
 
+This document describes the 0.8 foundation. See [Living Wildfront](LIVING-WILDFRONT.md) for the current 0.9 overrides: player-relative grids, hold-Alt inventory, twenty-player arena sizes, launchpads, usable animal equipment rewards, caves, ground cover and front-end UI. In particular, old organic-only reward wording is superseded by the user's explicit equipment-drop request.
+
 This update retains the 6,144 m reserve and 4K atlas while adding construction, improved combat/voice and clearer presentation. Unity stays pinned to 2022.3.13f1. **Protocol 8 requires matching 0.8 peers.** The four construction forms and cell edits are original Pinefall implementations inspired by familiar battle royale mechanics; full Fortnite pattern/animation parity is not claimed.
 
 ## Construction and harvesting

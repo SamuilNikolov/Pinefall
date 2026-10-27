@@ -1,0 +1,35 @@
+{
+    "passed": [
+        "Three players connected to the expanded reserve",
+        "Forty-eight settlements contain more than two hundred searchable buildings",
+        "Distributed motorcycles, cars and launches populate travel routes",
+        "Denser procedural wildlife populations",
+        "New navigable lakes are carved into terrain",
+        "Autumn floodplain has its own habitat label",
+        "All recorded surface, weapon and wildlife sound banks load",
+        "Survey control can be rebound",
+        "Full-map transport registry includes vehicles beyond local render range",
+        "Vehicle map icons follow updated server positions",
+        "Rival enters the vehicle before visibility is checked",
+        "Enemy-occupied vehicles do not reveal rivals on the map",
+        "Objects shown and removed in one network tick leave no stale spawn queue",
+        "Low hunger explicitly locks sprinting",
+        "Survey consumes one charge and reveals enemy snapshots to its team",
+        "An active scan cannot waste a second charge",
+        "Server timed scan expires after twelve seconds",
+        "Survey tool can be dropped for other players",
+        "Dropped survey tool can be collected",
+        "A special supply reward creates a usable motorcycle on dry ground",
+        "Motorcycle supports entering the driver seat",
+        "Supply crates can release a survey beacon",
+        "Verification never records the microphone"
+    ],
+    "failed": [
+        "Eating restores sprint eligibility and consumes carried food"
+    ],
+    "errors": [],
+    "villages": 60,
+    "houses": 444,
+    "vehicles": 112,
+    "animals": 213
+}

@@ -6,7 +6,7 @@ namespace Pinefall
     {
         public NetworkVariable<int> DamageRevision = new NetworkVariable<int>();
         public float ArmorEquipPulse { get; private set; }
-        void DamageRevisionChanged(int previous, int next) { if (LocalHuman) DamageFlash = Time.time + .65f; }
+        void DamageRevisionChanged(int previous, int next) { if (LocalHuman){DamageFlash = Time.time + .65f;cameraKick=Mathf.Min(3,cameraKick+.7f);} }
         [ClientRpc] void VestEquippedClientRpc()
         { if (LocalHuman) ArmorEquipPulse = Time.time + .65f; }
     }

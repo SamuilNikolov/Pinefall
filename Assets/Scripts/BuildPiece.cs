@@ -14,6 +14,8 @@ namespace Pinefall
         public NetworkVariable<int> Health = new NetworkVariable<int>(80), Team = new NetworkVariable<int>();
         public NetworkVariable<ulong> Builder = new NetworkVariable<ulong>();
         public NetworkVariable<bool> DoorOpen = new NetworkVariable<bool>();
+        public NetworkVariable<float> GridYaw = new NetworkVariable<float>();
+        public NetworkVariable<Vector3> GridOrigin = new NetworkVariable<Vector3>();
         public NetworkVariable<double> BuiltAt = new NetworkVariable<double>();
         public int Maximum { get { return MaxHealth(Material.Value); } }
         public static int MaxHealth(int material) { return material == 0 ? 300 : material == 1 ? 450 : 600; }

@@ -10,13 +10,14 @@ namespace Pinefall
         public NetworkVariable<byte> State=new NetworkVariable<byte>(0);
         public NetworkVariable<float> MoveSpeed=new NetworkVariable<float>(0);
         public NetworkVariable<bool> Enraged=new NetworkVariable<bool>(false);public bool Aquatic{get{return species=="Shark";}}public bool NaturallyHostile{get{return naturallyHostile;}}
+        public Vector3 HitCenter=new Vector3(0,.7f,0),HitSize=new Vector3(.8f,1.4f,1.6f);
         public bool Dead{get{return Health.Value<=0;}}public VisualRig rig;
         float nextRelevance,nextSimulation,simulatedAt;bool nearPlayer=true;float simulationStep;Vector3 target,home;float decision,fleeUntil,aggroUntil,warningUntil,nextAttack,diedAt;bool charging;System.Random rng;
         public float CorpseAge{get{return Dead?Time.time-diedAt:0;}}
         bool boar,small,naturallyHostile;bool Boar{get{return boar;}}
         bool Small{get{return small;}}
         public override void OnNetworkSpawn()
-        {string lower=species.ToLowerInvariant();boar=lower.Contains("boar");small=lower.Contains("hare")||kind==1;naturallyHostile=boar||lower.Contains("wolf")||lower.Contains("bear")||Aquatic;rig=GetComponentInChildren<VisualRig>();ReserveSession.Instance.Animals.Add(this);gameObject.AddComponent<WildlifeSound>();PresentationBudget.RegisterWildlife(this);simulatedAt=Time.time;home=target=transform.position;rng=new System.Random((int)NetworkObjectId*971+ReserveWorld.Seed);decision=Time.time+(float)rng.NextDouble();if(IsServer)Health.Value=maxHealth;}
+        {WildlifeHitboxes.Measure(this);string lower=species.ToLowerInvariant();boar=lower.Contains("boar");small=lower.Contains("hare")||kind==1;naturallyHostile=boar||lower.Contains("wolf")||lower.Contains("bear")||Aquatic;rig=GetComponentInChildren<VisualRig>();ReserveSession.Instance.Animals.Add(this);gameObject.AddComponent<WildlifeSound>();PresentationBudget.RegisterWildlife(this);simulatedAt=Time.time;home=target=transform.position;rng=new System.Random((int)NetworkObjectId*971+ReserveWorld.Seed);decision=Time.time+(float)rng.NextDouble();if(IsServer)Health.Value=maxHealth;}
         public override void OnNetworkDespawn(){WorldInterest.Forget(NetworkObject);if(ReserveSession.Instance)ReserveSession.Instance.Animals.Remove(this);}
         public bool Sees(Ranger p)
         {

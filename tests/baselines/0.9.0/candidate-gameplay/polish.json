@@ -1,0 +1,32 @@
+{
+    "passed": [
+        "Attachment Reflex optic fits its correct slot",
+        "Attachment Ranger optic fits its correct slot",
+        "Attachment Marksman optic fits its correct slot",
+        "Attachment Reinforced barrel fits its correct slot",
+        "Attachment Precision barrel fits its correct slot",
+        "Attachment Muzzle brake fits its correct slot",
+        "Attachment Speed loader fits its correct slot",
+        "Attachment Steady grip fits its correct slot",
+        "Attachment Balanced stock fits its correct slot",
+        "Incompatible marksman optic stays in the pack",
+        "Precision barrel tightens actual firing spread",
+        "Speed loader shortens the actual reload",
+        "Removing an attachment returns it to the pack",
+        "Muzzle brake reduces recoil",
+        "Sharks attack a swimmer",
+        "Sharks cannot attack boat occupants",
+        "Damage starts a visible hit-feedback pulse",
+        "Return 1 preserves terrain and atlas without regeneration",
+        "Rehost 1 restores one clean session",
+        "Return 2 preserves terrain and atlas without regeneration",
+        "Rehost 2 restores one clean session",
+        "Return 3 preserves terrain and atlas without regeneration",
+        "Rehost 3 restores one clean session",
+        "Polish verification never records the microphone"
+    ],
+    "failed": [],
+    "errors": [],
+    "longestReturn": 0.44663238525390627,
+    "rehosts": 3
+}

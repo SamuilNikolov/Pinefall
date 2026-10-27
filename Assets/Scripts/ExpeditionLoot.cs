@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 namespace Pinefall
@@ -15,10 +16,14 @@ namespace Pinefall
         {
             foreach(var l in UnityEngine.Object.FindObjectsOfType<WorldLoot>())if(l.IsSpawned)l.NetworkObject.Despawn();
             foreach(var v in UnityEngine.Object.FindObjectsOfType<RoadVehicle>())if(v.IsSpawned)v.NetworkObject.Despawn();
+            foreach(var pad in LaunchPad.All.ToArray())if(pad&&pad.IsSpawned)pad.NetworkObject.Despawn();
             var rng=new System.Random(Guid.NewGuid().GetHashCode());
             for(int r=0;r<ExpeditionLayout.Regions.Length;r++)
             {
-                var district=ExpeditionLayout.Regions[r];if(!district.minor)for(int material=0;material<3;material++)Spawn(ReserveWorld.OnGround(district.center.x-6+material*2,district.center.y-10,.4f),13,material,0,30);
+                var district=ExpeditionLayout.Regions[r];if(WildfrontMatch.Current&&WildfrontMatch.Current.Phase.Value!=0&&!RoundArena.Includes(district))continue;
+                if(r>=48&&r%2==0)Spawn(ReserveWorld.OnGround(district.center.x-8,district.center.y-12,.4f),15,0,3,0);
+                if(r%4==0&& !ReserveWater.HasSurface(district.center.x-9,district.center.y-26))LaunchPad.Spawn(ReserveWorld.OnGround(district.center.x-9,district.center.y-26,.04f));
+                if(r%7==0)Spawn(ReserveWorld.OnGround(district.center.x+6,district.center.y-8,.4f),14,0,3,1);if(!district.minor)for(int material=0;material<3;material++)Spawn(ReserveWorld.OnGround(district.center.x-6+material*2,district.center.y-10,.4f),13,material,0,30);
                 for(int house=0;house<ExpeditionLayout.HouseCount(district);house++)for(int n=0;n<6;n++)
                 {
                     var p=district.center+VillageFootprints.Offset(district,house)+new Vector2(-2+(n%3)*2,-1+(n/3)*2.5f);
@@ -31,11 +36,11 @@ namespace Pinefall
                 if(district.minor)Spawn(ReserveWorld.OnGround(district.center.x+7,district.center.y-9,.4f),11,0,2,1);
                 if(r%2==0)Spawn(ReserveWorld.OnGround(district.center.x+5,district.center.y-12,.4f),4,0,0,1);
                 var vp=ExpeditionLayout.VehiclePoint(r);var location=district.vehicle==4?ReserveWater.BoatPoint(district.center):ReserveWorld.OnGround(vp.x,vp.y,.65f);var g=UnityEngine.Object.Instantiate(Resources.Load<GameObject>("RoadVehicle"),location,Quaternion.Euler(0,r*47,0));var car=g.GetComponent<RoadVehicle>();
-                car.Type.Value=district.vehicle;car.Condition.Value=r==3||r==6?0:rng.Next(30,85);car.Fuel.Value=rng.Next(12,54);g.GetComponent<NetworkObject>().Spawn();
+                car.Type.Value=district.vehicle;car.Condition.Value=r%9==0?0:rng.Next(30,85);car.Fuel.Value=rng.Next(12,54);g.GetComponent<NetworkObject>().Spawn();
             }
-            int stopIndex=0;foreach(var p in ExpeditionLayout.MobilityStops()){Spawn(ReserveWorld.OnGround(p.x+2,p.y,.4f),4,0,0,2);Spawn(ReserveWorld.OnGround(p.x-2,p.y,.4f),3,0,0,3);Spawn(ReserveWorld.OnGround(p.x,p.y+2,.4f),11,0,1,1);SpawnVehicle(ReserveWorld.OnGround(p.x,p.y+6,.65f),stopIndex++%3==0?5:stopIndex%4,75,65);}
-            foreach(var p in ExpeditionLayout.BoatStops()){SpawnVehicle(p,4,90,70);Spawn(ReserveWater.LootPosition(p.x+2,p.z),4,0,0,1);}
-
+            int stopIndex=0;foreach(var p in ExpeditionLayout.MobilityStops()){if(WildfrontMatch.Current&&WildfrontMatch.Current.Phase.Value!=0&&!RoundArena.Contains(new Vector3(p.x,0,p.y)))continue;Spawn(ReserveWorld.OnGround(p.x+2,p.y,.4f),4,0,0,2);Spawn(ReserveWorld.OnGround(p.x-2,p.y,.4f),3,0,0,3);Spawn(ReserveWorld.OnGround(p.x,p.y+2,.4f),11,0,1,1);SpawnVehicle(ReserveWorld.OnGround(p.x,p.y+6,.65f),stopIndex++%3==0?5:stopIndex%4,75,65);}
+            foreach(var p in ExpeditionLayout.BoatStops()){if(WildfrontMatch.Current&&WildfrontMatch.Current.Phase.Value!=0&&!RoundArena.Contains(p))continue;SpawnVehicle(p,4,90,70);Spawn(ReserveWater.LootPosition(p.x+2,p.z),4,0,0,1);}
+            foreach(var cave in CaveLayout.Sites){if(WildfrontMatch.Current&&WildfrontMatch.Current.Phase.Value!=0&&!RoundArena.Contains(new Vector3(cave.center.x,0,cave.center.y),140))continue;for(int cache=0;cache<3;cache++){float along=(cache-1)*cave.length*.25f;Vector3 at=cave.World(0,along);at.y=cave.Floor(along)+.35f;Spawn(at,cache==0?11:cache==1?0:1,cache==1?5:0,3,cache==1?-1:cache==2?20:1);}}
         }
     }
 }

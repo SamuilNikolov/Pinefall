@@ -43,7 +43,7 @@ namespace Pinefall
             if(!IsServer||!Alive)return;Health.Value=0;Downed.Value=false;BleedEnds.Value=0;CancelRevive();ExitVehicleServer();DropBackpack();respawnAfter=Time.time+6;
             var killer=attacker>=0?Players.FirstOrDefault(p=>p&&p.NetworkObjectId==(ulong)attacker&&p.Team.Value!=Team.Value):null;
             if(killer)killer.Kills.Value++;Debug.Log("PINEFALL_RANGER_DOWN "+NetworkObjectId+" by "+attacker);
-            if(WildfrontMatch.Current){WildfrontMatch.Current.NarrateClientRpc("elim"+Random.Range(0,3),DisplayName.Value+" eliminated"+(killer?" by "+killer.DisplayName.Value:"")+".");WildfrontMatch.Current.AnnounceClientRpc(DisplayName.Value+" was eliminated"+(killer?" by "+killer.DisplayName.Value:" in the wild")+".");}
+            if(WildfrontMatch.Current){WildfrontMatch.Current.NarrateEvent("elim"+Random.Range(0,5),DisplayName.Value+" eliminated"+(killer?" by "+killer.DisplayName.Value:"")+".");WildfrontMatch.Current.AnnounceClientRpc(DisplayName.Value+" was eliminated"+(killer?" by "+killer.DisplayName.Value:" in the wild")+".");}
         }
     }
     public sealed partial class WildfrontMatch

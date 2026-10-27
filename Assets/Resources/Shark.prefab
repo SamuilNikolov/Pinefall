@@ -83,7 +83,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &2876303327099258176
+--- !u!1 &2674757337406600478
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,9 +91,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2075458470720415335}
-  - component: {fileID: 8012067360948498675}
-  - component: {fileID: 6158848861741140542}
+  - component: {fileID: 4578805540953850687}
+  - component: {fileID: 1461028570695782317}
+  - component: {fileID: 7318921739835200509}
   m_Layer: 8
   m_Name: Eye
   m_TagString: Untagged
@@ -101,13 +101,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!4 &2075458470720415335
+--- !u!4 &4578805540953850687
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2876303327099258176}
+  m_GameObject: {fileID: 2674757337406600478}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.31, y: 0.08, z: 1.28}
@@ -116,21 +116,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9145407366248500779}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &8012067360948498675
+--- !u!33 &1461028570695782317
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2876303327099258176}
+  m_GameObject: {fileID: 2674757337406600478}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &6158848861741140542
+--- !u!23 &7318921739835200509
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2876303327099258176}
+  m_GameObject: {fileID: 2674757337406600478}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -449,7 +449,7 @@ Transform:
   - {fileID: 3559276130439983808}
   - {fileID: 7167218605563900216}
   - {fileID: 454326026181787964}
-  - {fileID: 2075458470720415335}
+  - {fileID: 4578805540953850687}
   m_Father: {fileID: 1950416722946773965}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5702566644853321882
@@ -500,7 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1534151553
+  GlobalObjectIdHash: 3828149940
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -552,6 +552,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46753f451f1feb045bf1e493f6529784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Boss:
+    m_InternalValue: 0
   species: Shark
   kind: 2
   maxHealth: 150
@@ -565,6 +567,8 @@ MonoBehaviour:
     m_InternalValue: 0
   Enraged:
     m_InternalValue: 0
+  HitCenter: {x: 0, y: 0.7, z: 0}
+  HitSize: {x: 0.8, y: 1.4, z: 1.6}
   rig: {fileID: 0}
 --- !u!136 &3593018730687824654
 CapsuleCollider:

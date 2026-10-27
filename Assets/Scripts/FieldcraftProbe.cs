@@ -40,14 +40,15 @@ namespace Pinefall
             var match = WildfrontMatch.Current; match.Battle.Value = true; match.Phase.Value = 1; match.ShrinkAt.Value = ReserveSession.Instance.Network.ServerTime.Time + 10000; match.StageEnds.Value = match.ShrinkAt.Value + 100;
             foreach (var player in Ranger.Players) { player.ResetRound(ReserveWorld.OnGround(player == p ? 0 : player == enemy ? 0 : -9, player == enemy ? -144 : -166, .2f)); player.InitializeEquipment(true); player.Health.Value = 100; player.Owned.Value |= 1 << 1; player.Weapon.Value = 1; player.Ammo.Value = 15; }
             yield return new WaitForSecondsRealtime(2);
-            bool remoteCrouch=false;float baseModelY=friend.rig?friend.rig.transform.localPosition.y:0;int observations = 0, before = p.Health.Value; float shooting = Time.realtimeSinceStartup + 10;
+            bool remoteEmote=false;bool remoteCrouch=false;float baseModelY=friend.rig?friend.rig.transform.localPosition.y:0;int observations = 0, before = p.Health.Value; float shooting = Time.realtimeSinceStartup + 10;
             while (Time.realtimeSinceStartup < shooting)
             {
                 p.SmokeMoveTo(ReserveWorld.OnGround(Mathf.Sin(Time.time * 2) * 2.6f, -166, .2f));
+                if(friend.IsEmoting&&friend.EmoteId.Value==0)remoteEmote=true;
                 if(friend.Crouched.Value&&friend.GetComponent<CapsuleCollider>().height<1.4f&&friend.rig&&friend.rig.transform.localPosition.y<baseModelY-.25f)remoteCrouch=true;
                 if (p.Health.Value < before) observations++; p.Health.Value = 100; before = 100; yield return null;
             }
-            Check(ProximityVoice.Current.FramesFrom(enemy.NetworkObjectId)>=70,"Remote packet bursts preserve sustained proximity speech frames");Check(observations >= 9, "Remote client damages a moving host with delayed shots");Check(remoteCrouch,"Remote crouch lowers both the hitbox and visible character model");
+            Check(ProximityVoice.Current.FramesFrom(enemy.NetworkObjectId)>=70,"Remote packet bursts preserve sustained proximity speech frames");Check(observations >= 9, "Remote client damages a moving host with delayed shots");Check(remoteEmote,"Remote emote state is visible to the host");Check(remoteCrouch,"Remote crouch lowers both the hitbox and visible character model");
             p.SmokeMoveTo(ReserveWorld.OnGround(0, -175, .2f));
             var world = ConstructionWorld.Current; p.Wood.Value = 300; p.Stone.Value = 200; p.Metal.Value = 100;
             Vector3 point = Vector3.zero; bool found = false;
@@ -113,7 +114,7 @@ namespace Pinefall
             Check(WorldLoot.All.Count(l => l.Kind.Value == 13) == drops + 1, "Construction materials can be dropped and shared");
             var beast = Instantiate(Resources.Load<GameObject>("Boar"), ReserveWorld.OnGround(8, -171), Quaternion.identity).GetComponent<Wildlife>(); beast.GetComponent<Unity.Netcode.NetworkObject>().Spawn();
             Check(beast.MutateBoss() && beast.Health.Value == beast.maxHealth * 3 && beast.transform.localScale.x > 1.5f, "Storm boss mutation increases size and health");
-            int beforeLoot = WorldLoot.All.Count; p.AnimalReward(beast); Check(WorldLoot.All.Skip(beforeLoot).All(l => l.Kind.Value == 5 || l.Kind.Value == 9), "Boss rewards remain organic survival items");
+            int beforeLoot = WorldLoot.All.Count; p.AnimalReward(beast); Check(WorldLoot.All.Skip(beforeLoot).All(l => l.Kind.Value >= 0 && l.Kind.Value <= 14), "Boss rewards are usable equipment and survival supplies");
             p.SmokeMoveTo(ReserveWorld.OnGround(0, -175, 9)); float heightBefore = p.transform.position.y; ReserveUI.Instance.VerificationPanel("settings"); yield return new WaitForSecondsRealtime(.6f);
             Check(p.transform.position.y < heightBefore - 1, "Gravity continues while settings are open"); ReserveUI.Instance.VerificationPanel("");
             var pose = new ShotHistory.Pose { bottom = Vector3.zero, height = 1.8f, radius = .33f };
@@ -126,7 +127,7 @@ namespace Pinefall
             Check(!p.ResolveShot(p.transform.position + Vector3.up, Vector3.forward, p.Weapon.Value, serverNow - 1, 5000, true), "Out-of-window shot timestamps are rejected");
             Check(!p.ResolveShot(p.transform.position + Vector3.up, Vector3.forward, p.Weapon.Value, serverNow + 2, 5001, true), "Future shot timestamps are rejected");
             p.SmokeMoveTo(ReserveWorld.OnGround(0, -174, .1f)); yield return new WaitForSecondsRealtime(.3f);
-            Check(p.StartSlide(Vector3.forward), "A grounded player can initiate a slide");
+            p.Velocity.Value=9.4f;Check(p.StartSlide(Vector3.forward), "A grounded player can initiate a slide");
             Vector3 slideStart = p.transform.position; yield return new WaitForSecondsRealtime(.3f);
             Check(p.Sliding.Value && (p.transform.position - slideStart).sqrMagnitude > .5f && p.GetComponent<CapsuleCollider>().height < 1, "Slide momentum and shortened hitbox continue without menu input");
             p.Sliding.Value = false;
@@ -202,7 +203,8 @@ namespace Pinefall
             }
             else
             {
-                yield return new WaitForSecondsRealtime(5); p.Crouched.Value = true; yield return new WaitForSecondsRealtime(.7f);
+                p.RequestEmote(0);yield return new WaitForSecondsRealtime(.5f);Check(p.IsEmoting,"Owner receives the server-authorized emote state");
+                yield return new WaitForSecondsRealtime(4.5f); p.Crouched.Value = true; yield return new WaitForSecondsRealtime(.7f);
                 Check(p.GetComponent<CapsuleCollider>().height < 1.4f, "Crouch changes the actual local hitbox height"); p.Crouched.Value = false;
             }
             yield return new WaitForSecondsRealtime(25);

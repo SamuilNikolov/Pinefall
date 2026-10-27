@@ -17,15 +17,15 @@ namespace Pinefall
         }
         [ClientRpc] void ConfirmDamageClientRpc(Vector3 point, int damage, int shield, int health, int maximum, bool killed, bool headshot, ulong target, bool enemy, ClientRpcParams rpc = default)
         {
-            if (!LocalHuman) return; hitUntil = Time.time + .32f; ConfirmedHits++;
+            if (!LocalHuman) return; if(shield>0)ReserveEffects.Shield(point); hitUntil = Time.time + .32f; ConfirmedHits++;
             if (DamageReceipts.Count >= 16) DamageReceipts.RemoveAt(0);
             DamageReceipts.Add(new DamageReceipt { position = point, damage = damage, shield = shield, health = health, maximum = maximum, killed = killed, headshot = headshot, target = target, enemy = enemy, at = Time.time });
             CombatSounds.Play(killed ? 3 : shield > 0 ? 2 : 1);
         }
         public void AnimalReward(Wildlife animal)
         {
-            if (!IsServer || !animal) return; Score.Value++;
-            if (WildfrontMatch.Current) { WildfrontMatch.Current.DropReward(animal.transform.position, animal.kind, animal.Enraged.Value); if (animal.Boss.Value) { ExpeditionLoot.Spawn(ReserveWater.LootPosition(animal.transform.position.x - 1, animal.transform.position.z), 5, 0, 0, 4); ExpeditionLoot.Spawn(ReserveWater.LootPosition(animal.transform.position.x + 1, animal.transform.position.z), 9, 0, 2, 1); } }
+            if (!IsServer || !animal) return; Score.Value++; AnimalLoot.Drop(animal);
+            if (WildfrontMatch.Current) { WildfrontMatch.Current.DropReward(animal.transform.position, animal.kind, animal.Enraged.Value); if (animal.Boss.Value) { ExpeditionLoot.Spawn(CaveLayout.LootPosition(animal.transform.position,Vector3.left), 5, 0, 0, 4); ExpeditionLoot.Spawn(CaveLayout.LootPosition(animal.transform.position,Vector3.right), 9, 0, 2, 1); } }
         }
     }
     public static class CombatSounds

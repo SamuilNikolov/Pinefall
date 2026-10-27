@@ -37,6 +37,6 @@ public static partial class BuildReserve
             surface.SetFloat("_Metallic", material == 2 ? .55f : 0); surface.SetFloat("_Glossiness", material == 2 ? .27f : .12f);
             surface.mainTextureScale = new Vector2(1, 1); AssetDatabase.CreateAsset(surface, path);
         }
-        ExportHandbookData();AssetDatabase.SaveAssets();
+        PrepareLivingResources();ExportHandbookData();AssetDatabase.SaveAssets();
     }
 }

@@ -41,8 +41,8 @@ namespace Pinefall
             if(ReserveSession.Instance.Animals.Count(a=>a&&!a.Dead)>=Maximum)return;
             for(int attempt=0;attempt<100;attempt++)
             {
-                float x=(float)(rng.NextDouble()-.5f)*(ReserveWorld.Size-130),z=(float)(rng.NextDouble()-.5f)*(ReserveWorld.Size-130);
-                if(ReserveWater.HasSurface(x,z)||ReserveBiomes.At(x,z)!=biome||ReserveWorld.Clearing(x,z))continue;Vector3 pos=ReserveWorld.OnGround(x,z);
+                float x=(float)(rng.NextDouble()-.5f)*(RoundArena.Size-130),z=(float)(rng.NextDouble()-.5f)*(RoundArena.Size-130);
+                if(!RoundArena.Contains(new Vector3(x,0,z))||ReserveWater.HasSurface(x,z)||ReserveBiomes.At(x,z)!=biome||ReserveWorld.Clearing(x,z))continue;Vector3 pos=ReserveWorld.OnGround(x,z);
                 if(Ranger.Players.Any(p=>p&&p.Alive&&Vector3.Distance(pos,p.transform.position)<(initial?95:150)))continue;
                 if(WildfrontMatch.Current&&WildfrontMatch.Current.Active&&WildfrontMatch.Current.Outside(pos))continue;
                 string type=Habitats[biome][rng.Next(Habitats[biome].Length)];var g=Instantiate(Resources.Load<GameObject>(type),pos,Quaternion.Euler(0,rng.Next(360),0));g.GetComponent<NetworkObject>().Spawn();return;

@@ -1,0 +1,14 @@
+{
+    "role": "client 3",
+    "passed": [
+        "Late join spectates the active round",
+        "Microphone stays off"
+    ],
+    "failed": [],
+    "errors": [],
+    "voiceFrames": 60,
+    "animals": 0,
+    "loot": 0,
+    "vehicles": 0,
+    "fps": 5.349573135375977
+}

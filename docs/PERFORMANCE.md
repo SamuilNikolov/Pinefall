@@ -42,3 +42,12 @@ See [TESTING](TESTING.md) and `tools/Measure-Performance.ps1`. Other GPUs, weak 
 ## Fieldcraft additions
 
 0.8 keeps resource destruction sparse: existing foliage collider/matrix handles are registered once, changed HP is replicated, and there is no per-tree Update or network actor. Built pieces combine visible parts into one render mesh, cap at 80/player and 512/world, and traverse a spatial support grid only after removal. Shot history has bounded rings; voice receive/device playback uses preallocated buffers. See [0.8 verification](VERIFICATION-0.8.md) for a graphics-enabled release run. The route does not stress a saturated 512-piece arena.
+
+
+## Living Wildfront visual budget
+
+0.9 defaults to a 900 m view distance, adjustable from 750 to 1,800 m. Village detail changes to simple silhouettes at approximately 175–300 m, depending on adaptive detail; scoped views retain more detail. Collision, loot and map state are unaffected. Fir branch scans have three geometry levels. Low grass is 0.17–0.31 m tall in a bounded 49-cell camera cache, with one new cell prepared per frame and three combined-mesh detail levels. It is omitted for headless/atlas rendering and when far above ground. Grass materials are shared by biome rather than cloned per spatial batch. Far tree batches do not submit shadow casting beyond the useful shadow range.
+
+Map labels reuse three styles. Text styles reuse immutable base/font/tint combinations, with fading tint quantized to 64 steps and line heights cached per window size. Map labels reuse stable styles; neither path creates unbounded per-frame style keys. Character previews have a 30 Hz render limit. Impact particles and tracers have fixed pools.
+
+Do not run a graphics measurement beside editor builds or parallel integration groups, and never rebuild into a player folder currently under test. Record resolution, graphics device, mean frame rate and p95/p99. Twenty participant capacity and short local transport tests are not twenty-human rendering evidence.

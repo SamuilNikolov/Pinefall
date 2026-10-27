@@ -14,7 +14,7 @@ namespace Pinefall
             for(int i=0;i<ExpeditionLayout.Roads.GetLength(0);i++)
             {int a=ExpeditionLayout.Roads[i,0],b=ExpeditionLayout.Roads[i,1];float t;float d=ExpeditionLayout.SegmentDistance(point,ExpeditionLayout.Regions[a].center,ExpeditionLayout.Regions[b].center,out t);if(d<distance){distance=d;projection=Vector2.Lerp(ExpeditionLayout.Regions[a].center,ExpeditionLayout.Regions[b].center,t);along=(ExpeditionLayout.Regions[b].center-ExpeditionLayout.Regions[a].center).normalized;}}
             if(distance<14){float roadH=(NaturalHeight(projection.x-along.x*10,projection.y-along.y*10)+NaturalHeight(projection.x,projection.y)*2+NaturalHeight(projection.x+along.x*10,projection.y+along.y*10))*.25f;roadH=Mathf.Clamp(roadH,h-1.25f,h+1.25f);h=Mathf.Lerp(h,roadH,1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(3,14,distance)));}
-            for(int i=0;i<ExpeditionLayout.Regions.Length;i++){float d=Vector2.Distance(point,ExpeditionLayout.Regions[i].center);h=Mathf.Lerp(h,padHeights[i],1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(ExpeditionLayout.Regions[i].minor?62:100,ExpeditionLayout.Regions[i].minor?140:170,d)));}
+            for(int i=0;i<ExpeditionLayout.Regions.Length;i++){float d=Vector2.Distance(point,ExpeditionLayout.Regions[i].center);h=Mathf.Lerp(h,padHeights[i],1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(ExpeditionLayout.Regions[i].minor?62:100,Mathf.Max(ExpeditionLayout.Regions[i].minor?140:170,(ExpeditionLayout.Regions[i].minor?62:100)+Mathf.Abs(h-padHeights[i])*3),d)));}
             return ReserveWater.Carve(x,z,h);
         }
         void CreateUnderstory()
@@ -30,7 +30,7 @@ namespace Pinefall
             var materials=new Material[6,4];for(int b=0;b<6;b++)for(int k=0;k<4;k++){var m=new Material(Shader.Find("Pinefall/Nature")){color=colors[b,k],enableInstancing=true};m.SetFloat("_Wind",k==3?0:.035f);materials[b,k]=m;fineAssets.Add(m);}
             var groups=new Dictionary<int,List<Matrix4x4>>();var rng=new System.Random(Seed+731);
             // Patch noise leaves navigable gaps and makes dense cover feel like a habitat.
-            for(int i=0;i<680000;i++)
+            for(int i=0;i<850000;i++)
             {
                 float x=(float)(rng.NextDouble()-.5)*(Size-65),z=(float)(rng.NextDouble()-.5)*(Size-65);if(Clearing(x,z)||ReserveWater.HasSurface(x,z))continue;
                 int biome=ReserveBiomes.At(x,z);float patch=Mathf.PerlinNoise(x*.027f+81,z*.027f+16);if(patch<.38f)continue;
@@ -44,10 +44,27 @@ namespace Pinefall
             // Dense reed beds follow the wetland shore rather than filling the navigable lake.
             var marsh=ReserveWater.Lakes[1];for(int i=0;i<18000;i++){float angle=(float)rng.NextDouble()*Mathf.PI*2,ring=.96f+(float)rng.NextDouble()*.18f;float x=marsh.center.x+Mathf.Cos(angle)*marsh.radius.x*ring,z=marsh.center.y+Mathf.Sin(angle)*marsh.radius.y*ring;if(Clearing(x,z)||ReserveWater.Depth(x,z)>.65f)continue;int key=Cell(x,z)+20*4096;if(!groups.ContainsKey(key))groups[key]=new List<Matrix4x4>();float scale=.85f+(float)rng.NextDouble()*.65f;groups[key].Add(Matrix4x4.TRS(OnGround(x,z),Quaternion.Euler(0,rng.Next(360),0),Vector3.one*scale));}
             var fern=Resources.Load<GameObject>("RealFern");Material fernMaterial=null;if(fern){var renderer=fern.GetComponentInChildren<MeshRenderer>();fernMaterial=new Material(Shader.Find("Pinefall/Nature")){color=new Color(.73f,.90f,.69f),enableInstancing=true,mainTexture=renderer?renderer.sharedMaterial.mainTexture:null};fernMaterial.SetFloat("_Wind",.02f);fineAssets.Add(fernMaterial);}
+            var realGrass=Resources.Load<GameObject>("RealGrass");
+            var grassFilters=realGrass?realGrass.GetComponentsInChildren<MeshFilter>():new MeshFilter[0];
+            var grassMaterials=new Material[grassFilters.Length];
+            for(int i=0;i<grassFilters.Length;i++)
+            {
+                var renderer=grassFilters[i].GetComponent<Renderer>();if(!renderer)continue;
+                var material=new Material(Shader.Find("Pinefall/Foliage")){mainTexture=renderer.sharedMaterial.mainTexture,color=Color.white,enableInstancing=true};
+                material.SetTexture("_AlphaTex",Resources.Load<Texture2D>("GrassOpacity"));material.SetFloat("_Wind",.04f);fineAssets.Add(material);grassMaterials[i]=material;
+            }
             foreach(var entry in groups)
             {
                 int type=entry.Key/4096,b=type/4,k=type%4;
-                if(k==1&&(b==0||b==4||b==5)&&fern)
+                if(k==0&&(b==0||b==4)&&realGrass)
+                {
+                    for(int i=0;i<grassFilters.Length;i++)
+                    {
+                        var filter=grassFilters[i];var mat=grassMaterials[i];if(!mat)continue;
+                        var matrices=new List<Matrix4x4>(entry.Value.Count);foreach(var matrix in entry.Value)matrices.Add(matrix*filter.transform.localToWorldMatrix);AddBatch(filter.sharedMesh,mat,matrices,110);
+                    }
+                }
+                else if(k==1&&(b==0||b==4||b==5)&&fern)
                 {
                     foreach(var filter in fern.GetComponentsInChildren<MeshFilter>()){var renderer=filter.GetComponent<Renderer>();if(!renderer||renderer.sharedMaterials.Length==0)continue;var offset=filter.transform.localToWorldMatrix;var matrices=new List<Matrix4x4>(entry.Value.Count);foreach(var matrix in entry.Value)matrices.Add(matrix*offset);AddBatch(filter.sharedMesh,fernMaterial,matrices,145);}
                 }

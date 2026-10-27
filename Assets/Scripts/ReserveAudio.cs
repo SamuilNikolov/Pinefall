@@ -66,17 +66,4 @@ namespace Pinefall
         }
         void OnDestroy(){if(instance==this)instance=null;}
     }
-    public static class ReserveEffects
-    {
-        static Material dust;
-        public static void Impact(Vector3 position,Vector3 normal,bool animal)
-        {
-            if(!dust)dust=WeaponView.Mat("Impact dust",new Color(.57f,.49f,.31f));
-            var p=GameObject.CreatePrimitive(PrimitiveType.Sphere);p.name="Impact";Object.Destroy(p.GetComponent<Collider>());p.transform.position=position+normal*.025f;p.transform.localScale=Vector3.one*.09f;p.GetComponent<Renderer>().sharedMaterial=dust;
-            Object.Destroy(p,1.5f);
-            var line=new GameObject("Impact sparks");line.transform.position=position;var ps=line.AddComponent<ParticleSystem>();var main=ps.main;main.duration=.2f;main.loop=false;main.startLifetime=.4f;main.startSpeed=1.7f;main.startSize=.07f;main.startColor=new Color(.65f,.58f,.43f,.7f);main.maxParticles=9;main.simulationSpace=ParticleSystemSimulationSpace.World;
-            var emission=ps.emission;emission.rateOverTime=0;emission.SetBursts(new[]{new ParticleSystem.Burst(0,7)});
-            var renderer=line.GetComponent<ParticleSystemRenderer>();renderer.sharedMaterial=Resources.Load<Material>("Dust");ps.Play();Object.Destroy(line,1);
-        }
-    }
 }

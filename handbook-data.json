@@ -1,9 +1,9 @@
 {
-    "version": "0.8.0",
-    "roadLinks": 71,
-    "serviceStops": 35,
+    "version": "0.9.0",
+    "roadLinks": 89,
+    "serviceStops": 44,
     "boats": 10,
-    "vehicles": 91,
+    "vehicles": 112,
     "locations": [
         {
             "name": "Ranger Refuge",
@@ -387,6 +387,102 @@
             "description": "An abandoned village with stocked houses, transport and a sealed supply cache.",
             "x": 1440.0,
             "z": -320.0,
+            "hamlet": true
+        },
+        {
+            "name": "Foxglove Fields",
+            "biome": "Lush valley",
+            "description": "Open farmland, a supply relay and routes into the central reserve.",
+            "x": -160.0,
+            "z": -360.0,
+            "hamlet": true
+        },
+        {
+            "name": "Riverside Rest",
+            "biome": "Lush valley",
+            "description": "A riverside stop with close cover and quick transport.",
+            "x": 462.70208740234377,
+            "z": -259.49285888671877,
+            "hamlet": true
+        },
+        {
+            "name": "Bracken Borough",
+            "biome": "Lush valley",
+            "description": "Woodland houses, stocked sheds and a supply relay.",
+            "x": -800.0,
+            "z": -800.0,
+            "hamlet": true
+        },
+        {
+            "name": "Cedar Camp",
+            "biome": "Lush valley",
+            "description": "Abandoned logging cabins beside the central ridge.",
+            "x": 800.0,
+            "z": -280.0,
+            "hamlet": true
+        },
+        {
+            "name": "Orchid Outlook",
+            "biome": "Rainforest",
+            "description": "A jungle outpost with strong loot and a contested supply relay.",
+            "x": 1720.0,
+            "z": -320.0,
+            "hamlet": true
+        },
+        {
+            "name": "Dustfall Depot",
+            "biome": "Dune basin",
+            "description": "A desert depot with vehicle supplies and rooftop sightlines.",
+            "x": -1680.0,
+            "z": -320.0,
+            "hamlet": true
+        },
+        {
+            "name": "Snowmelt Station",
+            "biome": "Ice desert",
+            "description": "An ice-road station with a supply relay and mountain access.",
+            "x": -1703.18408203125,
+            "z": 910.7740478515625,
+            "hamlet": true
+        },
+        {
+            "name": "Raven Ridge",
+            "biome": "High Rockies",
+            "description": "A high mountain settlement overlooking long rotations.",
+            "x": 282.6225891113281,
+            "z": 2170.11474609375,
+            "hamlet": true
+        },
+        {
+            "name": "Larch Lookout",
+            "biome": "High Rockies",
+            "description": "A ridge-side hamlet above the eastern lake.",
+            "x": 2040.0,
+            "z": 960.0,
+            "hamlet": true
+        },
+        {
+            "name": "Icecap Inn",
+            "biome": "Ice desert",
+            "description": "A snowbound inn and utility cabins near the northern edge.",
+            "x": -720.0,
+            "z": 2600.0,
+            "hamlet": true
+        },
+        {
+            "name": "Marshland Market",
+            "biome": "Reedwater marsh",
+            "description": "Wetland trade sheds and a contestable supply relay.",
+            "x": 1517.7694091796875,
+            "z": -2567.3583984375,
+            "hamlet": true
+        },
+        {
+            "name": "Sparrow Springs",
+            "biome": "Reedwater marsh",
+            "description": "A southern hunting hamlet with stocked homes and a trail launch.",
+            "x": -600.0,
+            "z": -2400.0,
             "hamlet": true
         }
     ],

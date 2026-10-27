@@ -25,7 +25,7 @@ See the [content recipes](CONTENT.md) before regenerating the world. An unrelate
 
 Record original author, direct source, license/version, relevant license text, modifications, destination filenames and any attribution requirement. Update `THIRD-PARTY-NOTICES.md`; sound clips also update `AUDIO-SOURCES.json`. Use clearly named originals and processed derivatives where appropriate. Do not include private download credentials, paid asset packages or unrelated tools in the repository.
 
-The baseline uses Quaternius and Poly Haven CC0 content, OFL fonts and a mixture of CC0/public-domain/CC BY audio. Adapted animals and weapons can reuse source meshes and should not be described as dedicated realistic models. Piper-generated event WAV files are included; its neural generator/model are not a runtime dependency and are not bundled.
+The baseline uses Quaternius and Poly Haven CC0 content, OFL fonts and a mixture of CC0/public-domain/CC BY audio. Adapted animals and weapons can reuse source meshes and should not be described as dedicated realistic models. Kokoro-generated event WAV files are included; its neural generator/model are not a runtime dependency and are not bundled.
 
 Project-wide licensing has not been selected; see [LICENSE.md](../LICENSE.md). Third-party license obligations are independent of that decision. A provenance record is not a completed legal audit.
 

@@ -1,0 +1,45 @@
+{
+  "version": "0.9.0",
+  "status": "compiled development candidate; partial verification",
+  "unity": "2022.3.13f1",
+  "protocol": 9,
+  "maximumParticipants": 20,
+  "sourceParent": "65dd36fc4b18ca22db500a6908bc60166b49066d",
+  "runtimeAssemblySha256": "1d77761cdd9903f4bc8aa11b2409dcf335825dd2b791e344eaa45e7c5ed2f20d",
+  "executableSha256": "8a9b25cfbb8a839b097d3e059b4dec2bac2b7bf1833f380e41c352aa6d8708ea",
+  "atlasSha256": "88328b0890b06de115bf142612566549e46427879d710b2dca7d4ddbeaab11f3",
+  "buildLog": "20261026-193339-6367.log",
+  "groups": {
+    "earlier-gameplay": {
+      "reports": 10,
+      "passed": 146,
+      "failed": 0,
+      "errors": 0
+    },
+    "fieldcraft": {
+      "reports": 4,
+      "passed": 75,
+      "failed": 0,
+      "errors": 0
+    },
+    "frontier": {
+      "reports": 1,
+      "passed": 51,
+      "failed": 0,
+      "errors": 0
+    },
+    "candidate-gameplay": {
+      "reports": 10,
+      "passed": 145,
+      "failed": 1,
+      "errors": 0
+    }
+  },
+  "verificationNotes": [
+    "Earlier gameplay predates the final movement/render changes.",
+    "Fieldcraft and frontier cover the high-speed movement candidate before the last render-only changes; its assembly hash was not captured before rebuilding.",
+    "Candidate gameplay has one failed hunger assertion. Its fixture was changed to assert before periodic decay; that correction compiled but was not rerun.",
+    "Prior complete UI captures passed layout audit at 1600x900 and 1280x720. The latest render-tuned visual sequence ended without its completion marker.",
+    "User requested compile and push without another full sweep."
+  ]
+}

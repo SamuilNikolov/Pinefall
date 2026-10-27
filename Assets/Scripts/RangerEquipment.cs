@@ -23,7 +23,7 @@ namespace Pinefall
         {get{NetworkObject obj;return VehicleId.Value!=RoadVehicle.Empty&&NetworkManager&&NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(VehicleId.Value,out obj)?obj.GetComponent<RoadVehicle>():null;}}
         public void InitializeEquipment(bool sandbox)
         {
-            if(!IsServer)return;ResetBuildingMaterials();ResetCombatCadence();ResetSurvey();magazines=WeaponData.All.Select(w=>w.magazine).ToArray();
+            if(!IsServer)return;LaunchPads.Value=0;ResetBuildingMaterials();ResetCombatCadence();ResetSurvey();magazines=WeaponData.All.Select(w=>w.magazine).ToArray();
             Optics.Value=Barrels.Value=Handling.Value=0;ModBag.Value=0;Owned.Value=sandbox?((1<<Mathf.Clamp(ReserveSession.Instance.SelectedWeapon,0,WeaponData.All.Length-1))|(1<<3)):1<<3;RarityBits.Value=0;RifleReserve.Value=LightReserve.Value=ShellReserve.Value=sandbox?100:0;PistolReserve.Value=sandbox?120:24;RocketReserve.Value=sandbox?3:0;
             Weapon.Value=sandbox?Mathf.Clamp(ReserveSession.Instance.SelectedWeapon,0,WeaponData.All.Length-1):3;Ammo.Value=magazines[Weapon.Value];Medkits.Value=sandbox?2:0;FuelCans.Value=sandbox?1:0;Food.Value=1;Hunger.Value=85;ArmorTier.Value=0;Armor.Value=0;ArmorPlates.Value=0;InitialSlots(Weapon.Value);
         }
@@ -58,6 +58,8 @@ namespace Pinefall
                 if(fresh){if(Weapon.Value>=0)magazines[Weapon.Value]=Ammo.Value;magazines[index]=rounds;Weapon.Value=index;Ammo.Value=rounds;Reloading.Value=false;}
                 else {SetReserve(WeaponData.Get(index).ammoType,ReserveFor(WeaponData.Get(index).ammoType)+rounds);for(int slot=0;slot<3;slot++){int modId=(loot.Tuning.Value>>(slot*4))&15;if(!WeaponMods.Compatible(index,modId))continue;if(ModCount(modId)<5)SetModCountServer(modId,ModCount(modId)+1);else ExpeditionLoot.Spawn(loot.transform.position+Vector3.right*.3f,8,modId,0,1);}}
             }
+            else if(loot.Kind.Value==14){if(LaunchPads.Value>=3){FeedbackClientRpc("Launchpad pack full. Carry at most three.");return;}LaunchPads.Value++;}
+            else if(loot.Kind.Value==15){double now=NetworkManager.ServerTime.Time;if(loot.Amount.Value>now){FeedbackClientRpc("Relay cooling down. Come back shortly.");return;}if(!WildfrontMatch.Current||!WildfrontMatch.Current.Active)return;loot.Amount.Value=Mathf.CeilToInt((float)now+180);WildfrontMatch.Current.SpawnSupply(loot.transform.position+Vector3.right*18);WildfrontMatch.Current.NarrateEvent("relay");FeedbackClientRpc("Supply flight called. The crate is visible to every team.");return;}
             else if(loot.Kind.Value==13){int material=loot.Item.Value;if(material<0||material>2)return;int accepted=Mathf.Min(999-BuildingMaterial(material),loot.Amount.Value);if(accepted<=0)return;AddBuildingMaterial(material,accepted);loot.Amount.Value-=accepted;if(loot.Amount.Value>0)return;}
             else if(loot.Kind.Value==12){if(SurveyCharges.Value>=2){FeedbackClientRpc("Survey beacon pack full (two). Use or share one.");return;}SurveyCharges.Value++;}
             else if(loot.Kind.Value==11){var at=loot.transform.position;ExpeditionLoot.Spawn(at+Vector3.left*.65f,8,UnityEngine.Random.Range(1,10),2,1);ExpeditionLoot.Spawn(at+Vector3.right*.65f,2,0,0,1);ExpeditionLoot.Spawn(at+Vector3.forward*.65f,7,0,1,2);FeedbackClientRpc("Field cache opened: an attachment, medicine and armor plates.");}

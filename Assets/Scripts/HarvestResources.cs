@@ -12,6 +12,7 @@ namespace Pinefall
         public Vector3 Position { get { return collider ? collider.transform.position : Vector3.zero; } }
         public void Apply(int value)
         {
+            HarvestResources.Version++;
             health = Mathf.Clamp(value, 0, maximum);
             if (collider) collider.enabled = health > 0;
             foreach (var handle in handles)
@@ -20,6 +21,7 @@ namespace Pinefall
     }
     public static class HarvestResources
     {
+        public static int Version;
         public static readonly List<HarvestNode> Nodes = new List<HarvestNode>();
         static readonly Dictionary<Collider, HarvestNode> lookup = new Dictionary<Collider, HarvestNode>();
         public static HarvestNode Register(Collider collider, int material, int health)

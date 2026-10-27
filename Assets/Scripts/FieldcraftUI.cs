@@ -23,7 +23,7 @@ namespace Pinefall
                 Text(1058, 533, 480, 44, GameBindings.Label("Fire")+" build   "+GameBindings.Label("Aim")+" material   "+GameBindings.Label("Reload")+" rotate\n"+GameBindings.Label("Build Wall")+"–"+GameBindings.Label("Build Pyramid")+" shape   "+GameBindings.Label("Edit build")+" edit   "+GameBindings.Label("Build")+" return", small, 16, muted);
                 if (P.BlueprintError != "") Text(560, 490, 480, 38, P.BlueprintError, Centered(small), 18, danger);
             }
-            ResourceStrip(1140, 624, false);
+            ResourceStrip(1140, 605, false);
             var aimed = P.AimedBuild(); if (aimed) SmallHealth(aimed.Center + Vector3.up * 1.2f, aimed.Health.Value, aimed.Maximum, BuildPiece.Materials[aimed.Material.Value] + " " + BuildPiece.Shapes[aimed.Kind.Value], aimed.Team.Value == P.Team.Value ? ice : danger);
             if (P.FocusAnimal && !P.FocusAnimal.Dead && (P.FocusAnimal.transform.position - P.transform.position).sqrMagnitude < 150 * 150)
                 SmallHealth(P.FocusAnimal.transform.position + Vector3.up * (P.FocusAnimal.Boss.Value ? 3.4f : 2), P.FocusAnimal.Health.Value, P.FocusAnimal.EffectiveMaxHealth, P.FocusAnimal.Boss.Value ? "Storm alpha" : P.FocusAnimal.species, P.FocusAnimal.Boss.Value ? gold : prey);
@@ -100,7 +100,7 @@ namespace Pinefall
                     if (Button(x + 12, y, 254, 22, id > 0 ? WeaponMods.Names[id] + "  ×" : "+ " + WeaponMods.SlotName(fit), id > 0)) { inventoryWeapon = gun; if (id > 0) P.DetachModServerRpc(gun, fit); }
                 }
             }
-            Text(686, 323, 800, 31, "Backpack", type, 23, paper);
+            Text(686, 323, 400, 31, "Backpack", type, 23, paper);Glyph(1170,327,23,"launchpad",ice);Text(1200,327,180,25,"Launchpads ×"+P.LaunchPads.Value,small,17,ice);if(Button(1385,323,162,30,"Drop pad"))P.DropItemServerRpc(14,0,1);
             int[] kinds = { 1, 1, 1, 1, 1, 5, 2, 3, 4, 6, 7, 12 };
             string[] labels = { ".308", ".223", "12-gauge", "9 mm", "Rockets", "Food", "Medkit", "Repair", "Fuel", "Vest", "Plates", "Survey" };
             for (int i = 0; i < kinds.Length; i++)
@@ -228,7 +228,7 @@ namespace Pinefall
             {
                 if (Button(976, 480, 550, 44, voice.Enabled ? "Microphone enabled" : "Enable microphone", voice.Enabled)) voice.Enabled = !voice.Enabled;
                 if (Button(976, 536, 265, 39, "Push to talk", !voice.OpenMic)) voice.OpenMic = false; if (Button(1254, 536, 272, 39, "Open mic", voice.OpenMic)) voice.OpenMic = true;
-                Text(976, 598, 550, 44, "Voice reaches all teams within 75 m.\nTurning it off stops capture.", small, 18, muted);
+                Text(976, 598, 550, 56, "Voice reaches all teams within 75 m.\nTurning it off stops capture.", small, 18, muted);
             }
             if(Button(976,666,550,44,"Voice & narration options"))Open("voice");
             if(voice)Text(976,725,550,35,voice.Status,small,17,muted);

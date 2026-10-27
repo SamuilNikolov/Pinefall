@@ -1,10 +1,13 @@
 using UnityEngine;
 namespace Pinefall
 {
+    [DefaultExecutionOrder(200)]
     public sealed class RuntimePerformance:MonoBehaviour
     {
         public static RuntimePerformance Current;public static bool HideHud;
         public static float Detail=1;
+        public static float ViewDistance {get{return Mathf.Clamp(PlayerPrefs.GetFloat("view.distance",900),750,1800);}}
+        void LateUpdate(){var camera=Camera.main;if(!camera||ReserveSession.Arg("--bake-atlas")!="")return;camera.farClipPlane=Mathf.Max(Ranger.Local&&Ranger.Local.Aiming?850:650,ViewDistance*(.75f+Detail*.25f));RenderSettings.fogDensity=Mathf.Max(RenderSettings.fogDensity,1.9f/camera.farClipPlane);SettlementDetail.Tick(camera);Shader.SetGlobalFloat("_ReserveViewDistance",camera.farClipPlane);}
         public static bool Automatic{get{return PlayerPrefs.GetInt("perf.auto",1)==1;}set{PlayerPrefs.SetInt("perf.auto",value?1:0);}}
         public static int Target{get{return PlayerPrefs.GetInt("perf.target",90);}set{PlayerPrefs.SetInt("perf.target",value);}}
         public float FrameMs{get;private set;}=16.7f;float nextTune,stableSince;bool lastFocus;int appliedTarget;
@@ -32,7 +35,7 @@ namespace Pinefall
             Text(85,250,1320,40,"Graphics device: "+SystemInfo.graphicsDeviceName,small,22,paper);Text(85,304,1320,40,Screen.width+" × "+Screen.height+"    "+(RuntimePerformance.Current?Mathf.RoundToInt(1000/RuntimePerformance.Current.FrameMs)+" FPS · "+RuntimePerformance.Current.FrameMs.ToString("0.0")+" ms":""),small,22,gold);
             if(Button(85,386,430,56,RuntimePerformance.Automatic?"Auto performance: on":"Auto performance: off",RuntimePerformance.Automatic)){RuntimePerformance.Automatic=!RuntimePerformance.Automatic;RuntimePerformance.ApplyDetail();}
             Text(85,482,1200,35,"Frame-rate target",type,26,paper);int[] rates={60,90,120,144,0};for(int i=0;i<rates.Length;i++)if(Button(85+i*274,540,253,55,rates[i]==0?"Uncapped":rates[i]+" FPS",RuntimePerformance.Target==rates[i]))RuntimePerformance.Target=rates[i];
-            Text(85,636,1360,70,"Choose a target your display and hardware can sustain. When the game is in the background, rendering is limited to 30 FPS. Hosting and voice continue.",small,20,muted);
+            Text(85,625,1300,28,"View distance: "+Mathf.RoundToInt(RuntimePerformance.ViewDistance)+" m",small,20,paper);float view=Slider(85,673,1060,RuntimePerformance.ViewDistance,750,1800);if(Event.current.type!=EventType.Repaint&&Event.current.type!=EventType.Layout)PlayerPrefs.SetFloat("view.distance",view);
             bool show=PlayerPrefs.GetInt("perf.overlay",1)==1;if(Button(85,761,430,55,show?"Frame-rate display: on":"Frame-rate display: off"))PlayerPrefs.SetInt("perf.overlay",show?0:1);if(Button(1120,761,380,55,"Back to Settings",true)){PlayerPrefs.Save();Open("settings");}
         }
     }

@@ -9,7 +9,7 @@ Content is currently largely code-driven. Numeric IDs, packed state and `Resourc
 3. Check server loot/transport spawning and free-point landing collision/water rules. Names/map labels must match the actual geometry. Avoid intersecting roads with cliffs or buildings.
 4. Regenerate scene content deliberately, review prefab/terrain changes, then refresh the road coverage and atlas below. Verify foundations, driveable routes, bridge height, loot reachability, map label collisions and remote-client interest behavior.
 
-The baseline has 48 places, 14 major villages and 34 smaller hamlets. Adding a major activity can be more valuable than duplicating empty houses. See the roadmap for possible compact objectives; those ideas are proposals, not implemented features.
+The baseline has 60 places, 14 major villages and 46 smaller hamlets. Adding a major activity can be more valuable than duplicating empty houses. See the roadmap for possible compact objectives; those ideas are proposals, not implemented features.
 
 ## A biome or water feature
 
@@ -23,7 +23,7 @@ The baseline has 48 places, 14 major villages and 34 smaller hamlets. Adding a m
 2. Register the prefab in `ReserveSession` and add it to the appropriate `WildlifeDirector.Habitats` entries. Update species identity, size, health and behavior flags intentionally; current hostility checks include species-name semantics.
 3. Keep distant simulation bounded, body animation behind presentation relevance, and required colliders independent of visual enablement. Respect the shared population cap and players' spawn buffers.
 4. Add suitable sound-bank behavior and credits; avoid claiming an adapted sound/model is a species-accurate production asset.
-5. Test normal flight/aggression, storm tint/enrage, hit/harvest, reward types, late join and hide/show/despawn. Animal rewards are logical survival resources; no guns, ammunition or fuel.
+5. Test normal flight/aggression, storm tint/enrage, hit/harvest, reward types, late join and hide/show/despawn. The user explicitly changed 0.9 rewards to usable equipment in addition to food. Use AnimalLoot; do not add pelts, bones, trophies or crafting.
 
 ## A firearm or attachment
 

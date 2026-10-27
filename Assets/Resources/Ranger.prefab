@@ -3386,7 +3386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 301951917
+  GlobalObjectIdHash: 1312837055
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -3487,6 +3487,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f8b0263ae1a6c445a2f959d492491be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LaunchPads:
+    m_InternalValue: 0
+  GlideState:
+    m_InternalValue: 0
   DisplayName:
     m_InternalValue:
       utf8LengthInBytes: 6
@@ -3595,6 +3599,22 @@ MonoBehaviour:
     m_InternalValue: 0
   ArmorPlates:
     m_InternalValue: 0
+  Wood:
+    m_InternalValue: 80
+  Stone:
+    m_InternalValue: 40
+  Metal:
+    m_InternalValue: 20
+  ToolMode:
+    m_InternalValue: 0
+  ToolSwings:
+    m_InternalValue: 0
+  BuildKind: 0
+  BuildMaterial: 0
+  BuildTurn: 0
+  EditMask: 0
+  DamageRevision:
+    m_InternalValue: 0
   IsBot:
     m_InternalValue: 0
   Owned:
@@ -3604,6 +3624,8 @@ MonoBehaviour:
   OtherUpgrades:
     m_InternalValue: 0
   RifleReserve:
+    m_InternalValue: 0
+  RocketReserve:
     m_InternalValue: 0
   LightReserve:
     m_InternalValue: 0
@@ -3631,6 +3653,8 @@ MonoBehaviour:
     m_InternalValue: 0
   ReloadStarted:
     m_InternalValue: 0
+  Sliding:
+    m_InternalValue: 0
   Downed:
     m_InternalValue: 0
   BleedEnds:
@@ -3645,6 +3669,8 @@ MonoBehaviour:
     m_InternalValue: -1
   Slot2:
     m_InternalValue: -1
+  SpectatingId:
+    m_InternalValue: 18446744073709551615
   Hunger:
     m_InternalValue: 85
   Food:

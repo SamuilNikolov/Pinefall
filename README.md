@@ -2,9 +2,11 @@
 
 **A host-your-own multiplayer wilderness battle royale built in Unity.** Hunt to survive, scavenge named settlements, upgrade your equipment, and travel by road or water as the storm closes.
 
-![Pinefall reserve map](docs/images/reserve-map.png)
+![Pinefall main screen](docs/images/main-menu.png)
 
-**Current source baseline:** 0.8.0 · **Unity:** 2022.3.13f1 · **Player target:** Windows x64 · **Network protocol:** 8 · **Players:** up to eight, including practice bots.
+**Current source baseline:** 0.9.0 · **Unity:** 2022.3.13f1 · **Player target:** Windows x64 · **Network protocol:** 9 · **Players:** up to twenty, including practice bots.
+
+**Closeout status:** compiled development candidate. See [verification and remaining issues](docs/VERIFICATION-0.9.md), including the remaining performance regression and incomplete final rerun.
 
 This repository contains the editable game, imported assets, generated scene, pinned packages, and collaboration tooling. Open the repository root in Unity Hub. The game is playable and still in development; character art, animation, vehicle handling, balance, and online infrastructure have room to improve.
 
@@ -29,11 +31,11 @@ The first clone is substantial because the imported source art, extracted animat
 | Area | Current functionality |
 | --- | --- |
 | Match | Solo, duo and squad teams; practice bots; lobby/readiness; per-player spawn bidding and free-point landing; shrinking storm stages; downing, revives and victory |
-| World | 6,144 m square reserve; six core biomes plus an autumn floodplain variant; 48 named settlements, 304 searchable buildings, 71 road links, five lakes |
+| World | 6,144 m square reserve; six core biomes plus an autumn floodplain variant; 60 named settlements, 444 searchable buildings, 89 road links, six branching cave systems, five lakes |
 | Equipment | Eight weapon classes including a projectile RPG, rarity-based loot, three attachment categories with nine mods, slot inventory, shareable drops, armor, hunger, food and healing |
-| Travel | 91 starting vehicles including motorcycles and boats; condition, fuel, repairs and boost; live vehicle map icons |
-| Wildlife | Biome-based populations; peaceful prey and predators; storm aggression and larger alpha mutations; organic hunting rewards; swimming sharks |
-| Construction | Pickaxe harvesting, wood/stone/metal, replicated walls/floors/stairs/pyramids, cell editing, doors, repairs and support collapse |
+| Travel | 112 starting vehicles including motorcycles and boats; condition, fuel, repairs and boost; live vehicle map icons |
+| Wildlife | Biome-based populations; peaceful prey and predators; storm aggression and larger alpha mutations; food and usable equipment rewards; swimming sharks |
+| Construction | Pickaxe harvesting, wood/stone/metal, player-relative replicated walls/floors/stairs/pyramids, cell editing, doors, repairs, support collapse and floor-mounted launchpads |
 | Combat | Stance-aware anatomical hit regions, bounded server rewind, confirmed damage feedback, class-specific firing/range, team-aware spectating |
 | Presentation | First/third person, character options, weather and five-minute day cycle, map zoom/labels, recorded sound banks, event narration, opt-in proximity voice |
 | Performance | Cached terrain sampling, sleeping parked vehicles, bounded distant simulation, visual/network work budgets, cached HUD icons and hardware-independent automatic detail |
@@ -42,18 +44,20 @@ The first clone is substantial because the imported source art, extracted animat
 
 Read the [player handbook](GAME-GUIDE.md) for rules and controls. These are current development features, not a promise that every asset or mechanic is production finished.
 
+Read the [Living Wildfront update](docs/LIVING-WILDFRONT.md) for lobby-sized arenas, launchpads, caves, equipment rewards and the visual budgets.
+
 ## Join a game
 
 The host's session card shows its address and **UDP 7777** by default. LAN guests can use discovery or the host's local IPv4 address. Internet guests need the public IPv4 address, a reachable forwarded UDP port and an executable-specific firewall allowance. There is **no relay or account service**. A displayed public address does not prove reachability; carrier-grade NAT and double NAT can require another approach. See [networking](docs/NETWORKING.md).
 
-**All friends must use 0.8 builds.** Protocol 8 changes player state, combat requests, voice packets and network prefabs; 0.7/0.7.1 clients are incompatible. Local automation uses separate ports and never needs your router settings.
+**All friends must use 0.9 builds.** Protocol 9 adds arena, build-frame, launchpad and glider state. Earlier clients are incompatible. Local automation uses separate ports and never needs your router settings.
 
 ## Start contributing
 
 | You want to… | Read this |
 | --- | --- |
 | Import, run and build | [Setup](docs/SETUP.md) |
-| Understand the 0.8 systems and controls | [Fieldcraft update](docs/FIELDCRAFT.md) |
+| Understand the building and combat systems | [Fieldcraft update](docs/FIELDCRAFT.md) |
 | Understand the code and scene | [Architecture](docs/ARCHITECTURE.md) and [system/file map](docs/SYSTEMS.md) |
 | Continue work as an AI agent | [AGENTS.md](AGENTS.md), then [current handoff](docs/HANDOFF.md) |
 | Add a gun, animal, settlement, biome or vehicle | [Content extension recipes](docs/CONTENT.md) |

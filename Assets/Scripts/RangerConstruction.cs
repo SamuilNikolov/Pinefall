@@ -15,6 +15,8 @@ namespace Pinefall
         public Vector3 BlueprintPoint { get; private set; }
         public string BlueprintError { get; private set; } = "";
         GameObject blueprint, pickaxeView; Material blueprintSurface; int blueprintStamp = -1;
+        Vector3 buildOrigin; float buildYaw; int rotationOffset; bool gridReady;
+        public float BlueprintYaw { get { return buildYaw + BuildTurn * 90; } }
         float nextBlueprintCheck, nextPlace, nextSwing, serverSwing, swingAt, serverBuildAt, serverEditAt; bool blueprintValid;
         public static bool FiniteVector(Vector3 point) { return Finite(point); }
         public int BuildingMaterial(int material) { return material == 0 ? Wood.Value : material == 1 ? Stone.Value : Metal.Value; }
@@ -32,32 +34,47 @@ namespace Pinefall
             if (!Alive || CurrentVehicle) { if (ToolMode.Value != 0) ToolMode.Value = 0; CancelBuildEdit(); }
             if (EditTarget && (!ReserveUI.Instance || !ReserveUI.Instance.EditingBuild)) CancelBuildEdit();
             if (!controls) { if (blueprint && !EditTarget) blueprint.SetActive(false); return; }
+            if(GameBindings.Down("Launchpad"))TryDeployLaunchPad();
             if (GameBindings.Down("Pickaxe")) ToolMode.Value = PickaxeSelected ? (byte)0 : (byte)1;
-            if (GameBindings.Down("Build")) ToolMode.Value = Building ? (byte)0 : (byte)2;
+            if (GameBindings.Down("Build")) { if(!Building)gridReady=false; ToolMode.Value = Building ? (byte)0 : (byte)2; }
             if (GameBindings.Down("Repair")) { var repair = AimedBuild(); if (repair) RepairBuildServerRpc(repair.NetworkObjectId); }
-            for (int kind = 0; kind < 4; kind++) if (GameBindings.Down("Build " + BuildPiece.Shapes[kind])) { BuildKind = kind; ToolMode.Value = 2; }
+            for (int kind = 0; kind < 4; kind++) if (GameBindings.Down("Build " + BuildPiece.Shapes[kind])) { if(!Building)gridReady=false; BuildKind = kind; ToolMode.Value = 2; }
             if (GameBindings.Down("Edit build"))
             {
                 var piece = AimedBuild();
-                if (ConstructionWorld.CanModify(this, piece)) { EditTarget = piece; piece.SetPreviewHidden(true); EditMask = piece.Mask.Value; BuildTurn = Mathf.RoundToInt(piece.transform.eulerAngles.y / 90) % 4; ReserveUI.Instance.OpenBuildEditor(); ShowBlueprint(piece.transform.position, piece.Kind.Value, EditMask, BuildTurn, true); }
+                if (ConstructionWorld.CanModify(this, piece)) { EditTarget = piece; piece.SetPreviewHidden(true); EditMask = piece.Mask.Value; BuildTurn = BuildGrid.FacingTurn(piece.transform.eulerAngles.y,piece.GridYaw.Value); ReserveUI.Instance.OpenBuildEditor(); ShowBlueprint(piece.transform.position, piece.Kind.Value, EditMask, BuildTurn, true,piece.GridYaw.Value); }
                 else ShowNotice("Aim at a nearby structure owned by your team.", 2);
             }
             if (EditTarget) return;
             if (Building)
             {
-                if (GameBindings.Down("Reload")) BuildTurn = (BuildTurn + 1) % 4;
+                if (!gridReady) { buildYaw = Mathf.Repeat(transform.eulerAngles.y,360); buildOrigin = BuildGrid.RootOrigin(transform.position,CaveLayout.SupportHeight(transform.position));rotationOffset=0;gridReady=true; }
+                if (GameBindings.Down("Reload")) rotationOffset = (rotationOffset + 1) % 4;
                 if (GameBindings.Down("Aim")) BuildMaterial = (BuildMaterial + 1) % 3;
-                Vector3 aimed = view.transform.position + view.transform.forward * 6; BuildPiece anchor = null; Vector3 hitPoint = aimed;
-                if (Physics.Raycast(view.transform.position, view.transform.forward, out var hit, 10, ~((1 << 8) | (1 << 9) | (1 << 10)), QueryTriggerInteraction.Ignore)) { aimed = hit.point + hit.normal * .08f; hitPoint = hit.point; anchor = hit.collider.GetComponentInParent<BuildPiece>(); }
-                BlueprintPoint = ConstructionWorld.Snap(aimed);
-                float ground = ReserveWorld.Height(BlueprintPoint.x, BlueprintPoint.z), level = Mathf.Ceil((ground + .03f) / .75f) * .75f;
-                if (anchor) level = anchor.transform.position.y + (hitPoint.y - anchor.transform.position.y > 2.1f ? 3 : 0);
-                else if (Physics.Raycast(transform.position + Vector3.up * .25f, Vector3.down, out var under, 2, ~((1 << 8) | (1 << 9) | (1 << 10)), QueryTriggerInteraction.Ignore))
-                { var support = under.collider.GetComponentInParent<BuildPiece>(); if (support) level = support.transform.position.y + (transform.position.y - support.transform.position.y > 2.1f ? 3 : 0); else if (!(under.collider is TerrainCollider) && HarvestResources.Find(under.collider) == null) level = Mathf.Ceil((under.point.y + .03f) / .75f) * .75f; }
-                BlueprintPoint = ConstructionWorld.Snap(new Vector3(BlueprintPoint.x, level, BlueprintPoint.z));
-                if (Time.time >= nextBlueprintCheck) { nextBlueprintCheck = Time.time + .08f; BlueprintError = ConstructionWorld.PlacementError(this, BuildKind, BuildMaterial, BlueprintPoint, BuildTurn); blueprintValid = BlueprintError == ""; }
-                ShowBlueprint(BlueprintPoint, BuildKind, BuildPiece.FullMask(BuildKind), BuildTurn, blueprintValid);
-                if (GameBindings.Held("Fire") && Time.time >= nextPlace) { nextPlace = Time.time + .15f; if (blueprintValid) PlaceBuildServerRpc(BuildKind, BuildMaterial, BlueprintPoint, BuildTurn); }
+                BuildPiece anchor = null; RaycastHit under;
+                if (Physics.Raycast(transform.position + Vector3.up * .5f, Vector3.down, out under, 4, ~((1 << 8) | (1 << 9) | (1 << 10)), QueryTriggerInteraction.Ignore)) anchor=under.collider.GetComponentInParent<BuildPiece>();
+                if(!anchor && Physics.Raycast(view.transform.position,view.transform.forward,out var ahead,8,~((1<<8)|(1<<9)|(1<<10)),QueryTriggerInteraction.Ignore))anchor=ahead.collider.GetComponentInParent<BuildPiece>();
+                float level=buildOrigin.y;
+                if(anchor)
+                {
+                    buildYaw=anchor.GridYaw.Value;buildOrigin=anchor.GridOrigin.Value;
+                    level=anchor.transform.position.y;
+                    if(transform.position.y-level>1.7f)level+=3;
+                }
+                else if(under.collider && !(under.collider is TerrainCollider) && HarvestResources.Find(under.collider)==null)
+                    level=buildOrigin.y+Mathf.Round((under.point.y-buildOrigin.y)/3)*3;
+                else
+                {
+                    float ground=ReserveWorld.Height(transform.position.x,transform.position.z);
+                    // A new grounded run can move to a nearby natural terrace; connected pieces keep their storey.
+                    level=buildOrigin.y+Mathf.Round((ground-buildOrigin.y)/3)*3;
+                }
+                BuildTurn=BuildGrid.FacingTurn(transform.eulerAngles.y,buildYaw,rotationOffset);
+                BlueprintPoint=BuildGrid.Target(transform.position,transform.forward,BuildKind,buildOrigin,buildYaw,level);
+                if(Time.time>=nextBlueprintCheck){nextBlueprintCheck=Time.time+.06f;BlueprintError=ConstructionWorld.PlacementError(this,BuildKind,BuildMaterial,BlueprintPoint,BuildTurn,buildYaw,buildOrigin);blueprintValid=BlueprintError=="";}
+                ShowBlueprint(BlueprintPoint,BuildKind,BuildPiece.FullMask(BuildKind),BuildTurn,blueprintValid,buildYaw);
+                if(GameBindings.Held("Fire")&&Time.time>=nextPlace){nextPlace=Time.time+.09f;if(blueprintValid)PlaceBuildServerRpc(BuildKind,BuildMaterial,BlueprintPoint,BuildTurn,buildYaw,buildOrigin);}
+
             }
             else if (blueprint) blueprint.SetActive(false);
             if (PickaxeSelected && GameBindings.Down("Fire") && Time.time >= nextSwing)
@@ -67,7 +84,7 @@ namespace Pinefall
         void LateConstructionVisual()
         {
             if (!LocalHuman || !view) return;
-            bool tool = PickaxeSelected && Alive && CanAct && !CurrentVehicle;
+            bool tool = PickaxeSelected && !IsEmoting && Alive && CanAct && !CurrentVehicle && (!ReserveUI.Instance||!ReserveUI.Instance.FrontPanelVisible);
             if (tool && !pickaxeView)
             {
                 pickaxeView = new GameObject("Field pickaxe"); pickaxeView.transform.SetParent(view.transform, false); CreatePickaxe(pickaxeView.transform, true);
@@ -99,10 +116,10 @@ namespace Pinefall
         public bool BeginBuildEdit(BuildPiece piece)
         {
             if (!ConstructionWorld.CanModify(this, piece)) return false;
-            EditTarget = piece; piece.SetPreviewHidden(true); EditMask = piece.Mask.Value; BuildTurn = Mathf.RoundToInt(piece.transform.eulerAngles.y / 90) % 4;
-            ReserveUI.Instance.OpenBuildEditor(); ShowBlueprint(piece.transform.position, piece.Kind.Value, EditMask, BuildTurn, true); return true;
+            EditTarget = piece; piece.SetPreviewHidden(true); EditMask = piece.Mask.Value; BuildTurn = BuildGrid.FacingTurn(piece.transform.eulerAngles.y,piece.GridYaw.Value);
+            ReserveUI.Instance.OpenBuildEditor(); ShowBlueprint(piece.transform.position, piece.Kind.Value, EditMask, BuildTurn, true,piece.GridYaw.Value); return true;
         }
-        void ShowBlueprint(Vector3 point, int kind, int mask, int turn, bool valid)
+        void ShowBlueprint(Vector3 point, int kind, int mask, int turn, bool valid, float gridYaw = 0)
         {
             if (!blueprintSurface)
             {
@@ -119,17 +136,17 @@ namespace Pinefall
                 foreach (var collider in blueprint.GetComponentsInChildren<Collider>()) collider.enabled = false;
                 blueprintStamp = stamp;
             }
-            blueprint.SetActive(true); blueprint.transform.SetPositionAndRotation(point, Quaternion.Euler(0, turn * 90, 0));
+            blueprint.SetActive(true); blueprint.transform.SetPositionAndRotation(point, Quaternion.Euler(0, gridYaw + turn * 90, 0));
         }
         public void PreviewBuildEdit(int mask)
-        { if (!EditTarget) return; EditMask = mask; ShowBlueprint(EditTarget.transform.position, EditTarget.Kind.Value, mask, BuildTurn, BuildPiece.ValidMask(EditTarget.Kind.Value, mask)); }
+        { if (!EditTarget) return; EditMask = mask; ShowBlueprint(EditTarget.transform.position, EditTarget.Kind.Value, mask, BuildTurn, BuildPiece.ValidMask(EditTarget.Kind.Value, mask),EditTarget.GridYaw.Value); }
         public void ConfirmBuildEdit()
         { if (EditTarget) EditBuildServerRpc(EditTarget.NetworkObjectId, EditMask, BuildTurn, false); CancelBuildEdit(); if (ReserveUI.Instance) ReserveUI.Instance.CloseBuildEditor(); }
         public void CancelBuildEdit() { if (EditTarget) EditTarget.SetPreviewHidden(false); EditTarget = null; if (blueprint) blueprint.SetActive(false); }
         public void DisposeConstruction()
         { if (blueprint) Destroy(blueprint); if (blueprintSurface) Destroy(blueprintSurface); if (pickaxeView) Destroy(pickaxeView); }
-        [ServerRpc] public void PlaceBuildServerRpc(int kind, int material, Vector3 point, int turn)
-        { if (Time.time < serverBuildAt) return; serverBuildAt = Time.time + .12f; if (ConstructionWorld.Current) ConstructionWorld.Current.TryPlace(this, kind, material, point, turn); }
+        [ServerRpc] public void PlaceBuildServerRpc(int kind, int material, Vector3 point, int turn, float gridYaw = 0, Vector3 gridOrigin = default)
+        { if (Time.time < serverBuildAt) return; serverBuildAt = Time.time + .075f; if (ConstructionWorld.Current) ConstructionWorld.Current.TryPlace(this, kind, material, point, turn, gridYaw, gridOrigin); }
         [ServerRpc] public void EditBuildServerRpc(ulong id, int mask, int turn, bool reset)
         { if (Time.time < serverEditAt) return; serverEditAt = Time.time + .07f; if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(id, out var obj) && ConstructionWorld.Current) ConstructionWorld.Current.TryEdit(this, obj.GetComponent<BuildPiece>(), mask, turn, reset); }
         [ServerRpc] public void RepairBuildServerRpc(ulong id)

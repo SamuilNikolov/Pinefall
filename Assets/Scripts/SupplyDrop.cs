@@ -29,14 +29,14 @@ namespace Pinefall
         {
             if(!IsSpawned)return;float elapsed=(float)(NetworkManager.ServerTime.Time-Began.Value);plane.gameObject.SetActive(elapsed<23);plane.localPosition=new Vector3((elapsed-10)*115,220,0);plane.localRotation=Quaternion.Euler(0,90,0);
             crate.gameObject.SetActive(elapsed>=10&&!Opened.Value);crate.localPosition=Vector3.up*(Landed?.6f:Mathf.Lerp(220,.6f,Mathf.Clamp01((elapsed-10)/16)));canopy.gameObject.SetActive(!Landed);foreach(var r in ropes)r.enabled=!Landed;
-            if(IsServer&&Landed&&!announced){announced=true;if(WildfrontMatch.Current)WildfrontMatch.Current.NarrateClientRpc("landed");}
+            if(IsServer&&Landed&&!announced){announced=true;if(WildfrontMatch.Current)WildfrontMatch.Current.NarrateEvent("landed");}
         }
         [ServerRpc(RequireOwnership=false)]public void OpenServerRpc(ServerRpcParams rpc=default)
         {
             var player=Ranger.Players.Find(p=>p&&!p.IsBot.Value&&p.OwnerClientId==rpc.Receive.SenderClientId);
             if(!Landed||Opened.Value||!player||!player.Fighting||!player.CanAct||(player.transform.position-transform.position).sqrMagnitude>25)return;
             Opened.Value=true;Vector3 p=transform.position;int special=SupplySpecials.Choose(UnityEngine.Random.value),bikesBefore=RoadVehicle.All.Count(v=>v.Type.Value==5);if(SupplySpecials.Release(p,special))player.InformServer(RoadVehicle.All.Count(v=>v.Type.Value==5)>bikesBefore?"Bonus motorcycle delivered nearby. Look for the blue bike icon.":"Survey beacon delivered beside the crate. Collect it, then press your Survey key to scan.");int weapon=UnityEngine.Random.Range(0,WeaponData.All.Length);int rarity=UnityEngine.Random.value<.22f?4:3;
-            ExpeditionLoot.Spawn(p+new Vector3(-.9f,.15f,0),0,weapon,rarity,-1);ExpeditionLoot.Spawn(p+new Vector3(.9f,.15f,0),1,WeaponData.Get(weapon).ammoType,0,WeaponData.Get(weapon).magazine*3);ExpeditionLoot.Spawn(p+new Vector3(0,.15f,.8f),2,0,0,2);ExpeditionLoot.Spawn(p+new Vector3(0,.15f,-.8f),5,0,0,3);ExpeditionLoot.Spawn(p+new Vector3(.7f,.15f,.7f),6,3,3,100);ExpeditionLoot.Spawn(p+new Vector3(-.7f,.15f,-.7f),7,0,0,3);if(WildfrontMatch.Current)WildfrontMatch.Current.NarrateClientRpc("claimed");
+            ExpeditionLoot.Spawn(p+new Vector3(-.9f,.15f,0),0,weapon,rarity,-1);ExpeditionLoot.Spawn(p+new Vector3(.9f,.15f,0),1,WeaponData.Get(weapon).ammoType,0,WeaponData.Get(weapon).magazine*3);ExpeditionLoot.Spawn(p+new Vector3(0,.15f,.8f),2,0,0,2);ExpeditionLoot.Spawn(p+new Vector3(0,.15f,-.8f),5,0,0,3);ExpeditionLoot.Spawn(p+new Vector3(.7f,.15f,.7f),6,3,3,100);ExpeditionLoot.Spawn(p+new Vector3(-.7f,.15f,-.7f),7,0,0,3);if(WildfrontMatch.Current)WildfrontMatch.Current.NarrateEvent("claimed");
         }
         public override void OnDestroy(){All.Remove(this);if(fabric)Destroy(fabric);if(metal)Destroy(metal);if(paint)Destroy(paint);base.OnDestroy();}
     }
@@ -45,16 +45,16 @@ namespace Pinefall
         double nextSupply;int supplyCount,announcedStage=-1;bool warningSaid,closingSaid;
         public SupplyDrop SpawnSupply(Vector3 target,bool immediate=false)
         {
-            if(!IsServer)return null;float surface;target.y=ReserveWater.Surface(target.x,target.z,out surface)?surface+.2f:ReserveWorld.Height(target.x,target.z)+.2f;var go=Instantiate(Resources.Load<GameObject>("SupplyDrop"),target,Quaternion.identity);var d=go.GetComponent<SupplyDrop>();d.Began.Value=NetworkManager.ServerTime.Time-(immediate?27:0);go.GetComponent<NetworkObject>().Spawn();NarrateClientRpc("inbound");supplyCount++;return d;
+            if(!IsServer)return null;float surface;target.y=ReserveWater.Surface(target.x,target.z,out surface)?surface+.2f:ReserveWorld.Height(target.x,target.z)+.2f;var go=Instantiate(Resources.Load<GameObject>("SupplyDrop"),target,Quaternion.identity);var d=go.GetComponent<SupplyDrop>();d.Began.Value=NetworkManager.ServerTime.Time-(immediate?27:0);go.GetComponent<NetworkObject>().Spawn();NarrateEvent("inbound");supplyCount++;return d;
         }
         void SupplyTick()
         {
             if(!IsServer||!Active)return;double now=NetworkManager.ServerTime.Time;
-            if(announcedStage!=Stage.Value){announcedStage=Stage.Value;warningSaid=closingSaid=false;if(Stage.Value>0)NarrateClientRpc("safe");}
-            if(!warningSaid&&now>=ShrinkAt.Value-12){warningSaid=true;NarrateClientRpc("warning");}
-            if(!closingSaid&&now>=ShrinkAt.Value){closingSaid=true;NarrateClientRpc("closing");}
+            if(announcedStage!=Stage.Value){announcedStage=Stage.Value;warningSaid=closingSaid=false;if(Stage.Value>0)NarrateEvent("safe");}
+            if(!warningSaid&&now>=ShrinkAt.Value-12){warningSaid=true;NarrateEvent("warning");}
+            if(!closingSaid&&now>=ShrinkAt.Value){closingSaid=true;NarrateEvent("closing");}
             if(now<nextSupply||supplyCount>=6||NextRadius.Value<200)return;nextSupply=now+140;float a=UnityEngine.Random.value*Mathf.PI*2,r=NextRadius.Value*Mathf.Sqrt(UnityEngine.Random.value)*.70f;Vector3 goal=NextCenter.Value+new Vector3(Mathf.Cos(a)*r,0,Mathf.Sin(a)*r);goal.x=Mathf.Clamp(goal.x,-ReserveWorld.Edge,ReserveWorld.Edge);goal.z=Mathf.Clamp(goal.z,-ReserveWorld.Edge,ReserveWorld.Edge);SpawnSupply(goal);
         }
-        void ResetSupplies(){foreach(var d in SupplyDrop.All.ToArray())if(d&&d.IsSpawned)d.NetworkObject.Despawn();supplyCount=0;announcedStage=-1;nextSupply=NetworkManager.ServerTime.Time+65;NarrateClientRpc("deploy");}
+        void ResetSupplies(){foreach(var d in SupplyDrop.All.ToArray())if(d&&d.IsSpawned)d.NetworkObject.Despawn();supplyCount=0;announcedStage=-1;nextSupply=NetworkManager.ServerTime.Time+65;NarrateEvent("deploy");}
     }
 }

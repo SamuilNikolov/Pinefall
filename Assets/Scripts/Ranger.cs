@@ -85,7 +85,7 @@ namespace Pinefall
         void Update()
         {
             if(!IsSpawned)return;
-            SpectatorTick();StanceTick();if(LocalHuman)ConstructionTick(ReserveUI.Instance&&ReserveUI.Instance.ControlsActive&&CanAct);GunHandlingTick();RescueTick();SurvivalTick();SurveyTick();if(LocalHuman&&ReserveUI.Instance&&ReserveUI.Instance.ControlsActive&&GameBindings.Down("Survey"))SurveyServerRpc();
+            EmoteTick();SpectatorTick();StanceTick();if(LocalHuman)ConstructionTick(ReserveUI.Instance&&ReserveUI.Instance.ControlsActive&&CanAct);GunHandlingTick();RescueTick();SurvivalTick();SurveyTick();if(LocalHuman&&ReserveUI.Instance&&ReserveUI.Instance.ControlsActive&&GameBindings.Down("Survey"))SurveyServerRpc();
             if(IsServer&&!Alive&&WildfrontMatch.Current&&!WildfrontMatch.Current.Battle.Value&&Time.time>respawnAfter){ResetRound(ReserveWorld.OnGround(0,-160,.3f));InitializeEquipment(true);}
             if(rig)rig.Pose(Velocity.Value,!Alive);
             if(!LocalHuman&&body)body.gameObject.SetActive(Alive);
@@ -101,7 +101,7 @@ namespace Pinefall
             }
             if(weaponView)weaponView.enabled=true;
             if(ReviveControls(controls))return;
-            if(VehicleControls(controls))return;
+            if(VehicleControls(controls)){ResetHopMomentum();return;}
             if(controller&&!controller.enabled)controller.enabled=true;
             if(!controls){MovementWithoutInput();Aiming=SmokeScoped;if(view)view.fieldOfView=Aiming?AimFov:74;return;}
             transform.Rotate(0,Input.GetAxisRaw("Mouse X")*ReserveUI.Instance.Sensitivity,0);
@@ -112,10 +112,10 @@ namespace Pinefall
             bool sprint=GameBindings.Held("Sprint")&&moveZ>0&&!GameBindings.Held("Crouch")&&stamina>.02f&&CanSprint&&!GameBindings.Held("Aim")&&!GameBindings.Held("Fire");
             stamina=Mathf.Clamp01(stamina+Time.deltaTime*(sprint&&!Sliding.Value?-.065f:.23f));
             var move=MovementInput(moveX,moveZ,sprint);
-            if(controller.isGrounded){vertical=-2;if(GameBindings.Down("Jump")&&(!Crouched.Value||Sliding.Value||slideJumpRequested)){Sliding.Value=false;vertical=6.2f;}}else vertical-=18*Time.deltaTime;
+            if(!LaunchMotion(ref move))move=ResolveJumpMovement(move,GameBindings.Held("Jump"),GameBindings.Down("Jump"),Time.deltaTime);
             slideJumpRequested=false;if(!SwimMove(move,sprint))controller.Move((move+Vector3.up*vertical)*Time.deltaTime);
             var p=transform.position;p.x=Mathf.Clamp(p.x,-ReserveWorld.Edge,ReserveWorld.Edge);p.z=Mathf.Clamp(p.z,-ReserveWorld.Edge,ReserveWorld.Edge);
-            if(p.y<ReserveWorld.Height(p.x,p.z)-3)p=ReserveWorld.OnGround(p.x,p.z,.15f);
+            if(p.y<ReserveWorld.Height(p.x,p.z)-3&&!CaveLayout.Underground(p))p=ReserveWorld.OnGround(p.x,p.z,.15f);
             transform.position=p;
             float actual=new Vector2(controller.velocity.x,controller.velocity.z).magnitude;
             if(Mathf.Abs(Velocity.Value-actual)>.2f)Velocity.Value=actual;
@@ -175,7 +175,7 @@ namespace Pinefall
         [ClientRpc]void ShotClientRpc(Vector3 origin,Vector3 impact,Vector3 normal,int weapon,bool hit,bool killed)
         {
             if(!LocalHuman)ReserveAudio.Gun(origin,weapon,.8f);
-            ReserveEffects.Impact(impact,normal,hit);
+            ReserveEffects.Impact(impact,normal,hit);ReserveEffects.Trace(origin,impact,weapon);
             if(IsOwner&&hit)hitUntil=Time.time+.3f;
         }
         [ServerRpc]void HarvestServerRpc(ulong id)
@@ -199,7 +199,7 @@ namespace Pinefall
         [ServerRpc]public void UpgradeServerRpc(int index){if(IsServer)FeedbackClientRpc("Find attachments, then fit them in the inventory.");}
         public bool TakeDamageServer(int amount,int attacker)
         {
-            var match=WildfrontMatch.Current;if(!IsServer||!Alive||amount<=0||match&&match.Battle.Value&&!match.Active)return false;int beforeArmor=Armor.Value;amount=ProtectDamage(amount,attacker);if(amount<=0){if(Armor.Value<beforeArmor)DamageRevision.Value++;return false;}DamageRevision.Value++;CancelRevive();
+            var match=WildfrontMatch.Current;if(!IsServer||!Alive||amount<=0||match&&match.Battle.Value&&!match.Active)return false;int beforeArmor=Armor.Value;amount=ProtectDamage(amount,attacker);if(amount<=0){if(Armor.Value<beforeArmor){CancelEmoteServer();DamageRevision.Value++;}return false;}DamageRevision.Value++;CancelEmoteServer();CancelRevive();
             if(Downed.Value){if(attacker>=0)lastDowner=attacker;Health.Value=Mathf.Max(1,Health.Value-amount);if(Health.Value<=1)EliminateServer(lastDowner);return !Alive;}
             if(amount<Health.Value){Health.Value-=amount;return false;}
             bool rescue=match&&match.Active&&match.TeamSize.Value>1&&knockCount<2&&Players.Any(p=>p&&p!=this&&p.Fighting&&p.Team.Value==Team.Value);
@@ -212,7 +212,7 @@ namespace Pinefall
         {if(!IsOwner)ReserveAudio.Step(position,volume,gravel);}
         public void ResetRound(Vector3 spawn)
         {
-            if(!IsServer)return;if(ShotHistory.Current)ShotHistory.Current.Teleport(NetworkObjectId,spawn,1.8f,NetworkManager.ServerTime.Time,transform.eulerAngles.y);ResetCombatCadence();ResetRescue();OrderCycle.Value=0;orderVisited.Clear();ExitVehicleServer();Health.Value=100;Kills.Value=0;Score.Value=0;Harvests.Value=0;Craft.Value=0;Upgrade0.Value=Upgrade1.Value=Upgrade2.Value=OtherUpgrades.Value=0;Optics.Value=Barrels.Value=Handling.Value=0;ModBag.Value=0;Reloading.Value=false;
+            if(!IsServer)return;CancelEmoteServer();ResetHopMomentum();if(ShotHistory.Current)ShotHistory.Current.Teleport(NetworkObjectId,spawn,1.8f,NetworkManager.ServerTime.Time,transform.eulerAngles.y);ResetCombatCadence();ResetRescue();OrderCycle.Value=0;orderVisited.Clear();ExitVehicleServer();Health.Value=100;Kills.Value=0;Score.Value=0;Harvests.Value=0;Craft.Value=0;Upgrade0.Value=Upgrade1.Value=Upgrade2.Value=OtherUpgrades.Value=0;Optics.Value=Barrels.Value=Handling.Value=0;ModBag.Value=0;Reloading.Value=false;
             magazines=WeaponData.All.Select(w=>w.magazine).ToArray();if(Weapon.Value<0)Weapon.Value=3;Ammo.Value=magazines[Weapon.Value];
             if(IsBot.Value){controller.enabled=false;transform.position=spawn;controller.enabled=true;}else ResetClientRpc(spawn);
         }
@@ -231,7 +231,7 @@ namespace Pinefall
         }
         public void SmokeMoveTo(Vector3 position)
         {
-            if(!IsOwner)return;if(IsServer&&ShotHistory.Current&&(position-transform.position).sqrMagnitude>25)ShotHistory.Current.Teleport(NetworkObjectId,position,StanceHeight,NetworkManager.ServerTime.Time,transform.eulerAngles.y);controller.enabled=false;transform.position=position;controller.enabled=true;
+            if(!IsOwner)return;ResetHopMomentum();if(IsServer&&ShotHistory.Current&&(position-transform.position).sqrMagnitude>25)ShotHistory.Current.Teleport(NetworkObjectId,position,StanceHeight,NetworkManager.ServerTime.Time,transform.eulerAngles.y);controller.enabled=false;transform.position=position;controller.enabled=true;
         }
     }
 }

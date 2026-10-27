@@ -6,7 +6,7 @@ using UnityEditor;
 using Pinefall;
 public static partial class BuildReserve
 {
-    [Serializable]class HandbookData{public string version="0.8.0";public int roadLinks,serviceStops,boats,vehicles;public PlaceData[] locations;public GunData[] guns;public ModData[] mods;}
+    [Serializable]class HandbookData{public string version="0.9.0";public int roadLinks,serviceStops,boats,vehicles;public PlaceData[] locations;public GunData[] guns;public ModData[] mods;}
     [Serializable]class PlaceData{public string name,biome,description;public float x,z;public bool hamlet;}
     [Serializable]class GunData{public string name,ammo,description,category,fireMode;public int magazine,damage,pellets;public float reload,range;}
     [Serializable]class ModData{public string name,slot,effect;}
