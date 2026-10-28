@@ -1,8 +1,18 @@
 # Current developer and AI-agent handoff
 
-**Current source: Pinefall Wildfront 0.9.0 Living Wildfront, October 26, 2026.** Unity 2022.3.13f1, NGO 1.8.1, glTFast 6.0.1, Windows x64 / Mono / built-in rendering. Protocol PinefallReserve/9 requires matching 0.9 builds. Maximum twenty participants including bots.
+**October 28, 2026: active direction is Unreal migration. Unity work is frozen.** Read [Unreal migration](../Design/UNREAL-MIGRATION.md), [status/remaining gates](../Design/UNREAL-STATUS.md), [art/audio/UI direction](../Design/UNREAL-PRESENTATION.md), [rule catalog](../Design/RULES-CATALOG.md) and [setup/source boundaries](../Unreal/Pinefall/README.md). The native project initially compiles; runtime and presentation checks have separate gates. Do not interpret the legacy feature list below as implemented Unreal functionality.
+
+The final Unity 0.9.1 suite was cancelled on the user's switch request. Prior frontier/fieldcraft and performance evidence exists, but there is no completed final-build full-suite claim. Do not relabel older measurements with a newer build hash. Preserve unfinished Unity work without resuming it.
+
+## Frozen Unity handoff
+
+**Current source: Pinefall Wildfront 0.9.1 Handling and Presentation, October 27, 2026.** Unity 2022.3.13f1, NGO 1.8.1, glTFast 6.0.1, Windows x64 / Mono / built-in rendering. Protocol PinefallReserve/9 requires matching 0.9 builds. Maximum twenty participants including bots.
 
 Read AGENTS.md, SETUP.md, ARCHITECTURE.md, SYSTEMS.md, LIVING-WILDFRONT.md and TESTING.md. The repository root is the self-contained Unity project. Open Assets/Scenes/Reserve.unity. Ordinary builds use BuildReserve.BuildCurrent; Setup regenerates terrain/content. Existing asset GUIDs must be preserved.
+
+## Current follow-up
+
+Read [0.9.1 changes](HANDLING-PRESENTATION.md) for camera-aware snap selection, continuous-grade vehicles/host render interpolation, cached ground-item models, pickup cards, wildlife replenishment, anomaly caches and lighting/material adjustments. `LootModels` and `FieldAnomaly` are new domains. The existing protocol remains 9; no RPC/NV/prefab layout changed. Match peers should use the same 0.9.1 build. The previous closeout below describes historical 0.9 evidence, not current test results.
 
 ## What changed
 
@@ -36,7 +46,7 @@ Bunny-hop movement uses a 150 ms jump buffer and 100 ms edge grace. Hold jump or
 - Current panels live in FrontDoorUI, BattleHUD, FieldcraftUI and FieldAtlasPanel. Legacy methods have distinct names; do not rewire them accidentally.
 - Eight weapon IDs fill packed attachment nibbles. A ninth needs migration. Preserve dropped magazines/mods, source-specific armor and stance hitboxes.
 
-## Closeout status
+## Previous 0.9 closeout status
 
 The Windows candidate compiled successfully. See [0.9 verification](VERIFICATION-0.9.md) and its raw evidence before making any final-build test claim. Final full-detail graphics performance is approximately 56–74 FPS with HUD, below the historical 0.8 route. One hunger test fixture was corrected but not rerun; the latest render-tuned visual sequence was incomplete. Prior complete UI audits and movement/multiplayer checks are preserved separately. The user requested compile and push without another full sweep. Performance and final verification remain the first follow-up work.
 

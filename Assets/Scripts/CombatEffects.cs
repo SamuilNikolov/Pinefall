@@ -10,14 +10,14 @@ namespace Pinefall
         static readonly List<Burst> bursts = new List<Burst>();
         static readonly List<Tracer> tracers = new List<Tracer>();
         static Material particle, trail; static Texture2D soft;
+        public static Material ParticleSurface { get { Materials();return particle; } }
         static void Materials()
         {
             if (particle) return;
             soft = new Texture2D(32, 32, TextureFormat.RGBA32, false);
             for (int y = 0; y < 32; y++) for (int x = 0; x < 32; x++)
             { float radius = new Vector2(x - 15.5f, y - 15.5f).magnitude / 15.5f; soft.SetPixel(x, y, new Color(1, 1, 1, Mathf.Pow(Mathf.Clamp01(1 - radius), 1.5f))); }
-            soft.Apply(false, true); particle = new Material(Shader.Find("Particles/Standard Unlit")); particle.mainTexture = soft;
-            particle.SetFloat("_Mode", 2); particle.SetInt("_SrcBlend", 5); particle.SetInt("_DstBlend", 10); particle.SetInt("_ZWrite", 0); particle.EnableKeyword("_ALPHABLEND_ON"); particle.renderQueue = 3000;
+            soft.Apply(false, true); particle = new Material(Shader.Find("Sprites/Default")); particle.mainTexture = soft;particle.renderQueue = 3000;
             trail = new Material(Shader.Find("Sprites/Default"));
         }
         static Burst Available()

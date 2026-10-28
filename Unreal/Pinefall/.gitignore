@@ -1,0 +1,13 @@
+/Binaries/
+/Intermediate/
+/Saved/
+/DerivedDataCache/
+/.vs/
+*.sln
+*.suo
+*.VC.db
+
+# Installed Epic content is copied by Setup-Unreal, never relabeled as project-owned.
+/Content/Characters/
+/Content/Input/
+/Content/StarterContent/

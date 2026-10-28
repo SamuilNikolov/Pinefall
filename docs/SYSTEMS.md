@@ -69,3 +69,10 @@ Important entry points:
 | Larger world / moved village | Terrain generation, cache, roads, foundations, water, bridges, loot/vehicles, spawn validation, atlas image/labels and probe coordinates |
 | New map overlay | Team targeting, visibility/expiry, information beyond actor interest range, label collisions and input handling |
 | Session manager service | Reset/despawn/leave lifecycle, static registries and three consecutive rehosts |
+
+## Handling/presentation additions (0.9.1)
+
+- `LootModels.cs`: cached imported/adapted firearm silhouettes and combined procedural supply models.
+- `FieldAnomaly.cs`: authoritative cache hazard/population; presentation attached to the existing loot visual.
+- `RoadVehicle.cs`: bounded support/obstacle sampling and host presentation-pose interpolation.
+- `BuildGrid.cs`: camera aim projection, stable quarter turns and storey selection.

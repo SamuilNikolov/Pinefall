@@ -91,6 +91,9 @@ namespace Pinefall
             if(!LocalHuman&&body)body.gameObject.SetActive(Alive);
             if(IsServer&&Reloading.Value&&Time.time>=reloadEnds)CompleteReload();
             if(!LocalHuman)return;
+            // Explicit capture sessions own the camera and actor pose. Normal
+            // input/head-bob must not invalidate a scripted rendered viewpoint.
+            if(CaptureProbe.Running)return;
             bool controls=ReserveUI.Instance&&ReserveUI.Instance.ControlsActive&&CanAct;if(controls&&GameBindings.Down("Flashlight")&&torch)torch.enabled=!torch.enabled;if((!Alive||Downed.Value)&&torch)torch.enabled=false;
             if(Downed.Value){MovementWithoutInput();Aiming=false;if(weaponView)weaponView.SetVisible(false);if(Velocity.Value!=0)Velocity.Value=0;if(view){view.transform.position=transform.position+Vector3.up*.65f;view.transform.localRotation=Quaternion.Euler(LookPitch,0,0);}return;}
             if(!Alive)

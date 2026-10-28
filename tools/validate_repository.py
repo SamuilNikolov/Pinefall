@@ -31,8 +31,17 @@ def source_files():
     for path in ROOT.iterdir():
         if path.is_file():
             yield path
-    for folder in ('Assets', 'Packages', 'ProjectSettings', 'docs', 'tools', 'tests', '.github'):
+    for folder in ('Assets', 'Packages', 'ProjectSettings', 'docs', 'tools', 'tests', '.github', 'Design'):
         base = ROOT / folder
+        if base.exists():
+            yield from (p for p in base.rglob('*') if p.is_file() and '__pycache__' not in p.parts)
+    # Enumerate only portable Unreal inputs; never scan compiler/DDC/installed Epic trees.
+    unreal = ROOT / 'Unreal/Pinefall'
+    for path in unreal.iterdir() if unreal.exists() else []:
+        if path.is_file():
+            yield path
+    for folder in ('Source', 'Config', 'Scripts', 'SourceArt', 'Content/Pinefall'):
+        base = unreal / folder
         if base.exists():
             yield from (p for p in base.rglob('*') if p.is_file() and '__pycache__' not in p.parts)
 
@@ -47,6 +56,10 @@ def validate() -> int:
         'docs/SETUP.md', 'docs/ARCHITECTURE.md', 'docs/HANDOFF.md', 'docs/TESTING.md',
         'tools/Build-Game.ps1', 'tools/Test-Game.ps1', 'tools/Measure-Performance.ps1',
         'THIRD-PARTY-NOTICES.md', 'AUDIO-SOURCES.json', 'GAME-GUIDE.md',
+        'Design/RULES-CATALOG.md', 'Design/rules.json', 'Design/UNREAL-MIGRATION.md',
+        'Design/UNREAL-PRESENTATION.md', 'Design/UNREAL-STATUS.md',
+        'Unreal/Pinefall/Pinefall.uproject', 'Unreal/Pinefall/README.md',
+        'tools/Setup-Unreal.ps1', 'tools/Build-Unreal.ps1', 'tools/Run-Unreal.ps1',
     )
     for relative in required:
         if not (ROOT / relative).is_file():
@@ -105,7 +118,7 @@ def validate() -> int:
             WARNINGS.append(f'Large baseline file (>50 MiB advisory): {relative}')
         if path.name in forbidden_names or path.suffix.lower() in {'.pem', '.pfx', '.key', '.keystore', '.exe', '.zip', '.7z', '.dmp', '.log'}:
             error(f'Private/local/generated file belongs outside source: {relative}')
-        if path.suffix in {'.md', '.ps1', '.py', '.yml', '.json', '.cs'} and size < 2 * 1024 * 1024:
+        if path.suffix in {'.md', '.ps1', '.py', '.yml', '.json', '.cs', '.cpp', '.h', '.ini', '.uproject'} and size < 2 * 1024 * 1024:
             text = path.read_text(encoding='utf-8-sig')
             if re.search(r'(?i)C:[/\\]Users[/\\][^/\\\s]+', text):
                 error(f'Personal absolute path in portable source: {relative}')
@@ -147,7 +160,7 @@ def validate() -> int:
     for message in ERRORS:
         print(f'ERROR: {message}')
     print(f'Checked {len(files)} source/doc/evidence files and {len(guids)} Unity GUIDs. '
-          f'{len(ERRORS)} errors, {len(WARNINGS)} warnings. No Unity compilation performed.')
+          f'{len(ERRORS)} errors, {len(WARNINGS)} warnings. No engine compilation performed.')
     return 1 if ERRORS else 0
 
 

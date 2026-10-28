@@ -1,5 +1,7 @@
 # Runtime architecture
 
+**Active development is Unreal 5.6.1.** See [migration architecture and phases](../Design/UNREAL-MIGRATION.md) and [native module/class boundaries](../Unreal/Pinefall/README.md). This page records the frozen Unity implementation used as the migration reference.
+
 ## Execution model
 
 Pinefall uses Unity's built-in render pipeline, GameObjects/MonoBehaviours, Netcode for GameObjects (NGO) and Unity Transport. It is a **listen-server** game: the host runs authoritative simulation and a local rendered player in one process. Guests render and send player requests; they do not run the full host AI/vehicle simulation. There is no dedicated-server product, relay, backend persistence or ECS implementation in this baseline.

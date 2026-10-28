@@ -23,7 +23,7 @@ namespace Pinefall
                 var mesh=new Mesh{name="Scanned short grass LOD "+level};mesh.CombineMeshes(combined,true,true);lowGrassMeshes[level]=mesh;fineAssets.Add(mesh);
             }
             var renderer=filter.GetComponent<Renderer>();lowGrassMaterials=new Material[6];lowGrassDistantMaterials=new Material[6];
-            Color[] tints={new Color(.76f,.95f,.71f),new Color(.88f,.79f,.53f),new Color(.66f,.72f,.62f),new Color(.71f,.80f,.60f),new Color(.62f,.86f,.57f),new Color(.73f,.88f,.63f)};
+            Color[] tints={new Color(.87f,.88f,.75f),new Color(.88f,.79f,.53f),new Color(.66f,.72f,.62f),new Color(.71f,.80f,.60f),new Color(.76f,.83f,.67f),new Color(.82f,.86f,.71f)};
             for(int i=0;i<6;i++){var m=new Material(Shader.Find("Pinefall/Foliage")){mainTexture=renderer.sharedMaterial.mainTexture,color=tints[i],enableInstancing=true};m.SetTexture("_AlphaTex",Resources.Load<Texture2D>("GrassOpacity"));m.SetFloat("_Wind",.055f);m.SetFloat("_FadeDistance",95);lowGrassMaterials[i]=m;fineAssets.Add(m);var distant=new Material(m);distant.shader=Shader.Find("Pinefall/DistantFoliage");lowGrassDistantMaterials[i]=distant;fineAssets.Add(distant);}
             int n=0;for(int z=-3;z<=3;z++)for(int x=-3;x<=3;x++)grassOffsets[n++]=new Vector2Int(x,z);
             System.Array.Sort(grassOffsets,(a,b)=>a.sqrMagnitude.CompareTo(b.sqrMagnitude));

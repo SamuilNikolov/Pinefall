@@ -1,0 +1,12 @@
+{
+    "passed": [
+        "Owner receives the server-authorized emote state",
+        "Crouch changes the actual local hitbox height",
+        "Remote peers receive multiple player-built shapes",
+        "Remote peers receive edited geometry state",
+        "Remote peers display the boss's larger model",
+        "Remote fieldcraft checks do not record voice"
+    ],
+    "failed": [],
+    "errors": []
+}

@@ -27,7 +27,7 @@ namespace Pinefall
                 {new Color(.27f,.35f,.23f),new Color(.46f,.47f,.28f),new Color(.73f,.61f,.86f),new Color(.47f,.49f,.48f)},
                 {new Color(.16f,.36f,.17f),new Color(.24f,.44f,.16f),new Color(.94f,.42f,.27f),new Color(.29f,.37f,.26f)},
                 {new Color(.31f,.43f,.23f),new Color(.27f,.40f,.20f),new Color(.83f,.80f,.46f),new Color(.33f,.40f,.36f)}};
-            var materials=new Material[6,4];for(int b=0;b<6;b++)for(int k=0;k<4;k++){var m=new Material(Shader.Find("Pinefall/Nature")){color=colors[b,k],enableInstancing=true};m.SetFloat("_Wind",k==3?0:.035f);materials[b,k]=m;fineAssets.Add(m);}
+            var materials=new Material[6,4];for(int b=0;b<6;b++)for(int k=0;k<4;k++){var m=k==3?new Material(stone):new Material(Shader.Find("Pinefall/Nature")){color=colors[b,k],enableInstancing=true};if(k!=3)m.SetFloat("_Wind",.035f);materials[b,k]=m;fineAssets.Add(m);}
             var groups=new Dictionary<int,List<Matrix4x4>>();var rng=new System.Random(Seed+731);
             // Patch noise leaves navigable gaps and makes dense cover feel like a habitat.
             for(int i=0;i<850000;i++)

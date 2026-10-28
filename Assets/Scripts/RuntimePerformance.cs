@@ -7,7 +7,7 @@ namespace Pinefall
         public static RuntimePerformance Current;public static bool HideHud;
         public static float Detail=1;
         public static float ViewDistance {get{return Mathf.Clamp(PlayerPrefs.GetFloat("view.distance",900),750,1800);}}
-        void LateUpdate(){var camera=Camera.main;if(!camera||ReserveSession.Arg("--bake-atlas")!="")return;camera.farClipPlane=Mathf.Max(Ranger.Local&&Ranger.Local.Aiming?850:650,ViewDistance*(.75f+Detail*.25f));RenderSettings.fogDensity=Mathf.Max(RenderSettings.fogDensity,1.9f/camera.farClipPlane);SettlementDetail.Tick(camera);Shader.SetGlobalFloat("_ReserveViewDistance",camera.farClipPlane);}
+        void LateUpdate(){var camera=Camera.main;if(!camera||ReserveSession.Arg("--bake-atlas")!="")return;camera.farClipPlane=Mathf.Max(Ranger.Local&&Ranger.Local.Aiming?850:650,ViewDistance*(.75f+Detail*.25f));RenderSettings.fogDensity=Mathf.Max(RenderSettings.fogDensity,1.25f/camera.farClipPlane);SettlementDetail.Tick(camera);Shader.SetGlobalFloat("_ReserveViewDistance",camera.farClipPlane);}
         public static bool Automatic{get{return PlayerPrefs.GetInt("perf.auto",1)==1;}set{PlayerPrefs.SetInt("perf.auto",value?1:0);}}
         public static int Target{get{return PlayerPrefs.GetInt("perf.target",90);}set{PlayerPrefs.SetInt("perf.target",value);}}
         public float FrameMs{get;private set;}=16.7f;float nextTune,stableSince;bool lastFocus;int appliedTarget;

@@ -35,7 +35,7 @@ public static partial class BuildReserve
     [MenuItem("Pinefall/Build current scene")]
     public static void BuildCurrent()
     {
-        PrepareFieldcraft();PrepareRoadCoverage();PlayerSettings.bundleVersion="0.9.0";
+        PrepareFieldcraft();PrepareRoadCoverage();PlayerSettings.bundleVersion="0.9.1";
         string requested=ReserveSession.Arg("-pinefallBuildPath");
         string path=string.IsNullOrEmpty(requested)?Path.GetFullPath(Path.Combine(Application.dataPath,"../Builds/Windows/Pinefall.exe")):Path.GetFullPath(requested);
         Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -77,7 +77,7 @@ public static partial class BuildReserve
         var app=new GameObject("Reserve application");var session=app.AddComponent<ReserveSession>();session.vistaCamera=camera;session.previewHerd=herd;
         var ui=app.AddComponent<ReserveUI>();ui.serif=serif;ui.sans=sans;
         var dust=new Material(Shader.Find("Particles/Standard Unlit"));dust.SetColor("_Color",new Color(.6f,.55f,.4f,.8f));Save(dust,R+"Dust.mat");
-        PlayerSettings.companyName="Pinefall";PlayerSettings.productName="Pinefall Wildfront";PlayerSettings.bundleVersion="0.9.0";
+        PlayerSettings.companyName="Pinefall";PlayerSettings.productName="Pinefall Wildfront";PlayerSettings.bundleVersion="0.9.1";
         PlayerSettings.defaultScreenWidth=1280;PlayerSettings.defaultScreenHeight=720;PlayerSettings.fullScreenMode=FullScreenMode.Windowed;PlayerSettings.resizableWindow=true;PlayerSettings.runInBackground=true;PlayerSettings.colorSpace=ColorSpace.Linear;
         PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone,ScriptingImplementation.Mono2x);PlayerSettings.allowFullscreenSwitch=true;
         var tags=new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);var layers=tags.FindProperty("layers");layers.GetArrayElementAtIndex(8).stringValue="Wildlife";layers.GetArrayElementAtIndex(9).stringValue="Rangers";layers.GetArrayElementAtIndex(10).stringValue="Viewmodel";tags.ApplyModifiedProperties();

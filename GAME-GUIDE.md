@@ -386,3 +386,12 @@ Gestures use original skeletal posing, are authorized and timed by the server, a
 
 
 Fast movement plus crouch initiates a slide; crouching from rest does not. Hold Jump or time landing jumps to bunny hop. The jump buffer is 150 ms with 100 ms edge grace. Each chained hop adds 1.7 m/s, up to 24 m/s; slides can carry up to 26 m/s. Grounded running remains 9.4 m/s. Hunger still prevents high-speed travel.
+
+
+## Ground equipment and storm anomalies (0.9.1)
+
+Dropped weapons retain their metal/material finish. Small ground rings and thin locator lines indicate rarity; approach to see the item name, category and pickup key in a right-side card. Medical bags, ammunition, fuel cans, vests, optics and caches have distinct models.
+
+Storm anomaly caches scatter across wilderness: up to six in the smallest arena, ten in the medium arena and fourteen in the full reserve. Blue drifting motes mark a charged cache. During an active match its seven-metre hazard deals four health every two seconds, bypassing armor. Open it with the interaction key to stop the hazard and reveal an epic weapon (80%) or legendary weapon (20%), an attachment, medicine and armor plates. The new gun still needs a free weapon slot to pick up.
+
+Building follows camera facing; R adds a quarter turn. Small diagonal movements do not flicker between orientations. Look down toward the next cell to extend a floor; the grid stays attached to nearby structures while jumping.

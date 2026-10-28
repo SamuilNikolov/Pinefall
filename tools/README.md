@@ -1,5 +1,7 @@
 # Build, test and maintain
 
+Active Unreal development uses `Setup-Unreal.ps1`, `Build-Unreal.ps1`, `Run-Unreal.ps1` and `Test-Unreal.ps1`. See [Unreal setup and controls](../Unreal/Pinefall/README.md). `PLAY-UNREAL.cmd` at the root opens the game window after setup. The Unity commands below remain for the frozen reference project.
+
 These commands work from the repository root or another working directory because paths are resolved relative to the scripts. They require no paths from the original author's workspace. Windows PowerShell 5.1+ is supported; Python checks need 3.10+ with the standard library only.
 
 ## Repository checks

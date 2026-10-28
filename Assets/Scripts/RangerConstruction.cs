@@ -15,7 +15,7 @@ namespace Pinefall
         public Vector3 BlueprintPoint { get; private set; }
         public string BlueprintError { get; private set; } = "";
         GameObject blueprint, pickaxeView; Material blueprintSurface; int blueprintStamp = -1;
-        Vector3 buildOrigin; float buildYaw; int rotationOffset; bool gridReady;
+        Vector3 buildOrigin; float buildYaw; int rotationOffset, facingTurn; bool gridReady;
         public float BlueprintYaw { get { return buildYaw + BuildTurn * 90; } }
         float nextBlueprintCheck, nextPlace, nextSwing, serverSwing, swingAt, serverBuildAt, serverEditAt; bool blueprintValid;
         public static bool FiniteVector(Vector3 point) { return Finite(point); }
@@ -48,30 +48,44 @@ namespace Pinefall
             if (EditTarget) return;
             if (Building)
             {
-                if (!gridReady) { buildYaw = Mathf.Repeat(transform.eulerAngles.y,360); buildOrigin = BuildGrid.RootOrigin(transform.position,CaveLayout.SupportHeight(transform.position));rotationOffset=0;gridReady=true; }
+                if (!gridReady) { buildYaw = Mathf.Repeat(view.transform.eulerAngles.y,360); buildOrigin = BuildGrid.RootOrigin(transform.position,CaveLayout.SupportHeight(transform.position));rotationOffset=0;facingTurn=0;gridReady=true; }
                 if (GameBindings.Down("Reload")) rotationOffset = (rotationOffset + 1) % 4;
                 if (GameBindings.Down("Aim")) BuildMaterial = (BuildMaterial + 1) % 3;
                 BuildPiece anchor = null; RaycastHit under;
                 if (Physics.Raycast(transform.position + Vector3.up * .5f, Vector3.down, out under, 4, ~((1 << 8) | (1 << 9) | (1 << 10)), QueryTriggerInteraction.Ignore)) anchor=under.collider.GetComponentInParent<BuildPiece>();
                 if(!anchor && Physics.Raycast(view.transform.position,view.transform.forward,out var ahead,8,~((1<<8)|(1<<9)|(1<<10)),QueryTriggerInteraction.Ignore))anchor=ahead.collider.GetComponentInParent<BuildPiece>();
-                float level=buildOrigin.y;
+                // A jump or an edited opening must not detach an existing build
+                // run from its frame. Prefer the support below; nearby pieces bridge ray gaps.
+                if (!anchor)
+                {
+                    float nearest = 5.2f * 5.2f;
+                    foreach (var piece in BuildPiece.All)
+                    {
+                        if (!piece || Mathf.Abs(piece.transform.position.y - transform.position.y) > 4.2f) continue;
+                        float distance = (piece.transform.position - transform.position).sqrMagnitude;
+                        if (distance < nearest) { nearest = distance; anchor = piece; }
+                    }
+                }
+                float level=BuildGrid.Storey(transform.position.y,buildOrigin.y);
                 if(anchor)
                 {
                     buildYaw=anchor.GridYaw.Value;buildOrigin=anchor.GridOrigin.Value;
-                    level=anchor.transform.position.y;
-                    if(transform.position.y-level>1.7f)level+=3;
+                    level=BuildGrid.Storey(transform.position.y,buildOrigin.y);
                 }
                 else if(under.collider && !(under.collider is TerrainCollider) && HarvestResources.Find(under.collider)==null)
                     level=buildOrigin.y+Mathf.Round((under.point.y-buildOrigin.y)/3)*3;
                 else
                 {
-                    float ground=ReserveWorld.Height(transform.position.x,transform.position.z);
-                    // A new grounded run can move to a nearby natural terrace; connected pieces keep their storey.
-                    level=buildOrigin.y+Mathf.Round((ground-buildOrigin.y)/3)*3;
+                    if (controller.isGrounded && (transform.position-buildOrigin).sqrMagnitude>12*12)
+                    { buildOrigin=BuildGrid.RootOrigin(transform.position,CaveLayout.SupportHeight(transform.position));level=buildOrigin.y; }
+                    else level=Mathf.Max(buildOrigin.y,level);
                 }
-                BuildTurn=BuildGrid.FacingTurn(transform.eulerAngles.y,buildYaw,rotationOffset);
-                BlueprintPoint=BuildGrid.Target(transform.position,transform.forward,BuildKind,buildOrigin,buildYaw,level);
-                if(Time.time>=nextBlueprintCheck){nextBlueprintCheck=Time.time+.06f;BlueprintError=ConstructionWorld.PlacementError(this,BuildKind,BuildMaterial,BlueprintPoint,BuildTurn,buildYaw,buildOrigin);blueprintValid=BlueprintError=="";}
+                facingTurn=BuildGrid.StableTurn(view.transform.eulerAngles.y,buildYaw,facingTurn);
+                BuildTurn=(facingTurn+rotationOffset)%4;
+                var previousPoint=BlueprintPoint;
+                BlueprintPoint=BuildGrid.AimTarget(transform.position,new Ray(view.transform.position,view.transform.forward),BuildKind,buildOrigin,buildYaw,level);
+                // Validate on every target change and immediately before spending material.
+                if(Time.time>=nextBlueprintCheck||(BlueprintPoint-previousPoint).sqrMagnitude>.001f||GameBindings.Held("Fire")){nextBlueprintCheck=Time.time+.06f;BlueprintError=ConstructionWorld.PlacementError(this,BuildKind,BuildMaterial,BlueprintPoint,BuildTurn,buildYaw,buildOrigin);blueprintValid=BlueprintError=="";}
                 ShowBlueprint(BlueprintPoint,BuildKind,BuildPiece.FullMask(BuildKind),BuildTurn,blueprintValid,buildYaw);
                 if(GameBindings.Held("Fire")&&Time.time>=nextPlace){nextPlace=Time.time+.09f;if(blueprintValid)PlaceBuildServerRpc(BuildKind,BuildMaterial,BlueprintPoint,BuildTurn,buildYaw,buildOrigin);}
 

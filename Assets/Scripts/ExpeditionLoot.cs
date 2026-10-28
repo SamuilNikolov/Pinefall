@@ -41,6 +41,7 @@ namespace Pinefall
             int stopIndex=0;foreach(var p in ExpeditionLayout.MobilityStops()){if(WildfrontMatch.Current&&WildfrontMatch.Current.Phase.Value!=0&&!RoundArena.Contains(new Vector3(p.x,0,p.y)))continue;Spawn(ReserveWorld.OnGround(p.x+2,p.y,.4f),4,0,0,2);Spawn(ReserveWorld.OnGround(p.x-2,p.y,.4f),3,0,0,3);Spawn(ReserveWorld.OnGround(p.x,p.y+2,.4f),11,0,1,1);SpawnVehicle(ReserveWorld.OnGround(p.x,p.y+6,.65f),stopIndex++%3==0?5:stopIndex%4,75,65);}
             foreach(var p in ExpeditionLayout.BoatStops()){if(WildfrontMatch.Current&&WildfrontMatch.Current.Phase.Value!=0&&!RoundArena.Contains(p))continue;SpawnVehicle(p,4,90,70);Spawn(ReserveWater.LootPosition(p.x+2,p.z),4,0,0,1);}
             foreach(var cave in CaveLayout.Sites){if(WildfrontMatch.Current&&WildfrontMatch.Current.Phase.Value!=0&&!RoundArena.Contains(new Vector3(cave.center.x,0,cave.center.y),140))continue;for(int cache=0;cache<3;cache++){float along=(cache-1)*cave.length*.25f;Vector3 at=cave.World(0,along);at.y=cave.Floor(along)+.35f;Spawn(at,cache==0?11:cache==1?0:1,cache==1?5:0,3,cache==1?-1:cache==2?20:1);}}
+            FieldAnomaly.Populate(rng);
         }
     }
 }

@@ -1,12 +1,18 @@
 # Pinefall Wildfront
 
+**Active development has moved to Unreal Engine 5.6.1.** The new native project is in [`Unreal/Pinefall`](Unreal/Pinefall/README.md). Start with `tools/Setup-Unreal.ps1`, then `tools/Run-Unreal.ps1`. It is an early combat/environment foundation, not full feature parity or a packaged replacement release.
+
+Read the [migration plan](Design/UNREAL-MIGRATION.md), [120 source-linked game rules](Design/RULES-CATALOG.md), [presentation direction](Design/UNREAL-PRESENTATION.md), and [current Unreal status](Design/UNREAL-STATUS.md). Unity development was stopped by the user; its unfinished 0.9.1 edits and historical evidence remain intact below as a reference.
+
+## Legacy Unity project
+
 **A host-your-own multiplayer wilderness battle royale built in Unity.** Hunt to survive, scavenge named settlements, upgrade your equipment, and travel by road or water as the storm closes.
 
 ![Pinefall main screen](docs/images/main-menu.png)
 
-**Current source baseline:** 0.9.0 · **Unity:** 2022.3.13f1 · **Player target:** Windows x64 · **Network protocol:** 9 · **Players:** up to twenty, including practice bots.
+**Current source baseline:** 0.9.1 · **Unity:** 2022.3.13f1 · **Player target:** Windows x64 · **Network protocol:** 9 · **Players:** up to twenty, including practice bots.
 
-**Closeout status:** compiled development candidate. See [verification and remaining issues](docs/VERIFICATION-0.9.md), including the remaining performance regression and incomplete final rerun.
+**Current pass:** handling and presentation improvements; see [0.9.1 changes](docs/HANDLING-PRESENTATION.md). The earlier [0.9 verification](docs/VERIFICATION-0.9.md) records historical performance and test limits.
 
 This repository contains the editable game, imported assets, generated scene, pinned packages, and collaboration tooling. Open the repository root in Unity Hub. The game is playable and still in development; character art, animation, vehicle handling, balance, and online infrastructure have room to improve.
 

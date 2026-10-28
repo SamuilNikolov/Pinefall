@@ -6,7 +6,7 @@ namespace Pinefall
 {
     public sealed class WildlifeDirector:MonoBehaviour
     {
-        public const int PerBiome=32,Maximum=300;
+        public const int PerBiome=40,Maximum=320;
         public static WildlifeDirector Current;
         public static readonly string[][] Habitats={new[]{"Deer","Stag","Hare","Boar","Elk"},new[]{"Fox","Hare","Antelope","Horse"},new[]{"Wolf","ArcticFox","SnowHare","Elk"},new[]{"Ibex","Alpaca","Stag","Wolf","Hare"},new[]{"JungleBoar","Deer","Ox","Hare","Fox"},new[]{"Boar","Deer","Hare","Fox","Ox"}};
         System.Random rng;float next,cleanup;
@@ -21,18 +21,18 @@ namespace Pinefall
         {
             if(!ReserveSession.Instance.Network.IsServer)return;
             if(Time.time>cleanup){cleanup=Time.time+12;foreach(var a in ReserveSession.Instance.Animals.ToArray())if(a&&a.Dead&&a.CorpseAge>80)a.NetworkObject.Despawn();}
-            if(Time.time<next)return;next=Time.time+6+(float)rng.NextDouble()*4;
+            if(Time.time<next)return;next=Time.time+4+(float)rng.NextDouble()*3;
             int biome=rng.Next(Habitats.Length);if(ReserveSession.Instance.Animals.Count(a=>a&&!a.Aquatic&&!a.Dead&&ReserveBiomes.At(a.transform.position.x,a.transform.position.z)==biome)<PerBiome)Spawn(biome,false);
             if(ReserveSession.Instance.Animals.Count(a=>a&&!a.Dead)<Maximum)foreach(var player in Ranger.Players.Where(p=>p&&p.Fighting&&!p.IsBot.Value))
             {
-                if(ReserveSession.Instance.Animals.Count(a=>a&&!a.Dead&&(a.transform.position-player.transform.position).sqrMagnitude<320*320)>=9)continue;
+                if(ReserveSession.Instance.Animals.Count(a=>a&&!a.Dead&&(a.transform.position-player.transform.position).sqrMagnitude<260*260)>=14)continue;
                 for(int attempt=0;attempt<16;attempt++)
                 {
-                    float angle=(float)rng.NextDouble()*Mathf.PI*2,distance=145+(float)rng.NextDouble()*100;Vector3 offset=new Vector3(Mathf.Cos(angle),0,Mathf.Sin(angle))*distance;
+                    float angle=(float)rng.NextDouble()*Mathf.PI*2,distance=100+(float)rng.NextDouble()*110;Vector3 offset=new Vector3(Mathf.Cos(angle),0,Mathf.Sin(angle))*distance;
                     if(Vector3.Dot(offset.normalized,player.transform.forward)>.15f)continue;Vector3 p=player.transform.position+offset;
-                    if(Mathf.Abs(p.x)>ReserveWorld.Edge||Mathf.Abs(p.z)>ReserveWorld.Edge||ReserveWorld.Clearing(p.x,p.z)||ReserveWater.HasSurface(p.x,p.z)||WildfrontMatch.Current.Active&&WildfrontMatch.Current.Outside(p))continue;
-                    if(Ranger.Players.Any(q=>q&&q.Alive&&(new Vector2(q.transform.position.x-p.x,q.transform.position.z-p.z)).sqrMagnitude<125*125))continue;
-                    int b=ReserveBiomes.At(p.x,p.z);string type=Habitats[b][rng.Next(Habitats[b].Length)];for(int member=0;member<3;member++){if(ReserveSession.Instance.Animals.Count(a=>a&&!a.Dead)>=Maximum)break;var at=p+new Vector3(member*7,0,member*4);if(ReserveWater.HasSurface(at.x,at.z)||ReserveWorld.Clearing(at.x,at.z))continue;var obj=Instantiate(Resources.Load<GameObject>(type),ReserveWorld.OnGround(at.x,at.z),Quaternion.Euler(0,rng.Next(360),0));obj.GetComponent<NetworkObject>().Spawn();}break;
+                    if(!RoundArena.Contains(p,40)||ReserveWorld.Clearing(p.x,p.z)||ReserveWater.HasSurface(p.x,p.z)||WildfrontMatch.Current.Active&&WildfrontMatch.Current.Outside(p))continue;
+                    if(Ranger.Players.Any(q=>q&&q.Alive&&(new Vector2(q.transform.position.x-p.x,q.transform.position.z-p.z)).sqrMagnitude<90*90))continue;
+                    int b=ReserveBiomes.At(p.x,p.z);string type=Habitats[b][rng.Next(Habitats[b].Length)];for(int member=0;member<3;member++){if(ReserveSession.Instance.Animals.Count(a=>a&&!a.Dead)>=Maximum)break;var at=p+new Vector3(member*7,0,member*4);if(!RoundArena.Contains(at,40)||ReserveWater.HasSurface(at.x,at.z)||ReserveWorld.Clearing(at.x,at.z)||Ranger.Players.Any(q=>q&&q.Alive&&(q.transform.position-at).sqrMagnitude<90*90))continue;var obj=Instantiate(Resources.Load<GameObject>(type),ReserveWorld.OnGround(at.x,at.z),Quaternion.Euler(0,rng.Next(360),0));obj.GetComponent<NetworkObject>().Spawn();}break;
                 }
             }
         }

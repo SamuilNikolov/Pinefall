@@ -1,5 +1,13 @@
 # Verification and reproducible checks
 
+## Active Unreal foundation
+
+Use `tools/Build-Unreal.ps1` for native compilation, `tools/Setup-Unreal.ps1 -RebuildEnvironment` for explicit scene regeneration and `tools/Test-Unreal.ps1` for the two-process range smoke test. The latter requires a real remote owner confirmation after an ordinary server-validated rifle shot, not a direct health override. It uses a separate local UDP port, synthetic input and owned child processes; no microphone is enabled. Logs/results go under ignored `artifacts/unreal-tests`.
+
+Rendered launch/captures are a separate gate. Optional `-PFCapture=<absolute PNG path> -PFQuitAfterCapture` captures the visible HUD after 25 game seconds and exits after 30. First-run shader work may require another settled capture. `-PFSmoke` hides the menu; `-PFSmokeFire` performs one guarded synthetic ordinary shot. These flags do not bypass server damage/ammo validation. A range-target smoke does not prove moving-player lag compensation, gameplay parity, audible quality or WAN reachability. See [Unreal status](../Design/UNREAL-STATUS.md).
+
+The Unity procedures below are frozen historical/reference workflows. The final 0.9.1 suite was cancelled when the user switched engines.
+
 ## Layers and their meaning
 
 | Layer | Command / entry | Evidence |
@@ -109,3 +117,9 @@ Run test groups sequentially for final evidence and keep the tested build direct
 Frontier also checks emote directional/center selection, hold release, click commit, visible raised-hand posing, damage/motion rejection and expiry. Fieldcraft checks an actual remote owner and host observing replicated emote state. Native captures include the wheel and a visible wave.
 
 The final movement checks verify that stationary crouch cannot slide, fast travel can slide, holding jump produces repeated real controller jumps, and chained hops gain substantial capped speed.
+
+## Handling/presentation checks (0.9.1)
+
+Frontier includes camera-projected floor extension, turn dead bands, storey boundaries, a real occupied 36-degree ramp drive and anomaly population/rewards. `tools/Test-PolishVisual.ps1` opens the actual player for close ground-equipment, pickup-card, anomaly, woodland and highland captures with layout auditing. Run it after other Unity processes, then use the unchanged graphics route for a comparable host/client measurement.
+
+The 0.9.1 expedition stock-count assertion includes the separately identified anomaly-cache population. It still compares the ordinary settlement/house/mobility/cave stock formula exactly; this is not a relaxed minimum-count check.

@@ -49,6 +49,8 @@ namespace Pinefall
         {
             Instance=this;HarvestResources.Clear();CacheTerrainHeights();
             spawn=OnGround(0,-160, .2f);
+            // Reuse the rock scan in world space, avoiding stretched sphere UVs.
+            if(stone){var scanned=new Material(Shader.Find("Pinefall/CaveRock")){mainTexture=stone.mainTexture,color=new Color(.76f,.77f,.74f),enableInstancing=true};stone=scanned;fineAssets.Add(scanned);}
             CreateFoliage();CreateUnderstory();PrepareLowGrass();gameObject.AddComponent<ReserveWater>();gameObject.AddComponent<AmbientBirds>();
             map=Resources.Load<Texture2D>("DetailedAtlas");if(!map)map=MakeMap();
         }

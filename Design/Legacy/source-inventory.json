@@ -1,0 +1,670 @@
+{
+  "baseline": "Unity 0.9.1 checkpoint",
+  "files": [
+    {
+      "file": "Assets/Scripts/AmbientBirds.cs",
+      "sha256": "282e4058489ab1b96d29285191b003b37b14d3648fa295ad1b99faa72b9b24b9",
+      "lines": 16
+    },
+    {
+      "file": "Assets/Scripts/AnimalLoot.cs",
+      "sha256": "b911aee0b7b0575c5cb97b45872fa82ae81f3a7842867e3bd0186116fb582d4f",
+      "lines": 31
+    },
+    {
+      "file": "Assets/Scripts/AtlasBakeProbe.cs",
+      "sha256": "26f2084d8fc321628034276997ba125d22129e4201ba512589170c74570c07e5",
+      "lines": 16
+    },
+    {
+      "file": "Assets/Scripts/AutumnCanopy.cs",
+      "sha256": "1241f40338f2c2a17245d7b4eddbefb9d95aea3d3c41c909dda14c6a953c16d6",
+      "lines": 14
+    },
+    {
+      "file": "Assets/Scripts/AvatarStyle.cs",
+      "sha256": "c58a9a90fc74de60074de6380e6826732cd226c821042325af9e3781ea079bd4",
+      "lines": 52
+    },
+    {
+      "file": "Assets/Scripts/BattleHUD.cs",
+      "sha256": "bb9e6a1e3c2d455d4f00ab3a7a90408462f477fa0269ccf2c4f4f457a1878d51",
+      "lines": 148
+    },
+    {
+      "file": "Assets/Scripts/BoatVisual.cs",
+      "sha256": "a0e73e8725dde7fd7d02dea8672d9d4494c2b1faf5cd35d8c6ac7d72f0774db3",
+      "lines": 21
+    },
+    {
+      "file": "Assets/Scripts/BuildGrid.cs",
+      "sha256": "a73a03012973bc4eeb4719df0e1f2a56ec244b4b32a847108d84655627049c1b",
+      "lines": 68
+    },
+    {
+      "file": "Assets/Scripts/BuildPiece.cs",
+      "sha256": "bd6b8ddfa29ba539fd7f88ab6707dae78b4bcb7cce193102f52cb876928eece7",
+      "lines": 188
+    },
+    {
+      "file": "Assets/Scripts/CaptureProbe.cs",
+      "sha256": "f3d7118fb5edc74b355afdf6d339fed2b6270923c5984785f9e0982f0339f805",
+      "lines": 81
+    },
+    {
+      "file": "Assets/Scripts/CaveLayout.cs",
+      "sha256": "c220946a3ee03d9ff609ed974305b7de15e301a2e5dc5152a6d2641bae1f2820",
+      "lines": 91
+    },
+    {
+      "file": "Assets/Scripts/CharacterPreview.cs",
+      "sha256": "73b1cea17caa78ef3be6a5bf0f61dd799268115011ae64c14dc63f321e9da61b",
+      "lines": 33
+    },
+    {
+      "file": "Assets/Scripts/CinematicView.cs",
+      "sha256": "d2337c174da80765ba9e528af82438075b4a7a8272785c0ac0cc152f429ccd79",
+      "lines": 13
+    },
+    {
+      "file": "Assets/Scripts/CombatEffects.cs",
+      "sha256": "a8b6a27b229ac39d5be4c8cdaa62277ad6e1fa96f012ff418f237c586f257fb7",
+      "lines": 70
+    },
+    {
+      "file": "Assets/Scripts/CombatFeedback.cs",
+      "sha256": "268987fce1386468b266e39212aa57514fab35ca70510b1a317f8d4966984750",
+      "lines": 55
+    },
+    {
+      "file": "Assets/Scripts/CombatUI.cs",
+      "sha256": "065245048bb1fea5b9a745a68bd0f22a159770fec90682cab2bc28c3f3267b08",
+      "lines": 43
+    },
+    {
+      "file": "Assets/Scripts/ConstructionWorld.cs",
+      "sha256": "6d43ece174f0abea7f8585d71a8207ba6d77fef18462fef9c996d32a9dea7569",
+      "lines": 172
+    },
+    {
+      "file": "Assets/Scripts/EmoteWheel.cs",
+      "sha256": "74dcaf00c04ab2caf8d2636e30e0436d78cae861989273d0e2e9365657d0f33b",
+      "lines": 60
+    },
+    {
+      "file": "Assets/Scripts/ExpeditionLayout.cs",
+      "sha256": "6020cd625468fb3a8a7e250c3cab47fe153485d8a9f71f39ff99abe07ff0b8b0",
+      "lines": 116
+    },
+    {
+      "file": "Assets/Scripts/ExpeditionLoot.cs",
+      "sha256": "c9b0cf24599bda7f18a617f9920ea44d7f49ec8cf1cedead1f5d1b23c62a8daf",
+      "lines": 47
+    },
+    {
+      "file": "Assets/Scripts/ExpeditionProbe.cs",
+      "sha256": "964149c46e670614c912063997bcd22081061d2294c0a5a3eab1f5bb765e0681",
+      "lines": 95
+    },
+    {
+      "file": "Assets/Scripts/ExpeditionUI.cs",
+      "sha256": "57b7d3abcea3fecb131f8cd62b4105e813c899ead70aa0a19bae7bd3c2102f2c",
+      "lines": 173
+    },
+    {
+      "file": "Assets/Scripts/ExpeditionVisuals.cs",
+      "sha256": "b4fd6e01e75e32492036f13370ad1c883ba6aaba2cbf1c9efd2ec2cb04906fd6",
+      "lines": 99
+    },
+    {
+      "file": "Assets/Scripts/FieldAnomaly.cs",
+      "sha256": "33b83c5fb63873ab63285d749f9a656519a6cb88c88c345213fa4b7b8d80f439",
+      "lines": 45
+    },
+    {
+      "file": "Assets/Scripts/FieldAtlas.cs",
+      "sha256": "3f8db2d9c053aeaaa162c1d1a74cdc61d06cba4f86cc19632b7d6a92f69250a7",
+      "lines": 37
+    },
+    {
+      "file": "Assets/Scripts/FieldAtlasPanel.cs",
+      "sha256": "129615f2f8d6fd13e49701bf22fdb42d7b3780e519adddb16bcf9240bcc39879",
+      "lines": 36
+    },
+    {
+      "file": "Assets/Scripts/FieldcraftCaptures.cs",
+      "sha256": "d9b6af89206e8ddd288c6d035ce73bc75d0700ed2464c28a5a8e742b4b806026",
+      "lines": 68
+    },
+    {
+      "file": "Assets/Scripts/FieldcraftProbe.cs",
+      "sha256": "3df64bead91d4f746c7acb27d019b706b3c2726e2a3a77a98411fa575cc2f6fe",
+      "lines": 223
+    },
+    {
+      "file": "Assets/Scripts/FieldcraftUI.cs",
+      "sha256": "dae5db2489fa24cee2ac79e2013b168e00d95f99ec2c72bf55ae5be1cb0b5fb4",
+      "lines": 239
+    },
+    {
+      "file": "Assets/Scripts/FieldHUD.cs",
+      "sha256": "070e083c8ed65b6c3f2139c5245317f37da830eba678e9afaeee93c199fbae2b",
+      "lines": 47
+    },
+    {
+      "file": "Assets/Scripts/FieldNarrator.cs",
+      "sha256": "46f94cbe268aa2038e85af62da4eaeadf91aad96dd837e58ac06934b2cbe47d6",
+      "lines": 82
+    },
+    {
+      "file": "Assets/Scripts/FieldPickup.cs",
+      "sha256": "cb23a92101bfa0797cb96a1c5ad1f8f77b10e0f27628e4977393a258290e94d5",
+      "lines": 16
+    },
+    {
+      "file": "Assets/Scripts/FreeSpawn.cs",
+      "sha256": "19115e3ce2fa83a92fda2fa0f197c822ae4d7f1b336e703957404b067fdda06e",
+      "lines": 14
+    },
+    {
+      "file": "Assets/Scripts/FrontDoorUI.cs",
+      "sha256": "7a398d1b9176834f1b1edbc7005fd19a120257bc88f2ddda4079e2ebb20ee668",
+      "lines": 164
+    },
+    {
+      "file": "Assets/Scripts/GameBindings.cs",
+      "sha256": "7eb21d6a5bdf2a9256805ad07c63c4c71b6f473e8296dd142e18786a6765a345",
+      "lines": 17
+    },
+    {
+      "file": "Assets/Scripts/GuideUI.cs",
+      "sha256": "57b10c451420f133beb998246f72788195b75a902056de33d5b3a9d1c04ab122",
+      "lines": 38
+    },
+    {
+      "file": "Assets/Scripts/HarvestResources.cs",
+      "sha256": "92f33d936375fb28c66a7ad5fd5c690fa56523b4f30b1efa34dc0dd3bf9982b3",
+      "lines": 41
+    },
+    {
+      "file": "Assets/Scripts/HunterBot.cs",
+      "sha256": "5bd7ca08833f7ccd7116a4e0f80d719dae6e543e7c3422ae44b41e6f82dc44d0",
+      "lines": 44
+    },
+    {
+      "file": "Assets/Scripts/LanDiscovery.cs",
+      "sha256": "f0bc9f008c2587b6f9d16dd739dd944a72a7e152c43bb772cf748bf83e753326",
+      "lines": 39
+    },
+    {
+      "file": "Assets/Scripts/LaunchPad.cs",
+      "sha256": "5650c6b71b2d85e0595f2a836466d805aa8bae106b316614627a3641a6a2f4b8",
+      "lines": 102
+    },
+    {
+      "file": "Assets/Scripts/LivingForest.cs",
+      "sha256": "148c9ff3a8212a2f5a6876b93be62db34a816424bfdec49f017da422cd54a075",
+      "lines": 85
+    },
+    {
+      "file": "Assets/Scripts/LivingFrontierProbe.cs",
+      "sha256": "187a416a18f2082495cf40b01cc96b861560c2c554f74bf5dca6ee41eaa80b13",
+      "lines": 138
+    },
+    {
+      "file": "Assets/Scripts/LivingReserveProbe.cs",
+      "sha256": "be8ea87b14b9329862b3600f4a096a22cc99c4a24eae458bf8b01ffef1a66ee3",
+      "lines": 33
+    },
+    {
+      "file": "Assets/Scripts/LootModels.cs",
+      "sha256": "d67e876f05ddfe9ea56763fc97153299463668b2c4e344733791c49fb50ab050",
+      "lines": 135
+    },
+    {
+      "file": "Assets/Scripts/LowGroundcover.cs",
+      "sha256": "14c14b2785cd04fd1b86fccd6650173fc459105ff0969afd6cab281837e505fa",
+      "lines": 68
+    },
+    {
+      "file": "Assets/Scripts/MotorcycleVisual.cs",
+      "sha256": "7e50a33d10b6c4e297bcb24cc136dec129fd2c1b479b85a0800a0239b2a11fa6",
+      "lines": 22
+    },
+    {
+      "file": "Assets/Scripts/NativeFauna.cs",
+      "sha256": "18e582800f2f90e1cfdfac344f74f66bb850025a05acf5af745f7e1ad4e07fdd",
+      "lines": 19
+    },
+    {
+      "file": "Assets/Scripts/NetworkSeed.cs",
+      "sha256": "d98306215064805c43fbfeac6d4111b56c4cd2ebbaa3d628769213bffe42d7e6",
+      "lines": 12
+    },
+    {
+      "file": "Assets/Scripts/OwnerTransform.cs",
+      "sha256": "35380ba5a3892d4b856fe48e4fa3144ddad026a857464ede51fb7b7f660155e0",
+      "lines": 17
+    },
+    {
+      "file": "Assets/Scripts/PerformanceProbe.cs",
+      "sha256": "253c025918a82156d05bd84dcbec6f7031ef682152a8e90441bff01c1bf52773",
+      "lines": 29
+    },
+    {
+      "file": "Assets/Scripts/PlayerHitboxes.cs",
+      "sha256": "15fa37194b7dd7f2c1fd481522460bbe458d4f7f987e988ca76bb0b1d9056d9c",
+      "lines": 48
+    },
+    {
+      "file": "Assets/Scripts/PolishedMenus.cs",
+      "sha256": "36bba588dc7d6628e3776de9c2f0bfdf398b63dac4858d1d3897e7df77e0ac93",
+      "lines": 77
+    },
+    {
+      "file": "Assets/Scripts/PolishProbe.cs",
+      "sha256": "68eb31db2a8838caa3fd66ade1989e1ff81334c3ff954302126d4e195a2ea388",
+      "lines": 27
+    },
+    {
+      "file": "Assets/Scripts/PresentationBudget.cs",
+      "sha256": "50f443ea6a59007478862aeb445daecfc6b019dbcc0ff5c4ce05b495a684518e",
+      "lines": 19
+    },
+    {
+      "file": "Assets/Scripts/PreviewAnimal.cs",
+      "sha256": "5f90bc58a42bdecbe2ea2c079e86d9c14e3e2269193a5cc86b315854b817025f",
+      "lines": 10
+    },
+    {
+      "file": "Assets/Scripts/ProximityVoice.cs",
+      "sha256": "883c56ec64555b4e07fe72812efa0496334d28ae38797acc294e9b38ece08f07",
+      "lines": 140
+    },
+    {
+      "file": "Assets/Scripts/Ranger.cs",
+      "sha256": "e383de174b2873b51e65a2a3573bf01baa91ca8f4807754cccc4027bd2e01357",
+      "lines": 240
+    },
+    {
+      "file": "Assets/Scripts/RangerArmor.cs",
+      "sha256": "14257758470490d6e06db266829ce0989ceafaeb78dd83561303935a523390a9",
+      "lines": 16
+    },
+    {
+      "file": "Assets/Scripts/RangerCamera.cs",
+      "sha256": "d4612957d0c2a3e3b85a8f58d861f38f1d2aeda8530767a7b19ba54803bc3c54",
+      "lines": 30
+    },
+    {
+      "file": "Assets/Scripts/RangerCombat.cs",
+      "sha256": "60f6029684c0cd963d2a78754597a264582b8b7193507ceb1cf203019a8a3f1e",
+      "lines": 106
+    },
+    {
+      "file": "Assets/Scripts/RangerConstruction.cs",
+      "sha256": "f00963705c20393b0a93dd1dfd74ca46052efd707aa2207a27d036aa5883d9ac",
+      "lines": 212
+    },
+    {
+      "file": "Assets/Scripts/RangerDamageSignals.cs",
+      "sha256": "e53ebc40d9768862d85ccaf6f064d6e7de37a116ff8aaf69335b3acfcabaef7d",
+      "lines": 13
+    },
+    {
+      "file": "Assets/Scripts/RangerEmotes.cs",
+      "sha256": "0bfed9fbf12e3f9ece2d78668c036f40cd5d56ee3c89f4d0f9967fc0dc6043c8",
+      "lines": 89
+    },
+    {
+      "file": "Assets/Scripts/RangerEquipment.cs",
+      "sha256": "04443c9d82d0842f97ad0e77cf952706bb507ec8703296c03aa759060da21315",
+      "lines": 118
+    },
+    {
+      "file": "Assets/Scripts/RangerGunHandling.cs",
+      "sha256": "05cd3b1b014c10fef3ed0dbb21527da66b66687c057a0e4643d0169af62fb83e",
+      "lines": 27
+    },
+    {
+      "file": "Assets/Scripts/RangerMovement.cs",
+      "sha256": "c71d2a57b48f46a083679095cc84d464da7b5da983571bc46632100eed394abd",
+      "lines": 125
+    },
+    {
+      "file": "Assets/Scripts/RangerRescue.cs",
+      "sha256": "12864679279877189f598fc78017824dd6001b00c81d3a8c3e830f272f36dfc2",
+      "lines": 53
+    },
+    {
+      "file": "Assets/Scripts/RangerSlots.cs",
+      "sha256": "dd5005d59f599ec3320c322fef84d65a50995a716d2911058b45e933672776a1",
+      "lines": 15
+    },
+    {
+      "file": "Assets/Scripts/RangerSpectator.cs",
+      "sha256": "a7b7ae2716ca73bf490bf0aad2e38666f73e5f496ba0d8ab4b892cb145090c82",
+      "lines": 57
+    },
+    {
+      "file": "Assets/Scripts/RangerSurvival.cs",
+      "sha256": "6f73058cb99c2d152fbb2f360992492a5fea3fba9351797ff9a2188307563a84",
+      "lines": 67
+    },
+    {
+      "file": "Assets/Scripts/RangerWater.cs",
+      "sha256": "523f463c613fde71bb1b09e5f5f1c35132bdce94b939c972625c58e9bd9f44dc",
+      "lines": 25
+    },
+    {
+      "file": "Assets/Scripts/RangerWeaponPose.cs",
+      "sha256": "caadf77e5ff865a12f44e1097856754b8122509b1cbd7491955857f011afdeb5",
+      "lines": 39
+    },
+    {
+      "file": "Assets/Scripts/RangeTarget.cs",
+      "sha256": "491ac15029cf0e7adfc20efe6e17dc0a7ce2ec675cc3857b253040df33dfa822",
+      "lines": 11
+    },
+    {
+      "file": "Assets/Scripts/RasterIcons.cs",
+      "sha256": "31cba2e7e43e92b3b9805b60907b3e8137794a3e4323c65f3f2fc5e792263665",
+      "lines": 35
+    },
+    {
+      "file": "Assets/Scripts/ReadableUI.cs",
+      "sha256": "68be6877373a3333f53f2a8ae1d88d56b6ea8713a9cd67205604315434649b38",
+      "lines": 28
+    },
+    {
+      "file": "Assets/Scripts/ReserveAudio.cs",
+      "sha256": "8c053deb62ffb332e0ba01acc448630b3a5c5cc9e701ad4592db4d561da6ad3c",
+      "lines": 69
+    },
+    {
+      "file": "Assets/Scripts/ReserveBiomes.cs",
+      "sha256": "be835f0feb3d5acbee9553d9ccf190b7d7e4986acc3a62637967022408ce07a7",
+      "lines": 17
+    },
+    {
+      "file": "Assets/Scripts/ReserveLobby.cs",
+      "sha256": "dd7578e14983294bc1033d12e1965f8149bbdf18f17ad51f28998f38030dd0c8",
+      "lines": 55
+    },
+    {
+      "file": "Assets/Scripts/ReserveSession.cs",
+      "sha256": "1d25784c38362ebbbfcf9fb8ae7860136aaa357f5882c0b2d740befbe3058c22",
+      "lines": 208
+    },
+    {
+      "file": "Assets/Scripts/ReserveUI.cs",
+      "sha256": "5fee95bb0d3008d7235fb970b620a57bf6a76a14596e6d5641002b8868de1308",
+      "lines": 385
+    },
+    {
+      "file": "Assets/Scripts/ReserveUnderstory.cs",
+      "sha256": "80deda37a1aea1d77db858f3ee5034b0af9ee32dfcdca2ba5fe884578ff2104f",
+      "lines": 107
+    },
+    {
+      "file": "Assets/Scripts/ReserveWater.cs",
+      "sha256": "73159d3ef6ffb0c8b2bfc6c7bd182e791425dcb6c442a3171950537c943d9293",
+      "lines": 41
+    },
+    {
+      "file": "Assets/Scripts/ReserveWeather.cs",
+      "sha256": "cca55332c7e880cde75f71217c749b423087acfa9a542c1a46ad6a1dadaccec1",
+      "lines": 112
+    },
+    {
+      "file": "Assets/Scripts/ReserveWorld.cs",
+      "sha256": "e9b197b1574da0efaa1d3f6697ef5ad841e492ceb8ca1c33fd7274f7244f803d",
+      "lines": 229
+    },
+    {
+      "file": "Assets/Scripts/RoadVehicle.cs",
+      "sha256": "4092e40f4069e537bae835a862c220a3d757a36669c41f23db6c1b4fd745f78d",
+      "lines": 120
+    },
+    {
+      "file": "Assets/Scripts/RocketProjectile.cs",
+      "sha256": "c0fa56ee2fca95d6ad1797130251ff0ab36131d3f9ee0349db6c0aa0702a9b0b",
+      "lines": 94
+    },
+    {
+      "file": "Assets/Scripts/RoundArena.cs",
+      "sha256": "38b620267af8c62718429a6de5cc867d35348ed89d9a286c9a66a02ddbe1eb58",
+      "lines": 33
+    },
+    {
+      "file": "Assets/Scripts/RuntimePerformance.cs",
+      "sha256": "6fefd473ff2a1440737f19ef487e175f2d7aec3b43f6ead486a1f4cdbaa1685b",
+      "lines": 42
+    },
+    {
+      "file": "Assets/Scripts/SessionAddress.cs",
+      "sha256": "4d5154ff64ca88048203ef96051292def16fb2e7de980c523b44524c27dec361",
+      "lines": 16
+    },
+    {
+      "file": "Assets/Scripts/SettlementDetail.cs",
+      "sha256": "6ef4899608f8dd15052056baa837eeed7666b32ec4347f7b720abd1084dc742a",
+      "lines": 29
+    },
+    {
+      "file": "Assets/Scripts/SharkLife.cs",
+      "sha256": "450cef61eca4f7a0cb4dcd641522ddc3776cf03930029546bd6605eef3402528",
+      "lines": 23
+    },
+    {
+      "file": "Assets/Scripts/ShotHistory.cs",
+      "sha256": "3dea1dce9ec85af3052762d36b94a7f8692f473a9ca61e22186ed1f5fea8ab7d",
+      "lines": 100
+    },
+    {
+      "file": "Assets/Scripts/SmokeProbe.cs",
+      "sha256": "2cc2c637e26e820fc4b75c1f3b7b231c37a0bc1fb653ba74681da46612adb02e",
+      "lines": 61
+    },
+    {
+      "file": "Assets/Scripts/SoftGeometry.cs",
+      "sha256": "d37f2a7ddacef4a4b581695bb9a330d36163404d4028348d22a019265124c1dc",
+      "lines": 34
+    },
+    {
+      "file": "Assets/Scripts/Soundscape.cs",
+      "sha256": "05722fe18a7601cb15b95d8c62853e95a4f552fd512ab0d1468323ff4b4f39d9",
+      "lines": 54
+    },
+    {
+      "file": "Assets/Scripts/SpawnDraft.cs",
+      "sha256": "cde75a7a2d41ed5535a7fd717996e86c189406936dc874bc455071f990f763db",
+      "lines": 76
+    },
+    {
+      "file": "Assets/Scripts/StormMutation.cs",
+      "sha256": "547ea4e97f7946d6bb0c07ea789c6ed60a59ef19e5dc4a03a9e16732577cbb82",
+      "lines": 39
+    },
+    {
+      "file": "Assets/Scripts/StormView.cs",
+      "sha256": "e8bfddfa65fee3b5d50801d88134d45a0a4c3a04109d49681c83b2c084c04c1a",
+      "lines": 34
+    },
+    {
+      "file": "Assets/Scripts/SupplyDrop.cs",
+      "sha256": "53575ef86798a429e67e0c2e10bb986aeeb0d67d3d4936deaea883357004bd7e",
+      "lines": 60
+    },
+    {
+      "file": "Assets/Scripts/SurveyBeacon.cs",
+      "sha256": "b083103bf4d243bb909f37b110393ff9acafbf5313da51fcbdca4f4a9ac85ed7",
+      "lines": 47
+    },
+    {
+      "file": "Assets/Scripts/TerrainSampling.cs",
+      "sha256": "0418b48b7ebe3116f7fa6838b3c573194fecf504c14daf8b329e3c06905b4b83",
+      "lines": 14
+    },
+    {
+      "file": "Assets/Scripts/TransportMap.cs",
+      "sha256": "73dea96df7f2cd18b44f0305603e828ae598b8b2f4fe7c37a3118bdfda62d504",
+      "lines": 32
+    },
+    {
+      "file": "Assets/Scripts/VillageFootprints.cs",
+      "sha256": "d84a8bbd2a693fc78af14b2d32ad125d32a56871ff74391e36cb9dbe040e6767",
+      "lines": 29
+    },
+    {
+      "file": "Assets/Scripts/VistaCamera.cs",
+      "sha256": "9da87aa32387f7839c4ca35a710dae02df580fc95fa0f9d0923cd6af2b7e9f6f",
+      "lines": 12
+    },
+    {
+      "file": "Assets/Scripts/VisualRig.cs",
+      "sha256": "255990f80c832535ff7e076d0758ce8fef5fa6431f4c265e428f04efe4622c74",
+      "lines": 24
+    },
+    {
+      "file": "Assets/Scripts/VoiceJitterBuffer.cs",
+      "sha256": "bdec8e1beefe596c0225bd74405de546efb1c62ddcc190b6f78e27f660214346",
+      "lines": 92
+    },
+    {
+      "file": "Assets/Scripts/WeaponData.cs",
+      "sha256": "ab39d27f00cc10bf079b7bbc20c1346c2ec1a9f99b03769e7d816bba1d218414",
+      "lines": 36
+    },
+    {
+      "file": "Assets/Scripts/WeaponMods.cs",
+      "sha256": "ceb90dd5b87de7814ab8ab57a43318e87b19bd3b28ef83a1b9696da87e2fd8f5",
+      "lines": 28
+    },
+    {
+      "file": "Assets/Scripts/WeaponView.cs",
+      "sha256": "229d988473913587dd6f4a2a54543addcd59cc37377e7103fea009abde821630",
+      "lines": 101
+    },
+    {
+      "file": "Assets/Scripts/WeatherState.cs",
+      "sha256": "26f037817828acd628fb5f39d6a00c8f82374b93b3933c98da18745041d988a1",
+      "lines": 29
+    },
+    {
+      "file": "Assets/Scripts/WildfrontMatch.cs",
+      "sha256": "6e0e6586f51bb43454ddaf31c189ebc00c59d6280c840895dbd80ccef01a804e",
+      "lines": 127
+    },
+    {
+      "file": "Assets/Scripts/WildfrontProbe.cs",
+      "sha256": "fd17ffbda6e51b93a1710b9fe9b0be48a5e59d2920d5321e286f09f6bd251462",
+      "lines": 49
+    },
+    {
+      "file": "Assets/Scripts/Wildlife.cs",
+      "sha256": "55a98802b440293e0fb1de00c24fecc6ac649b122e406c77fc99de44be132828",
+      "lines": 80
+    },
+    {
+      "file": "Assets/Scripts/WildlifeDirector.cs",
+      "sha256": "681b16bba378d164cfa3529bbdf3e52a3de99f87db973ba80da5db30f3abd868",
+      "lines": 53
+    },
+    {
+      "file": "Assets/Scripts/WildlifeHitboxes.cs",
+      "sha256": "daaf2b31fe9d47b8124ddc3a56bdc811043ca9dfa8cea699b88b34de47ae6143",
+      "lines": 60
+    },
+    {
+      "file": "Assets/Scripts/WorldInterest.cs",
+      "sha256": "0d897d023dcd698088cb910edc2f54777905e5e25c5b996c9986228bd212e4aa",
+      "lines": 32
+    },
+    {
+      "file": "Assets/Scripts/WorldLoot.cs",
+      "sha256": "b03aa2662f821a08fec7648c9d90d459915c86d32621185a26318a40eac3e51e",
+      "lines": 18
+    },
+    {
+      "file": "Assets/Scripts/WorldSign.cs",
+      "sha256": "bf4f7feba97cae32d787c2b0e5ed460b842b211820e6a2a0c12afd954a1f8d1d",
+      "lines": 10
+    },
+    {
+      "file": "Assets/Editor/BuildBridges.cs",
+      "sha256": "6c18bcd60ebe1587637188260a16efe222953b0b7b682d8e4238f900dfdf48f0",
+      "lines": 29
+    },
+    {
+      "file": "Assets/Editor/BuildCaves.cs",
+      "sha256": "3d3ece72a55d3a5af75648c1ece2cb25d5c75dd23cd71e75f26790c0f74adc91",
+      "lines": 112
+    },
+    {
+      "file": "Assets/Editor/BuildExpedition.cs",
+      "sha256": "d3421ade83709797e17060d0d7b0e8d98fe8ff3088209221eb6ccf63c696b88a",
+      "lines": 78
+    },
+    {
+      "file": "Assets/Editor/BuildFieldcraft.cs",
+      "sha256": "363d7bb9c68e4d1f3a503b921e2f75a814ffd477b0247ac1a745cf44ff740517",
+      "lines": 42
+    },
+    {
+      "file": "Assets/Editor/BuildHandbook.cs",
+      "sha256": "4935abf810af9f96af4b403a962446c2bf5c23bb6aeca6364888fbadef391ea0",
+      "lines": 15
+    },
+    {
+      "file": "Assets/Editor/BuildLivingResources.cs",
+      "sha256": "0b49d2f52ccedf3c737afe3afd4728cf2596def61021feadd3800bf751447dbd",
+      "lines": 76
+    },
+    {
+      "file": "Assets/Editor/BuildMapStyle.cs",
+      "sha256": "909fdfab0f47c70f2214dedd63f2b1ceb32dd5ca680d9afed76e57f3adeaf788",
+      "lines": 12
+    },
+    {
+      "file": "Assets/Editor/BuildRealAssets.cs",
+      "sha256": "ae1e4972c36dd72a27857f55917206c6d8b9986edeaf3431d7be430db5991425",
+      "lines": 27
+    },
+    {
+      "file": "Assets/Editor/BuildReserve.cs",
+      "sha256": "7086e9e8737ac66737d7cd669bcdd5cab58e716e9b4f2633d5d4be34ed454cc0",
+      "lines": 345
+    },
+    {
+      "file": "Assets/Editor/BuildRoadCoverage.cs",
+      "sha256": "f481c5cb979097679df741c59fc9cc62f39354a0c3170857df278435dc2aa948",
+      "lines": 19
+    },
+    {
+      "file": "Assets/Editor/BuildRoadside.cs",
+      "sha256": "621eb789a06e948cf232b74f90f74873533fbc5fafb33867baf7435a995417b9",
+      "lines": 8
+    },
+    {
+      "file": "Assets/Editor/BuildShark.cs",
+      "sha256": "3dfb68de775733fb142272929bdf9747d77e2db6dafa83290e062521c80b390f",
+      "lines": 16
+    },
+    {
+      "file": "Assets/Editor/BuildVillageDetails.cs",
+      "sha256": "4eccfa8245a341149aa9a201e9859d61296750058c68ae44ab65f4abb31be136",
+      "lines": 21
+    },
+    {
+      "file": "Assets/Editor/BuildWeaponIcons.cs",
+      "sha256": "67a54166840cd3272b6dca2cd153c423fd92905ebd1a3e7946a81d2e5ee16c50",
+      "lines": 12
+    },
+    {
+      "file": "Assets/Editor/CollaborationTools.cs",
+      "sha256": "eb81fcfd51f31379ceb06b5819df3c79ef154ea4aeba45fdeed41554f5d3bea5",
+      "lines": 47
+    }
+  ]
+}

@@ -74,7 +74,7 @@ namespace Pinefall
         public static GameObject Part(Transform root,PrimitiveType type,Vector3 pos,Vector3 scale,Material mat,Vector3 angles=default(Vector3))
         {
             var g=GameObject.CreatePrimitive(type);g.name=mat?mat.name:"Part";g.transform.SetParent(root,false);g.transform.localPosition=pos;g.transform.localScale=scale;g.transform.localEulerAngles=angles;
-            var collider=g.GetComponent<Collider>();if(collider)Destroy(collider);
+            var collider=g.GetComponent<Collider>();if(collider){collider.enabled=false;Destroy(collider);}
             if(type==PrimitiveType.Cube)g.GetComponent<MeshFilter>().sharedMesh=SoftGeometry.BeveledCube;
             g.GetComponent<Renderer>().sharedMaterial=mat;g.GetComponent<Renderer>().shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;g.layer=10;return g;
         }

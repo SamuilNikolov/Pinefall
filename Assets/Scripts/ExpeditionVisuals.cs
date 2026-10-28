@@ -4,23 +4,50 @@ namespace Pinefall
 {
     public sealed class LootVisual:MonoBehaviour
     {
-        Material material,trim;Transform beacon,modelRoot;
+        static readonly Material[] markers=new Material[5];
+        Transform modelRoot,itemBody;float nextDetail;static Mesh locatorMesh;
         void Start()
         {
-            var loot=GetComponent<WorldLoot>();Color color=loot.Kind.Value==12?new Color(.52f,.63f,1):loot.Kind.Value==0?WeaponData.RarityColor(loot.Rarity.Value):loot.Kind.Value==5?new Color(.85f,.65f,.31f):new Color(.51f,.76f,.67f);
-            material=WeaponView.Mat("Dropped equipment",color*.7f);trim=WeaponView.Mat("Equipment marker",color);
-            var root=new GameObject("Pickup").transform;modelRoot=root;root.SetParent(transform,false);
-            if(loot.Kind.Value==12){WeaponView.Part(root,PrimitiveType.Cube,Vector3.zero,new Vector3(.28f,.38f,.16f),material);WeaponView.Part(root,PrimitiveType.Cylinder,new Vector3(-.07f,.34f,0),new Vector3(.025f,.24f,.025f),trim);WeaponView.Part(root,PrimitiveType.Cube,new Vector3(0,.05f,-.09f),new Vector3(.19f,.13f,.025f),trim);}
-            else if(loot.Kind.Value==0)
-            {WeaponView.Part(root,PrimitiveType.Cube,Vector3.zero,new Vector3(.13f,.15f,.7f),material);WeaponView.Part(root,PrimitiveType.Cylinder,new Vector3(0,.04f,.4f),new Vector3(.035f,.22f,.035f),trim,new Vector3(90,0,0));WeaponView.Part(root,PrimitiveType.Cube,new Vector3(0,-.05f,-.34f),new Vector3(.14f,.17f,.3f),material);}
-            else {WeaponView.Part(root,loot.Kind.Value==5?PrimitiveType.Sphere:PrimitiveType.Cube,Vector3.zero,loot.Kind.Value==4?new Vector3(.28f,.42f,.22f):new Vector3(.32f,.22f,.26f),material);WeaponView.Part(root,PrimitiveType.Cube,new Vector3(0,.12f,0),new Vector3(.12f,.025f,.25f),trim);}
-            beacon=WeaponView.Part(root,PrimitiveType.Sphere,new Vector3(0,.45f,0),Vector3.one*.07f,trim).transform;
-            foreach(var t in root.GetComponentsInChildren<Transform>())t.gameObject.layer=0;
+            var loot=GetComponent<WorldLoot>();
+            var root=new GameObject("Ground equipment").transform;modelRoot=root;root.SetParent(transform,false);root.localPosition=Vector3.down*.30f;
+            itemBody=LootModels.Create(root,loot.Kind.Value,loot.Item.Value).transform;
+            int rarity=Mathf.Clamp(loot.Kind.Value==0?loot.Rarity.Value:loot.Kind.Value==11||loot.Kind.Value==12?3:loot.Kind.Value==8?2:0,0,4);
+            if(!markers[rarity]){markers[rarity]=new Material(Shader.Find("Pinefall/PickupLocator")){name="Shared pickup rarity "+rarity,color=WeaponData.RarityColor(rarity)*new Color(1,1,1,.55f),enableInstancing=true};}
+            var marker=new GameObject("Instanced rarity locator");marker.transform.SetParent(root,false);
+            marker.AddComponent<MeshFilter>().sharedMesh=LocatorMesh;
+            var renderer=marker.AddComponent<MeshRenderer>();renderer.sharedMaterial=markers[rarity];renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;renderer.receiveShadows=false;
+            float radius=loot.Kind.Value==0?.50f:.30f;marker.transform.localScale=new Vector3(radius*2,rarity>=3?1:.6f,radius*2);
+            if(loot.Kind.Value==11&&loot.Item.Value==1)FieldAnomaly.CreateVisual(root);
+        }
+        static Mesh LocatorMesh
+        {
+            get
+            {
+                if(locatorMesh)return locatorMesh;
+                var vertices=new List<Vector3>();var triangles=new List<int>();
+                for(int i=0;i<40;i++)
+                {
+                    float a=i/40f*Mathf.PI*2,b=(i+1)/40f*Mathf.PI*2;int n=vertices.Count;
+                    vertices.Add(new Vector3(Mathf.Cos(a)*.49f,.025f,Mathf.Sin(a)*.49f));vertices.Add(new Vector3(Mathf.Cos(a)*.51f,.025f,Mathf.Sin(a)*.51f));
+                    vertices.Add(new Vector3(Mathf.Cos(b)*.51f,.025f,Mathf.Sin(b)*.51f));vertices.Add(new Vector3(Mathf.Cos(b)*.49f,.025f,Mathf.Sin(b)*.49f));triangles.AddRange(new[]{n,n+1,n+2,n,n+2,n+3});
+                }
+                for(int plane=0;plane<2;plane++)
+                {
+                    int n=vertices.Count;var side=plane==0?Vector3.right*.004f:Vector3.forward*.004f;
+                    vertices.Add(Vector3.up*.25f-side);vertices.Add(Vector3.up*.25f+side);vertices.Add(Vector3.up*1.25f+side);vertices.Add(Vector3.up*1.25f-side);triangles.AddRange(new[]{n,n+1,n+2,n,n+2,n+3});
+                }
+                locatorMesh=new Mesh{name="Shared rarity ring and locator"};locatorMesh.SetVertices(vertices);locatorMesh.SetTriangles(triangles,0);locatorMesh.RecalculateBounds();return locatorMesh;
+            }
+        }
+        void Update()
+        {
+            if(!itemBody||Time.unscaledTime<nextDetail)return;nextDetail=Time.unscaledTime+.25f;
+            var camera=Ranger.Local?Ranger.Local.view:Camera.main;if(!camera)return;
+            float range=itemBody.gameObject.activeSelf?44:38;
+            itemBody.gameObject.SetActive((transform.position-camera.transform.position).sqrMagnitude<range*range);
         }
         void OnEnable(){if(modelRoot)modelRoot.gameObject.SetActive(true);}
         void OnDisable(){if(modelRoot)modelRoot.gameObject.SetActive(false);}
-        void Update(){if(beacon)beacon.localPosition=Vector3.up*(.45f+Mathf.Sin(Time.time*2.5f)*.06f);}
-        void OnDestroy(){if(material)Destroy(material);if(trim)Destroy(trim);}
     }
     public sealed class VehicleVisual:MonoBehaviour
     {
@@ -66,6 +93,7 @@ namespace Pinefall
         }
 
         void Update(){if(!car)return;foreach(var wheel in wheels)wheel.Rotate(Vector3.up,car.Speed.Value*Time.deltaTime*145,Space.Self);if(engine){engine.volume=car.Condition.Value>0&&car.Fuel.Value>0&&car.Seat0.Value!=RoadVehicle.Empty?.27f:0;engine.pitch=.7f+Mathf.Abs(car.Speed.Value)*.045f;}}
+        void LateUpdate(){if(car&&modelRoot)modelRoot.SetPositionAndRotation(car.VisualPosition,car.VisualRotation);}
         void OnDestroy(){foreach(var m in materials)if(m)Destroy(m);if(engine&&engine.clip)Destroy(engine.clip);}
     }
 }

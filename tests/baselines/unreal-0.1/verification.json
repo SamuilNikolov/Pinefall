@@ -1,0 +1,26 @@
+{
+  "limitations": [
+    "NullRHI: no graphics/FPS or audible sound claim",
+    "Range target damage only; moving-player hit fairness/rewind remains unverified",
+    "No WAN, microphone, inventory or battle royale parity test"
+  ],
+  "passed": [
+    "Host admitted a real second process",
+    "Remote weapon loaded a five-round magazine",
+    "Server accepted the remote shot and decremented ammo",
+    "Remote owner received confirmed 80-point rifle damage"
+  ],
+  "failed": [],
+  "engine": "5.6.1",
+  "date": "2026-10-28",
+  "nativeBuild": "unreal-build-09.log",
+  "environmentBuild": "unreal-assets-09.log",
+  "renderReview": "unreal-render-04.log, 1600x900",
+  "sourceParent": "f4ecac8b66405d2b8fafbcf6130b57a46a8a67b8",
+  "release": false,
+  "sha256": {
+    "Unreal/Pinefall/Binaries/Win64/UnrealEditor-Pinefall.dll": "0e8a2e608cc326b0e7f44de482e4759523c035d59b152fd73dfc06543d45e2d1",
+    "Unreal/Pinefall/Binaries/Win64/UnrealEditor-PinefallEditor.dll": "047b6a2e7871fd974f33a70c9d2a7353b2b768af7884442ab85d00ac7ec539a6",
+    "Unreal/Pinefall/Content/Pinefall/Maps/CedarCrossing.umap": "d783a8b5ee79f0e172a2be761f7a40296464cd424bb70f818ad914efa7354511"
+  }
+}

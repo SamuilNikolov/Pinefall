@@ -1,0 +1,47 @@
+[
+  {
+    "File": "pine_sapling_small_1k.gltf",
+    "Bytes": 11442,
+    "MD5": "237a7672645631550ae571743aa9f55b"
+  },
+  {
+    "File": "textures/pine_sapling_small_twig_arm_1k.jpg",
+    "Bytes": 394056,
+    "MD5": "b5062030fc42ec7bd12eb3f052054104"
+  },
+  {
+    "File": "textures/pine_sapling_small_twig_diff_1k.jpg",
+    "Bytes": 477942,
+    "MD5": "dacc918bb421968e9ccc1956d78a2dbe"
+  },
+  {
+    "File": "textures/pine_sapling_small_bark_nor_gl_1k.jpg",
+    "Bytes": 1016849,
+    "MD5": "bb6e3a6eea777d992cef48fabfdc538c"
+  },
+  {
+    "File": "pine_sapling_small.bin",
+    "Bytes": 17771796,
+    "MD5": "76dd1802d8de128c812f2e124a258b35"
+  },
+  {
+    "File": "textures/pine_sapling_small_bark_diff_1k.jpg",
+    "Bytes": 725265,
+    "MD5": "7d3a558ed614c7e75594c7be3bf80311"
+  },
+  {
+    "File": "textures/pine_sapling_small_bark_arm_1k.jpg",
+    "Bytes": 801278,
+    "MD5": "21d1abd15e40951825a4f3da110b20ea"
+  },
+  {
+    "File": "textures/pine_sapling_small_twig_nor_gl_1k.jpg",
+    "Bytes": 692711,
+    "MD5": "eebc5a81f8f6231d8e18ec4ad7292798"
+  },
+  {
+    "File": "textures/pine_sapling_small_twig_alpha_1k.png",
+    "Bytes": 159896,
+    "MD5": "9890eccee0444fd263dad2133338583f"
+  }
+]

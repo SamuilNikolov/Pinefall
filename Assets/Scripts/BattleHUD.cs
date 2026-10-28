@@ -70,6 +70,9 @@ namespace Pinefall
                 }
                 if (P.HitMarker) { Line(new Vector2(787, 437), new Vector2(795, 445), ice, 2); Line(new Vector2(805, 455), new Vector2(813, 463), ice, 2); Line(new Vector2(787, 463), new Vector2(795, 455), ice, 2); Line(new Vector2(805, 445), new Vector2(813, 437), ice, 2); }
                 string hint = P.Interaction(); var piece = P.AimedBuild();
+                var groundItem=WorldLoot.Near(P.transform.position);
+                if(!P.Building&&!P.CurrentVehicle&&!piece&&groundItem&&hint==GameBindings.Label("Interact")+" · "+groundItem.Description)
+                { GroundItemCard(groundItem);hint=""; }
                 if (piece) hint = (piece.Team.Value == P.Team.Value ? GameBindings.Label("Edit build")+" Edit   "+GameBindings.Label("Repair")+" Repair" : "Enemy structure") + ((511 ^ piece.Mask.Value) == 18 ? "   "+GameBindings.Label("Interact")+" Door" : "");
                 if (hint != "") { Rect(430, 692, 690, 36, glass); Text(440, 699, 670, 28, hint, Centered(small), 16, paper); }
                 if (match && match.Active && match.Outside(P.transform.position)) { Rect(585, 102, 430, 49, new Color(.22f, .07f, .34f, .78f)); Text(600, 111, 400, 33, "Storm exposure / reach the safe zone", Centered(type), 20, paper); }
@@ -111,6 +114,17 @@ namespace Pinefall
             if (ProximityVoice.Current && ProximityVoice.Current.Transmitting) { Glyph(30, 480, 20, "radio", ice); Text(60, 478, 245, 26, "Speaking nearby", small, 16, ice); }
             if (PlayerPrefs.GetInt("perf.overlay", 1) == 1 && RuntimePerformance.Current) Text(30, 895 - 19, 285, 20, Mathf.RoundToInt(1000 / RuntimePerformance.Current.FrameMs) + " FPS  " + RuntimePerformance.Current.FrameMs.ToString("0.0") + " ms", small, 12, muted);
             if (FieldNarrator.Current && FieldNarrator.Current.Captions && FieldNarrator.Current.Subtitle != "") { Rect(420, 190, 760, 63, glass); Text(435, 198, 730, 47, FieldNarrator.Current.Subtitle, Centered(small), 17, paper); }
+        }
+        void GroundItemCard(WorldLoot item)
+        {
+            const float x=1010,y=468,w=510;
+            bool gun=item.Kind.Value==0;Color rarity=gun?WeaponData.RarityColor(item.Rarity.Value):ice;
+            Rect(x,y,w,128,new Color(.025f,.04f,.055f,.82f));Rect(x,y,4,128,rarity);
+            string icon=item.Kind.Value==1?"ammo":item.Kind.Value==2?"health":item.Kind.Value==5||item.Kind.Value==9?"food":item.Kind.Value==6||item.Kind.Value==7?"shield":item.Kind.Value==12?"radio":"crate";
+            Glyph(x+17,y+19,30,icon,rarity);
+            Text(x+62,y+12,425,gun?34:67,gun?WeaponData.Get(item.Item.Value).name:item.Description,type,gun?24:20,paper);
+            if(gun)Text(x+62,y+50,425,28,WeaponData.Rarities[Mathf.Clamp(item.Rarity.Value,0,4)]+"  /  "+WeaponData.Get(item.Item.Value).ClassLabel,small,17,rarity);
+            Text(x+20,y+91,470,27,GameBindings.Label("Interact")+"  "+(item.Kind.Value==11?"Open cache":item.Kind.Value==15?"Call supply flight":"Pick up")+(gun?"     Hold "+GameBindings.Label("Inventory")+" to manage slots":""),small,16,muted);
         }
         void SpectatorHUD()
         {

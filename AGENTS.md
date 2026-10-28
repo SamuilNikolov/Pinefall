@@ -11,6 +11,9 @@ These instructions apply to the entire repository. They describe project constra
 
 ## Current baseline
 
+- **Active work is now Unreal 5.6.1**, under `Unreal/Pinefall`. Read `Design/UNREAL-MIGRATION.md`, `Design/UNREAL-STATUS.md`, `Design/UNREAL-PRESENTATION.md` and `Unreal/Pinefall/README.md` before continuing. The 120-rule catalog is a Unity reference, not Unreal completion evidence.
+- **Unity is frozen** at the unfinished 0.9.1 working tree by the user's explicit direction. Preserve its files and evidence. Do not resume Unity development/testing or claim the cancelled final suite passed.
+- The remaining engine-specific instructions below describe the legacy Unity project. Apply its gameplay/privacy/performance invariants to Unreal; use the Unreal setup/build scripts for the new project and keep editor tooling out of runtime modules.
 - Unity **2022.3.13f1**, Windows x64, Mono, built-in render pipeline.
 - NGO **1.8.1**, glTFast **6.0.1**, protocol string **PinefallReserve/9**, maximum twenty players including bots.
 - The repository root is the Unity project. Never depend on the original author's `outputs/` or `work/` directories.

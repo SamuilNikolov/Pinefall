@@ -1,0 +1,13 @@
+{
+  "version": "0.9.1",
+  "unity": "2022.3.13f1",
+  "protocol": 9,
+  "maximumParticipants": 20,
+  "sourceParent": "f4ecac8b66405d2b8fafbcf6130b57a46a8a67b8",
+  "runtimeAssemblySha256": "d6c4db843860a38811548b13094dc8b4b8204c673daecc7372ff8427dbaf5567",
+  "executableSha256": "8a9b25cfbb8a839b097d3e059b4dec2bac2b7bf1833f380e41c352aa6d8708ea",
+  "buildLog": "20261027-160232-0738.log",
+  "status": "Frozen unfinished checkpoint; final Shipping suite cancelled on migration request",
+  "hashScope": "The hashes/buildLog identify Polish091Ship only; archived frontier/fieldcraft/performance reports came from the earlier Polish091Optimized candidate, not this final binary.",
+  "archivedEvidenceBuild": "Polish091Optimized"
+}

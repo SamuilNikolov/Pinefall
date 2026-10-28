@@ -1,0 +1,45 @@
+[
+  {
+    "file": "GrassAlpha.jpg",
+    "sha256": "90ad8db2b471de6b61597c60bc218d1295c4bf68230be9083aa2001b9067b2e2",
+    "legacySource": [
+      "Assets/Resources/GrassOpacity.jpg",
+      "Assets/Art/Terrain/GrassAlpha.jpg"
+    ]
+  },
+  {
+    "file": "MeadowDetail.jpg",
+    "sha256": "1a2ddfa4652adbe00447b940c40019d46f4b88245bc1b341cdf622c2110b7bc5",
+    "legacySource": [
+      "Assets/Art/Terrain/MeadowDetail.jpg"
+    ]
+  },
+  {
+    "file": "MeadowDetailArm.jpg",
+    "sha256": "a7daabd9aa877f861ced2830b792709f31a399324db47df2bdac256c0414fc14",
+    "legacySource": [
+      "Assets/Art/Terrain/MeadowDetailArm.jpg"
+    ]
+  },
+  {
+    "file": "MeadowDetailNormal.jpg",
+    "sha256": "c6aa14b042ce243f93a6ca807f46a085711c23ad316b104578e92df7770ee285",
+    "legacySource": [
+      "Assets/Art/Terrain/MeadowDetailNormal.jpg"
+    ]
+  },
+  {
+    "file": "Rock.jpg",
+    "sha256": "ea48e0e47ad42c8bd312476178b1248ec66f0eb19156a26a1c222f2a40caaf2d",
+    "legacySource": [
+      "Assets/Art/Terrain/Rock.jpg"
+    ]
+  },
+  {
+    "file": "RockNormal.jpg",
+    "sha256": "c6423169583f31715cf0636954bad524e806848a5f2861fcea6794275f726ff0",
+    "legacySource": [
+      "Assets/Art/Terrain/RockNormal.jpg"
+    ]
+  }
+]

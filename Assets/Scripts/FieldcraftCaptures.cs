@@ -7,6 +7,21 @@ namespace Pinefall
 {
     public sealed partial class CaptureProbe
     {
+        IEnumerator PolishShots()
+        {
+            var p=Ranger.Local;var ui=ReserveUI.Instance;ui.VerificationPanel("");WeatherState.Current.Choose(0,false,16.7f);
+            p.SmokeMoveTo(ReserveWorld.OnGround(0,-180,.1f));var origin=ReserveWorld.OnGround(0,-173,.4f);
+            foreach(var item in WorldLoot.All.ToArray())if(item&&(item.transform.position-origin).sqrMagnitude<25*25)item.NetworkObject.Despawn();
+            for(int gun=0;gun<8;gun++)ExpeditionLoot.Spawn(ReserveWorld.OnGround((gun-3.5f)*1.2f,-173,.4f),0,gun,gun%5,-1);
+            foreach(int kind in new[]{1,2,4,6,8,11,12})ExpeditionLoot.Spawn(ReserveWorld.OnGround((kind==1?0:kind)*.8f-4,-175.5f,.4f),kind,kind==6?2:kind==8?3:0,2,1);
+            yield return new WaitForSecondsRealtime(2);p.view.transform.position=ReserveWorld.OnGround(0,-181,5);p.view.transform.LookAt(origin);yield return Shot("polish-ground-equipment");
+            var pistol=WorldLoot.All.Where(l=>l.Kind.Value==0&&l.Item.Value==3).OrderBy(l=>(l.transform.position-origin).sqrMagnitude).First();p.SmokeMoveTo(pistol.transform.position+Vector3.back*2);p.view.transform.position=p.transform.position+Vector3.up*1.7f;p.view.transform.LookAt(pistol.transform.position);yield return Shot("polish-pickup-card");
+            var anomaly=ExpeditionLoot.Spawn(ReserveWorld.OnGround(11,-173,.4f),11,1,3,1);p.SmokeMoveTo(anomaly.transform.position+new Vector3(-4,0,-6));p.view.transform.position=p.transform.position+Vector3.up*2;p.view.transform.LookAt(anomaly.transform.position+Vector3.up*.5f);yield return new WaitForSecondsRealtime(2);yield return Shot("polish-anomaly");
+            var forest=ReserveWorld.Instance.trees.Where(t=>t.x< -200&&t.z<100&&!ReserveWorld.Clearing(t.x+4,t.z)).Take(80).OrderByDescending(t=>ReserveWorld.Instance.trees.Count(n=>(n-t).sqrMagnitude<60*60)).First();
+            p.SmokeMoveTo(ReserveWorld.OnGround(forest.x+4,forest.z-7,.1f));p.view.transform.position=p.transform.position+Vector3.up*1.7f;p.view.transform.LookAt(forest+Vector3.up*2.3f);yield return new WaitForSecondsRealtime(2);yield return Shot("polish-woodland");
+            p.SmokeMoveTo(ReserveWorld.OnGround(1100,1450,.1f));p.view.transform.position=p.transform.position+Vector3.up*1.7f;p.view.transform.rotation=Quaternion.Euler(-8,35,0);yield return Shot("polish-highlands");
+            Debug.Log("POLISH_VISUAL_OK");
+        }
         IEnumerator FieldcraftShots()
         {
             var p = Ranger.Local; var ui = ReserveUI.Instance; var world = ConstructionWorld.Current; p.InitializeEquipment(true); p.Wood.Value = 300; p.Stone.Value = 240; p.Metal.Value = 160;

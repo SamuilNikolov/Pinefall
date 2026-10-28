@@ -20,6 +20,7 @@ namespace Pinefall
             ReserveSession.Instance.SelectedWeapon=0;ReserveSession.Instance.BattleMode=false;ReserveSession.Instance.Port="7798";ReserveSession.Instance.PlayerName="FieldTest";ReserveSession.Instance.Host();
             yield return new WaitForSecondsRealtime(3);
             if(!Ranger.Local){Debug.LogError("CAPTURE_HOST_FAILED");Application.Quit();yield break;}
+            if(ReserveSession.Arg("--polish-capture")=="1"){yield return PolishShots();Application.Quit();yield break;}
             if(ReserveSession.Arg("--fieldcraft-capture")=="1"){yield return FieldcraftShots();Application.Quit();yield break;}
             ReserveUI.Instance.VerificationPanel("");yield return Shot("play");Ranger.Local.SetModCountServer(2,1);Ranger.Local.SetModCountServer(4,1);Ranger.Local.SetModCountServer(7,1);ReserveUI.Instance.VerificationPanel("loadout");yield return Shot("inventory");ReserveUI.Instance.VerificationPanel("bindings");yield return Shot("controls");ReserveUI.Instance.VerificationPanel("guide");yield return Shot("guide");ReserveUI.Instance.VerificationPanel("");
             var animal=ReserveSession.Instance.Animals.First(a=>!a.Dead);
@@ -65,6 +66,7 @@ namespace Pinefall
         }
         IEnumerator Shot(string name)
         {
+            if(Ranger.Local)Debug.Log("PRESENTATION_SHOT "+name+" actor="+Ranger.Local.transform.position+" camera="+Ranger.Local.view.transform.position);
             yield return new WaitForSecondsRealtime(.65f);yield return new WaitForEndOfFrame();
             ScreenCapture.CaptureScreenshot(Path.Combine(folder,name+".png"));yield return new WaitForSecondsRealtime(.5f);
             var camera=Camera.main;

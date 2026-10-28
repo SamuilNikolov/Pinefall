@@ -1,5 +1,11 @@
 # Third-party notices
 
+## Unreal migration foundation
+
+The Unreal project adds [Pine Sapling Small](https://polyhaven.com/a/pine_sapling_small), Poly Haven, CC0, with 1K bark/needle/normal/roughness/opacity maps. Powered by Poly Haven. Source checksums, prepared-model modifications and the five reused audio sources are documented in [Unreal source-art provenance](Unreal/Pinefall/SourceArt/README.md). The rifle, pistol, fern, grass and terrain sources retain the licenses credited below.
+
+Epic mannequin/template/Starter Content is copied from the user's installed Unreal distribution by setup, excluded from Git and subject to Epic's applicable terms. It is not licensed under this repository's original-code license or represented as CC0. No Fortnite/Apex game assets were imported.
+
 ## Models and animations — Quaternius, CC0 1.0
 
 Deer, stag, fox, wolf, and bull models and their animations originate from the **Ultimate Animated Animal Pack** by Quaternius. The publisher labels the pack CC0 1.0 and permits personal and commercial use.

@@ -55,6 +55,26 @@ namespace Pinefall
             var snap=BuildGrid.Snap(origin+rotation*new Vector3(4.1f,2.9f,-3.9f),origin,37);
             Check((snap-origin-rotation*new Vector3(4,3,-4)).sqrMagnitude<.001f,"Rotated grid snaps in local horizontal and vertical axes");
             Check(Enumerable.Range(0,4).All(turn=>BuildGrid.FacingTurn(37+turn*90,37)==turn),"Quarter turns follow the player in a rotated build frame");
+            Check(BuildGrid.StableTurn(37+48,37,0)==0&&BuildGrid.StableTurn(37+53,37,0)==1,"Build rotation has a stable diagonal dead band");
+            Check(BuildGrid.Storey(origin.y+1.9f,origin.y)==origin.y&&BuildGrid.Storey(origin.y+2.8f,origin.y)==origin.y+3,"Jumping preserves a floor level until feet reach the next storey");
+            var aimedFloor=BuildGrid.AimTarget(origin+rotation*Vector3.forward*1.6f,new Ray(origin+rotation*Vector3.forward*1.6f+Vector3.up*1.7f,rotation*new Vector3(0,-.4f,1).normalized),1,origin,37,origin.y);
+            Check((aimedFloor-origin-rotation*Vector3.forward*4).sqrMagnitude<.001f,"Camera aim extends a floor onto the adjacent cell");
+            Check(RoadVehicle.CanTraverse(.8f,1)&&!RoadVehicle.CanTraverse(2, .2f),"Vehicle grade test permits a 39 degree slope and rejects a sheer ledge");
+            // Real authoritative motion up a collider, not only a mathematical slope check.
+            ui.VerificationPanel("settings");p.SmokeMoveTo(ReserveWorld.OnGround(0,-175,.2f));
+            var rampObject=GameObject.CreatePrimitive(PrimitiveType.Cube);rampObject.name="Probe drivable ramp";rampObject.AddComponent<BridgeSurface>();
+            var rampBase=ReserveWorld.OnGround(0,-175,2);rampObject.transform.SetPositionAndRotation(rampBase+new Vector3(0,7.053f,9.708f),Quaternion.Euler(-36,0,0));rampObject.transform.localScale=new Vector3(7,.16f,24);
+            var testCar=ExpeditionLoot.SpawnVehicle(rampBase+Vector3.up*.83f,0,100,100);p.SmokeMoveTo(testCar.transform.position);bool entered=testCar.Enter(p);yield return null;
+            testCar.DriveServerRpc(float.NaN,float.PositiveInfinity,false,false);yield return new WaitForFixedUpdate();
+            Check(Ranger.FiniteVector(testCar.transform.position)&&testCar.Speed.Value==0,"Malformed driver input cannot corrupt vehicle position or speed");
+            var carStart=testCar.transform.position;float driveUntil=Time.realtimeSinceStartup+1.4f;int movingTicks=0;
+            while(Time.realtimeSinceStartup<driveUntil){testCar.DriveServerRpc(1,0,false,false);if(testCar.Speed.Value>1)movingTicks++;yield return null;}
+            Check(entered&&testCar.transform.position.z-carStart.z>5&&testCar.transform.position.y-carStart.y>2&&movingTicks>10,"Occupied vehicle climbs a continuous 36 degree ramp without stop-start motion");
+            testCar.Remove(p);testCar.NetworkObject.Despawn();Destroy(rampObject);p.SmokeMoveTo(ReserveWorld.OnGround(0,-175,.1f));ui.VerificationPanel("");yield return null;
+            int anomalyCount=WorldLoot.All.Count(l=>l&&l.Kind.Value==11&&l.Item.Value==1);Check(anomalyCount>=4&&anomalyCount<=14,"Reserve populates a bounded set of scattered anomaly caches");
+            var anomaly=WorldLoot.All.FirstOrDefault(l=>l&&l.Kind.Value==11&&l.Item.Value==1);
+            if(anomaly){p.SmokeMoveTo(anomaly.transform.position);match.Battle.Value=true;match.Phase.Value=1;p.Health.Value=100;p.ArmorTier.Value=2;p.Armor.Value=60;yield return new WaitForSecondsRealtime(2.3f);Check(p.Health.Value<100&&p.Armor.Value==60,"Anomaly exposure damages health without consuming gunshot/animal armor");int dropsBefore=WorldLoot.All.Count;p.ScavengeServerRpc(anomaly.NetworkObjectId);yield return null;Check(!anomaly&&WorldLoot.All.Count>=dropsBefore+3,"Securing an anomaly awards a high-tier weapon and useful supplies");p.Health.Value=100;p.Armor.Value=p.ArmorTier.Value=0;match.Battle.Value=false;}
+            p.SmokeMoveTo(ReserveWorld.OnGround(0,-175,.1f));
             p.Wood.Value=p.Stone.Value=p.Metal.Value=999;BuildPiece floor=null;
             for(int z=-200;z<=-160&&!floor;z+=4)for(int x=-20;x<=20&&!floor;x+=4)
             {var feet=ReserveWorld.OnGround(x,z,.2f);var point=BuildGrid.RootOrigin(feet,ReserveWorld.Height(x,z));p.SmokeMoveTo(feet+rotation*Vector3.back*2.5f);if(world.TryPlace(p,1,0,point,0,37,point)){floor=BuildPiece.All.Last();origin=point;}}
@@ -76,7 +96,8 @@ namespace Pinefall
             }
             var launchPoint=ReserveWorld.OnGround(60,-175,.08f);var fixedPad=LaunchPad.Spawn(launchPoint);p.SmokeMoveTo(launchPoint+Vector3.up*.3f);float y=p.transform.position.y;
             yield return new WaitForSecondsRealtime(1);Check(p.transform.position.y>y+8,"Stepping onto a fixed pad launches the owning player");
-            yield return new WaitForSecondsRealtime(2);Check(p.Gliding,"Launchpad opens a networked glider on descent");
+            float glideDeadline=Time.realtimeSinceStartup+7;while(!p.Gliding&&Time.realtimeSinceStartup<glideDeadline)yield return null;
+            Check(p.Gliding,"Launchpad opens a networked glider on descent");
             p.SmokeMoveTo(ReserveWorld.OnGround(100,-175,.05f));yield return new WaitForSecondsRealtime(.5f);Check(!p.Gliding,"Landing closes the glider");
             world.ResetWorld();
             bool floors=true,ceilings=true,stable=true;

@@ -14,6 +14,7 @@ namespace Pinefall
         public Light sun;
         public Material cloudMaterial,rainMaterial,gradeMaterial;
         Material sky;
+        Cubemap equipmentEnvironment;
         ParticleSystem rain;
         Transform clouds;
         float cloudiness,wetness,flashUntil;
@@ -23,6 +24,7 @@ namespace Pinefall
         void Awake()
         {
             Instance=this;sky=new Material(RenderSettings.skybox);RenderSettings.skybox=sky;
+            CreateEquipmentEnvironment();
             cloudMaterial=new Material(cloudMaterial);
             var dome=new GameObject("Moving cloud canopy");clouds=dome.transform;clouds.SetParent(transform);
             dome.AddComponent<MeshFilter>().sharedMesh=Dome();var renderer=dome.AddComponent<MeshRenderer>();renderer.sharedMaterial=cloudMaterial;renderer.shadowCastingMode=ShadowCastingMode.Off;renderer.receiveShadows=false;
@@ -45,12 +47,13 @@ namespace Pinefall
             cloudMaterial.SetColor("_CloudColor",Color.Lerp(new Color(.96f,.94f,.86f),new Color(.40f,.46f,.48f),wetness));
             float elevation=Mathf.Sin((Hour-6)/12*Mathf.PI)*55;float warmth=1-Mathf.InverseLerp(15,37,elevation);
             float daylight=Mathf.SmoothStep(0,1,Mathf.InverseLerp(-7,15,elevation));sun.transform.rotation=Quaternion.Euler(Mathf.Max(12,Mathf.Abs(elevation)),-38+(Hour-16.7f)*10,0);
+            if(equipmentEnvironment)RenderSettings.reflectionIntensity=Mathf.Lerp(.06f,.85f,daylight)*(1-wetness*.3f);
             sun.color=Color.Lerp(new Color(1,.96f,.86f),new Color(1,.76f,.49f),warmth*.7f);
             sun.intensity=Mathf.Lerp(.14f,Mathf.Lerp(1.35f,.38f,cloudiness*.85f+wetness*.15f),daylight)+(Time.time<flashUntil?3:0);sun.color=Color.Lerp(new Color(.38f,.55f,.86f),sun.color,daylight);
-            RenderSettings.ambientSkyColor=Color.Lerp(new Color(.55f,.64f,.70f),new Color(.37f,.45f,.52f),wetness);
-            RenderSettings.ambientEquatorColor=Color.Lerp(new Color(.48f,.5f,.43f),new Color(.32f,.38f,.39f),wetness);
+            RenderSettings.ambientSkyColor=Color.Lerp(new Color(.48f,.55f,.63f),new Color(.37f,.45f,.52f),wetness);
+            RenderSettings.ambientEquatorColor=Color.Lerp(new Color(.35f,.38f,.34f),new Color(.32f,.38f,.39f),wetness);
             RenderSettings.fogColor=Color.Lerp(new Color(.69f,.76f,.75f),new Color(.40f,.48f,.52f),wetness);
-            RenderSettings.fogDensity=Mathf.Lerp(.0012f,.0027f,wetness);
+            RenderSettings.fogDensity=Mathf.Lerp(.00085f,.0023f,wetness);
             sky.SetColor("_SkyTint",Color.Lerp(new Color(.48f,.57f,.67f),new Color(.37f,.42f,.47f),cloudiness*.75f));
             RenderSettings.ambientSkyColor*=Mathf.Lerp(.22f,1,daylight);RenderSettings.ambientEquatorColor*=Mathf.Lerp(.25f,1,daylight);RenderSettings.ambientGroundColor=new Color(.20f,.23f,.24f)*Mathf.Lerp(.2f,1,daylight);RenderSettings.fogColor=Color.Lerp(new Color(.055f,.09f,.16f),RenderSettings.fogColor,daylight);sky.SetFloat("_Exposure",Mathf.Lerp(.10f,Mathf.Lerp(1.12f,.72f,wetness),daylight));
             Shader.SetGlobalFloat("_ReserveWet",wetness);
@@ -67,6 +70,26 @@ namespace Pinefall
             {lastLightning=WeatherState.Current.Lightning.Value;if(wetness>.5f){flashUntil=Time.time+.16f;StartCoroutine(Thunder());}}
         }
         IEnumerator Thunder(){yield return new WaitForSeconds(1.1f);ReserveAudio.Thunder();}
+        void CreateEquipmentEnvironment()
+        {
+            if(SystemInfo.graphicsDeviceType==GraphicsDeviceType.Null)return;
+            // A shared sky/ground environment gives metal a readable reflection
+            // without dynamic probe renders or a point light on every pickup.
+            const int size=32;equipmentEnvironment=new Cubemap(size,TextureFormat.RGBAHalf,true){name="Reserve diffuse sky reflection"};
+            for(int face=0;face<6;face++)
+            {
+                var colors=new Color[size*size];
+                for(int y=0;y<size;y++)for(int x=0;x<size;x++)
+                {
+                    float u=(x+.5f)/size*2-1,v=(y+.5f)/size*2-1;
+                    Vector3 ray=face==0?new Vector3(1,-v,-u):face==1?new Vector3(-1,-v,u):face==2?new Vector3(u,1,v):face==3?new Vector3(u,-1,-v):face==4?new Vector3(u,-v,1):new Vector3(-u,-v,-1);
+                    float height=ray.normalized.y;
+                    colors[y*size+x]=height<0?Color.Lerp(new Color(.33f,.35f,.31f),new Color(.13f,.15f,.12f),-height):Color.Lerp(new Color(.53f,.58f,.60f),new Color(.24f,.36f,.53f),height);
+                }
+                equipmentEnvironment.SetPixels(colors,(CubemapFace)face);
+            }
+            equipmentEnvironment.Apply(true,false);RenderSettings.defaultReflectionMode=DefaultReflectionMode.Custom;RenderSettings.customReflectionTexture=equipmentEnvironment;
+        }
         public void Choose(int mode,bool cycle,float hour)
         {
             PreviewMode=mode;AutoCycle=cycle;PreviewHour=hour;
@@ -84,6 +107,6 @@ namespace Pinefall
             }
             var m=new Mesh{name="Cloud canopy"};m.SetVertices(v);m.SetUVs(0,uv);m.SetTriangles(t,0);m.RecalculateNormals();return m;
         }
-        void OnDestroy(){Shader.SetGlobalFloat("_ReserveWet",0);if(sky)Destroy(sky);if(cloudMaterial)Destroy(cloudMaterial);if(Instance==this)Instance=null;}
+        void OnDestroy(){Shader.SetGlobalFloat("_ReserveWet",0);if(equipmentEnvironment){RenderSettings.customReflectionTexture=null;Destroy(equipmentEnvironment);}if(sky)Destroy(sky);if(cloudMaterial)Destroy(cloudMaterial);if(Instance==this)Instance=null;}
     }
 }

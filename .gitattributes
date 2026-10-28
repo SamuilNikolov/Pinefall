@@ -23,3 +23,11 @@
 *.wav binary
 *.ogg binary
 *.fbx binary
+*.uasset binary
+*.umap binary
+*.bin binary
+*.cpp text eol=lf
+*.h text eol=lf
+*.ini text eol=lf
+*.uproject text eol=lf
+*.cmd text eol=crlf
