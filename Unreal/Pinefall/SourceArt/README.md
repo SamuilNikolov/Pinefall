@@ -40,3 +40,16 @@ Round UI weapon thumbnails reuse the existing credited weapon icon sources; supp
 ## Epic bootstrap
 
 Setup copies Quinn/Manny, template animation/input and selected Starter Content from the user's installed Unreal 5.6.1 distribution. These are Epic-provided assets subject to Epic's applicable license, not CC0 or project-authored models. They live in ignored `Content/Characters`, `Content/Input`, `Content/StarterContent`. Their use is temporary baseline scaffolding. No Fortnite/Apex assets, purchased packs or external accounts are required.
+
+## Native ranger and scanned ground (0.2.1)
+
+`Characters/FieldRanger` contains CC0 generated body, clothing, hair and animation outputs published by Kasper Olesen in [CharacterCreator](https://github.com/kblood/CharacterCreator). Its asset license manifest and LICENSE-NOTES distinguish these generated MakeHuman-derived outputs from the GPL generator code; that code is not bundled. `Scripts/prepare_ranger.py` is original project preparation: dressed female morphology, covered-body removal, smoothing, original hold/reload/crouch poses and eighteen exported clips. `Prepared/FieldRanger` is the reproducible derivative; runtime imports live in Art/Characters/Ranger. Regeneration requires Blender 4.3, not a runtime dependency. The normal setup uses the committed prepared/imported assets.
+
+`Terrain/Scans` contains verified 2K diffuse, OpenGL normal and roughness maps for Poly Haven [Forest Leaves 02](https://polyhaven.com/a/forest_leaves_02) and [Rocky Terrain](https://polyhaven.com/a/rocky_terrain), CC0 under [their license](https://polyhaven.com/license). The manifest records original download checksums and SHA-256. `upgrade_world.py` builds slope/stochastic/triplanar material sampling from these maps and creates the original elliptical lake surface.
+
+
+## Unreal 0.2.1 character and terrain provenance
+
+The clothed ranger uses CC0 generated MakeHuman-derived body, shirt, jeans, boots, hair and animation outputs published by Kasper Olesen in [CharacterCreator](https://github.com/kblood/CharacterCreator). Its asset manifest and LICENSE-NOTES explicitly distinguish CC0 generated outputs from the GPL-3.0 generator. Only generated assets and license evidence are included under Unreal/Pinefall/SourceArt/Characters/FieldRanger; the upstream generator code is not bundled or linked. Pinefall's original Scripts/prepare_ranger.py dresses/bakes the character, removes covered geometry, smooths the surface and authors grip/reload/crouch clips. Prepared/FieldRanger contains eighteen clips; canonical runtime assets are Art/Characters/Ranger. Optional regeneration requires Blender 4.3. Normal build/play uses committed assets and needs no Blender. This is a temporary ranger, not a commissioned production character.
+
+Additional scanned ground maps: Poly Haven [Forest Leaves 02](https://polyhaven.com/a/forest_leaves_02) and [Rocky Terrain](https://polyhaven.com/a/rocky_terrain), CC0 under [the publisher license](https://polyhaven.com/license). Selected 2K diffuse, OpenGL normal and roughness maps have checksum provenance in SourceArt/Terrain/Scans and are used in modified native ground materials. upgrade_world.py builds slope/stochastic/triplanar sampling and the original elliptical lake surface.

@@ -92,3 +92,12 @@ All 30 current announcer WAVs are original event text synthesized offline using 
 Cave density/meshing, branching layouts, crystal geometry/materials, launchpads, glider geometry and HUD pictograms are original project code/assets. No Fortnite or Apex assets, audio or source code were copied.
 
 The six social emotes use original procedural skeletal poses on the previously credited characters. Wheel silhouettes, sector textures and input behavior are original code; no commercial dance animations were imported.
+
+
+## Unreal 0.2.1 character and terrain provenance
+
+The clothed ranger uses CC0 generated MakeHuman-derived body, shirt, jeans, boots, hair and animation outputs published by Kasper Olesen in [CharacterCreator](https://github.com/kblood/CharacterCreator). Its asset manifest and LICENSE-NOTES explicitly distinguish CC0 generated outputs from the GPL-3.0 generator. Only generated assets and license evidence are included under Unreal/Pinefall/SourceArt/Characters/FieldRanger; the upstream generator code is not bundled or linked. Pinefall's original Scripts/prepare_ranger.py dresses/bakes the character, removes covered geometry, smooths the surface and authors grip/reload/crouch clips. Prepared/FieldRanger contains eighteen clips; canonical runtime assets are Art/Characters/Ranger. Optional regeneration requires Blender 4.3. Normal build/play uses committed assets and needs no Blender. This is a temporary ranger, not a commissioned production character.
+
+Additional scanned ground maps: Poly Haven [Forest Leaves 02](https://polyhaven.com/a/forest_leaves_02) and [Rocky Terrain](https://polyhaven.com/a/rocky_terrain), CC0 under [the publisher license](https://polyhaven.com/license). Selected 2K diffuse, OpenGL normal and roughness maps have checksum provenance in SourceArt/Terrain/Scans and are used in modified native ground materials. upgrade_world.py builds slope/stochastic/triplanar sampling and the original elliptical lake surface.
+
+The native collision derivatives `Art/World/SM_Limestone` and `SM_TrunkCollision` copy Epic Starter Content SM_Rock and the Engine cylinder respectively, with project collision settings. They remain Epic-provided content under the applicable Unreal license, not CC0/project-authored geometry. The lake disk is original geometry. Setup still supplies the referenced ignored Starter Content textures/assets from the user's installed engine.

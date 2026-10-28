@@ -2,6 +2,8 @@
 
 ## Active Unreal round build
 
+`tools/Test-UnrealCombat.ps1 -PacketLagMs 80` fires from actual owning controllers into standing, crouched and moving player skeletal collision, with current-cover, FP/TP, ammunition and skull checks. The setting delays outgoing packets on both processes; it is a specific artificial-delay case, not general WAN/loss evidence. Fixtures arrange positions, health and cover, never accepted hits. `tools/Test-UnrealWorld.ps1` checks saved trunk/rock cover with capsule sweeps and bullets, automatic water entry/exit, immersion and arranged air/drowning/recovery cases. Render and audible reviews remain separate.
+
 `tools/Test-UnrealBattle.ps1` launches a host and two remote owners. It selects explicit teams, exercises ready/countdown/bidding/landing RPCs, then checks arranged inventory, armor, survival, revive, storm, spectating and results cases. Authority advances clocks and arranges damage; this is not moving-target shooting or latency evidence. `tools/Test-UnrealWildlife.ps1` checks arranged prey/predator decisions, attacks, rage/alpha state, reward transactions and remote skeletal spawning in two processes. No automated check opens a microphone.
 
 Use `tools/Setup-Unreal.ps1 -RebuildRoundAssets` only when regenerating the round atlas/icons/materials. Wildlife import repairs the common glTF skeleton root in derived files, preserving source models; its saved report validates mesh/clip skeleton association. Audio commandlet imports explicitly load the Bink decoder module before importing recorded clips.

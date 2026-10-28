@@ -1,6 +1,6 @@
 # Playing the native Unreal build
 
-Unreal 5.6.1, native version **0.2.0**. Matching Unreal clients are required. This is a development build launched through the installed editor, not a packaged replacement for the Unity release.
+Unreal 5.6.1, native version **0.2.1**. Matching Unreal clients are required. This is a development build launched through the installed editor, not a packaged replacement for the Unity release.
 
 ## Start and join
 
@@ -33,11 +33,15 @@ Late arrivals spectate an ongoing round. In duos/squads, eliminated players spec
 | Map / close a panel | M / Escape |
 | Next spectator target | ] |
 
+In water, WASD swims toward your view, Space rises and Ctrl dives. Air lasts about twenty-five seconds while your head is submerged; an empty air supply causes eight health damage per second and bypasses armor. Returning to the surface restores air. These survival ticks run during battle rounds.
+
 The menu blocks local combat input but does not pause physics, the storm or the network. Sensitivity, volume and graphics quality are available. Sliding, bunny hopping, pickaxe/build controls and rebinding are still pending in Unreal.
 
 ## Equipment and survival
 
-Only the Ridgeline rifle and Service Nine pistol are functional. Both use server-validated cadence, magazine state and traces against skeletal collision. Aiming has a smooth zoom and reduced sensitivity; the Ridgeline has a circular optic. Recoil moves the view weapon and settles after a shot. Confirmation markers, damage amounts and sounds follow accepted damage, not merely a trigger pull. White marks indicate ordinary hits, blue armor hits and amber eliminations. Incoming damage has a short edge pulse and direction cue; environmental storm damage has no attacker direction. Brief target health bars appear only after a confirmed hit and are hidden by cover.
+Only the Ridgeline rifle and Service Nine pistol are functional. Both use server-validated cadence, magazine state and traces against skeletal collision. Player shots use a measured server clock and at most 350 ms of server-only skeletal hit history, with current solid cover always blocking the shot. This is bounded compensation, not a promise that arbitrary latency/loss is fair. The player is a clothed MakeHuman-derived ranger rather than the Epic mannequin, with separate rifle/pistol holds, reload gestures, crouch and movement clips. Third-person guns follow the animated wrist with a grip offset. First-person arms and fully articulated magazine/bolt animations remain unfinished. The pistol scan is assembled with one seated magazine.
+
+Aiming has a smooth zoom and reduced sensitivity; the Ridgeline has a circular optic. Recoil moves the view weapon and settles after a shot. Confirmation markers, damage amounts and sounds follow accepted damage, not merely a trigger pull. White marks indicate ordinary hits, blue armor hits and amber eliminations. Incoming damage has a short edge pulse and direction cue; environmental storm damage has no attacker direction. Brief target health bars appear only after a confirmed hit and are hidden by cover.
 
 Round ammunition is finite. Reloading consumes only the missing rounds; dropped guns retain their magazine. The range has unlimited reserve reloads. Twelve inventory slots hold guns, ammunition, food, medicine, plates and vests. Total pool limits are 400 rounds per supported weapon, eight food, five medkits and six plates. Drop/pickup transactions are server controlled, with stale-click rejection.
 
@@ -55,6 +59,8 @@ Kills drop food and may drop ordinary usable equipment. Extra-drop odds are 35 p
 
 ## Still missing
 
-The larger biome reserve, dense named villages, branching caves, usable cars/boats, swimming/sharks, the other six gun families, attachments, construction/editing, launchpads, slide/bunnyhop, customization/emotes, weather/day cycle, narration and opt-in proximity voice remain migration work. The atlas currently shows Cedar Crossing, storm circles, public landing choices and relevant teammates; it never draws ordinary enemy positions. Rarity metadata exists but its full combat/modifier presentation is unfinished.
+The larger biome reserve, dense named villages, branching caves, usable cars/boats, sharks, the other six gun families, attachments, construction/editing, launchpads, slide/bunnyhop, customization/emotes, weather/day cycle, narration and opt-in proximity voice remain migration work. Cedar has scanned forest-floor/rock surfaces, a more varied ridge, denser planted trees, fitted trunk collision and rock-surface collision. Its elliptical lake has ripples, depth-faded shores and native swimming physics. This remains a small generated test arena, not the full reserve.
+
+The atlas currently shows Cedar Crossing, storm circles, public landing choices and relevant teammates; it never draws ordinary enemy positions. Rarity metadata exists but its full combat/modifier presentation is unfinished.
 
 See `Design/UNREAL-STATUS.md` for exact evidence and unverified areas. Compilation and headless tests do not establish visual quality, frame rate, moving-player hit fairness or internet reliability.

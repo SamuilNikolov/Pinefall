@@ -29,12 +29,18 @@ void APFGameMode::BeginPlay()
         int32 Team = FCString::Atoi(*UGameplayStatics::ParseOption(OptionsString, TEXT("team")));
         State->TeamSize = Team == 2 || Team == 4 ? Team : 1;
     }
-    GetWorld()->SpawnActor<APFWildlifeDirector>();
+    if (!FParse::Param(FCommandLine::Get(), TEXT("PFCombatProbe")) &&
+        !FParse::Param(FCommandLine::Get(), TEXT("PFWorldProbe")))
+        GetWorld()->SpawnActor<APFWildlifeDirector>();
     GetWorldTimerManager().SetTimer(RoundTimer, this, &APFGameMode::RoundSecond, 1, true);
     if (FParse::Param(FCommandLine::Get(), TEXT("PFRoundProbe")))
         GetWorldTimerManager().SetTimer(ProbeTimer, this, &APFGameMode::RunRoundProbe, .5, true);
     else if (FParse::Param(FCommandLine::Get(), TEXT("PFWildlifeProbe")))
         GetWorldTimerManager().SetTimer(ProbeTimer, this, &APFGameMode::RunWildlifeProbe, .5, true);
+    else if (FParse::Param(FCommandLine::Get(), TEXT("PFCombatProbe")))
+        GetWorldTimerManager().SetTimer(ProbeTimer, this, &APFGameMode::RunCombatProbe, .25, true);
+    else if (FParse::Param(FCommandLine::Get(), TEXT("PFWorldProbe")))
+        GetWorldTimerManager().SetTimer(ProbeTimer, this, &APFGameMode::RunWorldProbe, .25, true);
 }
 void APFGameMode::HandleStartingNewPlayer_Implementation(APlayerController *Player)
 {

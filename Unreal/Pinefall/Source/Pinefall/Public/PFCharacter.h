@@ -13,6 +13,7 @@ class USoundAttenuation;
 class UPFInventoryComponent;
 class APFWorldPickup;
 class UParticleSystem;
+class UPFHitHistoryComponent;
 UCLASS()
 class PINEFALL_API APFCharacter : public ACharacter
 {
@@ -22,6 +23,7 @@ class PINEFALL_API APFCharacter : public ACharacter
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type Reason) override;
     virtual void Tick(float Delta) override;
+    virtual void PreReplication(IRepChangedPropertyTracker& Tracker) override;
     virtual void PawnClientRestart() override;
     virtual void SetupPlayerInputComponent(UInputComponent *Component) override;
     virtual float TakeDamage(float Amount, FDamageEvent const &Event, AController *EventInstigator,
@@ -32,11 +34,13 @@ class PINEFALL_API APFCharacter : public ACharacter
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UStaticMeshComponent> WorldWeapon;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UStaticMeshComponent> ViewWeapon;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UPFInventoryComponent> Inventory;
+    UPROPERTY(VisibleAnywhere) TObjectPtr<UPFHitHistoryComponent> HitHistory;
     UPROPERTY(ReplicatedUsing = OnRep_Health, BlueprintReadOnly) float Health = 100.f;
     UPROPERTY(Replicated, BlueprintReadOnly) float Armor = 0.f;
     UPROPERTY(Replicated, BlueprintReadOnly) int32 ArmorTier = 0;
     UPROPERTY(Replicated, BlueprintReadOnly) float Hunger = 85;
     UPROPERTY(Replicated, BlueprintReadOnly) float Stamina = 100;
+    UPROPERTY(Replicated, BlueprintReadOnly) float Oxygen = 100;
     UPROPERTY(ReplicatedUsing = OnRep_Downed, BlueprintReadOnly) bool bDowned = false;
     UPROPERTY(Replicated, BlueprintReadOnly) float ReviveProgress = 0;
     UPROPERTY(Replicated, BlueprintReadOnly) double BleedOutAt = 0;
@@ -46,6 +50,9 @@ class PINEFALL_API APFCharacter : public ACharacter
     UPROPERTY(Replicated, BlueprintReadOnly) bool bReloading = false;
     UPROPERTY(Replicated, BlueprintReadOnly) bool bAiming = false;
     UPROPERTY(ReplicatedUsing = OnRep_Weapon, BlueprintReadOnly) FName WeaponId = TEXT("Ridgeline");
+    UPROPERTY(Replicated) double MovementPoseTime=0;
+    double RenderedPoseTime() const;
+    FVector VisualSmoothingOffset() const;
     UPROPERTY(BlueprintReadOnly) FPFWeaponDefinition Weapon;
     UPROPERTY(BlueprintReadOnly) float HitUntil = 0, DamageUntil = 0, LastDamageAmount = 0;
     UPROPERTY(BlueprintReadOnly) bool bLastHitArmor = false, bLastHitKill = false;
@@ -59,6 +66,7 @@ class PINEFALL_API APFCharacter : public ACharacter
     void StopAim();
     void RunFireProbe();
     void RunCombatViewProbe();
+    void RunCombatProbeInput();
     void Reload();
     void ResetForRound(int32 Kit);
     void EquipInventoryWeapon(FName Id);
@@ -108,7 +116,8 @@ class PINEFALL_API APFCharacter : public ACharacter
     UFUNCTION() void OnRep_Health(float Previous);
     UFUNCTION() void OnRep_Downed();
     UFUNCTION() void OnRep_Weapon();
-    UFUNCTION(Server, Reliable) void ServerFire(FVector_NetQuantize AimPoint, uint32 Sequence);
+    UFUNCTION(Server, Reliable)
+    void ServerFire(FVector_NetQuantize AimPoint, uint32 Sequence, double ViewTime);
     UFUNCTION(Server, Reliable) void ServerReload();
     UFUNCTION(Server, Reliable) void ServerAim(bool bValue);
     UFUNCTION(Server, Reliable) void ServerEquip(FName Id);
@@ -131,4 +140,7 @@ class PINEFALL_API APFCharacter : public ACharacter
     bool bEnvironmentalDamage = false;
     bool bDeathPresented = false;
     bool bReloadPresented = false;
+    bool bCombatProbe = false;
+    bool bSwimUpHeld = false, bSwimDownHeld = false;
+    int32 LastCombatProbeCase = 0;
 };

@@ -1,0 +1,6 @@
+{
+  "passed": 16,
+  "scope": "Actual standing/crouched/moving player targets, scoped FP/TP, current cover and head damage; no general latency/loss, WAN or rendered FPS claim",
+  "packet_lag_ms_each_sender": 80,
+  "failed": 0
+}

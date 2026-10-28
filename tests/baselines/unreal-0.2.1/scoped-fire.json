@@ -1,0 +1,15 @@
+{
+  "passed": [
+    "Host admitted a real second process",
+    "Remote weapon loaded a five-round magazine",
+    "Server accepted the remote shot and decremented ammo",
+    "Remote owner received confirmed 80-point rifle damage",
+    "Remote owner can fire while aiming down sights"
+  ],
+  "limitations": [
+    "NullRHI: no graphics/FPS or audible sound claim",
+    "Range target damage only; moving-player hit fairness/rewind remains unverified",
+    "No WAN, microphone, inventory or battle royale parity test"
+  ],
+  "failed": []
+}

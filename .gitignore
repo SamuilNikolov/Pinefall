@@ -43,3 +43,4 @@ __pycache__/
 *.7z
 *.exe
 *.dmp
+/work/tools/

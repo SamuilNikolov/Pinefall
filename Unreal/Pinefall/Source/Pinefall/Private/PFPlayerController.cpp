@@ -13,6 +13,37 @@ APFPlayerController::APFPlayerController()
 {
     PlayerCameraManagerClass = APlayerCameraManager::StaticClass();
 }
+double APFPlayerController::ShotViewTime(float SmoothingSeconds) const
+{
+    double Now = GetWorld()->GetTimeSeconds();
+    if (HasAuthority())
+        return Now;
+    if (bHasClock)
+        return Now + ClockOffset - ClockRoundTrip * .5 - SmoothingSeconds;
+    auto *Round = GetWorld()->GetGameState<APFMatchState>();
+    return (Round ? Round->GetServerWorldTimeSeconds() : Now) - SmoothingSeconds;
+}
+void APFPlayerController::ServerClock_Implementation(double Sent)
+{
+    double Now = GetWorld()->GetTimeSeconds();
+    if (!FMath::IsFinite(Sent) || Now < NextClockReply)
+        return;
+    NextClockReply = Now + .4;
+    ClientClock(Sent, Now);
+}
+void APFPlayerController::ClientClock_Implementation(double Sent, double ServerTime)
+{
+    double Now = GetWorld()->GetTimeSeconds(), RoundTrip = Now - Sent;
+    if (!FMath::IsFinite(ServerTime) || RoundTrip < 0 || RoundTrip > 1)
+        return;
+    double Offset = ServerTime + RoundTrip * .5 - Now;
+    ClockOffset =
+        !bHasClock || FMath::Abs(Offset - ClockOffset) > .15 ? Offset : FMath::Lerp(ClockOffset, Offset, .25);
+    ClockRoundTrip = bHasClock ? FMath::Lerp(ClockRoundTrip, float(RoundTrip), .25f) : RoundTrip;
+    bHasClock = true;
+    if (bRoundProbe || FParse::Param(FCommandLine::Get(), TEXT("PFCombatProbe")))
+        UE_LOG(LogTemp, Display, TEXT("PF_CLOCK rtt=%.3f offset=%.3f"), ClockRoundTrip, ClockOffset);
+}
 void APFPlayerController::BeginPlay()
 {
     Super::BeginPlay();
@@ -180,6 +211,11 @@ void APFPlayerController::InteractReleased()
 void APFPlayerController::PlayerTick(float Delta)
 {
     Super::PlayerTick(Delta);
+    if (IsLocalController() && !HasAuthority() && GetWorld()->GetTimeSeconds() >= NextClockRequest)
+    {
+        NextClockRequest = GetWorld()->GetTimeSeconds() + (bHasClock ? 2 : .5);
+        ServerClock(GetWorld()->GetTimeSeconds());
+    }
     if (!IsLocalController())
         return;
     if (bRoundProbe)

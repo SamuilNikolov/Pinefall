@@ -38,6 +38,9 @@ class PINEFALL_API APFPlayerController : public APlayerController
     void InteractPressed();
     void InteractReleased();
     void RefreshInputMode();
+    double ShotViewTime(float SmoothingSeconds) const;
+    UFUNCTION(Server, Unreliable) void ServerClock(double Sent);
+    UFUNCTION(Client, Unreliable) void ClientClock(double Sent, double ServerTime);
 
   private:
     bool bLastRoundPanel = false;
@@ -47,4 +50,7 @@ class PINEFALL_API APFPlayerController : public APlayerController
     int32 ProbePhase = -1;
     float LandingRetry = 0;
     bool bCaptureInventory = false;
+    bool bHasClock = false;
+    double ClockOffset = 0, NextClockRequest = 0, NextClockReply = 0;
+    float ClockRoundTrip = 0;
 };

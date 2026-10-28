@@ -2,6 +2,17 @@
 #include "GameFramework/Character.h"
 #include "PFCharacter.h"
 #include "PFMatchState.h"
+#include "PFWaterBody.h"
+float UPFMovementComponent::ImmersionDepth() const
+{
+    if (auto *Water = Cast<APFWaterBody>(GetPhysicsVolume()))
+    {
+        float Half = CharacterOwner->GetSimpleCollisionHalfHeight();
+        return FMath::Clamp(
+            (Water->SurfaceHeight() - CharacterOwner->GetActorLocation().Z + Half) / (2 * Half), 0.f, 1.f);
+    }
+    return Super::ImmersionDepth();
+}
 float UPFMovementComponent::GetMaxSpeed() const
 {
     auto *Player = Cast<APFCharacter>(GetOwner());
@@ -12,6 +23,8 @@ float UPFMovementComponent::GetMaxSpeed() const
         return 0;
     if (Player->bDowned)
         return 100;
+    if (IsSwimming())
+        return MaxSwimSpeed;
     if (Player->Hunger <= 0)
         return 250;
     return IsCrouching() ? 250 : bWantsSprint && Player->Stamina > 5 && Player->Hunger > 20 ? 940 : 480;

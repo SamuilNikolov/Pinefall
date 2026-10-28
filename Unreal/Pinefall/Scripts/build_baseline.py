@@ -89,7 +89,7 @@ for folder in ['Art','Art/Textures','Art/Weapons','Art/Foliage','Materials','Aud
 meshes={}
 for name in ['SM_Rifle','SM_Pistol','SM_PineA','SM_PineB','SM_PineC','SM_Grass','SM_Fern']:
     folder='/Game/Pinefall/Art/'+('Weapons' if name in ['SM_Rifle','SM_Pistol'] else 'Foliage')
-    if REUSE and LIB.does_asset_exist(folder+'/'+name):mesh=unreal.load_asset(folder+'/'+name)
+    if REUSE and not ('PFRefreshTrees' in unreal.SystemLibrary.get_command_line() and name.startswith('SM_Pine')) and LIB.does_asset_exist(folder+'/'+name):mesh=unreal.load_asset(folder+'/'+name)
     else:mesh=next(o for o in imported(ART/'Prepared'/name/(name+'.gltf'),folder,name) if isinstance(o,unreal.StaticMesh))
     meshes[name]=mesh
     expected=folder+'/'+name
@@ -177,6 +177,12 @@ LIB.save_loaded_asset(table)
 unreal.log('PF_WEAPON_TABLE '+unreal.DataTableFunctionLibrary.export_data_table_to_json_string(table))
 
 level=unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
+LIB.make_directory('/Game/Pinefall/Art/World')
+for source,name,complex_collision in [('/Engine/BasicShapes/Cylinder','SM_TrunkCollision',False),('/Game/StarterContent/Props/SM_Rock','SM_Limestone',True)]:
+    path='/Game/Pinefall/Art/World/'+name
+    mesh=unreal.load_asset(path) if LIB.does_asset_exist(path) else LIB.duplicate_asset(source,path)
+    if not mesh:raise RuntimeError('Missing collision mesh '+name)
+    unreal.PFWorldBuilder.configure_collision(mesh,complex_collision);LIB.save_loaded_asset(mesh)
 # Build an untitled world and write the named map only after successful generation.
 # This also avoids interactive checkout prompts in commandlet save_current_level.
 world=unreal.EditorLoadingAndSavingUtils.new_blank_map(False)
@@ -200,18 +206,21 @@ settings=post.get_editor_property('settings')
 for name,value in [('auto_exposure_min_brightness',9),('auto_exposure_max_brightness',15),('auto_exposure_bias',.25),('bloom_intensity',.25),('vignette_intensity',.2),('motion_blur_amount',0)]:
     settings.set_editor_property('override_'+name,True);settings.set_editor_property(name,value)
 post.set_editor_property('settings',settings)
-water=spawn(unreal.StaticMeshActor,'Lake reflection surface',(9000,9500,-120));water.static_mesh_component.set_static_mesh(unreal.load_asset('/Engine/BasicShapes/Plane'));water.set_actor_scale3d(unreal.Vector(84,120,1));water.static_mesh_component.set_collision_enabled(unreal.CollisionEnabled.NO_COLLISION);water.static_mesh_component.set_material(0,unreal.load_asset('/Game/StarterContent/Materials/M_Water_Lake'))
+water=spawn(unreal.PFWaterBody,'Cedar Lake - swimming water',(9000,9500,-1120))
 
 # Large shoreline stones and range architecture are authored cover, not repeated huts.
 import random
 rng=random.Random(7319)
-rock_mesh=unreal.load_asset('/Game/StarterContent/Props/SM_Rock')
+rock_mesh=unreal.load_asset('/Game/Pinefall/Art/World/SM_Limestone')
 for index in range(100):
     x,y=rng.uniform(-24000,24000),rng.uniform(-24000,24000)
     if abs(y)<2000 and -11000<x<5000:continue
     z=unreal.PFWorldBuilder.height_at(x,y)
     if z< -200:continue
-    actor=spawn(unreal.StaticMeshActor,'Limestone outcrop %03d'%index,(x,y,z-25),(0,rng.uniform(0,360),0));actor.static_mesh_component.set_static_mesh(rock_mesh);scale=rng.uniform(1.5,5.5);actor.set_actor_scale3d(unreal.Vector(scale,scale*.85,scale*.8))
+    scale=rng.uniform(1.5,4.5);box=rock_mesh.get_bounding_box()
+    base=z-box.min.z*scale*.8-(box.max.z-box.min.z)*scale*.8*.3
+    actor=spawn(unreal.StaticMeshActor,'Limestone outcrop %03d'%index,(x,y,base),(0,rng.uniform(0,360),0));actor.static_mesh_component.set_static_mesh(rock_mesh);actor.set_actor_scale3d(unreal.Vector(scale,scale*.85,scale*.8))
+    actor.static_mesh_component.set_collision_profile_name('BlockAll');actor.static_mesh_component.set_collision_enabled(unreal.CollisionEnabled.QUERY_AND_PHYSICS)
 if not unreal.EditorLoadingAndSavingUtils.save_map(world,'/Game/Pinefall/Maps/CedarCrossing'):
     raise RuntimeError('Generated world could not be saved')
 if not unreal.EditorLoadingAndSavingUtils.save_dirty_packages(True,True):

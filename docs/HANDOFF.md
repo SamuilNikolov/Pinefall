@@ -4,15 +4,17 @@
 
 The final Unity 0.9.1 suite was cancelled on the user's switch request. Prior frontier/fieldcraft and performance evidence exists, but there is no completed final-build full-suite claim. Do not relabel older measurements with a newer build hash. Preserve unfinished Unity work without resuming it.
 
-## Active Unreal 0.2 working tree
+## Active Unreal 0.2.1 working tree
 
-Read [native status](../Design/UNREAL-STATUS.md) and [native controls/rules](../Unreal/Pinefall/PLAYING.md). The first native round loop now includes teams/readiness, budgeted bidding, independent landing, cyclic storm, hunger, finite ammunition, inventory/drop transactions, armor, down/revive, spectating and results. Wildlife has seven animated species, bounded AI, storm rage/alpha variants and ordinary equipment rewards. Combat presentation has aim/recoil/reticle, server-confirmed hit cues and visible-target health bars, direction/armor feedback and varied footsteps.
+Read [native status](../Design/UNREAL-STATUS.md), [controls/rules](../Unreal/Pinefall/PLAYING.md) and [hit-registration design](../Design/HIT-REGISTRATION.md). The 0.2 round/inventory/wildlife loop is retained. This sweep adds a CC0 clothed ranger, native locomotion/weapon blending, fitted head collision, corrected pistol magazine and eye origins, server-only bounded skeletal rewind, scanned terrain, physical trunks/rocks and a swimming lake with oxygen/drowning.
 
-`PFMatchRules` owns round transitions; `PFInventoryComponent` owns transactions; `PFSurvival` owns character survival/revival; `PFWildlife` owns fauna; `PFExpeditionUI`, `PFTacticalMap` and `PFCombatHUD` handle presentation. See the native README for full source boundaries. Native network fields/RPCs changed; use matching native builds. Unity clients cannot connect.
+`PFHitHistoryComponent` owns sixteen 30 Hz collision samples (350 ms maximum rewind). `PFCharacter` sends the rendered target's movement time and validates shots on authority; `PFPlayerController` provides fallback clock measurement. Current cover wins. No live physics bodies move during rewind. Avoid a fixed smoothing subtraction: it overshot the tested moving target by about 50 cm. The listen host must account for its own target mesh smoothing too. See the design document for remaining death-ordering, jitter and anti-cheat limits.
 
-Checks: Build-Unreal, Test-Unreal, Test-UnrealBattle, Test-UnrealWildlife. Tests must select explicit teams: connection order varies. The round drop test must arrange a fresh ration after consuming the single starting ration. Actual rendered review is separate from headless checks and injected presentation cues. No frame-rate, audible mix, WAN or moving-player hit fairness claim yet.
+`PFRangerAnimInstance` samples the imported clips and blends weapon poses above spine_01. `PFRangerAssetTools` fits separate skull/neck collision during import. Raw CC0 character outputs are in SourceArt/Characters/FieldRanger; the reproducible original Blender preparation is Scripts/prepare_ranger.py, followed by import_ranger.py. Canonical runtime asset path is /Game/Pinefall/Art/Characters/Ranger. Use -PFRefreshRangerAnimations to rebuild the generated ranger asset set; reimporting just the mesh retains stale sibling clips. This explicit refresh replaces the derived folder, so preserve any newly authored consumers/edits before using it.
 
-Next priorities: actual weapon/hand animation and moving-target latency checks, then vehicles/water and biome/world expansion. Temporary fauna and the sparse 504 m Cedar scene are not a finished realistic world. Preserve the frozen Unity state below and historical evidence. Verification/source fingerprints are in tests/baselines/unreal-0.2: build passed; scoped-fire 5, round 36, wildlife 15 plus three remote skeletal spawns; rendered scope/inventory/armor review at 1600x900 and lobby at 1280x720.
+World generation is build_baseline.py then upgrade_world.py then build_round_assets.py (refresh atlas after geography changes). PFWaterBody is an elliptical real water volume; PFMovementComponent handles immersion. No boats/sharks yet. Visible culling must preserve collision. Tests now also include Test-UnrealCombat and Test-UnrealWorld; use separate rendering review. Cold editor startup can exceed 60 seconds and is not an in-game FPS measurement.
+
+Verification evidence is in tests/baselines/unreal-0.2.1. Native build 19 succeeded; actual renders retain an open gate for faceted materials and an incorrect support-hand grip. The expanded combat run passed sixteen checks at 80 ms artificial lag per sender, including both moving-player shooting roles. Physical world/survival probe passed fifteen arranged checks. Preserve tests/baselines/unreal-0.2 historical evidence; do not relabel it as current. New character grip/render polish, broad latency/loss tests, measured graphics performance and the remaining Unity migration are still open.
 
 ## Frozen Unity handoff
 
@@ -28,7 +30,7 @@ Read [0.9.1 changes](HANDLING-PRESENTATION.md) for camera-aware snap selection, 
 
 The full reserve now has 60 named sites (14 major, 46 minor), 444 buildings, 89 road links, 44 service stops, 112 starting vehicles and 10 boats. Six connected cave systems use winding passages, branch chambers and a loop, with terrain-integrated mouths, caches and crystal illumination. Stronger mountain/mesa elevation is intentional; some natural slopes are steep.
 
-ArenaTier locks at draft start: 1–5 participants use a 2,048 m crop, 6–12 use 4,096 m, 13–20 the full 6,144 m. Practice fills to eight; bots count. Free roam stays full size. Static world geometry is shared; loot/population/spawns/map/storm obey the arena bounds. This is not per-lobby terrain streaming.
+ArenaTier locks at draft start: 1â€“5 participants use a 2,048 m crop, 6â€“12 use 4,096 m, 13â€“20 the full 6,144 m. Practice fills to eight; bots count. Free roam stays full size. Static world geometry is shared; loot/population/spawns/map/storm obey the arena bounds. This is not per-lobby terrain streaming.
 
 The pickaxe and binding occupy the first hotbar tile; four structure bindings appear above guns. Hold Alt opens inventory and release closes it; custom bindings are retained. Connected builds inherit GridYaw/GridOrigin and snap in a player-relative frame, with automatic quarter turns and manual R offsets. Vertical cells are 3 m. Original editing/support limits remain 80 per builder and 512 globally.
 
@@ -36,7 +38,7 @@ LaunchPad is a registered network prefab. Fixed pads have map pins; loot kind 14
 
 **Explicit user override:** animal kills may award ordinary usable equipment. AnimalLoot uses 35% ordinary / 80% enraged extra-drop chances; bosses guarantee two rolls. Do not introduce pelts, bones, trophies or crafting. WildlifeHitboxes fits renderer-local model bounds once, then records oriented extents in ShotHistory. Preserve current-cover checks and the bounded remote rewind timeline.
 
-LowGroundcover keeps a bounded 48 m-cell cache around the camera and draws short scanned grass in three detail levels. LivingForest uses scanned needle atlases, three distance meshes and existing harvest handles. SettlementDetail swaps only rendering to distant silhouettes; collision/gameplay persist. Default view distance is 900 m, configurable 750–1,800; adaptive detail stays hardware-agnostic. CombatEffects pools particles and tracers. No per-tree network actors or Updates.
+LowGroundcover keeps a bounded 48 m-cell cache around the camera and draws short scanned grass in three detail levels. LivingForest uses scanned needle atlases, three distance meshes and existing harvest handles. SettlementDetail swaps only rendering to distant silhouettes; collision/gameplay persist. Default view distance is 900 m, configurable 750â€“1,800; adaptive detail stays hardware-agnostic. CombatEffects pools particles and tracers. No per-tree network actors or Updates.
 
 FrontDoorUI supplies the character-focused Play screen, hosting, joining, discovery, roster and ready flow. CharacterPreview renders at most 30 times per second. Text uses actual font line height; handbook content height is measured and scrollable. Map-label styles are reused rather than adding new GUIStyle keys every repaint. --layout-audit 1 logs measured overflow during explicit visual checks.
 
@@ -58,7 +60,7 @@ Bunny-hop movement uses a 150 ms jump buffer and 100 ms edge grace. Hold jump or
 
 ## Previous 0.9 closeout status
 
-The Windows candidate compiled successfully. See [0.9 verification](VERIFICATION-0.9.md) and its raw evidence before making any final-build test claim. Final full-detail graphics performance is approximately 56–74 FPS with HUD, below the historical 0.8 route. One hunger test fixture was corrected but not rerun; the latest render-tuned visual sequence was incomplete. Prior complete UI audits and movement/multiplayer checks are preserved separately. The user requested compile and push without another full sweep. Performance and final verification remain the first follow-up work.
+The Windows candidate compiled successfully. See [0.9 verification](VERIFICATION-0.9.md) and its raw evidence before making any final-build test claim. Final full-detail graphics performance is approximately 56â€“74 FPS with HUD, below the historical 0.8 route. One hunger test fixture was corrected but not rerun; the latest render-tuned visual sequence was incomplete. Prior complete UI audits and movement/multiplayer checks are preserved separately. The user requested compile and push without another full sweep. Performance and final verification remain the first follow-up work.
 
 ## Verification and next work
 

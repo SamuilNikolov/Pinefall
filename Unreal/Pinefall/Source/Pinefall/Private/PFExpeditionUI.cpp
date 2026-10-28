@@ -260,8 +260,9 @@ void UPFInterface::UpdateExpeditionUI()
     ArmorBar->SetPercent(Player->Armor / (Player->ArmorTier == 1 ? 50 : Player->ArmorTier == 2 ? 75 : 100));
     HungerBar->SetPercent(Player->Hunger / 100);
     StaminaBar->SetPercent(Player->Stamina / 100);
-    SurvivalText->SetText(FText::FromString(
-        FString::Printf(TEXT("Hunger %.0f   ·   Stamina %.0f"), Player->Hunger, Player->Stamina)));
+    FString Survival=FString::Printf(TEXT("Hunger %.0f · Stamina %.0f"),Player->Hunger,Player->Stamina);
+    if(Player->Oxygen<100)Survival+=FString::Printf(TEXT("\nAir %.0f · Space rise / Ctrl dive"),Player->Oxygen);
+    SurvivalText->SetText(FText::FromString(Survival));
     FString Prompt =
         Player->Health <= 0 ? TEXT("] Next spectator target")
         : Player->bDowned

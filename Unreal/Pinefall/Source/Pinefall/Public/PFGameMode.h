@@ -47,6 +47,8 @@ class PINEFALL_API APFGameMode : public AGameModeBase
     APFMatchState *Match() const;
     void RunRoundProbe();
     void RunWildlifeProbe();
+    void RunCombatProbe();
+    void RunWorldProbe();
 
   private:
     void RoundSecond();
@@ -71,4 +73,7 @@ class PINEFALL_API APFGameMode : public AGameModeBase
     TArray<FString> ProbePassed, ProbeFailed;
     UPROPERTY() TArray<TObjectPtr<APFWildlife>> ProbeAnimals;
     TArray<FVector> ProbeAnimalOrigins;
+    UPROPERTY() TObjectPtr<AActor> ProbeCover;
+    FVector ProbeHostOrigin = FVector::ZeroVector;
+    FVector ProbeRemoteOrigin = FVector::ZeroVector;
 };

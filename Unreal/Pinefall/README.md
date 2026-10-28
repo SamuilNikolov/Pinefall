@@ -40,6 +40,9 @@ WASD move; mouse look; Shift sprint; hold Ctrl crouch; Space jump; LMB fire; hol
 | `PinefallEditor` | Landscape and instanced foliage generation; excluded from runtime |
 | `PFMovementComponent` | Sprint in saved/compressed moves and normal CharacterMovement correction |
 | `PFCharacter` | Embodiment, camera, weapon state, fire requests and confirmed damage |
+| `PFHitHistoryComponent` | Bounded server-only skeletal history; current-cover-respecting lag compensation |
+| `PFRangerAnimInstance` | Native locomotion, crouch and weapon-pose sampling/blending |
+| `PFWaterBody` | Elliptical swimming volume; movement immersion and character oxygen rules |
 | `PFWeaponDefinition` | Data-table schema; eight legacy rows, two enabled weapons |
 | `PFGameMode` / `PFMatchRules` / `PFPlayerState` | Admission, team/readiness/draft, storm, downing, results and range respawn |
 | `PFMatchState` / `PFStormVisual` | Public server-clock round state and client storm surface |
@@ -52,4 +55,6 @@ WASD move; mouse look; Shift sprint; hold Ctrl crouch; Space jump; LMB fire; hol
 
 `Scripts/build_round_assets.py` produces the atlas, supplies/zone/rage materials and inventory thumbnails. `Scripts/import_wildlife.py -PFImportAllWildlife` imports the seven credited animal sources with a canonical shared skin root, verifies their clip/skeleton links and saves an import report. `Scripts/build_combat_audio.py` builds original confirmation cues and imports existing credited wildlife/footstep recordings. Editor tooling explicitly registers the installed Bink decoder for commandlet imports without opening an audio device. Ordinary runtime has no editor/Python dependency.
 
-Read [migration phases](../../Design/UNREAL-MIGRATION.md), [presentation direction](../../Design/UNREAL-PRESENTATION.md), [status and limits](../../Design/UNREAL-STATUS.md), and [all legacy rules](../../Design/RULES-CATALOG.md). Biomes, villages, vehicles/boats, construction, additional weapons, moving-player rewind, voice and the realism/animation pass remain substantial work. These legacy specifications are not completion evidence.
+Read [migration phases](../../Design/UNREAL-MIGRATION.md), [presentation direction](../../Design/UNREAL-PRESENTATION.md), [status and limits](../../Design/UNREAL-STATUS.md), and [all legacy rules](../../Design/RULES-CATALOG.md). Biomes, villages, vehicles/boats, construction, additional weapons, broader latency/loss fairness, voice and further realism/animation work remain substantial work. These legacy specifications are not completion evidence.
+
+The 0.2.1 ranger uses committed CC0 sources and eighteen prepared clips. `import_ranger.py` fits head/neck collision; add `-PFRefreshRangerAnimations` when changing prepared clips. This explicitly replaces the generated ranger asset folder; preserve any authored edits or external consumers first. Optional regeneration uses `prepare_ranger.py` in Blender 4.3, which is not required to build/play. After geography regeneration run `upgrade_world.py` and then `build_round_assets.py` to refresh ground/lake presentation and the atlas. Setup handles these passes for `-RebuildEnvironment`. Read [hit-registration design and limits](../../Design/HIT-REGISTRATION.md) before changing shot timing.

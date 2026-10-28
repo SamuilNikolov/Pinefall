@@ -42,6 +42,8 @@ UTextBlock *Text(UWidgetTree *Tree, const FString &Value, int32 Size, FLinearCol
     Label->SetFont(FCoreStyle::GetDefaultFontStyle(Size >= 24 ? TEXT("Bold") : TEXT("Regular"), Size));
     Label->SetColorAndOpacity(Color);
     Label->SetAutoWrapText(true);
+    Label->SetShadowColorAndOpacity(FLinearColor(0, 0, 0, .65f));
+    Label->SetShadowOffset(FVector2D(1, 1));
     return Label;
 }
 } // namespace PFStyle
@@ -222,7 +224,7 @@ void UPFInterface::NativeTick(const FGeometry &Geometry, float Delta)
                                 : Character->bLastHitArmor ? PFStyle::Ice
                                                            : PFStyle::Paper);
     DamageText->SetRenderOpacity(FMath::Clamp((Character->DamageUntil - Now) / .6f, 0.f, 1.f));
-    DamageText->SetText(FText::FromString(Character->bDamageWasEnvironmental ? TEXT("Storm damage")
+    DamageText->SetText(FText::FromString(Character->bDamageWasEnvironmental ? TEXT("Survival damage")
                                           : Character->bDamageWasArmor       ? TEXT("Armor hit")
                                                                              : TEXT("Taking damage")));
     DamageText->SetColorAndOpacity(Character->bDamageWasArmor ? PFStyle::Ice

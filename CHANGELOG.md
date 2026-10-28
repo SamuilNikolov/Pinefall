@@ -1,5 +1,13 @@
 # Pinefall Wildfront changelog
 
+## Unreal 0.2.1 combat/world working tree - 2026-10-28
+
+- Replaced the mannequin with a dressed CC0 MakeHuman-derived ranger, native movement/weapon-pose blending, authored rifle/pistol holds, reload gestures, crouch poses and fitted skull/neck collision.
+- Fixed detached pistol magazine geometry, sight placement and camera/server eye-origin disagreement. Third-person pose/offset work remains visually unfinished.
+- Added measured owning-client clock sync and bounded server-only skeletal hit history with current-cover rejection; separate real-player combat probes cover standing/crouched targets, camera modes, headshots and moving targets in both host/client shooting roles at simulated latency.
+- Added scanned forest/rock surfaces, triplanar cliff color, denser planted pines, root-centered tree imports, fitted trunk collision, surface collision for rocks and a shaped swimming lake with air/drowning rules.
+- Compiled and checked as a migration checkpoint; see tests/baselines/unreal-0.2.1 and Design/UNREAL-STATUS.md for results and unfinished art/performance gates.
+
 ## Unreal 0.2 round and combat working tree - 2026-10-28
 
 - Added the first native team lobby, loadout/landing bidding, cyclic storm, hunger/inventory, armor, down/revive, spectating and round results loop.

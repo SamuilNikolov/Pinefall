@@ -1,0 +1,25 @@
+{
+  "source": "MakeHuman CC0 outputs via kblood/CharacterCreator",
+  "mesh_vertices": 20826,
+  "clips": [
+    "walk_back",
+    "walk",
+    "strafe_right",
+    "strafe_left",
+    "run",
+    "land",
+    "jump",
+    "idle_look",
+    "idle_fidget",
+    "idle_breathe",
+    "idle",
+    "fall",
+    "RifleHold",
+    "PistolHold",
+    "RifleReload",
+    "PistolReload",
+    "CrouchIdle",
+    "CrouchWalk"
+  ],
+  "notes": "Original IK weapon holds/reload motions, hidden covered body removed, morphology baked; close hand grip still requires rendered review."
+}

@@ -1,0 +1,50 @@
+{
+  "LICENSE-NOTES.md": {
+    "source": "https://raw.githubusercontent.com/kblood/CharacterCreator/master/LICENSE-NOTES.md",
+    "sha256": "18af8d071bcb1cab2260263991ad49c314dc616facf7f33b0ab19bee78d4ec13",
+    "bytes": 18771,
+    "license": "CC0-1.0 generated asset; see LICENSE-NOTES.md"
+  },
+  "asset_licenses.json": {
+    "source": "https://raw.githubusercontent.com/kblood/CharacterCreator/master/output/asset_licenses.json",
+    "sha256": "b18bbc7f45fe7c28bcf3b119f44f7b8425d3b4c871f99c694b181b5603f4758e",
+    "bytes": 7730,
+    "license": "CC0-1.0 generated asset; see LICENSE-NOTES.md"
+  },
+  "clothing.json": {
+    "source": "https://raw.githubusercontent.com/kblood/CharacterCreator/master/output/clothing.json",
+    "sha256": "768877fa15b04fa8598c4617e7f12bd825d08895a86bbb8aeaeaa5372e74be34",
+    "bytes": 13514,
+    "license": "CC0-1.0 generated asset; see LICENSE-NOTES.md"
+  },
+  "base_body_anim.glb": {
+    "source": "https://raw.githubusercontent.com/kblood/CharacterCreator/master/output/base_body_anim.glb",
+    "sha256": "0eb271d4adea12b7f6bb1d4d8f7398db702f9449479be559ab9f019b5ab30b0f",
+    "bytes": 8212156,
+    "license": "CC0-1.0 generated asset; see LICENSE-NOTES.md"
+  },
+  "clothing_shirt.glb": {
+    "source": "https://raw.githubusercontent.com/kblood/CharacterCreator/master/output/clothing_shirt.glb",
+    "sha256": "c3467876f712e63a901fa664b1d54eb0127c56d20888dbbb0a606973fd26e9cc",
+    "bytes": 605956,
+    "license": "CC0-1.0 generated asset; see LICENSE-NOTES.md"
+  },
+  "clothing_jeans.glb": {
+    "source": "https://raw.githubusercontent.com/kblood/CharacterCreator/master/output/clothing_jeans.glb",
+    "sha256": "dac0e90aba219415e895eed0e471c0a9aab6b53f8870be1f8dfd41cd89c25d11",
+    "bytes": 428704,
+    "license": "CC0-1.0 generated asset; see LICENSE-NOTES.md"
+  },
+  "clothing_boots.glb": {
+    "source": "https://raw.githubusercontent.com/kblood/CharacterCreator/master/output/clothing_boots.glb",
+    "sha256": "ca9bd57f279006c5114cc47fbbc8143d0e53ac5ddb9b40c78099a53a0c904895",
+    "bytes": 696608,
+    "license": "CC0-1.0 generated asset; see LICENSE-NOTES.md"
+  },
+  "hair_ponytail01.glb": {
+    "source": "https://raw.githubusercontent.com/kblood/CharacterCreator/master/output/hair_ponytail01.glb",
+    "sha256": "944efb6fb4bc223017697d4838ba27ec95c58866f2c98eac661e32f50467ebed",
+    "bytes": 1825960,
+    "license": "CC0-1.0 generated asset; see LICENSE-NOTES.md"
+  }
+}

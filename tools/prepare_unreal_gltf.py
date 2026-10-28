@@ -21,7 +21,7 @@ def node_matrix(node):
  for row in range(3):
   for col in range(3):r[row][col]*=scale[col]
  return r
-def prepare(source,name,selected,length=None,height=None,ground=False):
+def prepare(source,name,selected,length=None,height=None,ground=False,offsets=None):
  source=ROOT/source;j=json.loads(source.read_text(encoding='utf-8'));buffers=[(source.parent/b['uri']).read_bytes() for b in j['buffers']]
  def accessor(index):
   a=j['accessors'][index];v=j['bufferViews'][a['bufferView']];count={'SCALAR':1,'VEC2':2,'VEC3':3,'VEC4':4}[a['type']]
@@ -37,7 +37,9 @@ def prepare(source,name,selected,length=None,height=None,ground=False):
  parts=[]
  for index,node in enumerate(j['nodes']):
   if 'mesh' not in node or node.get('name') not in selected:continue
-  m=worlds[index]
+  m=copy.deepcopy(worlds[index])
+  if offsets and node.get('name') in offsets:
+   for axis,value in enumerate(offsets[node['name']]):m[axis][3]+=value
   for primitive in j['meshes'][node['mesh']]['primitives']:
    if primitive.get('mode',4)!=4:continue
    attributes={key:accessor(value) for key,value in primitive['attributes'].items() if key in ['POSITION','NORMAL','TEXCOORD_0','TANGENT']}
@@ -50,6 +52,10 @@ def prepare(source,name,selected,length=None,height=None,ground=False):
  points=[v for attributes,_,_ in parts for v in attributes['POSITION']];low=[min(v[i] for v in points) for i in range(3)];high=[max(v[i] for v in points) for i in range(3)]
  scale=height/(high[1]-low[1]) if height else length/max(high[i]-low[i] for i in range(3)) if length else 1
  center=[(low[i]+high[i])*.5 for i in range(3)];center[1]=low[1] if ground else center[1]
+ if ground and name.startswith('SM_Pine'):
+  base=[p for p in points if p[1]<low[1]+(high[1]-low[1])*.08]
+  # Plant the actual trunk, not the center of an asymmetric canopy, at the origin.
+  for axis in [0,2]:center[axis]=(min(p[axis] for p in base)+max(p[axis] for p in base))*.5
  output=OUT/name;output.mkdir(parents=True,exist_ok=True);binary=bytearray();views=[];accessors=[];primitives=[]
  def write(values,kind,indices=False):
   while len(binary)%4:binary.append(0)
@@ -72,8 +78,10 @@ def prepare(source,name,selected,length=None,height=None,ground=False):
 if __name__=='__main__':
  prepare('Assets/Art/RealModels/bolt_action_rifle_7_62/bolt_action_rifle_7_62.gltf','SM_Rifle',{'bolt_action_rifle_7_62','bolt_action_rifle_7_62_scope','bolt_action_rifle_7_62_wrap','bolt_action_rifle_7_62_bolt_a','bolt_action_rifle_7_62_trigger'},length=1.1)
  pistol=json.loads((ROOT/'Assets/Art/RealModels/service_pistol/service_pistol.gltf').read_text(encoding='utf-8'))
- names={n.get('name') for n in pistol['nodes'] if 'mesh' in n and not n.get('name','').endswith('_b') and 'bullet' not in n.get('name','')}
- prepare('Assets/Art/RealModels/service_pistol/service_pistol.gltf','SM_Pistol',names,length=.3)
+ # The scan includes an alternate pistol and two detached display magazines.
+ # Assemble the loaded magazine in its grip; omit the empty display copy.
+ names={'service_pistol_pistol_a','service_pistol_slide_a','service_pistol_magazine_loaded','service_pistol_hammer_a','service_pistol_trigger_a'}
+ prepare('Assets/Art/RealModels/service_pistol/service_pistol.gltf','SM_Pistol',names,length=.3,offsets={'service_pistol_magazine_loaded':(.1,0,0)})
  for letter in 'abc':prepare('Unreal/Pinefall/SourceArt/pine_sapling_small/pine_sapling_small_1k.gltf','SM_Pine'+letter.upper(),{'pine_sapling_small_'+letter},ground=True)
  prepare('Assets/Art/RealModels/grass_medium_01/grass_medium_01.gltf','SM_Grass',{'grass_medium_01_tiny_a_LOD0'},height=.24,ground=True)
  prepare('Assets/Art/RealModels/fern_02/fern_02.gltf','SM_Fern',{'fern_02_a'},height=.65,ground=True)

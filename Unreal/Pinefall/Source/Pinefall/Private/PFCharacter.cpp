@@ -8,6 +8,10 @@
 #include "PFMatchState.h"
 #include "PFWorldPickup.h"
 #include "PFWildlife.h"
+#include "PFHitHistoryComponent.h"
+#include "PFWaterBody.h"
+#include "PFRangerAnimInstance.h"
+#include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -34,8 +38,11 @@ APFCharacter::APFCharacter(const FObjectInitializer &Init)
 {
     PrimaryActorTick.bCanEverTick = true;
     Inventory = CreateDefaultSubobject<UPFInventoryComponent>(TEXT("Inventory"));
+    HitHistory = CreateDefaultSubobject<UPFHitHistoryComponent>(TEXT("HitHistory"));
     bReplicates = true;
     SetReplicateMovement(true);
+    SetNetUpdateFrequency(30);
+    SetMinNetUpdateFrequency(10);
     GetCapsuleComponent()->InitCapsuleSize(34, 90);
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
     GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
@@ -43,16 +50,17 @@ APFCharacter::APFCharacter(const FObjectInitializer &Init)
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
     static ConstructorHelpers::FObjectFinder<USkeletalMesh> Body(
-        TEXT("/Game/Characters/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple"));
+        TEXT("/Game/Pinefall/Art/Characters/Ranger/FieldRanger.FieldRanger"));
     if (Body.Succeeded())
         GetMesh()->SetSkeletalMesh(Body.Object);
     GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
-    static ConstructorHelpers::FClassFinder<UAnimInstance> Anim(
-        TEXT("/Game/Characters/Mannequins/Anims/Unarmed/ABP_Unarmed"));
-    if (Anim.Succeeded())
-        GetMesh()->SetAnimInstanceClass(Anim.Class);
+    GetMesh()->SetAnimInstanceClass(UPFRangerAnimInstance::StaticClass());
     auto *Movement = GetCharacterMovement();
     Movement->GetNavAgentPropertiesRef().bCanCrouch = true;
+    Movement->SetCrouchedHalfHeight(60);
+    Movement->GetNavAgentPropertiesRef().bCanSwim = true;
+    Movement->MaxSwimSpeed = 360;
+    Movement->Buoyancy = 1.05f;
     Movement->MaxWalkSpeed = 480;
     Movement->MaxWalkSpeedCrouched = 250;
     Movement->JumpZVelocity = 700;
@@ -63,7 +71,7 @@ APFCharacter::APFCharacter(const FObjectInitializer &Init)
     CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
     CameraBoom->SetupAttachment(RootComponent);
     CameraBoom->TargetArmLength = 0;
-    CameraBoom->SocketOffset = FVector(0, 0, 65);
+    CameraBoom->TargetOffset = FVector(0, 0, 65);
     CameraBoom->bUsePawnControlRotation = true;
     CameraBoom->bEnableCameraLag = false;
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
@@ -83,6 +91,7 @@ APFCharacter::APFCharacter(const FObjectInitializer &Init)
 void APFCharacter::BeginPlay()
 {
     Super::BeginPlay();
+    bCombatProbe = FParse::Param(FCommandLine::Get(), TEXT("PFCombatProbe"));
     if (HasAuthority())
         Inventory->InitializeLoadout(true, 0);
     ApplyWeapon();
@@ -110,6 +119,30 @@ void APFCharacter::BeginPlay()
     AddMapping();
     UE_LOG(LogTemp, Display, TEXT("PF_PAWN role=%d owner=%d"), int32(GetLocalRole()), IsLocallyControlled());
 }
+void APFCharacter::PreReplication(IRepChangedPropertyTracker &Tracker)
+{
+    Super::PreReplication(Tracker);
+    MovementPoseTime = GetWorld()->GetTimeSeconds();
+}
+FVector APFCharacter::VisualSmoothingOffset() const
+{
+    return GetMesh()->GetComponentLocation() -
+           GetActorTransform().TransformPosition(GetBaseTranslationOffset());
+}
+double APFCharacter::RenderedPoseTime() const
+{
+    const double Stamp = HasAuthority() ? GetWorld()->GetTimeSeconds() : MovementPoseTime;
+    if (Stamp <= 0)
+        return 0;
+    FVector Base = HasAuthority() ? GetActorLocation() : FVector(GetReplicatedMovement().Location);
+    FVector Visible = GetActorLocation() + VisualSmoothingOffset();
+    FVector Velocity = GetVelocity();
+    double SpeedSquared = Velocity.SizeSquared();
+    double Offset = SpeedSquared > 100 ? FVector::DotProduct(Visible - Base, Velocity) / SpeedSquared : 0;
+    // The render pose can be interpolated behind or briefly extrapolated ahead
+    // of its last movement packet. Use that timeline, never a guessed fixed delay.
+    return Stamp + FMath::Clamp(Offset, -.2, .1);
+}
 bool APFCharacter::AcceptsInput() const
 {
     auto *PC = Cast<APFPlayerController>(Controller);
@@ -120,8 +153,23 @@ bool APFCharacter::AcceptsInput() const
 void APFCharacter::Tick(float Delta)
 {
     Super::Tick(Delta);
+    if (Health > 0 && !WeaponId.IsNone())
+    {
+        // Mesh centers are not grip sockets: follow the animated wrist with a
+        // weapon-specific offset and keep the barrel aligned with the aim.
+        FRotator Aim = GetBaseAimRotation();
+        Aim.Yaw = GetActorRotation().Yaw;
+        Aim.Roll = 0;
+        FVector Grip = GetMesh()->GetSocketLocation(TEXT("hand_r"));
+        FVector Offset = WeaponId == TEXT("ServiceNine") ? FVector(9, 0, 4) : FVector(28, 0, 4);
+        WorldWeapon->SetWorldLocationAndRotation(Grip + Aim.RotateVector(Offset), Aim);
+    }
     if (IsLocallyControlled())
     {
+        if (GetCharacterMovement()->IsSwimming() && AcceptsInput())
+            AddMovementInput(FVector::UpVector, (bSwimUpHeld ? 1.f : 0.f) - (bSwimDownHeld ? 1.f : 0.f));
+        if (bCombatProbe)
+            RunCombatProbeInput();
         AimAlpha = FMath::FInterpTo(AimAlpha, bAiming && CanFight() ? 1.f : 0.f, Delta, 16);
         WeaponKick = FMath::FInterpTo(WeaponKick, 0.f, Delta, 18);
         ShotBloom = FMath::FInterpTo(ShotBloom, 0.f, Delta, 8);
@@ -133,12 +181,15 @@ void APFCharacter::Tick(float Delta)
                                                        : bAiming    ? 180
                                                                     : 280,
                                                        Delta, 14);
-        CameraBoom->SocketOffset =
-            FMath::VInterpTo(CameraBoom->SocketOffset,
-                             bFirstPerson ? FVector(0, 0, bIsCrouched ? 32 : 65)
-                                          : FVector(0, bAiming ? 40 : 55, bIsCrouched ? 30 : 70),
-                             Delta, 18);
-        FVector WeaponPose = FMath::Lerp(FVector(45, 17, -17), FVector(52, 0, -6), AimAlpha);
+        // Eye height belongs in the world-space pivot. A rotated socket height
+        // made looking up/down orbit the camera away from the server shot origin.
+        CameraBoom->TargetOffset =
+            FMath::VInterpTo(CameraBoom->TargetOffset, FVector(0, 0, bIsCrouched ? 40 : 65), Delta, 18);
+        CameraBoom->SocketOffset = FMath::VInterpTo(
+            CameraBoom->SocketOffset, bFirstPerson ? FVector::ZeroVector : FVector(0, bAiming ? 40 : 55, 0),
+            Delta, 18);
+        FVector SightPose = WeaponId == TEXT("ServiceNine") ? FVector(52, 0, -9) : FVector(52, 0, -6);
+        FVector WeaponPose = FMath::Lerp(FVector(45, 17, -17), SightPose, AimAlpha);
         WeaponPose.X -= WeaponKick * 2;
         WeaponPose.Z += WeaponKick * .65f;
         if (bReloading)
@@ -168,12 +219,17 @@ void APFCharacter::Tick(float Delta)
         }
         if (auto *Match = GetWorld()->GetGameState<APFMatchState>())
         {
-            float Weight =
-                Match->Phase == EPFRoundPhase::Active && Match->Outside(GetActorLocation()) ? .65f : 0;
+            auto *Water = Cast<APFWaterBody>(GetPhysicsVolume());
+            bool Underwater = Water && Camera->GetComponentLocation().Z < Water->SurfaceHeight() - 5;
+            float Weight = Underwater ? .75f
+                           : Match->Phase == EPFRoundPhase::Active && Match->Outside(GetActorLocation())
+                               ? .65f
+                               : 0;
             Camera->PostProcessBlendWeight =
                 FMath::FInterpTo(Camera->PostProcessBlendWeight, Weight, Delta, 4);
             Camera->PostProcessSettings.bOverride_SceneColorTint = true;
-            Camera->PostProcessSettings.SceneColorTint = FLinearColor(.35, .48, 1);
+            Camera->PostProcessSettings.SceneColorTint =
+                Underwater ? FLinearColor(.26, .62, .68) : FLinearColor(.35, .48, 1);
         }
     }
     if (Health > 0 && GetCharacterMovement()->IsMovingOnGround() && GetVelocity().Size2D() > 120)
@@ -286,7 +342,9 @@ void APFCharacter::Move(const FInputActionValue &Value)
         return;
     auto Axis = Value.Get<FVector2D>();
     auto Yaw = FRotator(0, Controller->GetControlRotation().Yaw, 0);
-    AddMovementInput(Yaw.Vector(), Axis.Y);
+    AddMovementInput(GetCharacterMovement()->IsSwimming() ? Controller->GetControlRotation().Vector()
+                                                          : Yaw.Vector(),
+                     Axis.Y);
     AddMovementInput(FRotationMatrix(Yaw).GetUnitAxis(EAxis::Y), Axis.X);
 }
 void APFCharacter::Look(const FInputActionValue &Value)
@@ -302,11 +360,13 @@ void APFCharacter::Look(const FInputActionValue &Value)
 }
 void APFCharacter::StartJump()
 {
+    bSwimUpHeld = true;
     if (AcceptsInput() && !bDowned)
         Jump();
 }
 void APFCharacter::EndJump()
 {
+    bSwimUpHeld = false;
     StopJumping();
 }
 void APFCharacter::StartSprint()
@@ -320,11 +380,15 @@ void APFCharacter::EndSprint()
 }
 void APFCharacter::StartCrouch()
 {
+    bSwimDownHeld = true;
+    if (GetCharacterMovement()->IsSwimming())
+        return;
     if (AcceptsInput())
         Crouch();
 }
 void APFCharacter::EndCrouch()
 {
+    bSwimDownHeld = false;
     UnCrouch();
 }
 void APFCharacter::StartFire()
@@ -448,18 +512,34 @@ void APFCharacter::FireLocal()
     FCollisionQueryParams Query(SCENE_QUERY_STAT(PFLocalAim), true, this);
     if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Query))
         End = Hit.ImpactPoint;
+    if (bCombatProbe)
+        UE_LOG(LogTemp, Display, TEXT("PF_LOCAL_AIM hit=%s point=%s"), *GetNameSafe(Hit.GetActor()),
+               *End.ToCompactString());
     ShotEffects(Start, End, true);
     WeaponKick = FMath::Min(WeaponKick + 1.2f, 3.f);
     ShotBloom = FMath::Min(ShotBloom + 6.f, 20.f);
-    ServerFire(End, ++LocalSequence);
+    auto *PC = Cast<APFPlayerController>(Controller);
+    double ViewTime = PC ? PC->ShotViewTime(GetCharacterMovement()->NetworkSimulatedSmoothLocationTime)
+                         : GetWorld()->GetTimeSeconds();
+    if (auto *Target = Cast<APFCharacter>(Hit.GetActor()))
+        if (double TargetTime = Target->RenderedPoseTime(); TargetTime > 0)
+            ViewTime = TargetTime;
+    ServerFire(End, ++LocalSequence, ViewTime);
     AddControllerPitchInput(-.6f);
 }
-void APFCharacter::ServerFire_Implementation(FVector_NetQuantize AimPoint, uint32 Sequence)
+void APFCharacter::ServerFire_Implementation(FVector_NetQuantize AimPoint, uint32 Sequence, double ViewTime)
 {
+    const double Now = GetWorld()->GetTimeSeconds();
+    if (bCombatProbe)
+        UE_LOG(LogTemp, Display, TEXT("PF_COMBAT_REQUEST age=%.3f ammo=%d seq=%u"), Now - ViewTime, Ammo,
+               Sequence);
     if (!CanFight() || WeaponId.IsNone() || bReloading || Ammo <= 0 || Sequence <= ServerSequence ||
-        AimPoint.ContainsNaN() || GetWorld()->GetTimeSeconds() + .015 < NextServerShot)
+        AimPoint.ContainsNaN() || !FMath::IsFinite(ViewTime) ||
+        Now - ViewTime > UPFHitHistoryComponent::MaxRewindSeconds || ViewTime > Now + .075 ||
+        Now + .015 < NextServerShot)
         return;
-    FVector Start = GetActorLocation() + FVector(0, 0, bIsCrouched ? 42 : 65);
+    ViewTime = FMath::Min(ViewTime, Now);
+    FVector Start = GetActorLocation() + FVector(0, 0, bIsCrouched ? 40 : 65);
     FVector Direction = FVector(AimPoint) - Start;
     if (Direction.SizeSquared() < 1 || Direction.Size() > Weapon.RangeCm + 600 ||
         FVector::DotProduct(Direction.GetSafeNormal(), GetBaseAimRotation().Vector()) < .35f)
@@ -470,8 +550,35 @@ void APFCharacter::ServerFire_Implementation(FVector_NetQuantize AimPoint, uint3
     FHitResult Hit;
     FCollisionQueryParams Query(SCENE_QUERY_STAT(PFServerShot), true, this);
     FVector End = Start + Direction.GetSafeNormal() * Weapon.RangeCm;
-    if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Query))
+    auto *Round = GetWorld()->GetGameState<APFMatchState>();
+    // Current cover is always authoritative. Historical player primitives are
+    // tested inside its distance without moving any live collision bodies.
+    if (Round)
+        for (APlayerState *Entry : Round->PlayerArray)
+            if (auto *Player = Cast<APFCharacter>(Entry->GetPawn()))
+                if (Player->Health > 0 && Player->HitHistory->SupportsRewind())
+                    Query.AddIgnoredActor(Player);
+    bool bHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Query);
+    double Nearest = bHit ? Hit.Distance : Weapon.RangeCm;
+    if (Round)
+        for (APlayerState *Entry : Round->PlayerArray)
+            if (auto *Player = Cast<APFCharacter>(Entry->GetPawn()))
+                if (Player != this && Player->Health > 0 && Player->HitHistory->SupportsRewind())
+                {
+                    FHitResult Rewound;
+                    if (Player->HitHistory->TraceAt(ViewTime, Start, End, Rewound) &&
+                        Rewound.Distance < Nearest)
+                    {
+                        Hit = Rewound;
+                        Nearest = Hit.Distance;
+                        bHit = true;
+                    }
+                }
+    if (bHit)
     {
+        if (bCombatProbe)
+            UE_LOG(LogTemp, Display, TEXT("PF_COMBAT_HIT target=%s bone=%s"), *GetNameSafe(Hit.GetActor()),
+                   *Hit.BoneName.ToString());
         End = Hit.ImpactPoint;
         bool Head = Hit.BoneName == TEXT("head");
         float Damage = Weapon.Damage * (Head ? 1.4f : 1);
@@ -628,6 +735,7 @@ void APFCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLife
     DOREPLIFETIME(APFCharacter, ArmorTier);
     DOREPLIFETIME(APFCharacter, Hunger);
     DOREPLIFETIME_CONDITION(APFCharacter, Stamina, COND_OwnerOnly);
+    DOREPLIFETIME_CONDITION(APFCharacter, Oxygen, COND_OwnerOnly);
     DOREPLIFETIME(APFCharacter, bDowned);
     DOREPLIFETIME(APFCharacter, ReviveProgress);
     DOREPLIFETIME(APFCharacter, BleedOutAt);
@@ -636,6 +744,7 @@ void APFCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLife
     DOREPLIFETIME(APFCharacter, bReloading);
     DOREPLIFETIME(APFCharacter, bAiming);
     DOREPLIFETIME(APFCharacter, WeaponId);
+    DOREPLIFETIME(APFCharacter, MovementPoseTime);
 }
 
 void APFCharacter::RunFireProbe()
@@ -679,6 +788,27 @@ void APFCharacter::RunCombatViewProbe()
         return;
     if (Mode == TEXT("Scope"))
         StartAim();
+    if (Mode == TEXT("Pistol") || Mode == TEXT("CharacterPistol"))
+        ServerEquip(TEXT("ServiceNine"));
+    if (Mode == TEXT("Pistol"))
+        StartAim();
+    if (Mode == TEXT("Character") || Mode == TEXT("CharacterPistol"))
+    {
+        bFirstPerson = false;
+        auto *View = GetWorld()->SpawnActor<ACameraActor>();
+        FVector Position = GetActorLocation() + GetActorForwardVector() * 240 + GetActorRightVector() * 95 +
+                           FVector(0, 0, 35);
+        View->SetActorLocation(Position);
+        View->SetActorRotation((GetActorLocation() + FVector(0, 0, 10) - Position).Rotation());
+        View->GetCameraComponent()->SetFieldOfView(48);
+        if (auto *PC = Cast<APlayerController>(Controller))
+            PC->SetViewTarget(View);
+    }
+    if (Mode == TEXT("Lake") && HasAuthority())
+    {
+        SetActorLocation(FVector(4500, 9000, 400));
+        Controller->SetControlRotation(FRotator(-10, 6, 0));
+    }
     if (Mode == TEXT("Armor"))
     {
         TWeakObjectPtr<APFCharacter> Weak = this;

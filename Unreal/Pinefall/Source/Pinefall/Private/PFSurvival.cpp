@@ -4,6 +4,7 @@
 #include "PFInventoryComponent.h"
 #include "PFWorldPickup.h"
 #include "PFMovementComponent.h"
+#include "PFWaterBody.h"
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/DamageType.h"
@@ -34,6 +35,7 @@ void APFCharacter::ResetForRound(int32 Kit)
     ArmorTier = 0;
     Hunger = 85;
     Stamina = 100;
+    Oxygen = 100;
     bDowned = false;
     Knocks = 0;
     BleedOutAt = 0;
@@ -98,6 +100,16 @@ void APFCharacter::SurvivalSecond()
         return;
     }
     bool Moving = GetVelocity().Size2D() > 500;
+    auto *Water = Cast<APFWaterBody>(GetPhysicsVolume());
+    bool HeadUnderwater =
+        Water && GetActorLocation().Z + (bIsCrouched ? 40 : 65) < Water->SurfaceHeight() - 5;
+    Oxygen = FMath::Clamp(Oxygen + (HeadUnderwater ? -4.f : 24.f), 0.f, 100.f);
+    if (HeadUnderwater && Oxygen <= 0)
+    {
+        EnvironmentalDamage(8);
+        if (Health <= 0)
+            return;
+    }
     Hunger = FMath::Max(0.f, Hunger - (Moving ? .15f : .065f));
     bool Sprinting = GetVelocity().Size2D() > 650;
     Stamina = FMath::Clamp(Stamina + (Sprinting ? -7.f : 16.f), 0.f, 100.f);

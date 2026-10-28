@@ -42,7 +42,9 @@ if ($RebuildEnvironment -or !(Test-Path -LiteralPath $map)) {
     }
 }
 $passes = @()
-if ($RebuildRoundAssets -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Materials\M_WildRage.uasset'))) {$passes += 'build_round_assets.py'}
+if ($RebuildEnvironment -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Materials\M_LakeSurface.uasset'))) {$passes += 'upgrade_world.py'}
+if (!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Art\Characters\Ranger\FieldRanger.uasset'))) {$passes += 'import_ranger.py'}
+if ($RebuildEnvironment -or $RebuildRoundAssets -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Materials\M_WildRage.uasset'))) {$passes += 'build_round_assets.py'}
 if (!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Audio\GrassStep4.uasset'))) {$passes += 'build_combat_audio.py'}
 if (!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Art\Fauna\Alpaca\Walk.uasset'))) {$passes += 'import_wildlife.py'}
 foreach ($pass in $passes) {

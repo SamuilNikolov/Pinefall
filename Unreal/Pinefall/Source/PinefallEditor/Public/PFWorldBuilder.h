@@ -9,7 +9,9 @@ class UPFWorldBuilder : public UBlueprintFunctionLibrary
     GENERATED_BODY()
   public:
     UFUNCTION(BlueprintCallable, Category = "Pinefall|Editor")
-    static void ConfigureMesh(UStaticMesh* Mesh,bool Nanite);
+    static void ConfigureMesh(UStaticMesh *Mesh, bool Nanite);
+    UFUNCTION(BlueprintCallable, Category = "Pinefall|Editor")
+    static void ConfigureCollision(UStaticMesh *Mesh, bool Complex);
     UFUNCTION(BlueprintCallable, Category = "Pinefall|Editor") static void BuildLandscape();
     UFUNCTION(BlueprintCallable, Category = "Pinefall|Editor")
     static void PopulateFoliage(const TArray<UStaticMesh *> &Trees, UStaticMesh *Grass, UStaticMesh *Fern);

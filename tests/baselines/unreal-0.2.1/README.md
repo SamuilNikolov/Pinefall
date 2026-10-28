@@ -1,0 +1,10 @@
+# Unreal 0.2.1 combat/world checkpoint
+
+October 28, 2026. Unreal 5.6.1 Development Editor, native build 19 compiled successfully. This is a migration checkpoint, not a completed realism release.
+
+- combat.json: sixteen checks in two real processes, 80 ms artificial lag per sender. Actual player collision, ordinary local trigger/server validation, moving targets in both shooting roles, standing/crouched, FP/TP aim, cover and headshot. Final run used the refreshed ranger assets. Positions/health/ammo/cover are arranged; no WAN, jitter/loss or twenty-player claim.
+- world.json: fifteen arranged physical-trunk/rock, swimming, immersion, oxygen, drowning and recovery checks on native build 18. Build 19 changed only the combat fixture/header; subsequent atlas and ranger asset refreshes did not change world geometry or survival code.
+- round.json: 36 assertions across three processes; wildlife.json: fifteen assertions plus wrapper verification of three remote skeletal species. Range/scoped-fire smoke also passed. These ran on build 19 before the last character clip refresh; the final combat rerun covers the refreshed player collision.
+- ranger.png, pistol.png and lake.png: actual rendered 1600x900 views. Pistol has no floating magazine and sights are centered. Water has a shaped shoreline and ripples. **Visual gate remains open:** ranger material/smoothing quality and support-hand grip are visibly unfinished; forest assets/ground coverage still fall short of the requested realistic world. Do not use these captures as proof of polished production art. First-person arms and proper magazine/bolt animations are absent.
+
+The asset import, atlas regeneration and obsolete-import dependency audit passed. Repository validation passed with only the existing >50 MiB stag-clip advisory. No rendered FPS, audible mix, microphone or packaged-distribution claim. See Design/HIT-REGISTRATION.md for bounded rewind and remaining lethal-ordering/latency tradeoffs. Historical baselines remain unchanged.

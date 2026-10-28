@@ -10,6 +10,7 @@ class PINEFALL_API UPFMovementComponent : public UCharacterMovementComponent
   public:
     bool bWantsSprint = false;
     virtual float GetMaxSpeed() const override;
+    virtual float ImmersionDepth() const override;
     virtual void UpdateFromCompressedFlags(uint8 Flags) override;
     virtual FNetworkPredictionData_Client *GetPredictionData_Client() const override;
 };
