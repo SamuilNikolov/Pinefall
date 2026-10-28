@@ -1,6 +1,7 @@
 param(
     [string]$EngineRoot = "$env:ProgramFiles\Epic Games\UE_5.6",
-    [switch]$RebuildEnvironment
+    [switch]$RebuildEnvironment,
+    [switch]$RebuildRoundAssets
 )
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path $PSScriptRoot -Parent
@@ -40,4 +41,16 @@ if ($RebuildEnvironment -or !(Test-Path -LiteralPath $map)) {
         throw "Environment generation did not pass. Inspect $log"
     }
 }
-Write-Host 'Unreal foundation ready. Run tools\Run-Unreal.ps1 or open Unreal\Pinefall\Pinefall.uproject.'
+$passes = @()
+if ($RebuildRoundAssets -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Materials\M_WildRage.uasset'))) {$passes += 'build_round_assets.py'}
+if (!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Audio\GrassStep4.uasset'))) {$passes += 'build_combat_audio.py'}
+if (!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Art\Fauna\Alpaca\Walk.uasset'))) {$passes += 'import_wildlife.py'}
+foreach ($pass in $passes) {
+    $logFolder = Join-Path $repo 'artifacts'
+    New-Item -ItemType Directory -Path $logFolder -Force | Out-Null
+    $log = Join-Path $logFolder ('unreal-' + [IO.Path]::GetFileNameWithoutExtension($pass) + '-' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '.log')
+    $script = Join-Path $projectRoot ('Scripts\' + $pass)
+    & $editor $project -run=pythonscript "-script=$script" -PFImportAllWildlife -unattended -nullrhi -SCCProvider=None "-abslog=$log"
+    if ($LASTEXITCODE -ne 0 -or (Select-String -LiteralPath $log -Pattern 'Log.*: Error:|Ensure condition failed' -Quiet)) {throw "Asset generation did not pass. Inspect $log"}
+}
+Write-Host 'Unreal round ready. Run tools\Run-Unreal.ps1 or open Unreal\Pinefall\Pinefall.uproject.'

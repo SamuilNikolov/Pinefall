@@ -1,0 +1,133 @@
+{
+  "Deer": {
+    "body": "/Game/Pinefall/Art/Fauna/Deer/Deer.Deer",
+    "animations": {
+      "Attack_Headbutt": "/Game/Pinefall/Art/Fauna/Deer/Attack_Headbutt.Attack_Headbutt",
+      "Attack_Kick": "/Game/Pinefall/Art/Fauna/Deer/Attack_Kick.Attack_Kick",
+      "Death": "/Game/Pinefall/Art/Fauna/Deer/Death.Death",
+      "Eating": "/Game/Pinefall/Art/Fauna/Deer/Eating.Eating",
+      "Gallop": "/Game/Pinefall/Art/Fauna/Deer/Gallop.Gallop",
+      "Gallop_Jump": "/Game/Pinefall/Art/Fauna/Deer/Gallop_Jump.Gallop_Jump",
+      "Idle": "/Game/Pinefall/Art/Fauna/Deer/Idle.Idle",
+      "Idle_2": "/Game/Pinefall/Art/Fauna/Deer/Idle_2.Idle_2",
+      "Idle_Headlow": "/Game/Pinefall/Art/Fauna/Deer/Idle_Headlow.Idle_Headlow",
+      "Idle_HitReact1": "/Game/Pinefall/Art/Fauna/Deer/Idle_HitReact1.Idle_HitReact1",
+      "Idle_HitReact2": "/Game/Pinefall/Art/Fauna/Deer/Idle_HitReact2.Idle_HitReact2",
+      "Jump_toIdle": "/Game/Pinefall/Art/Fauna/Deer/Jump_toIdle.Jump_toIdle",
+      "Walk": "/Game/Pinefall/Art/Fauna/Deer/Walk.Walk"
+    },
+    "physicsAsset": "/Game/Pinefall/Art/Fauna/Deer/Deer_PhysicsAsset.Deer_PhysicsAsset"
+  },
+  "Stag": {
+    "body": "/Game/Pinefall/Art/Fauna/Stag/Stag.Stag",
+    "animations": {
+      "Attack_Headbutt": "/Game/Pinefall/Art/Fauna/Stag/Attack_Headbutt.Attack_Headbutt",
+      "Attack_Kick": "/Game/Pinefall/Art/Fauna/Stag/Attack_Kick.Attack_Kick",
+      "Death": "/Game/Pinefall/Art/Fauna/Stag/Death.Death",
+      "Eating": "/Game/Pinefall/Art/Fauna/Stag/Eating.Eating",
+      "Gallop": "/Game/Pinefall/Art/Fauna/Stag/Gallop.Gallop",
+      "Gallop_Jump": "/Game/Pinefall/Art/Fauna/Stag/Gallop_Jump.Gallop_Jump",
+      "Idle": "/Game/Pinefall/Art/Fauna/Stag/Idle.Idle",
+      "Idle_2": "/Game/Pinefall/Art/Fauna/Stag/Idle_2.Idle_2",
+      "Idle_Headlow": "/Game/Pinefall/Art/Fauna/Stag/Idle_Headlow.Idle_Headlow",
+      "Idle_HitReact1": "/Game/Pinefall/Art/Fauna/Stag/Idle_HitReact1.Idle_HitReact1",
+      "Idle_HitReact2": "/Game/Pinefall/Art/Fauna/Stag/Idle_HitReact2.Idle_HitReact2",
+      "Jump_toIdle": "/Game/Pinefall/Art/Fauna/Stag/Jump_toIdle.Jump_toIdle",
+      "Walk": "/Game/Pinefall/Art/Fauna/Stag/Walk.Walk"
+    },
+    "physicsAsset": "/Game/Pinefall/Art/Fauna/Stag/Stag_PhysicsAsset.Stag_PhysicsAsset"
+  },
+  "Fox": {
+    "body": "/Game/Pinefall/Art/Fauna/Fox/Fox.Fox",
+    "animations": {
+      "Attack": "/Game/Pinefall/Art/Fauna/Fox/Attack.Attack",
+      "Death": "/Game/Pinefall/Art/Fauna/Fox/Death.Death",
+      "Eating": "/Game/Pinefall/Art/Fauna/Fox/Eating.Eating",
+      "Gallop": "/Game/Pinefall/Art/Fauna/Fox/Gallop.Gallop",
+      "Gallop_Jump": "/Game/Pinefall/Art/Fauna/Fox/Gallop_Jump.Gallop_Jump",
+      "Idle": "/Game/Pinefall/Art/Fauna/Fox/Idle.Idle",
+      "Idle_2": "/Game/Pinefall/Art/Fauna/Fox/Idle_2.Idle_2",
+      "Idle_2_HeadLow": "/Game/Pinefall/Art/Fauna/Fox/Idle_2_HeadLow.Idle_2_HeadLow",
+      "Idle_HitReact1": "/Game/Pinefall/Art/Fauna/Fox/Idle_HitReact1.Idle_HitReact1",
+      "Idle_HitReact2": "/Game/Pinefall/Art/Fauna/Fox/Idle_HitReact2.Idle_HitReact2",
+      "Jump_ToIdle": "/Game/Pinefall/Art/Fauna/Fox/Jump_ToIdle.Jump_ToIdle",
+      "Walk": "/Game/Pinefall/Art/Fauna/Fox/Walk.Walk"
+    },
+    "physicsAsset": "/Game/Pinefall/Art/Fauna/Fox/Fox_PhysicsAsset.Fox_PhysicsAsset"
+  },
+  "Wolf": {
+    "body": "/Game/Pinefall/Art/Fauna/Wolf/Wolf.Wolf",
+    "animations": {
+      "Attack": "/Game/Pinefall/Art/Fauna/Wolf/Attack.Attack",
+      "Death": "/Game/Pinefall/Art/Fauna/Wolf/Death.Death",
+      "Eating": "/Game/Pinefall/Art/Fauna/Wolf/Eating.Eating",
+      "Gallop": "/Game/Pinefall/Art/Fauna/Wolf/Gallop.Gallop",
+      "Gallop_Jump": "/Game/Pinefall/Art/Fauna/Wolf/Gallop_Jump.Gallop_Jump",
+      "Idle": "/Game/Pinefall/Art/Fauna/Wolf/Idle.Idle",
+      "Idle_2": "/Game/Pinefall/Art/Fauna/Wolf/Idle_2.Idle_2",
+      "Idle_2_HeadLow": "/Game/Pinefall/Art/Fauna/Wolf/Idle_2_HeadLow.Idle_2_HeadLow",
+      "Idle_HitReact1": "/Game/Pinefall/Art/Fauna/Wolf/Idle_HitReact1.Idle_HitReact1",
+      "Idle_HitReact2": "/Game/Pinefall/Art/Fauna/Wolf/Idle_HitReact2.Idle_HitReact2",
+      "Jump_ToIdle": "/Game/Pinefall/Art/Fauna/Wolf/Jump_ToIdle.Jump_ToIdle",
+      "Walk": "/Game/Pinefall/Art/Fauna/Wolf/Walk.Walk"
+    },
+    "physicsAsset": "/Game/Pinefall/Art/Fauna/Wolf/Wolf_PhysicsAsset.Wolf_PhysicsAsset"
+  },
+  "Bull": {
+    "body": "/Game/Pinefall/Art/Fauna/Bull/Bull.Bull",
+    "animations": {
+      "Attack_Headbutt": "/Game/Pinefall/Art/Fauna/Bull/Attack_Headbutt.Attack_Headbutt",
+      "Attack_Kick": "/Game/Pinefall/Art/Fauna/Bull/Attack_Kick.Attack_Kick",
+      "Death": "/Game/Pinefall/Art/Fauna/Bull/Death.Death",
+      "Eating": "/Game/Pinefall/Art/Fauna/Bull/Eating.Eating",
+      "Gallop": "/Game/Pinefall/Art/Fauna/Bull/Gallop.Gallop",
+      "Gallop_Jump": "/Game/Pinefall/Art/Fauna/Bull/Gallop_Jump.Gallop_Jump",
+      "Idle": "/Game/Pinefall/Art/Fauna/Bull/Idle.Idle",
+      "Idle_2": "/Game/Pinefall/Art/Fauna/Bull/Idle_2.Idle_2",
+      "Idle_Headlow": "/Game/Pinefall/Art/Fauna/Bull/Idle_Headlow.Idle_Headlow",
+      "Idle_HitReact1": "/Game/Pinefall/Art/Fauna/Bull/Idle_HitReact1.Idle_HitReact1",
+      "Idle_HitReact2": "/Game/Pinefall/Art/Fauna/Bull/Idle_HitReact2.Idle_HitReact2",
+      "Jump_toIdle": "/Game/Pinefall/Art/Fauna/Bull/Jump_toIdle.Jump_toIdle",
+      "Walk": "/Game/Pinefall/Art/Fauna/Bull/Walk.Walk"
+    },
+    "physicsAsset": "/Game/Pinefall/Art/Fauna/Bull/Bull_PhysicsAsset.Bull_PhysicsAsset"
+  },
+  "Horse": {
+    "body": "/Game/Pinefall/Art/Fauna/Horse/Horse.Horse",
+    "animations": {
+      "Attack_Headbutt": "/Game/Pinefall/Art/Fauna/Horse/Attack_Headbutt.Attack_Headbutt",
+      "Attack_Kick": "/Game/Pinefall/Art/Fauna/Horse/Attack_Kick.Attack_Kick",
+      "Death": "/Game/Pinefall/Art/Fauna/Horse/Death.Death",
+      "Eating": "/Game/Pinefall/Art/Fauna/Horse/Eating.Eating",
+      "Gallop": "/Game/Pinefall/Art/Fauna/Horse/Gallop.Gallop",
+      "Gallop_Jump": "/Game/Pinefall/Art/Fauna/Horse/Gallop_Jump.Gallop_Jump",
+      "Idle": "/Game/Pinefall/Art/Fauna/Horse/Idle.Idle",
+      "Idle_2": "/Game/Pinefall/Art/Fauna/Horse/Idle_2.Idle_2",
+      "Idle_Headlow": "/Game/Pinefall/Art/Fauna/Horse/Idle_Headlow.Idle_Headlow",
+      "Idle_HitReact1": "/Game/Pinefall/Art/Fauna/Horse/Idle_HitReact1.Idle_HitReact1",
+      "Idle_HitReact2": "/Game/Pinefall/Art/Fauna/Horse/Idle_HitReact2.Idle_HitReact2",
+      "Jump_toIdle": "/Game/Pinefall/Art/Fauna/Horse/Jump_toIdle.Jump_toIdle",
+      "Walk": "/Game/Pinefall/Art/Fauna/Horse/Walk.Walk"
+    },
+    "physicsAsset": "/Game/Pinefall/Art/Fauna/Horse/Horse_PhysicsAsset.Horse_PhysicsAsset"
+  },
+  "Alpaca": {
+    "body": "/Game/Pinefall/Art/Fauna/Alpaca/Alpaca.Alpaca",
+    "animations": {
+      "Attack_Headbutt": "/Game/Pinefall/Art/Fauna/Alpaca/Attack_Headbutt.Attack_Headbutt",
+      "Attack_Kick": "/Game/Pinefall/Art/Fauna/Alpaca/Attack_Kick.Attack_Kick",
+      "Death": "/Game/Pinefall/Art/Fauna/Alpaca/Death.Death",
+      "Eating": "/Game/Pinefall/Art/Fauna/Alpaca/Eating.Eating",
+      "Gallop": "/Game/Pinefall/Art/Fauna/Alpaca/Gallop.Gallop",
+      "Gallop_Jump": "/Game/Pinefall/Art/Fauna/Alpaca/Gallop_Jump.Gallop_Jump",
+      "Idle": "/Game/Pinefall/Art/Fauna/Alpaca/Idle.Idle",
+      "Idle_2": "/Game/Pinefall/Art/Fauna/Alpaca/Idle_2.Idle_2",
+      "Idle_Headlow": "/Game/Pinefall/Art/Fauna/Alpaca/Idle_Headlow.Idle_Headlow",
+      "Idle_HitReact1": "/Game/Pinefall/Art/Fauna/Alpaca/Idle_HitReact1.Idle_HitReact1",
+      "Idle_HitReact2": "/Game/Pinefall/Art/Fauna/Alpaca/Idle_HitReact2.Idle_HitReact2",
+      "Jump_toIdle": "/Game/Pinefall/Art/Fauna/Alpaca/Jump_toIdle.Jump_toIdle",
+      "Walk": "/Game/Pinefall/Art/Fauna/Alpaca/Walk.Walk"
+    },
+    "physicsAsset": "/Game/Pinefall/Art/Fauna/Alpaca/Alpaca_PhysicsAsset.Alpaca_PhysicsAsset"
+  }
+}

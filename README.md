@@ -1,6 +1,6 @@
 # Pinefall Wildfront
 
-**Active development has moved to Unreal Engine 5.6.1.** The new native project is in [`Unreal/Pinefall`](Unreal/Pinefall/README.md). Start with `tools/Setup-Unreal.ps1`, then `tools/Run-Unreal.ps1`. It is an early combat/environment foundation, not full feature parity or a packaged replacement release.
+**Active development has moved to Unreal Engine 5.6.1.** The native project is in [`Unreal/Pinefall`](Unreal/Pinefall/README.md). Start with `tools/Setup-Unreal.ps1`, then `PLAY-UNREAL.cmd`. Native 0.2 adds a battle royale round, teams and landing draft, survival/inventory, spectating and the first animated wildlife pass. It does not yet provide full Unity feature parity or a packaged replacement release. Read the [native controls and rules](Unreal/Pinefall/PLAYING.md).
 
 Read the [migration plan](Design/UNREAL-MIGRATION.md), [120 source-linked game rules](Design/RULES-CATALOG.md), [presentation direction](Design/UNREAL-PRESENTATION.md), and [current Unreal status](Design/UNREAL-STATUS.md). Unity development was stopped by the user; its unfinished 0.9.1 edits and historical evidence remain intact below as a reference.
 

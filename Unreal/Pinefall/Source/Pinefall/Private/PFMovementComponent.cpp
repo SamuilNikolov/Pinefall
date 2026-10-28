@@ -1,8 +1,20 @@
 #include "PFMovementComponent.h"
 #include "GameFramework/Character.h"
+#include "PFCharacter.h"
+#include "PFMatchState.h"
 float UPFMovementComponent::GetMaxSpeed() const
 {
-    return IsCrouching() ? 250.f : bWantsSprint ? 940.f : 480.f;
+    auto *Player = Cast<APFCharacter>(GetOwner());
+    if (!Player)
+        return Super::GetMaxSpeed();
+    auto *Match = GetWorld()->GetGameState<APFMatchState>();
+    if (Player->Health <= 0 || (Match && Match->IsBattleRoyale() && Match->Phase != EPFRoundPhase::Active))
+        return 0;
+    if (Player->bDowned)
+        return 100;
+    if (Player->Hunger <= 0)
+        return 250;
+    return IsCrouching() ? 250 : bWantsSprint && Player->Stamina > 5 && Player->Hunger > 20 ? 940 : 480;
 }
 void UPFMovementComponent::UpdateFromCompressedFlags(uint8 Flags)
 {

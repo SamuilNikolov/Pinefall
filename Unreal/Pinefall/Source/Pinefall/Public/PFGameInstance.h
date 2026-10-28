@@ -9,6 +9,7 @@ class PINEFALL_API UPFGameInstance : public UGameInstance
   public:
     UPROPERTY(BlueprintReadOnly) FString ConnectionMessage;
     UFUNCTION(BlueprintCallable) void HostRange();
+    UFUNCTION(BlueprintCallable) void HostBattleRoyale(int32 TeamSize);
     UFUNCTION(BlueprintCallable) bool JoinRange(const FString &Address);
     UFUNCTION(BlueprintCallable) FString LocalAddress() const;
 

@@ -32,7 +32,8 @@ try {
     Wait-Marker $hostLog 'PF_JOIN players=2' $deadline
     Wait-Marker $clientLog 'PF_CONFIRMED damage=80' $deadline
     Wait-Marker $hostLog 'PF_SHOT .*ammo=4' $deadline
-    $assertions = @('Host admitted a real second process','Remote weapon loaded a five-round magazine','Server accepted the remote shot and decremented ammo','Remote owner received confirmed 80-point rifle damage')
+    Wait-Marker $hostLog 'PF_SHOT .*ammo=4 aiming=1' $deadline
+    $assertions = @('Host admitted a real second process','Remote weapon loaded a five-round magazine','Server accepted the remote shot and decremented ammo','Remote owner received confirmed 80-point rifle damage','Remote owner can fire while aiming down sights')
     if (!(Select-String -LiteralPath $clientLog -Pattern 'PF_WEAPON .*magazine=5' -Quiet)) { throw 'Remote weapon data did not load.' }
     foreach ($log in @($hostLog,$clientLog)) {
         if (Select-String -LiteralPath $log -Pattern 'Fatal error:|Log.*: Error:|Ensure condition failed' -Quiet) { throw "Runtime error in $log" }

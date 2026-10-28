@@ -29,6 +29,12 @@ bool UPFGameInstance::JoinRange(const FString &Input)
     }
     return false;
 }
+void UPFGameInstance::HostBattleRoyale(int32 TeamSize)
+{
+    TeamSize = TeamSize == 2 || TeamSize == 4 ? TeamSize : 1;
+    UGameplayStatics::OpenLevel(this, TEXT("/Game/Pinefall/Maps/CedarCrossing"), true,
+                                FString::Printf(TEXT("listen?br?play?team=%d"), TeamSize));
+}
 FString UPFGameInstance::LocalAddress() const
 {
     if (!CachedLanAddress.IsEmpty())

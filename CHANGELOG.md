@@ -1,5 +1,13 @@
 # Pinefall Wildfront changelog
 
+## Unreal 0.2 round and combat working tree - 2026-10-28
+
+- Added the first native team lobby, loadout/landing bidding, cyclic storm, hunger/inventory, armor, down/revive, spectating and round results loop.
+- Added seven animated wildlife species, bounded server AI, storm rage/alpha variants, positional calls and food/equipment rewards.
+- Added smooth scoped aiming, sensitivity scaling, weapon recoil/reload presentation, server-confirmed hit/armor/elimination cues, brief visible-target health bars and directional incoming damage. Armor uses blue feedback.
+- Added contextual right-side inventory/draft panels and terrain/storm/team mapping. Scope masks retain readable foreground HUD elements.
+- Added separate multi-process round and wildlife probes, asset import tooling and the native handbook. This remains a small migration arena with temporary art; see Design/UNREAL-STATUS.md for unported functionality and open verification gates.
+
 ## Unreal 0.1 foundation — 2026-10-28
 
 - Froze the unfinished Unity 0.9.1 sweep at the user's migration request; its final full-suite verification was cancelled.

@@ -29,6 +29,14 @@ All five WAVs are byte-identical copies of existing processed clips; they are no
 
 Source links: [firearms](https://opengameart.org/content/the-free-firearm-sound-library), [Impact Sounds](https://kenney.nl/assets/impact-sounds), [RPG Audio](https://kenney.nl/assets/rpg-audio), [birds](https://opengameart.org/content/ambient-bird-sounds). Importing an audio file does not mean its full runtime mixer/event behavior is already implemented.
 
+## Native round additions
+
+Seven wildlife meshes and 89 animation clips derive from the existing `Assets/Art/Animals` glTF sources: Quaternius Ultimate Animated Animal Pack, CC0. See the root third-party notices. `Scripts/import_wildlife.py` adds the existing common identity armature to the derived skin so Unreal imports a consistent skeleton for mesh and animation; original models remain unchanged. The runtime selects five clips per species. These are temporary stylized models.
+
+`SourceArt/Audio/Feedback` contains original short generated confirmation/hurt cues, reproducible with `Scripts/build_combat_audio.py`. Additional imported `GrassStep0..4` use the credited Kenney grass clips. `Canid`, `Elk` and `Goat` use `canid0`, `elk0` and `goat0` from `Assets/Resources/Audio07`; the root audio manifest/notices retain authors, source recordings, processing and licenses. Canid is an adapted dog growl (CC BY 3.0), not a species-specific field recording.
+
+Round UI weapon thumbnails reuse the existing credited weapon icon sources; supply icons and the Cedar atlas/materials are original generated artwork from `Scripts/build_round_assets.py`. No Fortnite or Apex visual/audio assets are copied.
+
 ## Epic bootstrap
 
 Setup copies Quinn/Manny, template animation/input and selected Starter Content from the user's installed Unreal 5.6.1 distribution. These are Epic-provided assets subject to Epic's applicable license, not CC0 or project-authored models. They live in ignored `Content/Characters`, `Content/Input`, `Content/StarterContent`. Their use is temporary baseline scaffolding. No Fortnite/Apex assets, purchased packs or external accounts are required.

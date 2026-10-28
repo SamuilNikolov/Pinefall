@@ -1,4 +1,4 @@
-# Pinefall Unreal foundation
+# Pinefall Unreal round build
 
 **Unreal 5.6.1 / Windows / native C++**. This is the active migration project. The repository root still contains the frozen Unity reference implementation.
 
@@ -22,12 +22,15 @@ To edit, open `Pinefall.uproject` after setup. Native code builds with `tools/Bu
 ```powershell
 .\tools\Run-Unreal.ps1 -Mode Practice
 .\tools\Run-Unreal.ps1 -Mode Host
+.\tools\Run-Unreal.ps1 -Mode Duo
 .\tools\Run-Unreal.ps1 -Mode Join -Address '127.0.0.1:7777'
 ```
 
 The menu also exposes practice, host and address entry. Friends need the same Unreal source/build and a reachable UDP port. This foundation does not include matchmaking or a relay. A displayed LAN address does not prove public reachability. It cannot connect to Unity clients.
 
-WASD move; mouse look; Shift sprint; hold Ctrl crouch; Space jump; LMB fire; hold RMB aim; R reload; 1 rifle; 2 pistol; V first/third person; Escape menu. Settings do not pause the simulation. The range has unlimited reserve ammunition and six-second respawns; it is not yet battle royale.
+Choose Host solo battle royale, Host duos or Host squads for the round flow; `-Mode Solo`, `Duo` and `Squad` also work. Everyone readies, the host starts, players split ten points between two actual kit options and landing priority, then each player claims a separate map point. The first arena remains Cedar Crossing, with scaled storm circles. It is not the full Unity reserve.
+
+WASD move; mouse look; Shift sprint; hold Ctrl crouch; Space jump; LMB fire; hold RMB aim; R reload; 1 rifle; 2 pistol; V first/third person; hold Alt inventory; E pickup/hold revive; M map; ] next spectator; Escape closes panels or opens the menu. Settings do not pause simulation. The separate range keeps unlimited reserve reloads and six-second respawns. Read [PLAYING.md](PLAYING.md) for the native rules, equipment, wildlife and explicit missing features.
 
 ## Source boundaries
 
@@ -38,9 +41,15 @@ WASD move; mouse look; Shift sprint; hold Ctrl crouch; Space jump; LMB fire; hol
 | `PFMovementComponent` | Sprint in saved/compressed moves and normal CharacterMovement correction |
 | `PFCharacter` | Embodiment, camera, weapon state, fire requests and confirmed damage |
 | `PFWeaponDefinition` | Data-table schema; eight legacy rows, two enabled weapons |
-| `PFGameMode` / `PFPlayerState` | Range rules, capacity, respawn and replicated elimination count |
+| `PFGameMode` / `PFMatchRules` / `PFPlayerState` | Admission, team/readiness/draft, storm, downing, results and range respawn |
+| `PFMatchState` / `PFStormVisual` | Public server-clock round state and client storm surface |
+| `PFInventoryComponent` / `PFWorldPickup` | Owner inventory, revision-checked transactions, finite ammo, survival supplies and shared drops |
+| `PFWildlife` / `PFWildlifeDirector` | Replicated skeletal animals, bounded ecology, aggression, attacks, mutation and rewards |
 | `PFGameInstance` | Travel, address validation and cached local-address lookup |
-| `PFPlayerController` / `PFInterface` | Local input mode, menu/HUD and settings |
+| `PFPlayerController` / `PFInterface` | Input/menu/lobby/inventory, team-aware spectating and settings |
+| `PFCombatHUD` / `PFTacticalMap` | Scope/hit/damage/brief-health feedback; atlas, circles and private team map markers |
 | `Scripts/build_baseline.py` | Explicit editor import and generated environment; never runtime |
 
-Read [migration phases](../../Design/UNREAL-MIGRATION.md), [presentation direction](../../Design/UNREAL-PRESENTATION.md), [status and limits](../../Design/UNREAL-STATUS.md), and [all legacy rules](../../Design/RULES-CATALOG.md). The near-term goal is a good-looking, responsive, tested combat slice before large-world feature parity.
+`Scripts/build_round_assets.py` produces the atlas, supplies/zone/rage materials and inventory thumbnails. `Scripts/import_wildlife.py -PFImportAllWildlife` imports the seven credited animal sources with a canonical shared skin root, verifies their clip/skeleton links and saves an import report. `Scripts/build_combat_audio.py` builds original confirmation cues and imports existing credited wildlife/footstep recordings. Editor tooling explicitly registers the installed Bink decoder for commandlet imports without opening an audio device. Ordinary runtime has no editor/Python dependency.
+
+Read [migration phases](../../Design/UNREAL-MIGRATION.md), [presentation direction](../../Design/UNREAL-PRESENTATION.md), [status and limits](../../Design/UNREAL-STATUS.md), and [all legacy rules](../../Design/RULES-CATALOG.md). Biomes, villages, vehicles/boats, construction, additional weapons, moving-player rewind, voice and the realism/animation pass remain substantial work. These legacy specifications are not completion evidence.

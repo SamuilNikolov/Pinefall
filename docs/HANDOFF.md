@@ -4,6 +4,16 @@
 
 The final Unity 0.9.1 suite was cancelled on the user's switch request. Prior frontier/fieldcraft and performance evidence exists, but there is no completed final-build full-suite claim. Do not relabel older measurements with a newer build hash. Preserve unfinished Unity work without resuming it.
 
+## Active Unreal 0.2 working tree
+
+Read [native status](../Design/UNREAL-STATUS.md) and [native controls/rules](../Unreal/Pinefall/PLAYING.md). The first native round loop now includes teams/readiness, budgeted bidding, independent landing, cyclic storm, hunger, finite ammunition, inventory/drop transactions, armor, down/revive, spectating and results. Wildlife has seven animated species, bounded AI, storm rage/alpha variants and ordinary equipment rewards. Combat presentation has aim/recoil/reticle, server-confirmed hit cues and visible-target health bars, direction/armor feedback and varied footsteps.
+
+`PFMatchRules` owns round transitions; `PFInventoryComponent` owns transactions; `PFSurvival` owns character survival/revival; `PFWildlife` owns fauna; `PFExpeditionUI`, `PFTacticalMap` and `PFCombatHUD` handle presentation. See the native README for full source boundaries. Native network fields/RPCs changed; use matching native builds. Unity clients cannot connect.
+
+Checks: Build-Unreal, Test-Unreal, Test-UnrealBattle, Test-UnrealWildlife. Tests must select explicit teams: connection order varies. The round drop test must arrange a fresh ration after consuming the single starting ration. Actual rendered review is separate from headless checks and injected presentation cues. No frame-rate, audible mix, WAN or moving-player hit fairness claim yet.
+
+Next priorities: actual weapon/hand animation and moving-target latency checks, then vehicles/water and biome/world expansion. Temporary fauna and the sparse 504 m Cedar scene are not a finished realistic world. Preserve the frozen Unity state below and historical evidence. Verification/source fingerprints are in tests/baselines/unreal-0.2: build passed; scoped-fire 5, round 36, wildlife 15 plus three remote skeletal spawns; rendered scope/inventory/armor review at 1600x900 and lobby at 1280x720.
+
 ## Frozen Unity handoff
 
 **Current source: Pinefall Wildfront 0.9.1 Handling and Presentation, October 27, 2026.** Unity 2022.3.13f1, NGO 1.8.1, glTFast 6.0.1, Windows x64 / Mono / built-in rendering. Protocol PinefallReserve/9 requires matching 0.9 builds. Maximum twenty participants including bots.

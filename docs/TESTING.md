@@ -1,6 +1,10 @@
 # Verification and reproducible checks
 
-## Active Unreal foundation
+## Active Unreal round build
+
+`tools/Test-UnrealBattle.ps1` launches a host and two remote owners. It selects explicit teams, exercises ready/countdown/bidding/landing RPCs, then checks arranged inventory, armor, survival, revive, storm, spectating and results cases. Authority advances clocks and arranges damage; this is not moving-target shooting or latency evidence. `tools/Test-UnrealWildlife.ps1` checks arranged prey/predator decisions, attacks, rage/alpha state, reward transactions and remote skeletal spawning in two processes. No automated check opens a microphone.
+
+Use `tools/Setup-Unreal.ps1 -RebuildRoundAssets` only when regenerating the round atlas/icons/materials. Wildlife import repairs the common glTF skeleton root in derived files, preserving source models; its saved report validates mesh/clip skeleton association. Audio commandlet imports explicitly load the Bink decoder module before importing recorded clips.
 
 Use `tools/Build-Unreal.ps1` for native compilation, `tools/Setup-Unreal.ps1 -RebuildEnvironment` for explicit scene regeneration and `tools/Test-Unreal.ps1` for the two-process range smoke test. The latter requires a real remote owner confirmation after an ordinary server-validated rifle shot, not a direct health override. It uses a separate local UDP port, synthetic input and owned child processes; no microphone is enabled. Logs/results go under ignored `artifacts/unreal-tests`.
 

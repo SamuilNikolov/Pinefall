@@ -1,35 +1,31 @@
 # Unreal implementation and verification status
 
-October 28, 2026. Initial migration working tree; **not a replacement release for Unity 0.9**.
+October 28, 2026. Native 0.2 round working tree; **not full Unity parity or a finished visual release**.
 
-## Native foundation
+## Implemented first passes
 
-The runtime/editor modules compile with Unreal 5.6.1 and Visual Studio 2022. The runtime contains predicted CharacterMovement sprint/crouch/jump, two server-validated hitscan weapons, magazines/reload state, skeletal-mesh traces, replicated health/armor, practice targets, six-second range respawn, direct-IP host/join, camera modes, a native UMG HUD/menu, sensitivity/volume/quality settings, and a twenty-player admission limit.
+Unreal 5.6.1 runtime/editor modules build with Visual Studio 2022. Cedar Crossing remains a 504 m Landscape with 480 m playable bounds. It is a small migration test arena, not the six-biome reserve.
 
-Editor tooling imports prepared scanned meshes/materials/audio, creates the weapon table, and generates a 504 m Landscape and instanced foliage. Source preparation and rule export use standard-library Python. Installed Epic content is copied locally by setup and excluded from Git.
+- Native host/join, twenty-player admission limit, solo/duo/squad team sizes, readiness/countdown cancellation, ten-point loadout/landing bidding, individual turn-based landing, cyclic storm, victory/results and return to camp.
+- Owner-only twelve-slot inventory, finite battle ammunition, food/hunger/stamina, three armor tiers, medkits, plates, validated dropping/pickup and stale-click rejection. Two actual weapons and two kits; other source definitions are reference data.
+- Team downing, held nearby revival, elimination loot, ragdoll presentation and team-restricted spectator selection until a team wipe. Range mode retains respawns and unlimited reserve ammunition.
+- Seven animated animals: deer, stag, fox, wolf, bull, horse and alpaca. Peaceful prey flees; wolves attack. Closing storms enrage wildlife and can produce larger alpha variants. Food and ordinary equipment rewards use server-owned transactions. These models are temporary Quaternius art, not realistic replacement assets.
+- Cached/budgeted wildlife decisions, sleeping far movement and preserved collision. Direct steering is an initial implementation; complex obstacle navigation still needs work.
+- Smooth aim/FOV and sensitivity transitions, weapon kick/reload pose, recorded gunfire, quieter varied footsteps, positional animal calls, original hit/armor/elimination cues. Accepted damage produces colored hit markers, short-lived visible-target health bars, damage direction and blue armor/red health feedback. Equipping armor does not invoke damage feedback.
+- Right-side inventory/draft panels, survival bars, minimal team information and a terrain atlas with storm/landing/team markers. Ordinary enemy tracking remains disabled.
 
-## Evidence and limits
+The scope mask is drawn below foreground HUD elements. Visual checks and multiplayer checks are separate gates; a screenshot injected with the opt-in armor presentation probe does not prove actual damage.
 
-| Gate | Current status |
-| --- | --- |
-| Native runtime/editor compilation | Passed Unreal 5.6.1 Development Editor build after the input/camera/editor fixes |
-| Rule export | 120 linked rules; 8 weapons / 8 kits / 9 mods / 40 bindings / 16 fauna / 60 sites |
-| Environment generation | Passed with `PF_BASELINE_ASSETS_OK`; map save and dirty-package save are checked |
-| Visible rendered menu/game review | Inspected 1600x900 native menu and first-person range; corrected near-ground square repetition, mouse pitch inversion, camera lag, missing foliage usage flags and rifle/Nanite glass conflict |
-| Host/client firing and damage | Passed four assertions in a real separate-client local range test: admission, five-round magazine, server ammo decrement and remote 80-damage confirmation |
-| Packaged standalone build | Pending; launch scripts currently run through the installed Unreal editor |
-| Frame rate, WAN, audible sound quality | Pending; no Unreal performance or internet-readiness claim |
+## Verification
 
-The eight-row data table currently enables only **Ridgeline** and **Service Nine**. Range ammunition reserves are unlimited. The character is a temporary Epic mannequin with basic locomotion. Advanced weapon animation/IK, lag compensation, proper death/spectating and polished handling remain M1 tasks. Native armor damage is a small range implementation, not full source-specific legacy armor parity.
+Current evidence and source fingerprints are in [the 0.2 checkpoint](../tests/baselines/unreal-0.2/README.md): successful native compilation, five remote scoped-fire checks, 36 round checks, fifteen wildlife checks and three remote skeletal spawns. Scope, armor cue and inventory were rendered/reviewed at 1600x900; the round lobby was reviewed at 1280x720. Audio forced reimport passed without errors or decoder ensures. Historical M0 evidence in `unreal-0.1` remains unchanged. Current checks are `tools/Build-Unreal.ps1`, `tools/Test-Unreal.ps1`, `tools/Test-UnrealBattle.ps1` and `tools/Test-UnrealWildlife.ps1`.
 
-The close-ground material now uses three continuous overlapping patches with hashed translation/quarter-turn sampling, applied consistently to color, normal and roughness maps. This corrects the visible surface grid rather than hiding it with distance fog. Broader color patches and distant-normal fading are separate treatments. Near foliage and the wider environment still need an art pass; the generated scene is not a finished realistic landscape.
+The round probe uses three real processes and owning-client lobby/draft commands; it advances clocks and arranges damage on authority for deterministic rule checks. The wildlife probe uses two processes and checks remote skeletal spawning plus arranged AI/reward cases. Neither proves moving-player hit fairness, WAN operation, microphone quality, audible mix, graphics performance or twenty-player load. These remain explicit open gates.
 
-Evidence summary is in `tests/baselines/unreal-0.1`. Rendered review covered 1600x900 only, with first-run shader preparation; it is not a frame-rate benchmark. Moving-player hitboxes, latency/loss, long-session lifecycle and other display sizes remain unverified.
+## Remaining migration and presentation work
 
-## Explicitly not migrated yet
+Vehicles/boats/swimming, biome-specific ecology, the large reserve/villages/caves, construction/editing/harvesting, launchpads, sliding/bunny-hop, attachments and the full weapon set, customization, weather/day cycle, narrator/emotes and proximity voice remain to migrate. The lake currently has visual water only. No Unreal microphone capture is implemented.
 
-The battle royale loop, teams/draft, storm, hunger/inventory/loot economy, animal AI/rewards/bosses/sharks, six-biome world, villages/caves, vehicles/boats, construction/editing/harvesting, launchpads, slide/bunnyhop, full map, character customization, narrator/weather/day cycle, emotes and proximity voice are **planned**. Preserve their specifications in the rule ledger; do not advertise them as Unreal features. The visual lake currently has no swim/boat behavior.
+First-person hands/IK, proper weapon reload animations, muzzle/surface-specific effects, moving-player latency compensation, production wildlife models, dense realistic scenery, map zoom/minimap, teammate state beyond pawn relevance, full key rebinding and packaged standalone distribution also remain. Do not advertise this working tree as finished or label placeholder art as a realism upgrade.
 
-## Next developer entry
-
-Read [UNREAL-MIGRATION.md](UNREAL-MIGRATION.md), [UNREAL-PRESENTATION.md](UNREAL-PRESENTATION.md) and [the project README](../Unreal/Pinefall/README.md). Next address weapon/hand animation, close-view handling and the sparse generated scenery. Expand validation to player targets under latency, menu/input edge cases and other display sizes before treating M0 as a release. Keep old Unity evidence attached to the build it actually tested.
+Read [the native handbook](../Unreal/Pinefall/PLAYING.md), [migration plan](UNREAL-MIGRATION.md), [presentation direction](UNREAL-PRESENTATION.md) and [source-linked rules](RULES-CATALOG.md) before continuing. Unity remains frozen.

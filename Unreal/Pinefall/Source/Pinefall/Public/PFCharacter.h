@@ -10,6 +10,9 @@ class UStaticMeshComponent;
 class UInputMappingContext;
 class UInputAction;
 class USoundAttenuation;
+class UPFInventoryComponent;
+class APFWorldPickup;
+class UParticleSystem;
 UCLASS()
 class PINEFALL_API APFCharacter : public ACharacter
 {
@@ -17,6 +20,7 @@ class PINEFALL_API APFCharacter : public ACharacter
   public:
     APFCharacter(const FObjectInitializer &ObjectInitializer);
     virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type Reason) override;
     virtual void Tick(float Delta) override;
     virtual void PawnClientRestart() override;
     virtual void SetupPlayerInputComponent(UInputComponent *Component) override;
@@ -27,8 +31,17 @@ class PINEFALL_API APFCharacter : public ACharacter
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UCameraComponent> Camera;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UStaticMeshComponent> WorldWeapon;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UStaticMeshComponent> ViewWeapon;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UPFInventoryComponent> Inventory;
     UPROPERTY(ReplicatedUsing = OnRep_Health, BlueprintReadOnly) float Health = 100.f;
     UPROPERTY(Replicated, BlueprintReadOnly) float Armor = 0.f;
+    UPROPERTY(Replicated, BlueprintReadOnly) int32 ArmorTier = 0;
+    UPROPERTY(Replicated, BlueprintReadOnly) float Hunger = 85;
+    UPROPERTY(Replicated, BlueprintReadOnly) float Stamina = 100;
+    UPROPERTY(ReplicatedUsing = OnRep_Downed, BlueprintReadOnly) bool bDowned = false;
+    UPROPERTY(Replicated, BlueprintReadOnly) float ReviveProgress = 0;
+    UPROPERTY(Replicated, BlueprintReadOnly) double BleedOutAt = 0;
+    UPROPERTY(Replicated, BlueprintReadOnly) int32 Knocks = 0;
+    UPROPERTY() TWeakObjectPtr<APFWorldPickup> FocusedPickup;
     UPROPERTY(Replicated, BlueprintReadOnly) int32 Ammo = 5;
     UPROPERTY(Replicated, BlueprintReadOnly) bool bReloading = false;
     UPROPERTY(Replicated, BlueprintReadOnly) bool bAiming = false;
@@ -36,10 +49,28 @@ class PINEFALL_API APFCharacter : public ACharacter
     UPROPERTY(BlueprintReadOnly) FPFWeaponDefinition Weapon;
     UPROPERTY(BlueprintReadOnly) float HitUntil = 0, DamageUntil = 0, LastDamageAmount = 0;
     UPROPERTY(BlueprintReadOnly) bool bLastHitArmor = false, bLastHitKill = false;
+    bool bLastHitHead = false, bDamageWasArmor = false, bDamageWasEnvironmental = false;
+    FVector DamageSource = FVector::ZeroVector;
+    UPROPERTY() TWeakObjectPtr<AActor> ConfirmedTarget;
+    float TargetBarUntil = 0;
+    float ShotBloom = 0, AimAlpha = 0, WeaponKick = 0;
     bool bFirstPerson = true;
     void StopFire();
     void StopAim();
     void RunFireProbe();
+    void RunCombatViewProbe();
+    void Reload();
+    void ResetForRound(int32 Kit);
+    void EquipInventoryWeapon(FName Id);
+    void StoreMagazine();
+    void EnsureEquippedWeapon();
+    void EnvironmentalDamage(float Amount);
+    void SurvivalSecond();
+    bool CanFight() const;
+    void BeginInteract();
+    void EndInteract();
+    UFUNCTION(Server, Reliable) void ServerInteract(APFWorldPickup *Pickup);
+    UFUNCTION(Server, Reliable) void ServerRevive(bool Held);
 
   protected:
     UPROPERTY() TObjectPtr<UInputMappingContext> Mapping;
@@ -47,6 +78,14 @@ class PINEFALL_API APFCharacter : public ACharacter
     UPROPERTY() TObjectPtr<USoundAttenuation> ShotAttenuation;
     UPROPERTY() TObjectPtr<USoundAttenuation> StepAttenuation;
     UPROPERTY() TObjectPtr<USoundBase> StepSound;
+    UPROPERTY() TArray<TObjectPtr<USoundBase>> StepVariants;
+    int32 LastStepIndex = -1;
+    UPROPERTY() TObjectPtr<USoundBase> HitSound;
+    UPROPERTY() TObjectPtr<USoundBase> ArmorHitSound;
+    UPROPERTY() TObjectPtr<USoundBase> KillSound;
+    UPROPERTY() TObjectPtr<USoundBase> HurtSound;
+    UPROPERTY() TObjectPtr<USoundBase> ReloadSound;
+    UPROPERTY() TObjectPtr<UParticleSystem> ImpactEffect;
     void CreateActions();
     void AddMapping();
     bool AcceptsInput() const;
@@ -60,7 +99,6 @@ class PINEFALL_API APFCharacter : public ACharacter
     void EndCrouch();
     void StartFire();
     void StartAim();
-    void Reload();
     void ToggleCamera();
     void WeaponOne();
     void WeaponTwo();
@@ -68,6 +106,7 @@ class PINEFALL_API APFCharacter : public ACharacter
     void ApplyWeapon();
     void ShotEffects(const FVector &Start, const FVector &End, bool bLocal);
     UFUNCTION() void OnRep_Health(float Previous);
+    UFUNCTION() void OnRep_Downed();
     UFUNCTION() void OnRep_Weapon();
     UFUNCTION(Server, Reliable) void ServerFire(FVector_NetQuantize AimPoint, uint32 Sequence);
     UFUNCTION(Server, Reliable) void ServerReload();
@@ -75,7 +114,10 @@ class PINEFALL_API APFCharacter : public ACharacter
     UFUNCTION(Server, Reliable) void ServerEquip(FName Id);
     UFUNCTION(NetMulticast, Unreliable)
     void MulticastShot(FVector_NetQuantize Start, FVector_NetQuantize End);
-    UFUNCTION(Client, Reliable) void ClientConfirmed(float Amount, bool bShield, bool bKill, bool bHead);
+    UFUNCTION(Client, Reliable)
+    void ClientConfirmed(float Amount, bool bShield, bool bKill, bool bHead, AActor *Target);
+    UFUNCTION(Client, Reliable)
+    void ClientDamageFeedback(bool ArmorHit, bool Environmental, FVector_NetQuantize Source);
     bool bFireHeld = false;
     float NextLocalShot = 0;
     double NextServerShot = 0;
@@ -83,5 +125,10 @@ class PINEFALL_API APFCharacter : public ACharacter
     float Travelled = 0;
     FVector PreviousPosition;
     FTimerHandle ReloadTimer;
-    TMap<FName, int32> StoredMagazines;
+    TWeakObjectPtr<APFCharacter> ReviveTarget;
+    TWeakObjectPtr<APFCharacter> Reviver;
+    float StarvationTimer = 0, FocusTimer = 0;
+    bool bEnvironmentalDamage = false;
+    bool bDeathPresented = false;
+    bool bReloadPresented = false;
 };
