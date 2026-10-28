@@ -8,6 +8,8 @@ A remote player aims at a delayed, visually smoothed opponent. By the time the r
 
 Riot describes server-authoritative validation against the shooter's historical view, bounded rewind, buffering and the remaining latency tradeoffs in [Peeking into VALORANT's Netcode](https://www.riotgames.com/en/news/peeking-valorants-netcode). Its [gameplay consistency update](https://playvalorant.com/en-us/news/game-updates/valorant-gameplay-consistency-update/) also discusses jitter and divergent views. These are design references, not claims that Pinefall implements Riot's stack or performance.
 
+Respawn's [Apex Legends server/netcode deep dive](https://www.ea.com/games/apex-legends/apex-legends/news/servers-netcode-developer-deep-dive) likewise describes reconciling historical player perspectives and explains why latency still affects simultaneous shots and apparent deaths behind cover. Pinefall deliberately retains current cover and a short rewind limit; it does not reproduce Apex's full rollback policy or remove all timing advantages.
+
 ## Implemented pipeline
 
 1. Local input immediately produces recoil, sound and muzzle presentation. Damage and hit/kill confirmation wait for authority.
