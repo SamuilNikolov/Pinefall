@@ -1,0 +1,21 @@
+{
+	"passed": [
+		"spawned animal has a skeletal mesh and playable animation",
+		"spawned animal has a skeletal mesh and playable animation",
+		"spawned animal has a skeletal mesh and playable animation",
+		"peaceful deer enters a fleeing run",
+		"wolf enters a pursuing run",
+		"deer actually moves away through CharacterMovement",
+		"wolf actually closes distance through CharacterMovement",
+		"nearby predator starts an attack animation",
+		"attack applies damage after its windup",
+		"closing storm enrages normally peaceful prey",
+		"settled storm restores normal animal behavior",
+		"alpha size changes collision as well as the mesh",
+		"authoritative animal kill plays death and disables movement",
+		"alpha kill drops food and exactly two usable equipment rolls",
+		"dead animal cannot award damage or duplicate rewards"
+	],
+	"failed": [],
+	"scope": "Two real processes. Authority arranges encounters and invokes actual wildlife movement, attack and damage code. No graphics, audible audio, WAN or load benchmark."
+}

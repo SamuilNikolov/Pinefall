@@ -6,6 +6,7 @@
 #include "PFPlayerController.h"
 #include "PFInventoryComponent.h"
 #include "PFWorldPickup.h"
+#include "PFVehicle.h"
 #include "PFItemButton.h"
 #include "PFTacticalMap.h"
 #include "Blueprint/WidgetTree.h"
@@ -79,9 +80,13 @@ void UPFInterface::BuildExpeditionUI(UCanvasPanel *Canvas, UVerticalBox *Vitals)
     TeamText->SetColorAndOpacity(Ice);
     TeamText->SetAutoWrapText(true);
     Place(Canvas, TeamText, FAnchors(0, 1), FVector2D(0, 1), FMargin(42, -230, 320, 110));
+    Minimap = WidgetTree->ConstructWidget<UPFTacticalMap>();
+    Minimap->bMini = true;
+    Minimap->SetOwningPlayer(GetOwningPlayer());
+    Place(Canvas, Minimap, FAnchors(1, 0), FVector2D(1, 0), FMargin(-28, 28, 226, 226));
     TacticalMap = WidgetTree->ConstructWidget<UPFTacticalMap>();
     TacticalMap->SetOwningPlayer(GetOwningPlayer());
-    Place(Canvas, TacticalMap, FAnchors(0, .5), FVector2D(0, .5), FMargin(44, 0, 640, 500));
+    Place(Canvas, TacticalMap, FAnchors(0, .5), FVector2D(0, .5), FMargin(28, 0, 700, 590));
     Visible(TacticalMap, false);
     RoundPanel = WidgetTree->ConstructWidget<UBorder>();
     RoundPanel->SetBrushColor(Ink);
@@ -196,6 +201,7 @@ void UPFInterface::UpdateExpeditionUI()
     auto *Mine = PC->GetPlayerState<APFPlayerState>();
     auto *Player = Cast<APFCharacter>(PC->GetPawn());
     bool Round = PC->RoundPanelOpen() && !PC->bMenuOpen;
+    Visible(Minimap, !PC->bMenuOpen && !PC->bMapOpen && !PC->bInventoryOpen && !Round);
     Visible(RoundPanel, Round);
     Visible(InventoryPanel, PC->bInventoryOpen && !PC->bMenuOpen);
     Visible(TacticalMap, !PC->bMenuOpen && (PC->bMapOpen || Match->Phase == EPFRoundPhase::Landing));
@@ -260,8 +266,9 @@ void UPFInterface::UpdateExpeditionUI()
     ArmorBar->SetPercent(Player->Armor / (Player->ArmorTier == 1 ? 50 : Player->ArmorTier == 2 ? 75 : 100));
     HungerBar->SetPercent(Player->Hunger / 100);
     StaminaBar->SetPercent(Player->Stamina / 100);
-    FString Survival=FString::Printf(TEXT("Hunger %.0f · Stamina %.0f"),Player->Hunger,Player->Stamina);
-    if(Player->Oxygen<100)Survival+=FString::Printf(TEXT("\nAir %.0f · Space rise / Ctrl dive"),Player->Oxygen);
+    FString Survival = FString::Printf(TEXT("Hunger %.0f · Stamina %.0f"), Player->Hunger, Player->Stamina);
+    if (Player->Oxygen < 100)
+        Survival += FString::Printf(TEXT("\nAir %.0f · Space rise / Ctrl dive"), Player->Oxygen);
     SurvivalText->SetText(FText::FromString(Survival));
     FString Prompt =
         Player->Health <= 0 ? TEXT("] Next spectator target")
@@ -281,7 +288,12 @@ void UPFInterface::UpdateExpeditionUI()
                             Prompt = TEXT("Hold E to revive teammate");
                             break;
                         }
-    if (auto *Pickup = Player->FocusedPickup.Get())
+    if (Player->Vehicle)
+        Prompt = TEXT("E Exit · WASD Drive · Shift Boost · Ctrl Brake · Mouse Look");
+    else if (auto *Transport = Player->FocusedVehicle.Get())
+        Prompt = FString::Printf(TEXT("E Enter %s · R Service with kit\nCondition %.0f%% · Fuel %.0f%%"),
+                                 *Transport->Label(), Transport->Health / 5, Transport->Fuel);
+    else if (auto *Pickup = Player->FocusedPickup.Get())
         Prompt = FString::Printf(TEXT("E  %s  ×%d"), *Pickup->Item.Label(), Pickup->Item.Count);
     PickupPrompt->SetText(
         FText::FromString(PC->bMenuOpen || Round || PC->bInventoryOpen ? TEXT("") : Prompt));
@@ -310,7 +322,8 @@ void UPFInterface::UpdateExpeditionUI()
             for (int32 ButtonIndex = Index * 2; ButtonIndex <= Index * 2 + 1; ButtonIndex++)
             {
                 SlotButtons[ButtonIndex]->Revision = Item.Revision;
-                SlotButtons[ButtonIndex]->SetIsEnabled(Has);
+                SlotButtons[ButtonIndex]->SetIsEnabled(Has&&(ButtonIndex%2!=0||Item.Kind!=EPFItemKind::Ammo));
+                if(ButtonIndex%2==0)if(auto* Action=Cast<UTextBlock>(SlotButtons[ButtonIndex]->GetContent()))Action->SetText(FText::FromString(Item.Kind==EPFItemKind::Ammo?TEXT("Reserve ammo"):Item.Kind==EPFItemKind::Weapon?TEXT("Equip"):Item.Kind==EPFItemKind::ServiceKit?TEXT("Service nearby"):TEXT("Use")));
             }
         }
 }
@@ -374,5 +387,5 @@ void UPFInterface::ReturnLobby()
 }
 void UPFInterface::LeaveSession()
 {
-    UGameplayStatics::OpenLevel(this, TEXT("/Game/Pinefall/Maps/CedarCrossing"), true);
+    UGameplayStatics::OpenLevel(this, TEXT("/Game/Pinefall/Maps/WildfrontReserve"), true);
 }

@@ -1,0 +1,135 @@
+[
+  {
+    "name": "Skin",
+    "color": [
+      0.9420599937438965,
+      0.5212000012397766,
+      0.3481599986553192,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "Skin_color.jpg",
+    "normal_file": "Skin_normal.jpg"
+  },
+  {
+    "name": "Eyebrow",
+    "color": [
+      0.07952000200748444,
+      0.042100001126527786,
+      0.02360999956727028,
+      1
+    ],
+    "alpha": "MASK",
+    "color_file": "Eyebrow_color.png"
+  },
+  {
+    "name": "Eyelash",
+    "color": [
+      0.02111000008881092,
+      0.013629999943077564,
+      0.0094200000166893,
+      1
+    ],
+    "alpha": "MASK",
+    "color_file": "Eyelash_color.png"
+  },
+  {
+    "name": "Eye",
+    "color": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "Eye_color.jpg"
+  },
+  {
+    "name": "Iris",
+    "color": [
+      0.15217000246047974,
+      0.06317000091075897,
+      0.02160000056028366,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "Iris_color.jpg"
+  },
+  {
+    "name": "Cornea",
+    "color": [
+      1,
+      1,
+      1,
+      0.07999999821186066
+    ],
+    "alpha": "BLEND"
+  },
+  {
+    "name": "Teeth",
+    "color": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "Teeth_color.jpg"
+  },
+  {
+    "name": "Tongue",
+    "color": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "Tongue_color.jpg"
+  },
+  {
+    "name": "Cloth_shirt",
+    "color": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "Cloth_shirt_color.jpg"
+  },
+  {
+    "name": "Cloth_jeans",
+    "color": [
+      0.0933300033211708,
+      0.22887000441551208,
+      0.5245000123977661,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "Cloth_jeans_color.jpg",
+    "normal_file": "Cloth_jeans_normal.jpg"
+  },
+  {
+    "name": "Cloth_boots",
+    "color": [
+      0.08747000247240067,
+      0.046310000121593475,
+      0.02597000077366829,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "Cloth_boots_color.jpg"
+  },
+  {
+    "name": "Hair_ponytail01",
+    "color": [
+      0.08747000247240067,
+      0.046310000121593475,
+      0.02597000077366829,
+      1
+    ],
+    "alpha": "MASK",
+    "color_file": "Hair_ponytail01_color.png"
+  }
+]

@@ -2,6 +2,16 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "PFPlayerController.generated.h"
+USTRUCT()
+struct FPFMapMarker
+{
+    GENERATED_BODY()
+    UPROPERTY() FVector_NetQuantize Position = FVector::ZeroVector;
+    UPROPERTY() uint8 Kind = 0;
+    UPROPERTY() float Condition = 0;
+    UPROPERTY() int32 PlayerId = -1;
+    UPROPERTY() FString Label;
+};
 class UPFInterface;
 class APFCharacter;
 UCLASS()
@@ -10,6 +20,8 @@ class PINEFALL_API APFPlayerController : public APlayerController
     GENERATED_BODY()
   public:
     APFPlayerController();
+    UPROPERTY(Replicated) TArray<FPFMapMarker> MapMarkers;
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &Out) const override;
     virtual void BeginPlay() override;
     virtual void SetupInputComponent() override;
     virtual void PlayerTick(float Delta) override;

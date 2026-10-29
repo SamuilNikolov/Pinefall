@@ -1,5 +1,15 @@
 # Pinefall Wildfront changelog
 
+## Unreal 0.3 reserve checkpoint - 2026-10-29
+
+- Added a separate 2,016 m reserve with eight named settlements, 64 enterable cabins, graded road links, a lake/piers, 208 stock placements, sixteen trucks and three boats.
+- Switched to a textured stylized ranger; rebuilt crouch with planted ankle rotations, matching collision/eye height, swimming clips and real remote stance checks.
+- Repaired persistent character material assignment and explicit skeletal shader usage; added source-texture extraction/material tooling.
+- Added server-controlled driving/steering, look-around camera, boost/braking, ground/water following, remote display smoothing, safe exit, damage/fuel, service kits and sleeping empty vehicles.
+- Added original recognizable supply meshes, larger wildlife replenishment, a 2K layout atlas, map zoom/pan, minimap, live private team/transport icons and equipment/vehicle HUDs.
+- Added a separate real-owner reserve integration probe. Final results and visual limitations are recorded separately; this remains a migration build, not Unity parity or a finished art release.
+
+
 ## Unreal 0.2.1 combat/world working tree - 2026-10-28
 
 - Replaced the mannequin with a dressed CC0 MakeHuman-derived ranger, native movement/weapon-pose blending, authored rifle/pistol holds, reload gestures, crouch poses and fitted skull/neck collision.

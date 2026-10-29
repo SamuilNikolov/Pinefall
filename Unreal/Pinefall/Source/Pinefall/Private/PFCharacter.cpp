@@ -10,6 +10,9 @@
 #include "PFWildlife.h"
 #include "PFHitHistoryComponent.h"
 #include "PFWaterBody.h"
+#include "PFVehicle.h"
+#include "PFReserveWorld.h"
+#include "EngineUtils.h"
 #include "PFRangerAnimInstance.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
@@ -50,19 +53,19 @@ APFCharacter::APFCharacter(const FObjectInitializer &Init)
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
     static ConstructorHelpers::FObjectFinder<USkeletalMesh> Body(
-        TEXT("/Game/Pinefall/Art/Characters/Ranger/FieldRanger.FieldRanger"));
+        TEXT("/Game/Pinefall/Art/Characters/TrailRanger/TrailRanger.TrailRanger"));
     if (Body.Succeeded())
         GetMesh()->SetSkeletalMesh(Body.Object);
     GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
     GetMesh()->SetAnimInstanceClass(UPFRangerAnimInstance::StaticClass());
     auto *Movement = GetCharacterMovement();
     Movement->GetNavAgentPropertiesRef().bCanCrouch = true;
-    Movement->SetCrouchedHalfHeight(60);
+    Movement->SetCrouchedHalfHeight(72);
     Movement->GetNavAgentPropertiesRef().bCanSwim = true;
     Movement->MaxSwimSpeed = 360;
     Movement->Buoyancy = 1.05f;
     Movement->MaxWalkSpeed = 480;
-    Movement->MaxWalkSpeedCrouched = 250;
+    Movement->MaxWalkSpeedCrouched = 200;
     Movement->JumpZVelocity = 700;
     Movement->AirControl = .35f;
     Movement->BrakingDecelerationWalking = 1800;
@@ -78,7 +81,7 @@ APFCharacter::APFCharacter(const FObjectInitializer &Init)
     Camera->SetupAttachment(CameraBoom);
     Camera->FieldOfView = 85;
     WorldWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WorldWeapon"));
-    WorldWeapon->SetupAttachment(GetMesh(), TEXT("hand_r"));
+    WorldWeapon->SetupAttachment(GetMesh());
     WorldWeapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     WorldWeapon->SetRelativeLocation(FVector(8, 0, 0));
     ViewWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ViewWeapon"));
@@ -92,6 +95,7 @@ void APFCharacter::BeginPlay()
 {
     Super::BeginPlay();
     bCombatProbe = FParse::Param(FCommandLine::Get(), TEXT("PFCombatProbe"));
+    bReserveProbe = FParse::Param(FCommandLine::Get(), TEXT("PFReserveProbe"));
     if (HasAuthority())
         Inventory->InitializeLoadout(true, 0);
     ApplyWeapon();
@@ -153,7 +157,7 @@ bool APFCharacter::AcceptsInput() const
 void APFCharacter::Tick(float Delta)
 {
     Super::Tick(Delta);
-    if (Health > 0 && !WeaponId.IsNone())
+    if (!Vehicle && Health > 0 && !WeaponId.IsNone())
     {
         // Mesh centers are not grip sockets: follow the animated wrist with a
         // weapon-specific offset and keep the barrel aligned with the aim.
@@ -166,6 +170,19 @@ void APFCharacter::Tick(float Delta)
     }
     if (IsLocallyControlled())
     {
+        if (bReserveProbe)
+            RunReserveProbeInput();
+        if (Vehicle)
+        {
+            DriveSendAfter -= Delta;
+            if (DriveSendAfter <= 0)
+            {
+                DriveSendAfter = .05f;
+                ServerDrive(AcceptsInput() ? DriveAxes : FVector2D::ZeroVector, AcceptsInput() && bDriveBoost,
+                            AcceptsInput() && bDriveBrake);
+                DriveAxes = FVector2D::ZeroVector;
+            }
+        }
         if (GetCharacterMovement()->IsSwimming() && AcceptsInput())
             AddMovementInput(FVector::UpVector, (bSwimUpHeld ? 1.f : 0.f) - (bSwimDownHeld ? 1.f : 0.f));
         if (bCombatProbe)
@@ -177,14 +194,19 @@ void APFCharacter::Tick(float Delta)
             UGameplayStatics::PlaySound2D(this, ReloadSound, .28f);
         bReloadPresented = bReloading;
         CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength,
-                                                       bFirstPerson ? 0
-                                                       : bAiming    ? 180
-                                                                    : 280,
+                                                       Vehicle        ? 560
+                                                       : bFirstPerson ? 0
+                                                       : bAiming      ? 180
+                                                                      : 280,
                                                        Delta, 14);
         // Eye height belongs in the world-space pivot. A rotated socket height
         // made looking up/down orbit the camera away from the server shot origin.
-        CameraBoom->TargetOffset =
-            FMath::VInterpTo(CameraBoom->TargetOffset, FVector(0, 0, bIsCrouched ? 40 : 65), Delta, 18);
+        CameraBoom->TargetOffset = FMath::VInterpTo(CameraBoom->TargetOffset,
+                                                    FVector(0, 0,
+                                                            Vehicle       ? 125
+                                                            : bIsCrouched ? 55
+                                                                          : 65),
+                                                    Delta, 18);
         CameraBoom->SocketOffset = FMath::VInterpTo(
             CameraBoom->SocketOffset, bFirstPerson ? FVector::ZeroVector : FVector(0, bAiming ? 40 : 55, 0),
             Delta, 18);
@@ -200,9 +222,11 @@ void APFCharacter::Tick(float Delta)
             FRotator(WeaponKick * 2 - (bReloading ? 20 : 0), 0, bReloading ? -18 : 0));
         Camera->SetFieldOfView(
             FMath::FInterpTo(Camera->FieldOfView, bAiming ? Weapon.AimFOV : 85, Delta, 16));
-        GetMesh()->SetOwnerNoSee(bFirstPerson);
+        GetMesh()->SetOwnerNoSee(bFirstPerson || Vehicle != nullptr);
+        WorldWeapon->SetVisibility(!Vehicle);
         WorldWeapon->SetOwnerNoSee(bFirstPerson);
-        ViewWeapon->SetVisibility(bFirstPerson && Health > 0 && !(AimAlpha > .92f && Weapon.AimFOV <= 35));
+        ViewWeapon->SetVisibility(!Vehicle && bFirstPerson && Health > 0 &&
+                                  !(AimAlpha > .92f && Weapon.AimFOV <= 35));
         if (bFireHeld && AcceptsInput() && GetWorld()->GetTimeSeconds() >= NextLocalShot)
             FireLocal();
         FocusTimer -= Delta;
@@ -216,6 +240,7 @@ void APFCharacter::Tick(float Delta)
                                                      Camera->GetForwardVector() * 400,
                                                  ECC_GameTraceChannel1, Query);
             FocusedPickup = Cast<APFWorldPickup>(Focus.GetActor());
+            FocusedVehicle = Cast<APFVehicle>(Focus.GetActor());
         }
         if (auto *Match = GetWorld()->GetGameState<APFMatchState>())
         {
@@ -341,6 +366,11 @@ void APFCharacter::Move(const FInputActionValue &Value)
     if (!AcceptsInput())
         return;
     auto Axis = Value.Get<FVector2D>();
+    if (Vehicle)
+    {
+        DriveAxes = Axis;
+        return;
+    }
     auto Yaw = FRotator(0, Controller->GetControlRotation().Yaw, 0);
     AddMovementInput(GetCharacterMovement()->IsSwimming() ? Controller->GetControlRotation().Vector()
                                                           : Yaw.Vector(),
@@ -371,15 +401,26 @@ void APFCharacter::EndJump()
 }
 void APFCharacter::StartSprint()
 {
+    if (Vehicle)
+    {
+        bDriveBoost = true;
+        return;
+    }
     if (AcceptsInput() && !bAiming && !bDowned)
         CastChecked<UPFMovementComponent>(GetCharacterMovement())->bWantsSprint = true;
 }
 void APFCharacter::EndSprint()
 {
+    bDriveBoost = false;
     CastChecked<UPFMovementComponent>(GetCharacterMovement())->bWantsSprint = false;
 }
 void APFCharacter::StartCrouch()
 {
+    if (Vehicle)
+    {
+        bDriveBrake = true;
+        return;
+    }
     bSwimDownHeld = true;
     if (GetCharacterMovement()->IsSwimming())
         return;
@@ -388,6 +429,7 @@ void APFCharacter::StartCrouch()
 }
 void APFCharacter::EndCrouch()
 {
+    bDriveBrake = false;
     bSwimDownHeld = false;
     UnCrouch();
 }
@@ -424,6 +466,11 @@ void APFCharacter::ServerAim_Implementation(bool Value)
 }
 void APFCharacter::Reload()
 {
+    if (!Vehicle && FocusedVehicle.IsValid())
+    {
+        ServerVehicleInteract(FocusedVehicle.Get(), true);
+        return;
+    }
     if (AcceptsInput() && CanFight())
         ServerReload();
 }
@@ -539,7 +586,7 @@ void APFCharacter::ServerFire_Implementation(FVector_NetQuantize AimPoint, uint3
         Now + .015 < NextServerShot)
         return;
     ViewTime = FMath::Min(ViewTime, Now);
-    FVector Start = GetActorLocation() + FVector(0, 0, bIsCrouched ? 40 : 65);
+    FVector Start = GetActorLocation() + FVector(0, 0, bIsCrouched ? 55 : 65);
     FVector Direction = FVector(AimPoint) - Start;
     if (Direction.SizeSquared() < 1 || Direction.Size() > Weapon.RangeCm + 600 ||
         FVector::DotProduct(Direction.GetSafeNormal(), GetBaseAimRotation().Vector()) < .35f)
@@ -591,6 +638,13 @@ void APFCharacter::ServerFire_Implementation(FVector_NetQuantize AimPoint, uint3
             Kill = Other->Health <= 0;
             if (Actual > 0)
                 ClientConfirmed(Actual, Shield, Kill, Head, Other);
+        }
+        else if (auto *Transport = Cast<APFVehicle>(Hit.GetActor()))
+        {
+            float Actual = UGameplayStatics::ApplyDamage(Transport, Weapon.Damage, Controller, this,
+                                                         UDamageType::StaticClass());
+            if (Actual > 0)
+                ClientConfirmed(Actual, false, Transport->Health <= 0, false, Transport);
         }
         else if (auto *Animal = Cast<APFWildlife>(Hit.GetActor()))
         {
@@ -745,6 +799,7 @@ void APFCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLife
     DOREPLIFETIME(APFCharacter, bAiming);
     DOREPLIFETIME(APFCharacter, WeaponId);
     DOREPLIFETIME(APFCharacter, MovementPoseTime);
+    DOREPLIFETIME(APFCharacter, Vehicle);
 }
 
 void APFCharacter::RunFireProbe()
@@ -792,11 +847,12 @@ void APFCharacter::RunCombatViewProbe()
         ServerEquip(TEXT("ServiceNine"));
     if (Mode == TEXT("Pistol"))
         StartAim();
-    if (Mode == TEXT("Character") || Mode == TEXT("CharacterPistol"))
+    if (Mode == TEXT("Character") || Mode == TEXT("CharacterPistol") || Mode == TEXT("Crouch"))
     {
         bFirstPerson = false;
+        if (Mode == TEXT("Crouch")) Crouch();
         auto *View = GetWorld()->SpawnActor<ACameraActor>();
-        FVector Position = GetActorLocation() + GetActorForwardVector() * 240 + GetActorRightVector() * 95 +
+        FVector Position = GetActorLocation() + GetActorForwardVector() * 380 + GetActorRightVector() * 95 +
                            FVector(0, 0, 35);
         View->SetActorLocation(Position);
         View->SetActorRotation((GetActorLocation() + FVector(0, 0, 10) - Position).Rotation());
@@ -809,6 +865,19 @@ void APFCharacter::RunCombatViewProbe()
         SetActorLocation(FVector(4500, 9000, 400));
         Controller->SetControlRotation(FRotator(-10, 6, 0));
     }
+    if(Mode==TEXT("ReserveMap")){if(auto* PC=Cast<APFPlayerController>(Controller)){PC->bMapOpen=true;PC->RefreshInputMode();}}
+    if(Mode==TEXT("Village")&&HasAuthority()){
+        FVector Point(-32000,-25900,0);FHitResult Ground;FCollisionQueryParams Q(SCENE_QUERY_STAT(PFReserveView),false,this);
+        if(GetWorld()->LineTraceSingleByObjectType(Ground,Point+FVector(0,0,20000),Point-FVector(0,0,20000),FCollisionObjectQueryParams(ECC_WorldStatic),Q))SetActorLocation(Ground.ImpactPoint+FVector(0,0,100));
+        Controller->SetControlRotation(FRotator(-5,90,0));
+    }
+    if(Mode==TEXT("Truck")||Mode==TEXT("Boat")||Mode==TEXT("Driving")){
+        for(TActorIterator<APFVehicle> It(GetWorld());It;++It)if(It->bBoat==(Mode==TEXT("Boat"))){
+            if(Mode==TEXT("Driving")&&HasAuthority()){SetActorLocation(It->GetActorLocation()+It->GetActorRightVector()*260);It->Enter(this);Controller->SetControlRotation(It->GetActorRotation()+FRotator(-12,0,0));}
+            else {bFirstPerson=false;auto* View=GetWorld()->SpawnActor<ACameraActor>();FVector At=It->GetActorLocation()+It->GetActorForwardVector()*450+It->GetActorRightVector()*340+FVector(0,0,160);View->SetActorLocation(At);View->SetActorRotation((It->GetActorLocation()+FVector(0,0,40)-At).Rotation());View->GetCameraComponent()->SetFieldOfView(55);Cast<APlayerController>(Controller)->SetViewTarget(View);}break;
+        }
+    }
+    if(Mode==TEXT("Loot"))for(TActorIterator<APFWorldPickup> It(GetWorld());It;++It)if(It->Item.Kind==EPFItemKind::Medkit){bFirstPerson=false;auto* View=GetWorld()->SpawnActor<ACameraActor>();FVector At=It->GetActorLocation()+FVector(85,70,60);View->SetActorLocation(At);View->SetActorRotation((It->GetActorLocation()+FVector(0,0,12)-At).Rotation());View->GetCameraComponent()->SetFieldOfView(48);Cast<APlayerController>(Controller)->SetViewTarget(View);break;}
     if (Mode == TEXT("Armor"))
     {
         TWeakObjectPtr<APFCharacter> Weak = this;

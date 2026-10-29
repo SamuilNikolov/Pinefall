@@ -1,4 +1,6 @@
 #include "PFGameMode.h"
+#include "PFReserveWorld.h"
+#include "PFWaterBody.h"
 #include "PFCharacter.h"
 #include "PFPlayerController.h"
 #include "PFMatchState.h"
@@ -30,10 +32,13 @@ void APFGameMode::BeginPlay()
         State->TeamSize = Team == 2 || Team == 4 ? Team : 1;
     }
     if (!FParse::Param(FCommandLine::Get(), TEXT("PFCombatProbe")) &&
-        !FParse::Param(FCommandLine::Get(), TEXT("PFWorldProbe")))
+        !FParse::Param(FCommandLine::Get(), TEXT("PFWorldProbe")) &&
+        !FParse::Param(FCommandLine::Get(), TEXT("PFReserveProbe")))
         GetWorld()->SpawnActor<APFWildlifeDirector>();
     GetWorldTimerManager().SetTimer(RoundTimer, this, &APFGameMode::RoundSecond, 1, true);
-    if (FParse::Param(FCommandLine::Get(), TEXT("PFRoundProbe")))
+    if (FParse::Param(FCommandLine::Get(), TEXT("PFReserveProbe")))
+        GetWorldTimerManager().SetTimer(ProbeTimer, this, &APFGameMode::RunReserveProbe, .25, true);
+    else if (FParse::Param(FCommandLine::Get(), TEXT("PFRoundProbe")))
         GetWorldTimerManager().SetTimer(ProbeTimer, this, &APFGameMode::RunRoundProbe, .5, true);
     else if (FParse::Param(FCommandLine::Get(), TEXT("PFWildlifeProbe")))
         GetWorldTimerManager().SetTimer(ProbeTimer, this, &APFGameMode::RunWildlifeProbe, .5, true);
@@ -208,8 +213,10 @@ bool APFGameMode::GroundPoint(FVector &Point) const
             Hit.ImpactNormal.Z > .55f)
         {
             Point = Hit.ImpactPoint + FVector(0, 0, 100);
-            float Lake = FMath::Square((Point.X - 9000) / 4200) + FMath::Square((Point.Y - 9500) / 6000);
-            return !(Lake < 1.1f && Hit.ImpactPoint.Z < -120);
+            for (TActorIterator<APFWaterBody> Water(GetWorld()); Water; ++Water)
+                if (Water->ContainsWater(Hit.ImpactPoint))
+                    return false;
+            return true;
         }
     return false;
 }
@@ -450,6 +457,12 @@ void APFGameMode::ReturnToLobby(APlayerController *Player)
 }
 void APFGameMode::SpawnFieldLoot()
 {
+    for (TActorIterator<APFReserveWorld> It(GetWorld()); It; ++It)
+    {
+        It->ResetVehicles();
+        It->ResetLoot();
+        return;
+    }
     for (TActorIterator<APFWorldPickup> It(GetWorld()); It; ++It)
         It->Destroy();
     for (int32 Index = 0; Index < 90; Index++)

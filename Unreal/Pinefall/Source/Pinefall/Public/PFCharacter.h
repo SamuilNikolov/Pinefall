@@ -13,6 +13,7 @@ class USoundAttenuation;
 class UPFInventoryComponent;
 class APFWorldPickup;
 class UParticleSystem;
+class APFVehicle;
 class UPFHitHistoryComponent;
 UCLASS()
 class PINEFALL_API APFCharacter : public ACharacter
@@ -23,7 +24,7 @@ class PINEFALL_API APFCharacter : public ACharacter
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type Reason) override;
     virtual void Tick(float Delta) override;
-    virtual void PreReplication(IRepChangedPropertyTracker& Tracker) override;
+    virtual void PreReplication(IRepChangedPropertyTracker &Tracker) override;
     virtual void PawnClientRestart() override;
     virtual void SetupPlayerInputComponent(UInputComponent *Component) override;
     virtual float TakeDamage(float Amount, FDamageEvent const &Event, AController *EventInstigator,
@@ -50,7 +51,7 @@ class PINEFALL_API APFCharacter : public ACharacter
     UPROPERTY(Replicated, BlueprintReadOnly) bool bReloading = false;
     UPROPERTY(Replicated, BlueprintReadOnly) bool bAiming = false;
     UPROPERTY(ReplicatedUsing = OnRep_Weapon, BlueprintReadOnly) FName WeaponId = TEXT("Ridgeline");
-    UPROPERTY(Replicated) double MovementPoseTime=0;
+    UPROPERTY(Replicated) double MovementPoseTime = 0;
     double RenderedPoseTime() const;
     FVector VisualSmoothingOffset() const;
     UPROPERTY(BlueprintReadOnly) FPFWeaponDefinition Weapon;
@@ -62,11 +63,17 @@ class PINEFALL_API APFCharacter : public ACharacter
     float TargetBarUntil = 0;
     float ShotBloom = 0, AimAlpha = 0, WeaponKick = 0;
     bool bFirstPerson = true;
+    UPROPERTY(ReplicatedUsing = OnRep_Vehicle) TObjectPtr<APFVehicle> Vehicle;
+    UPROPERTY() TWeakObjectPtr<APFVehicle> FocusedVehicle;
+    UFUNCTION() void OnRep_Vehicle();
+    UFUNCTION(Server, Unreliable) void ServerDrive(FVector2D Axes, bool Boost, bool Brake);
+    UFUNCTION(Server, Reliable) void ServerVehicleInteract(APFVehicle *Target, bool Service);
     void StopFire();
     void StopAim();
     void RunFireProbe();
     void RunCombatViewProbe();
     void RunCombatProbeInput();
+    void RunReserveProbeInput();
     void Reload();
     void ResetForRound(int32 Kit);
     void EquipInventoryWeapon(FName Id);
@@ -140,7 +147,12 @@ class PINEFALL_API APFCharacter : public ACharacter
     bool bEnvironmentalDamage = false;
     bool bDeathPresented = false;
     bool bReloadPresented = false;
-    bool bCombatProbe = false;
+    bool bCombatProbe = false, bReserveProbe = false;
+    int32 LastReserveProbeCase = 0;
     bool bSwimUpHeld = false, bSwimDownHeld = false;
     int32 LastCombatProbeCase = 0;
+    FVector2D DriveAxes = FVector2D::ZeroVector;
+    bool bDriveBoost = false, bDriveBrake = false;
+    float DriveSendAfter = 0;
+    bool bViewBeforeDriving = true,bVehiclePresentationActive=false;
 };

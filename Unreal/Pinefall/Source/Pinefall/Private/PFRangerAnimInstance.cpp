@@ -37,6 +37,10 @@ class FPFRangerAnimProxy : public FAnimInstanceProxy
                        : TEXT("walk");
         if (Player->GetCharacterMovement()->IsFalling())
             Name = Velocity.Z > 100 ? TEXT("jump") : TEXT("fall");
+        if (Player->GetCharacterMovement()->IsSwimming())
+            Name = Speed < 15 ? TEXT("swim_idle") : TEXT("swim");
+        if (Player->Vehicle)
+            Name = TEXT("CrouchIdle");
         if (Player->bIsCrouched && Anim->Clips.Contains(TEXT("CrouchIdle")))
             Name = Speed < 15 ? TEXT("CrouchIdle") : TEXT("CrouchWalk");
         UAnimSequence *Next = Anim->Clips.FindRef(Name).Get();
@@ -49,8 +53,9 @@ class FPFRangerAnimProxy : public FAnimInstanceProxy
             Transition = 0;
         }
         Rate = Speed < 15 ? 1 : FMath::Clamp(Speed / (Speed > 600 ? 500.f : 220.f), .65f, 2.f);
+        if (Player->bIsCrouched && Speed >= 15) Rate = FMath::Clamp(Speed / 150.f, .65f, 1.6f);
         bReloading = Player->bReloading;
-        bArmed = !Player->WeaponId.IsNone();
+        bArmed = !Player->WeaponId.IsNone() && !Player->Vehicle;
         bool Pistol = Player->WeaponId == TEXT("ServiceNine");
         UAnimSequence *Hold = Anim->Clips
                                   .FindRef(bReloading ? (Pistol ? TEXT("PistolReload") : TEXT("RifleReload"))
@@ -144,9 +149,9 @@ void UPFRangerAnimInstance::NativeInitializeAnimation()
     for (const TCHAR *Name :
          {TEXT("idle"), TEXT("walk"), TEXT("run"), TEXT("walk_back"), TEXT("strafe_left"),
           TEXT("strafe_right"), TEXT("jump"), TEXT("fall"), TEXT("RifleHold"), TEXT("PistolHold"),
-          TEXT("RifleReload"), TEXT("PistolReload"), TEXT("CrouchIdle"), TEXT("CrouchWalk")})
+          TEXT("RifleReload"), TEXT("PistolReload"), TEXT("CrouchIdle"), TEXT("CrouchWalk"), TEXT("swim"), TEXT("swim_idle")})
     {
-        FString Path = FString::Printf(TEXT("/Game/Pinefall/Art/Characters/Ranger/%s.%s"), Name, Name);
+        FString Path = FString::Printf(TEXT("/Game/Pinefall/Art/Characters/TrailRanger/%s.%s"), Name, Name);
         if (auto *Clip = LoadObject<UAnimSequence>(nullptr, *Path))
             Clips.Add(FName(Name), Clip);
     }

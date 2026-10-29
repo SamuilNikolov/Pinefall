@@ -2,12 +2,16 @@
 #include "PFCharacter.h"
 #include "PFMatchState.h"
 #include "PFWorldPickup.h"
+#include "PFVehicle.h"
+#include "EngineUtils.h"
 #include "Engine/World.h"
 #include "Net/UnrealNetwork.h"
 FString FPFItemStack::Label() const
 {
     switch (Kind)
     {
+    case EPFItemKind::ServiceKit:
+        return TEXT("Vehicle service kit");
     case EPFItemKind::Weapon:
         return WeaponId == TEXT("Ridgeline") ? TEXT("Ridgeline rifle") : TEXT("Service Nine pistol");
     case EPFItemKind::Ammo:
@@ -28,11 +32,13 @@ FString FPFItemStack::Label() const
 }
 int32 FPFItemStack::Capacity() const
 {
-    return Kind == EPFItemKind::Weapon || Kind >= EPFItemKind::LightVest ? 1
-           : Kind == EPFItemKind::Ammo                                   ? 400
-           : Kind == EPFItemKind::Food                                   ? 8
-           : Kind == EPFItemKind::Medkit                                 ? 5
-                                                                         : 6;
+    return Kind == EPFItemKind::ServiceKit ? 3
+           : Kind == EPFItemKind::Weapon || (Kind >= EPFItemKind::LightVest && Kind <= EPFItemKind::HeavyVest)
+               ? 1
+           : Kind == EPFItemKind::Ammo   ? 400
+           : Kind == EPFItemKind::Food   ? 8
+           : Kind == EPFItemKind::Medkit ? 5
+                                         : 6;
 }
 UPFInventoryComponent::UPFInventoryComponent()
 {
@@ -185,6 +191,12 @@ void UPFInventoryComponent::ServerUseSlot_Implementation(int32 Index, uint32 Rev
     bool Consume = false;
     switch (Item.Kind)
     {
+    case EPFItemKind::ServiceKit:
+    {
+        APFVehicle* Nearest=nullptr;float Distance=FMath::Square(500.f);
+        for(TActorIterator<APFVehicle> It(GetWorld());It;++It){float D=FVector::DistSquared(Character->GetActorLocation(),It->GetActorLocation());if(D<Distance&&!It->Driver&&(It->Health<500||It->Fuel<100)){Nearest=*It;Distance=D;}}
+        if(Nearest)Consume=Nearest->Repair(Character);break;
+    }
     case EPFItemKind::Weapon:
         Character->EquipInventoryWeapon(Item.WeaponId);
         break;
@@ -284,4 +296,26 @@ void UPFInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME_CONDITION(UPFInventoryComponent, Slots, COND_OwnerOnly);
+}
+
+int32 UPFInventoryComponent::CountKind(EPFItemKind Kind) const
+{
+    int32 Count = 0;
+    for (const auto &Slot : Slots)
+        if (Slot.Kind == Kind)
+            Count += Slot.Count;
+    return Count;
+}
+bool UPFInventoryComponent::ConsumeKind(EPFItemKind Kind)
+{
+    if (!GetOwner()->HasAuthority())
+        return false;
+    for (auto &Slot : Slots)
+        if (Slot.Kind == Kind && Slot.Count > 0)
+        {
+            Slot.Count--;
+            GetOwner()->ForceNetUpdate();
+            return true;
+        }
+    return false;
 }

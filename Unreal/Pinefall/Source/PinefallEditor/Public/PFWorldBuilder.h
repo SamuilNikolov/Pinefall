@@ -16,4 +16,10 @@ class UPFWorldBuilder : public UBlueprintFunctionLibrary
     UFUNCTION(BlueprintCallable, Category = "Pinefall|Editor")
     static void PopulateFoliage(const TArray<UStaticMesh *> &Trees, UStaticMesh *Grass, UStaticMesh *Fern);
     UFUNCTION(BlueprintPure, Category = "Pinefall|Editor") static float HeightAt(float X, float Y);
+    UFUNCTION(BlueprintCallable, Category = "Pinefall|Editor") static void BuildReserveLandscape();
+    UFUNCTION(BlueprintCallable, Category = "Pinefall|Editor")
+    static void PopulateReserve(const TArray<UStaticMesh *> &Trees, UStaticMesh *Grass, UStaticMesh *Fern);
+    UFUNCTION(BlueprintPure, Category = "Pinefall|Editor") static float ReserveHeight(float X, float Y);
+    UFUNCTION(BlueprintPure, Category = "Pinefall|Editor") static FString ReserveLayoutJson();
+    UFUNCTION(BlueprintCallable, Category = "Pinefall|Editor") static int32 BuildReserveRoads();
 };

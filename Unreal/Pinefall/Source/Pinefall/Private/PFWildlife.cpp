@@ -1,4 +1,7 @@
 #include "PFWildlife.h"
+#include "PFReserveLayout.h"
+#include "PFWaterBody.h"
+#include "EngineUtils.h"
 #include "PFCharacter.h"
 #include "PFMatchState.h"
 #include "PFInventoryComponent.h"
@@ -249,8 +252,9 @@ void APFWildlife::Think(const TArray<TWeakObjectPtr<APFCharacter>> &Players, boo
     FCollisionQueryParams Query(SCENE_QUERY_STAT(PFAnimalGround), false, this);
     bool Grounded = GetWorld()->LineTraceSingleByChannel(Ground, Check + FVector(0, 0, 300),
                                                          Check - FVector(0, 0, 450), ECC_WorldStatic, Query);
-    bool Lake = FMath::Square((Check.X - 9000) / 4200) + FMath::Square((Check.Y - 9500) / 6000) < 1 &&
-                Ground.ImpactPoint.Z < -130;
+    bool Lake = (Half > 50000 && FPFReserveLayout::Water(Check.X, Check.Y)) ||
+                FMath::Square((Check.X - 9000) / 4200) + FMath::Square((Check.Y - 9500) / 6000) < 1 &&
+                    Ground.ImpactPoint.Z < -130;
     if (!Grounded || Ground.ImpactNormal.Z < .55f || Lake)
     {
         NextWander = 0;
@@ -361,7 +365,8 @@ void APFWildlifeDirector::Step()
     auto *Round = GetWorld()->GetGameState<APFMatchState>();
     if (!Round)
         return;
-    bool Active = Round->Phase == EPFRoundPhase::Active;
+    bool Active = Round->Phase == EPFRoundPhase::Active ||
+                  (Round->Phase == EPFRoundPhase::Range && Round->ArenaHalfExtent > 50000);
     if (!Active)
     {
         if (bRoundRunning)
@@ -386,9 +391,11 @@ void APFWildlifeDirector::Step()
         if (Animal->Health > 0)
             Living++;
     const double Now = GetWorld()->GetTimeSeconds();
-    if (!FParse::Param(FCommandLine::Get(), TEXT("PFRoundProbe")) && Living < 28 && Now >= NextReplenish)
+    const int32 TargetPopulation = Round->ArenaHalfExtent > 50000 ? 84 : 28;
+    if (!FParse::Param(FCommandLine::Get(), TEXT("PFRoundProbe")) && Living < TargetPopulation &&
+        Now >= NextReplenish)
     {
-        for (int32 I = 0; I < 2 && Living < 28; I++)
+        for (int32 I = 0; I < 2 && Living < TargetPopulation; I++)
             if (SpawnAnimal(Round->ArenaHalfExtent))
                 Living++;
         NextReplenish = Now + 1.5;
@@ -410,6 +417,19 @@ bool APFWildlifeDirector::SpawnAnimal(float Half)
     {
         FVector Point(FMath::FRandRange(-Half + 1000, Half - 1000),
                       FMath::FRandRange(-Half + 1000, Half - 1000), 0);
+        if (Half > 50000 && !Players.IsEmpty() && FMath::FRand() < .8f)
+        {
+            if (auto *Near = Players[FMath::RandHelper(Players.Num())].Get())
+            {
+                float Angle = FMath::FRandRange(0.f, 2 * PI), Distance = FMath::FRandRange(4500.f, 16000.f);
+                Point = Near->GetActorLocation() +
+                        FVector(FMath::Cos(Angle) * Distance, FMath::Sin(Angle) * Distance, 0);
+                Point.X = FMath::Clamp(Point.X, -Half + 1000, Half - 1000);
+                Point.Y = FMath::Clamp(Point.Y, -Half + 1000, Half - 1000);
+            }
+        }
+        if (Half > 50000 && FPFReserveLayout::Water(Point.X, Point.Y))
+            continue;
         bool TooClose = false;
         for (const auto &Weak : Players)
             if (auto *Player = Weak.Get())

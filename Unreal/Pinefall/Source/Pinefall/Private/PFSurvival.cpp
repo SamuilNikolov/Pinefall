@@ -1,4 +1,5 @@
 #include "PFCharacter.h"
+#include "PFVehicle.h"
 #include "PFGameMode.h"
 #include "PFMatchState.h"
 #include "PFInventoryComponent.h"
@@ -13,11 +14,13 @@
 bool APFCharacter::CanFight() const
 {
     auto *Match = GetWorld()->GetGameState<APFMatchState>();
-    return Health > 0 && !bDowned &&
+    return Health > 0 && !bDowned && !Vehicle &&
            (!Match || !Match->IsBattleRoyale() || Match->Phase == EPFRoundPhase::Active);
 }
 void APFCharacter::EndPlay(const EEndPlayReason::Type Reason)
 {
+    if (HasAuthority() && Vehicle)
+        Vehicle->Exit(true);
     GetWorldTimerManager().ClearTimer(ReloadTimer);
     if (ReviveTarget.IsValid())
     {
@@ -158,8 +161,20 @@ void APFCharacter::SurvivalSecond()
 }
 void APFCharacter::BeginInteract()
 {
-    if (!AcceptsInput() || !CanFight())
+    if (!AcceptsInput())
         return;
+    if (Vehicle)
+    {
+        ServerVehicleInteract(Vehicle, false);
+        return;
+    }
+    if (!CanFight())
+        return;
+    if (FocusedVehicle.IsValid())
+    {
+        ServerVehicleInteract(FocusedVehicle.Get(), false);
+        return;
+    }
     if (FocusedPickup.IsValid())
         ServerInteract(FocusedPickup.Get());
     else

@@ -11,7 +11,7 @@ void UPFRangerAssetTools::FitHeadCollision(USkeletalMesh *Mesh)
     const auto &Ref = Mesh->GetRefSkeleton();
     int32 HeadBone = Ref.FindBoneIndex(TEXT("head")), NeckBone = Ref.FindBoneIndex(TEXT("neck_01"));
     int32 NeckIndex = Asset->FindBodyIndex(TEXT("neck_01"));
-    if (HeadBone == INDEX_NONE || NeckBone == INDEX_NONE || NeckIndex == INDEX_NONE)
+    if (HeadBone == INDEX_NONE || NeckBone == INDEX_NONE)
         return;
     TArray<FTransform> Global;
     Global.SetNum(Ref.GetNum());
@@ -23,6 +23,12 @@ void UPFRangerAssetTools::FitHeadCollision(USkeletalMesh *Mesh)
     if (Up.IsNearlyZero())
         return;
     Asset->Modify();
+    if (NeckIndex == INDEX_NONE)
+    {
+        auto *Body = NewObject<USkeletalBodySetup>(Asset, NAME_None, RF_Transactional);
+        Body->BoneName = TEXT("neck_01");
+        NeckIndex = Asset->SkeletalBodySetups.Add(Body);
+    }
     int32 HeadIndex = Asset->FindBodyIndex(TEXT("head"));
     if (HeadIndex == INDEX_NONE)
     {

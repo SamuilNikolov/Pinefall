@@ -6,6 +6,7 @@
 #include "PFUserSettings.h"
 #include "PFInventoryComponent.h"
 #include "PFWildlife.h"
+#include "PFVehicle.h"
 #include "Camera/CameraComponent.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Blueprint/WidgetTree.h"
@@ -81,9 +82,13 @@ TSharedRef<SWidget> UPFInterface::RebuildWidget()
     CombatSlot->SetOffsets(FMargin(0));
     CombatSlot->SetZOrder(-100);
     auto *Brand = PFStyle::Text(WidgetTree, TEXT("PINEFALL"), 38, PFStyle::Paper);
-    PFStyle::Place(Canvas, Brand, FAnchors(0, 0), FVector2D::ZeroVector, FMargin(42, 28, 420, 65));
-    auto *Place = PFStyle::Text(WidgetTree, TEXT("Cedar Crossing  /  Field trial"), 14, PFStyle::Muted);
-    PFStyle::Place(Canvas, Place, FAnchors(0, 0), FVector2D::ZeroVector, FMargin(44, 86, 520, 45));
+    PFStyle::Place(Canvas, Brand, FAnchors(0, 0), FVector2D::ZeroVector, FMargin(28, 22, 300, 58));
+    auto *Place = PFStyle::Text(WidgetTree,
+                                GetWorld()->GetMapName().Contains(TEXT("WildfrontReserve"))
+                                    ? TEXT("Wildfront Reserve")
+                                    : TEXT("Cedar Crossing / Practice"),
+                                14, PFStyle::Muted);
+    PFStyle::Place(Canvas, Place, FAnchors(0, 0), FVector2D::ZeroVector, FMargin(30, 76, 400, 35));
     auto *Vitals = WidgetTree->ConstructWidget<UBorder>();
     Vitals->SetBrushColor(FLinearColor(.02f, .035f, .04f, .76f));
     Vitals->SetPadding(FMargin(18));
@@ -97,7 +102,7 @@ TSharedRef<SWidget> UPFInterface::RebuildWidget()
     PFStyle::Place(Canvas, Vitals, FAnchors(0, 1), FVector2D(0, 1), FMargin(42, -34, 300, 180));
     WeaponText = PFStyle::Text(WidgetTree, TEXT("Ridgeline"), 20, PFStyle::Paper);
     WeaponText->SetJustification(ETextJustify::Right);
-    PFStyle::Place(Canvas, WeaponText, FAnchors(1, 1), FVector2D(1, 1), FMargin(-42, -35, 460, 106));
+    PFStyle::Place(Canvas, WeaponText, FAnchors(1, 1), FVector2D(1, 1), FMargin(-30, -112, 440, 64));
     SessionText = PFStyle::Text(WidgetTree, TEXT(""), 13, PFStyle::Muted);
     PFStyle::Place(Canvas, SessionText, FAnchors(0, 0), FVector2D::ZeroVector, FMargin(44, 137, 620, 70));
     CombatLines.Reserve(65);
@@ -117,10 +122,10 @@ TSharedRef<SWidget> UPFInterface::RebuildWidget()
     auto *Stack = WidgetTree->ConstructWidget<UVerticalBox>();
     Scroll->AddChild(Stack);
     Label(Stack, TEXT("Enter the reserve"), 29, PFStyle::Paper);
-    Label(Stack, TEXT("Explore Cedar Crossing, test your aim, or invite friends to your range."), 15,
-          PFStyle::Muted);
-    Button(Stack, TEXT("Enter practice range"), TEXT("Resume"), true);
-    Button(Stack, TEXT("Host range · UDP 7777"), TEXT("Host"));
+    Label(Stack, TEXT("Explore the reserve, follow the roads, scavenge settlements and survive the storm."),
+          15, PFStyle::Muted);
+    Button(Stack, TEXT("Enter the world"), TEXT("Resume"), true);
+    Button(Stack, TEXT("Host exploration · UDP 7777"), TEXT("Host"));
     Button(Stack, TEXT("Host solo battle royale"), TEXT("HostSolo"));
     Button(Stack, TEXT("Host duos"), TEXT("HostDuo"));
     Button(Stack, TEXT("Host squads"), TEXT("HostSquad"));
@@ -209,12 +214,14 @@ void UPFInterface::NativeTick(const FGeometry &Geometry, float Delta)
     HealthBar->SetPercent(Character->Health / 100.f);
     HealthText->SetText(FText::FromString(
         FString::Printf(TEXT("Health %.0f   Armor %.0f"), Character->Health, Character->Armor)));
-    WeaponText->SetText(FText::FromString(FString::Printf(
-        TEXT("%s    %02d\n%s\n1 Rifle  2 Pistol  ·  R Reload  ·  V View"),
-        *Character->Weapon.DisplayName.ToString(), Character->Ammo,
-        Character->bReloading ? TEXT("Reloading…")
-                              : *FString::Printf(TEXT("Reserve %d   ·   Alt inventory"),
-                                                 Character->Inventory->Reserve(Character->WeaponId)))));
+    WeaponText->SetText(FText::FromString(
+        Character->Vehicle
+            ? FString::Printf(TEXT("%s   %.0f km/h\nFuel %.0f%%   Condition %.0f%%"),
+                              *Character->Vehicle->Label(), FMath::Abs(Character->Vehicle->Speed) * .036f,
+                              Character->Vehicle->Fuel, Character->Vehicle->Health / 5)
+            : FString::Printf(TEXT("%s   %02d / %d%s"), *Character->Weapon.DisplayName.ToString(),
+                              Character->Ammo, Character->Inventory->Reserve(Character->WeaponId),
+                              Character->bReloading ? TEXT("   Reloading") : TEXT(""))));
     HitText->SetRenderOpacity(Now < Character->HitUntil ? 1 : 0);
     HitText->SetText(FText::FromString(
         Character->bLastHitKill ? TEXT("Eliminated")

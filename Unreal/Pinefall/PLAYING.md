@@ -1,6 +1,20 @@
-# Playing the native Unreal build
+# Pinefall native 0.3 reserve
 
-Unreal 5.6.1, native version **0.2.1**. Matching Unreal clients are required. This is a development build launched through the installed editor, not a packaged replacement for the Unity release.
+The default map is now Wildfront Reserve: a 2,016 m square region with eight settlements, 64 enterable cabins, graded road links, a boating lake and shore piers. This is the first larger native reserve, not the complete 6 km Unity world. Cedar Crossing remains available through `tools/Run-Unreal.ps1 -Mode Practice` for focused combat tests.
+
+Settlements: Cedar Crossing, Willow Wharf, Rusty Rest, Granite Gorge, Sunset Sands, Frosty Falls, Meadow Market and Marshy Mill. Woodland, meadow, sand, rock and snow surfaces establish the first land-cover regions. These are not yet finished biome-specific ecosystems or authored cities.
+
+There are sixteen trail trucks and three riverboats. Look at a vehicle and press E to enter; E exits when a safe place is available. WASD drives, Shift boosts, Ctrl brakes and the mouse looks around independently. Vehicles consume fuel and take weapon damage. Some trucks start empty or broken: R while looking at one uses a vehicle service kit, restoring 150 condition and 35 fuel. A kit can also service the nearest eligible vehicle through inventory. Empty vehicles stop simulation ticks. This first pass has one driver seat, no passenger seating, suspension/wheel animation or final engine audio.
+
+The reserve starts with 208 supply placements inside cabins and around village junctions. Weapons/ammunition, food, medical supplies, armor and service kits use server-owned inventory transactions. Rarity rolls are weighted 40% common, 28% uncommon, 20% rare, 9% epic and 3% legendary; some ordinary supply types explicitly stay common. Rarity currently classifies loot and colors its presentation; it does not yet implement the legacy attachment economy. Two actual guns remain enabled. Supplies use original recognizable 3D models; weapons retain their scanned models.
+
+M opens the full map. Scroll to zoom and middle-drag to pan. The minimap follows you. Teammates and empty/allied vehicles update through an owner-only feed; enemy-occupied vehicles and ordinary enemy positions are excluded. Landing decisions remain public during the turn-based draft. The atlas is a 2K terrain/road/roof/forest bake from the saved layout, not a satellite photograph or an orthographic renderer capture.
+
+The active ranger is a textured, stylized hooded adventurer with a readable green outfit, rather than the earlier realistic character. Crouching uses planted ankle rotations, a shallower 35 cm pelvis drop, a matching 72 cm capsule half-height and a gentler camera drop. Proper magazine/bolt animation, first-person arms, full weapon-hand IK, customization and production character art remain unfinished.
+
+## Playing the native Unreal build
+
+Unreal 5.6.1, native version **0.3.0**. Matching Unreal clients are required. This is a development build launched through the installed editor, not a packaged replacement for the Unity release.
 
 ## Start and join
 

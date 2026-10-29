@@ -1,0 +1,24 @@
+{
+  "source": "Credited Quaternius CC0 ranger and universal animation library",
+  "clips": [
+    "idle",
+    "walk",
+    "run",
+    "walk_back",
+    "strafe_left",
+    "strafe_right",
+    "jump",
+    "fall",
+    "land",
+    "swim",
+    "swim_idle",
+    "RifleHold",
+    "PistolHold",
+    "RifleReload",
+    "PistolReload",
+    "CrouchIdle",
+    "CrouchWalk"
+  ],
+  "vertices": 27891,
+  "crouch": "35 cm lowered/back pelvis, forward knee poles, planted ankle rotations; native capsule 72 cm half-height"
+}

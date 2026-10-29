@@ -82,6 +82,35 @@ void APFWorldPickup::RefreshVisual()
         Color = FLinearColor(.07, .19, .27);
         Stripe = FLinearColor(.16, .48, .72);
     }
+    const TCHAR *ModelName = Item.Kind == EPFItemKind::Food         ? TEXT("SM_RationTins")
+                             : Item.Kind == EPFItemKind::Medkit     ? TEXT("SM_MedicalBag")
+                             : Item.Kind == EPFItemKind::Ammo       ? TEXT("SM_AmmoBox")
+                             : Item.Kind == EPFItemKind::ServiceKit ? TEXT("SM_ServiceCase")
+                                                                    : TEXT("SM_FieldVest");
+    FString ModelPath = FString::Printf(TEXT("/Game/Pinefall/Art/Reserve/%s.%s"), ModelName, ModelName);
+    if (auto *Model = LoadObject<UStaticMesh>(nullptr, *ModelPath))
+    {
+        Body->SetStaticMesh(Model);
+        Body->SetRelativeScale3D(FVector(1));
+        Body->SetRelativeLocation(FVector(0, 0, 2));
+        // A small rarity plate anchors supplies without obscuring the actual model.
+        Detail->SetStaticMesh(
+            LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cylinder.Cylinder")));
+        Detail->SetRelativeScale3D(FVector(.48, .48, .012));
+        Detail->SetRelativeLocation(FVector(0, 0, 1));
+        const FLinearColor Tiers[] = {FLinearColor(.35, .39, .4), FLinearColor(.22, .57, .3),
+                                      FLinearColor(.2, .45, .85), FLinearColor(.56, .3, .8),
+                                      FLinearColor(.85, .57, .16)};
+        auto *Base =
+            LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Pinefall/Materials/M_Supply.M_Supply"));
+        if (Base)
+        {
+            auto *Mark = UMaterialInstanceDynamic::Create(Base, this);
+            Mark->SetVectorParameterValue(TEXT("Tint"), Tiers[FMath::Min<int32>(Item.Rarity, 4)]);
+            Detail->SetMaterial(0, Mark);
+        }
+        return;
+    }
     auto *Material =
         LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Pinefall/Materials/M_Supply.M_Supply"));
     if (Material)

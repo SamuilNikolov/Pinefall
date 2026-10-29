@@ -12,8 +12,8 @@ $project = Join-Path $projectRoot 'Pinefall.uproject'
 if (!(Test-Path -LiteralPath $editor) -or !(Test-Path -LiteralPath (Join-Path $projectRoot 'Content\Pinefall\Maps\CedarCrossing.umap'))) {
     throw 'Run tools\Setup-Unreal.ps1 first. The native project and generated scene must both exist.'
 }
-$travel = '/Game/Pinefall/Maps/CedarCrossing'
-if ($Mode -eq 'Practice') { $travel += '?play' }
+$travel = '/Game/Pinefall/Maps/WildfrontReserve'
+if ($Mode -eq 'Practice') { $travel = '/Game/Pinefall/Maps/CedarCrossing?play' }
 if ($Mode -eq 'Host') { $travel += '?listen?play' }
 if ($Mode -in @('Solo','Duo','Squad')) {
     $teamSize = if ($Mode -eq 'Duo') {2} elseif ($Mode -eq 'Squad') {4} else {1}

@@ -1,5 +1,8 @@
 # Pinefall presentation direction
 
+**Character direction update, October 29:** the user explicitly prefers fun, somewhat cartoony characters over hyperrealistic people. Active TrailRanger uses stylized proportions, readable palette textures and a hooded outdoor silhouette. Keep terrain/light/material ambitions, but do not return to realistic skin/pore-heavy characters. Natural weapon grips, planted crouch and readable peer animations remain art-quality gates.
+
+
 The target is a grounded wilderness battle royale: readable combat amid convincing landscape, with moments of danger and beauty. Professional presentation comes from consistent scale, material response, animation, interaction and sound. Increasing polygon counts alone will not fix a floating gun, harsh footsteps or an unreadable menu.
 
 ## Cedar Crossing visual benchmark

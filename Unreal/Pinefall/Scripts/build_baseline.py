@@ -192,7 +192,7 @@ unreal.PFWorldBuilder.build_landscape()
 unreal.PFWorldBuilder.populate_foliage([meshes['SM_PineA'],meshes['SM_PineB'],meshes['SM_PineC']],meshes['SM_Grass'],meshes['SM_Fern'])
 
 def spawn(kind,label,position=(0,0,0),rotation=(0,0,0)):
-    actor=actors.spawn_actor_from_class(kind,unreal.Vector(*position),unreal.Rotator(*rotation));actor.set_actor_label(label);return actor
+    actor=actors.spawn_actor_from_class(kind,unreal.Vector(*position),unreal.Rotator(pitch=rotation[0],yaw=rotation[1],roll=rotation[2]));actor.set_actor_label(label);return actor
 spawn(unreal.SkyAtmosphere,'Physical sky')
 sun=spawn(unreal.DirectionalLight,'Afternoon sun',rotation=(-24,-38,0)).get_component_by_class(unreal.DirectionalLightComponent)
 sun.set_mobility(unreal.ComponentMobility.MOVABLE);sun.set_editor_property('intensity',50000);sun.set_editor_property('atmosphere_sun_light',True);sun.set_editor_property('use_temperature',True);sun.set_editor_property('temperature',5400)

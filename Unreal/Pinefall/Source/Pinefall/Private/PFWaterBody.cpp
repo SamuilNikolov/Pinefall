@@ -27,7 +27,9 @@ APFWaterBody::APFWaterBody()
 bool APFWaterBody::ContainsWater(const FVector &Point) const
 {
     FVector Delta = Point - GetActorLocation();
-    return FMath::Square(Delta.X / 4200) + FMath::Square(Delta.Y / 6000) <= 1 && FMath::Abs(Delta.Z) <= 1000;
+    FVector Extent = WaterBounds->GetScaledBoxExtent();
+    return FMath::Square(Delta.X / Extent.X) + FMath::Square(Delta.Y / Extent.Y) <= 1 &&
+           FMath::Abs(Delta.Z) <= Extent.Z;
 }
 bool APFWaterBody::IsOverlapInVolume(const USceneComponent &Test) const
 {

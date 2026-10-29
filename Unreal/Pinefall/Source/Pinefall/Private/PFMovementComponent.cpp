@@ -27,7 +27,7 @@ float UPFMovementComponent::GetMaxSpeed() const
         return MaxSwimSpeed;
     if (Player->Hunger <= 0)
         return 250;
-    return IsCrouching() ? 250 : bWantsSprint && Player->Stamina > 5 && Player->Hunger > 20 ? 940 : 480;
+    return IsCrouching() ? 200 : bWantsSprint && Player->Stamina > 5 && Player->Hunger > 20 ? 940 : 480;
 }
 void UPFMovementComponent::UpdateFromCompressedFlags(uint8 Flags)
 {

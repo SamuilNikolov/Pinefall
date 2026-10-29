@@ -1,0 +1,2856 @@
+{
+  "date": "2026-10-29",
+  "engine": "Unreal 5.6.1",
+  "native_build": "Development Editor 26 succeeded; only map label bounds changed after gameplay build 24",
+  "asset_refresh": "25; 17 stylized clips and explicit materials",
+  "checks": {
+    "reserve": 32,
+    "delayed_combat": 16,
+    "world": 15,
+    "round": 36,
+    "wildlife": 15,
+    "remote_species": 3,
+    "scoped_fire": 5
+  },
+  "runs": {
+    "reserve": "unreal-reserve/20261029-162640",
+    "combat": "unreal-combat/20261029-162732",
+    "world": "unreal-world/20261029-160610",
+    "round": "unreal-battle/20261029-160619",
+    "wildlife": "unreal-wildlife/20261029-160655",
+    "scoped-fire": "unreal-tests/20261029-160715"
+  },
+  "limits": [
+    "No Unity parity claim",
+    "No production art/animation claim; weapon hand contact still unfinished",
+    "No rendered FPS, audible mix, microphone, broad WAN, twenty-human or packaged-distribution validation"
+  ],
+  "fingerprints": [
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Pinefall.Build.cs",
+      "sha256": "0a275bf44496fcf54dccee176f6a4f8c6e63456b7ce6df32cc7949aea9456963",
+      "bytes": 382
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFCharacter.cpp",
+      "sha256": "a69207207748114f465efaaa81d9d83d67513585e399e30ae5ad64be6f0dece4",
+      "bytes": 40512
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFCharacterVehicle.cpp",
+      "sha256": "a48eaf768088ec10c511709f8765d63de849c81f2c3c741343e21ac289585f07",
+      "bytes": 2377
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFCombatHUD.cpp",
+      "sha256": "1da3282d15aabb76b0d43d9745b67d3d95089801201a1a3feda1d1facbff21ad",
+      "bytes": 10406
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFCombatProbe.cpp",
+      "sha256": "05d02efa3f2c7f2bf83179e8ac7b3cc936e639af2bc11d86dbb0879ff9514f37",
+      "bytes": 10091
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFExpeditionUI.cpp",
+      "sha256": "b67a371f2dd5c1a93feb18e41ab6ded8a9066f2b00e77dfb4477e28525e20223",
+      "bytes": 20348
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFGameInstance.cpp",
+      "sha256": "5d027f71d03d7cbd7b7a445d43d569579ee2633b8ce7a08fdca349b12beae5e1",
+      "bytes": 2378
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFGameMode.cpp",
+      "sha256": "19836d00073241a7d98727c745589aa2e9d60333d74df637b5c10cbe33c6f298",
+      "bytes": 2903
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFHitHistoryComponent.cpp",
+      "sha256": "e00688875e6ffc7684293e82da1a0829e40d67a2075b010835471af40c9e5dc6",
+      "bytes": 9188
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFInterface.cpp",
+      "sha256": "ba1a6574e10375649feb29ba567f9a7136d9c0a5841f709358204342e3fa488e",
+      "bytes": 15496
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFInventoryComponent.cpp",
+      "sha256": "77ae33c69d12a76efb100d1b7cdda96bc2a734ecb0f12884b5fe71b3c9aaf9dd",
+      "bytes": 11275
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFItemButton.cpp",
+      "sha256": "f000f2d5ddab9039608cee6f8ce9d0ee9a0582dec3b8baaa3324c60e114aaf35",
+      "bytes": 996
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFMatchProbe.cpp",
+      "sha256": "1c129e482244fc1401f2aace0b307d89c7548843115005446afc86ad64d11164",
+      "bytes": 14713
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFMatchRules.cpp",
+      "sha256": "2243275a96084d9f5d620fb7f586585ab91c8ef7a5df050ce5735943a14fe3ff",
+      "bytes": 20865
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFMatchState.cpp",
+      "sha256": "fb5612d19231369d569c803655deeeef22ed0a751e56667429d2d18f197d4a19",
+      "bytes": 2033
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFMovementComponent.cpp",
+      "sha256": "496a0ce466f51e78dc359db6eb0327cefe92bf723fe3793da222ffe832f80a73",
+      "bytes": 2613
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFPlayerController.cpp",
+      "sha256": "94ef4f7732e82b23cc0138cd94c2c5c68c1161da6a7bff72ca15f22e6043e0f2",
+      "bytes": 12493
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFRangerAnimInstance.cpp",
+      "sha256": "af501cc68f06b1abf0e769416b7bee2697a008f35cf897e1d5b8a7047c98ef41",
+      "bytes": 7975
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFRangeTarget.cpp",
+      "sha256": "e04219e37c35b161041ae9a0eba09192b2f4639eb5125b5dfdd33be5ee96dcce",
+      "bytes": 2352
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFReserveLayout.cpp",
+      "sha256": "a4ba3f56d608aefc53a076455dab4fc7406d6496ea5f56feedc1817a08631cd3",
+      "bytes": 2698
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFReserveProbe.cpp",
+      "sha256": "af89722e6a87806388860db6cf147eeb38c426aaf2a66b78174054ad8d0e290c",
+      "bytes": 16228
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFReserveWorld.cpp",
+      "sha256": "c5e512e7b4b50f93376b9f49ae0ac922a11fcfb070e59cada300db6f02a9505a",
+      "bytes": 6093
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFStormVisual.cpp",
+      "sha256": "f5c68cd256233d58241a6d9f152bd40e5240eec9d1981bd0056156cf7f8adf2d",
+      "bytes": 1435
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFSurvival.cpp",
+      "sha256": "fac15ad170054134bfd311168cda2132294288a2095d2a15bb69f0ed356f595d",
+      "bytes": 7597
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFTacticalMap.cpp",
+      "sha256": "60f1ddb3527631f5d905d77de1f64e67cbd8b087d94eebea69a55f0637ab93d5",
+      "bytes": 11530
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFUserSettings.cpp",
+      "sha256": "6addb14500b20e7f7c2ad5f886d32c9456befe3ae4cbb158f5922ea24a944279",
+      "bytes": 671
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFVehicle.cpp",
+      "sha256": "14aab716145e5e7c6512706763511970cd1741f181a9973f4364fc3d3d91f458",
+      "bytes": 11844
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFWaterBody.cpp",
+      "sha256": "c612ea77429aea8790b29546b4a0dd218b7c0d1b81623124623bb576c13e8bde",
+      "bytes": 1559
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFWildlife.cpp",
+      "sha256": "826b1325f26ee4b117bda15ea5eb2ca2acf94d72d90212eda1f4857dddf0c128",
+      "bytes": 20105
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFWildlifeProbe.cpp",
+      "sha256": "a12c3e4c35ca15fe7dd9d09adcd8b039713d1d84f85d90abf4ece1c3b03b8bbf",
+      "bytes": 7275
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFWorldPickup.cpp",
+      "sha256": "73af02d83b296d3f8aa60b92e692c4d71e7bc580c258bcaed8bf0069a3390695",
+      "bytes": 5855
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFWorldProbe.cpp",
+      "sha256": "7e341af154e1cdebc17139491581e0ce47e979a9c09c864c2f5672976ff5a7e1",
+      "bytes": 7253
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/Pinefall.cpp",
+      "sha256": "8aba13a9ac1142a75373328f963d95d4f011b24be24d4d54c27307da2604cd12",
+      "bytes": 114
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFCharacter.h",
+      "sha256": "3c4229f3f92d35b11279264c4c0c95277d255302863a7334fa992120abcc679f",
+      "bytes": 7498
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFCombatHUD.h",
+      "sha256": "88c23c061afad82ae4d5a8d237608457c8ca9c35e804aac3af2edd5ec7a28cea",
+      "bytes": 636
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFGameInstance.h",
+      "sha256": "23f9679b9b3589ba23501944d86ba951fdf22775dd25760b47c56418350ff03e",
+      "bytes": 581
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFGameMode.h",
+      "sha256": "e2fafadf7d6c967c7bd0191fdd5723f0ed47cfaa4b65df8d4d2d3b383dbe68f5",
+      "bytes": 3553
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFHitHistoryComponent.h",
+      "sha256": "8ba71030c0523e877dd68c41f8b2540ede9cf32f0d2c990a8db582bce9bc9d38",
+      "bytes": 1446
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFInterface.h",
+      "sha256": "89f0ccb0dcf6a58b2d26f138e7dad444b3de65bb645433cfee850bd076079538",
+      "bytes": 3769
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFInventoryComponent.h",
+      "sha256": "30e05a0a4e050f1235e21c4df449cae93c93ca5364cbb6e246443d1fc6f91b27",
+      "bytes": 1904
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFItemButton.h",
+      "sha256": "edd71c359129a285056696ab437e38750ef7e4a945e9335e623421c25e20ad41",
+      "bytes": 531
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFMatchState.h",
+      "sha256": "d28e178c66ad799e19bf1f8ad59a19d1c2c7071f836e8470c42406927dad9a27",
+      "bytes": 2119
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFMovementComponent.h",
+      "sha256": "d51aa319db13e98dd5c8571d49900be92b010f8564748baca36a5590f4a27e2e",
+      "bytes": 1543
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFPlayerController.h",
+      "sha256": "ff595526690353d15384e6cce064967c68e6aeacf4a3be720ba0aa99993560b4",
+      "bytes": 2766
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFRangerAnimInstance.h",
+      "sha256": "87e35a23b8e59017b0e6ebbef7cb935e94f71b08669b3ae724c2859bc03b47b8",
+      "bytes": 530
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFRangeTarget.h",
+      "sha256": "f62888c693dd0fa16054d5cabac016204268afc19a79061c450e07e9fc8d71f4",
+      "bytes": 610
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFReserveLayout.h",
+      "sha256": "0f1c38197c4f70e85dbc14414ac87e01890e2e9e4be704d7085173a1d436163f",
+      "bytes": 596
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFReserveWorld.h",
+      "sha256": "724016cd1076831e9d348ae9b7f1d0c1bfcba8c189af4aa59cb017b8ca86cff2",
+      "bytes": 656
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFStormVisual.h",
+      "sha256": "d53ea7d4002c66a8d91073d4808ed3d318efbb5bacbd57270c052a2a69a0099b",
+      "bytes": 404
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFTacticalMap.h",
+      "sha256": "f46a00df0350862fba42806f60ec674bb8b9a64f4862df7391e761b4616091b8",
+      "bytes": 1329
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFUserSettings.h",
+      "sha256": "f7993d11cd58091e505ffa992cc321aef00a31f9bc05d8735e29af2caad26334",
+      "bytes": 487
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFVehicle.h",
+      "sha256": "861d13d7e7955a2a03964f237507fd9435f3ec6fd42948f43537fcdefc301f63",
+      "bytes": 1897
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFWaterBody.h",
+      "sha256": "69484131451503e3f482e2647f973f9249146122cb796e616654e7be79077c87",
+      "bytes": 666
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFWeaponDefinition.h",
+      "sha256": "72d49d5783885aa878c1915e97cb37277fe4189bd66cda62edde4bb703cbb048",
+      "bytes": 1285
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFWildlife.h",
+      "sha256": "a767c22cd7f0774714d6b715187cb314ed76e3c9528b6f4da73c9a1d06f8f6bd",
+      "bytes": 2860
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFWorldPickup.h",
+      "sha256": "37e90b6229c8b37fb1f70069dcc8098a1bfbdbaf2aa4c3dfdb9212c2a103d299",
+      "bytes": 841
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall.Target.cs",
+      "sha256": "961b50a5667434da7c2ab3fc88cb315c9151db58fd1801ee994b73eb2e9c0739",
+      "bytes": 295
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/PinefallEditor.Build.cs",
+      "sha256": "06333bd1d9754873a50ddb050b2c66035eb78b0921f69c6eca23bbfbe546d5fb",
+      "bytes": 416
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/Private/PFRangerAssetTools.cpp",
+      "sha256": "f696e2c63b8f0427888d67c67ede141d2e42380dcc4f81f1b9a6eb8565906fe4",
+      "bytes": 4566
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/Private/PFReserveBuilder.cpp",
+      "sha256": "9619421889a7adc3fb5bd106113e3ca5ee5c613031416fab8c182cfe90acb228",
+      "bytes": 10816
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/Private/PFWorldBuilder.cpp",
+      "sha256": "889dcf0b40eb08a3f5ceea964f73066fff7f926f068845e43d86a20c731b88cc",
+      "bytes": 10375
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/Private/PinefallEditor.cpp",
+      "sha256": "ad3c53937d30a168d1554a6e5bbb976045e07737a17527bc214fd91d79418a76",
+      "bytes": 518
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/Public/PFRangerAssetTools.h",
+      "sha256": "1be5d5829b169631e9138b70dd27b12e27f95075cdef6678af8bc42761b75070",
+      "bytes": 370
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/Public/PFWorldBuilder.h",
+      "sha256": "8c47fa4ffaea4780637a717bcc0750854f7983696cb5b03f5b64af35bbb2b3fe",
+      "bytes": 1457
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor.Target.cs",
+      "sha256": "1db4e3e13023ec757ff656e34a7b31a26b29dac4c5c482138207479c7788662e",
+      "bytes": 338
+    },
+    {
+      "path": "Unreal/Pinefall/Config/DefaultEngine.ini",
+      "sha256": "1b59943e517173a009e75febaa4666af466c81636c780dc7ce1a4f3d396ca885",
+      "bytes": 1240
+    },
+    {
+      "path": "Unreal/Pinefall/Config/DefaultGame.ini",
+      "sha256": "21c845eb990efbdf1ec762d301d406ce48985bc8a11f3da5670e30208cfa683c",
+      "bytes": 643
+    },
+    {
+      "path": "Unreal/Pinefall/Config/DefaultInput.ini",
+      "sha256": "e37c479035e491d9f0b15b4e38712a598213481b785da3a6630d01bbda2bb646",
+      "bytes": 339
+    },
+    {
+      "path": "Unreal/Pinefall/Config/DefaultScalability.ini",
+      "sha256": "fb2344b4f536c9e2596c35bebe19d5375daef63ee102b2a511589d90cd22172a",
+      "bytes": 270
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/audit_character_materials.py",
+      "sha256": "ec0dacd3d4471ff8d1937f025d11617b7c4e883233cd21182e57030885ffa43f",
+      "bytes": 764
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/audit_ranger_dependencies.py",
+      "sha256": "d837efd36e27b4f537b88e9fb003a53e135b1bd91e7c4322406da395b1694b08",
+      "bytes": 784
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/audit_reserve_transforms.py",
+      "sha256": "d081054cc3735456932ed5e6ecaa98f0b9a10f55575a4c7bab667e500c5b98bd",
+      "bytes": 546
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/audit_scene.py",
+      "sha256": "7cbc68274d19a444688f2f2872f94e640c788dce07dddef9d7e1ad197f946a05",
+      "bytes": 1225
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/bake_reserve_atlas.py",
+      "sha256": "9b394fb215d6f80a822f4972abab8cb8ffb1b08796bf6b314a8649e0d2ef1cb4",
+      "bytes": 2283
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/build_baseline.py",
+      "sha256": "6c8cc7721613f9d212363439d05cc7e42209067ad91bd983eff156409d042215",
+      "bytes": 17923
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/build_combat_audio.py",
+      "sha256": "0c5e88f3abe4c8843a58e4f1736798ba6f14e3f2a77f80f2e478cbcfd5def8c7",
+      "bytes": 2403
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/build_reserve.py",
+      "sha256": "177bb495718e9a631f01c5e17990e6592b464a9563c96fbd8c23973c6b32ef78",
+      "bytes": 12476
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/build_round_assets.py",
+      "sha256": "bede4a44f7294acdb9851671560b35255b57b6df86119a5adc01bf36b5045d0a",
+      "bytes": 6645
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/fix_character_materials.py",
+      "sha256": "e336d084c632fe14f3acdd61db00dba33186a7aa1210c22cec8fc4c1498a1873",
+      "bytes": 4732
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/fix_stylized_materials.py",
+      "sha256": "d1c75b3c5ab129ca3e637ac4ae7412200c7c1d911b0e80e90bd5bad48058746e",
+      "bytes": 4693
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/ground_stochastic.hlsl",
+      "sha256": "82f3038773193d7e02a3c5345c861cbecc7a00708aab408e959d0dff71592abc",
+      "bytes": 1919
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/import_ranger.py",
+      "sha256": "7090d021608e51e76008c18fc480a5839cf391db66e8eb6d7070fe6fbb600bd6",
+      "bytes": 2917
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/import_reserve_atlas.py",
+      "sha256": "915c0979673f5aafa455e755ecc99247b9543f4a369727274a600850342b0db6",
+      "bytes": 732
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/import_stylized_ranger.py",
+      "sha256": "d6c6fd3f46893ef0975b44b82c529d0c6ec5f0bb5731cbe2ab59999364ad8b97",
+      "bytes": 2805
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/import_wildlife.py",
+      "sha256": "eae4a082a03a5c3f79cfeb04ade00aebdc57c6c8f2d829b624cb8339ebac8c74",
+      "bytes": 4704
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/merge_stylized_ranger.py",
+      "sha256": "d7d93ffcd5a46a74bdd4837eca5ec01d2cab89ce2ccded021aaf65573b81c74f",
+      "bytes": 3552
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/prepare_ranger.py",
+      "sha256": "03cc7294802fb4e9b4cfb963f230333ad68e623095343b9d62a8264bd8866cad",
+      "bytes": 11700
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/prepare_reserve_props.py",
+      "sha256": "e851c170f6c9ad2fc5c14040a0093cc27f12b5c9d0bb8b12cd95b4afa3346f2b",
+      "bytes": 7820
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/prepare_stylized_ranger.py",
+      "sha256": "9c62a2b8c757851613df36c93708720e6be59832dd0f9d6963e934641188e66e",
+      "bytes": 10140
+    },
+    {
+      "path": "Unreal/Pinefall/Scripts/upgrade_world.py",
+      "sha256": "004a3a41ccb312f0535adc320b36a88f45fb61f8007db96a9413bbbc45ae12de",
+      "bytes": 10305
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/Cloth_boots.uasset",
+      "sha256": "a1b355c33f14b5b4a8795521ab27512967c639a5cbdc5673f278fb3943566a0a",
+      "bytes": 49549
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/Cloth_jeans.uasset",
+      "sha256": "0250dcd2d139017ac5e7574dba8423f2112c69b4a390ea50a695256e23325035",
+      "bytes": 52385
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/Cloth_shirt.uasset",
+      "sha256": "04e5d7517baed3527d3703da8057d839f9a44f1582baeff7762c1254f5a967f8",
+      "bytes": 49061
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/Cornea.uasset",
+      "sha256": "23d846a9652948400c15809adf80a0bf3952314ecc7176beeab8830cd85b6372",
+      "bytes": 47299
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/CrouchIdle.uasset",
+      "sha256": "e7b41883e3372f93eddaf5c3be1f1ccf64e3a9e5e73d609263eea9174a35248e",
+      "bytes": 664570
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/CrouchWalk.uasset",
+      "sha256": "1e86c8299180d48a2a2f5be818779c22d1ee21ffcd7c5a109cff64079f6920a6",
+      "bytes": 307863
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/eye.uasset",
+      "sha256": "a015a086461568badb6deda262e21d2525d5aa824f5259ddb3714a4c1d57968f",
+      "bytes": 437952
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/eye1.uasset",
+      "sha256": "cc49e27df429b62b83a560f27ef9e4d8c621e2d27fdc87afc833c810f8bc7b3c",
+      "bytes": 437980
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/Eye12.uasset",
+      "sha256": "0b0e70c7ef8497204fa352039a692d3c57f2dcc95f67f23458ca14e7a63523f3",
+      "bytes": 48891
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/eyebrow.uasset",
+      "sha256": "3cf473f43e32340b49ad00973591ebba558f220705f1d4e9335062a6500acdae",
+      "bytes": 138771
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/Eyebrow1.uasset",
+      "sha256": "69951ea955a07f1aafb23af50470c08388e83e2d22624211ce17eec539c7719a",
+      "bytes": 50602
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/eyelash.uasset",
+      "sha256": "595dd57a4fe14c1e99ab4b2cb5e1e5d2753619f31f3c05c04a2a030980185b38",
+      "bytes": 121078
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/Eyelash1.uasset",
+      "sha256": "ae125ab3575891dc98c140104a82a0b47b432d7cf6f089b767f404b501f7c947",
+      "bytes": 50602
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/fall.uasset",
+      "sha256": "e0ea0353350a794184825e7d9b97997640496bedacddda95dc5e70755abab0b7",
+      "bytes": 267995
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/FieldRanger.uasset",
+      "sha256": "90517deb037f60bcefd9261c407b42c421390c345766e3cfd6621dbaea7c9a67",
+      "bytes": 5476001
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/FieldRanger_PhysicsAsset.uasset",
+      "sha256": "9e25344c95dd580aeb525377abc22833cd8be29943ae1c95b344ac3c9ae13fb7",
+      "bytes": 25188
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/FieldRanger_Skeleton.uasset",
+      "sha256": "a86e73432f5d1015060cc3d65ac93c6d1a08a3c54b616073ff028b65ac721101",
+      "bytes": 12491
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/hair_ponytail01.uasset",
+      "sha256": "e80562dd886ea2a78d28bf7dcdd03d99f5f9bb09363460f4867b912fceb36d29",
+      "bytes": 1020846
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/Hair_ponytail011.uasset",
+      "sha256": "d5a7d7c6a26bb13ff70bd729caa754c6e58f2d3037d071fe24e7c97182d606f6",
+      "bytes": 50815
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/idle.uasset",
+      "sha256": "02db784b57012f6b2cc21536e15bdd7812eac4543de844ee5a0f8f5649532208",
+      "bytes": 664510
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/idle_breathe.uasset",
+      "sha256": "5cae26b0dcf9351f2a72dd2626d0f20a6aed6fbd432c1ce7f233ae3cb0484921",
+      "bytes": 672191
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/idle_fidget.uasset",
+      "sha256": "8f7be9b23f60bdd874432f10dadb97ee15c4a0a33f9f314a85bbf8cc2e71ead9",
+      "bytes": 751958
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/idle_look.uasset",
+      "sha256": "44b0e8f92ebd7bb372466079287bbc0f0c573797a2aa9fcc5cc475ff5db89bb3",
+      "bytes": 779683
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/Iris.uasset",
+      "sha256": "ccd9748b21652fe363817401081e914b4585f1ffd6dede111c6f18504ec2b1a8",
+      "bytes": 49349
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/jump.uasset",
+      "sha256": "11473f60d4d8e402e1f5e79403d89f4d6532e39628c5932f6a079c8593a840f8",
+      "bytes": 342636
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/land.uasset",
+      "sha256": "ec7f32c08871e36e262892302af3fc089990798512bea99b9992385181b368cb",
+      "bytes": 293036
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/PistolHold.uasset",
+      "sha256": "ef082b0e4174fcdf31c215df78c85c066a149ac856884e4464213d23ca807326",
+      "bytes": 710842
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/PistolReload.uasset",
+      "sha256": "b1334e9b89b8f0400b776b4c461559b8b5a0b40e0cddd16a26c594fde5965d97",
+      "bytes": 388779
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/RifleHold.uasset",
+      "sha256": "b929ad473ca95948875a8d2ff088c4b0c96b2679373327ed1ff3f3d0d6d0bcc3",
+      "bytes": 703120
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/RifleReload.uasset",
+      "sha256": "1d5e35edd72fa01be7762940d5ea751cc2e5af88457d7404a01fd12d5e203ca1",
+      "bytes": 386337
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/run.uasset",
+      "sha256": "cbd1ab3e1bcadaa546444c8e5933d512aad72f7f57050fa347d53dc8998a92ba",
+      "bytes": 290274
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/Skin.uasset",
+      "sha256": "2afbcd3426efffbfc0ae2ff67105b9bfbacd65f95cb4933a0fe2d6f4b5fceabe",
+      "bytes": 52567
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/skin_albedo.uasset",
+      "sha256": "5d131c0d6f00d44e0265849856cec2f7f4a48c879163a51ed2500408e4616dcf",
+      "bytes": 3475519
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/skin_normal.uasset",
+      "sha256": "b1dcb4f568f53e89763e773d03daf15ba9b0fce82326048fe3b3156048442d38",
+      "bytes": 1215201
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/strafe_left.uasset",
+      "sha256": "6830692f002b069a73f3d255e1342a12c16a04a0c1176419a78ef69e1a864192",
+      "bytes": 295858
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/strafe_right.uasset",
+      "sha256": "fdb8eb62771ca44f376d542b9ef9c4517f570d34f1b94069297055b1fd6b01a8",
+      "bytes": 295868
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/teeth.uasset",
+      "sha256": "5c5f1704d842b0642e84a5be597a84feff43961a158ba8703cec3441110e750b",
+      "bytes": 293505
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/Teeth1.uasset",
+      "sha256": "28107bede60418fe9ba397ff54f30fc1804ce41733452c423125e07c31d7b425",
+      "bytes": 48958
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/tongue.uasset",
+      "sha256": "5a1acce01fbd96fcf9a262b418ace2a5a8356c930440e7430602b137843f0a6f",
+      "bytes": 172405
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/Tongue1.uasset",
+      "sha256": "59fc57cfbc4593f33b00401edb6646e973484f1a1f99d698c4072d553f606ee7",
+      "bytes": 48981
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/walk.uasset",
+      "sha256": "2180aeb0cab9f48ae2d2ff38c169254ffe67478b6c3d1f51e6d43deb6171985b",
+      "bytes": 307692
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/Ranger/walk_back.uasset",
+      "sha256": "64674429d5a226bed1e4a0cfb3195a7501f18276db40b53575ddc96b5f7c3cd3",
+      "bytes": 312094
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/CrouchIdle.uasset",
+      "sha256": "08ed4ce8baaa7bc77cb53c3179e298643109751fcecbd44a4c9d9d73dc30ffe8",
+      "bytes": 391877
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/CrouchWalk.uasset",
+      "sha256": "97848971057d1829b42b970e2c0eb0ee489435a8f0cd8c9791a42288194a8894",
+      "bytes": 364165
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/fall.uasset",
+      "sha256": "f4655167a8f73e84da722dcae059ea5dcef499af6abea1b10328a170c9357383",
+      "bytes": 396546
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/idle.uasset",
+      "sha256": "09bebbd3d678d564f0f8c3a71302d99aa62267088df67d0ddd8ec5a7fefe8c12",
+      "bytes": 391682
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/jump.uasset",
+      "sha256": "830b04ac0cc7040f627e738c430b1acef466a5787dec29e7dfc569c898ef6dd2",
+      "bytes": 419074
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/land.uasset",
+      "sha256": "042a87aa1fcdb48f24cd756902d483228d15859b20898c1f0f2957edbfb2224d",
+      "bytes": 418402
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/MI_Eyes.uasset",
+      "sha256": "c2bcc4e6fa0a4bc95455998d6df5c18ce61193d3de893197bb3d4ac0751c0c39",
+      "bytes": 51894
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/MI_Hair_1.uasset",
+      "sha256": "a5cca22b2464ca2e56474ce6e7680a17a44e480c13c0ed5345699eb7366f68a9",
+      "bytes": 51996
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/MI_Hair_1_001.uasset",
+      "sha256": "6c192c28c79e0b301cf2021107bed451208a1bff601c4c3a4af47d823bde7918",
+      "bytes": 51744
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/MI_Hair_1_002.uasset",
+      "sha256": "c58b3d1817f7e434274c900b85c24cbaa7706a7a8811c2bfd7d8f61850df6b2f",
+      "bytes": 52100
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/MI_Ranger.uasset",
+      "sha256": "6d404b14f1a747d36e0c14ecf841fef97a149e877a2efd834b9798bd45fd8836",
+      "bytes": 54058
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/MI_Ranger_001.uasset",
+      "sha256": "4533c8eed1d7e8be6e64d85c04754b2402c79ccf1b6eb8754e51ad63b373e69b",
+      "bytes": 54084
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/MI_Regular_Male.uasset",
+      "sha256": "201c02097ec40d2e734326b7203c552305253e5b1bb1c5ae5b20d4c87b401d11",
+      "bytes": 54758
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/MI_Superhero_Male.uasset",
+      "sha256": "6fb3aabb48a269ffd1cba11f2c54e805294fa4d0dff05e6acec1ed7b0db8501c",
+      "bytes": 54764
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/PistolHold.uasset",
+      "sha256": "c685b997bf0d2e6057c0a983e6e570eef20d2ef2ed984d349b1f25f0f801887e",
+      "bytes": 406469
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/PistolReload.uasset",
+      "sha256": "01c1df38b73fc8ac86242d17edd117db6a0a719e937c350bd0d25255b3af4539",
+      "bytes": 406489
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/RifleHold.uasset",
+      "sha256": "39a4abca8ce76dfdc15738d5126dfdb2328d43904e18acc50879f54e021b1b4f",
+      "bytes": 406459
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/RifleReload.uasset",
+      "sha256": "cfa145bdab906a9c8a17ba5b058159d0cc768d967c2c3a81c5c33ca9658c8d9e",
+      "bytes": 406479
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/run.uasset",
+      "sha256": "3857d5e79853764deecdbaeeae6f0816e67482f7a6cff0c59be0969aaeb293e8",
+      "bytes": 315672
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/strafe_left.uasset",
+      "sha256": "2fa5d92340ec2497b5d86456370c144d1bf120f8a1ae116ff95254e1a5e392c1",
+      "bytes": 329416
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/strafe_right.uasset",
+      "sha256": "c39c5c9b04603c6e18b3099b2311441f8b287c208385e74ac45120c50ea722bf",
+      "bytes": 329426
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/swim.uasset",
+      "sha256": "8907eca179c476cca92d1ed768876e058a34bac1cabea37c5a619effe0b65dd2",
+      "bytes": 350850
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/swim_idle.uasset",
+      "sha256": "3c8d7c893d743e7817706e9039092867c5b217d547585201141e5b6122c77a8b",
+      "bytes": 581375
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Eye_Brown.uasset",
+      "sha256": "e58c37684807900dbfdcff3022d7c140317831df7b0f9801e80fc09bbd6f40cf",
+      "bytes": 45832
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Eye_Normal.uasset",
+      "sha256": "0c6d9d44d17b3a8dd322f915259ece9e4807d42423c239a04b62a72c086ae078",
+      "bytes": 23856
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Hair_1_BaseColor.uasset",
+      "sha256": "226d49263675cd594a68a80288602cbe6b07fafd8247835a4cac3daad5d6d01c",
+      "bytes": 567818
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Hair_1_BaseColor1.uasset",
+      "sha256": "1c1ebb341f1b3f71d22265347b9a9cd71a6d5ecc4783e386029f7705606c318d",
+      "bytes": 567837
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Hair_1_BaseColor12.uasset",
+      "sha256": "dafdeae2afbf60dbc555255abf6840900722b6c9d85d5580a5085208bda91668",
+      "bytes": 567849
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Hair_1_Normal.uasset",
+      "sha256": "7189f3b513f3c26e4023afadd265938b653d393536c4d1421c8db77ec5b42ffb",
+      "bytes": 1192352
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Hair_1_Normal1.uasset",
+      "sha256": "824c7a280d6ed42dae58fb9cd94bdd1973b7bd1437bc77cf6ffb51c6dc54a1b2",
+      "bytes": 1192371
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Hair_1_Normal12.uasset",
+      "sha256": "30d1dfadf00fcc85647d8e93caa287097cc5b356ae49f7464923b8ab6bcc5847",
+      "bytes": 1192383
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Ranger_BaseColor.uasset",
+      "sha256": "4744635ac161e9ce0bf919efc230b15a13a960d76d6744828875b10c3893abe3",
+      "bytes": 860839
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Ranger_BaseColor1.uasset",
+      "sha256": "528c476c5d32515c1c0cd12f16b2a0cfdda94fb68e2f1dc0c4df86226d657be1",
+      "bytes": 860851
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Ranger_Normal.uasset",
+      "sha256": "3e5b035752bb4b4b093a44da94b4cb981cf802e5e0be6c3a7683d54eb23db62e",
+      "bytes": 1177349
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Ranger_Normal1.uasset",
+      "sha256": "33585ae11ea0c65f6a2e0776056d09d4cadfc3b2d4643e88d083fc075ca3750d",
+      "bytes": 1177361
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Ranger_ORM.uasset",
+      "sha256": "3bfd5a42190ec1d949882344420568afc69df0bc559a6687dcc8c314a54458c3",
+      "bytes": 815908
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Ranger_ORM1.uasset",
+      "sha256": "3782c259340655824dbe338926ed0cd246efc71ebf54cba91daa1053097991ec",
+      "bytes": 815913
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Regular_Male_Dark_BaseColor.uasset",
+      "sha256": "6aa40e2d8dc0eb4a0ce407271bb86c3cf8941b38378cbca73ff52985237f388e",
+      "bytes": 350911
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Regular_Male_Normal.uasset",
+      "sha256": "8f4086b8c05a7dbff846c682474894bff5c11f01505583e69856ce2f256e3390",
+      "bytes": 945756
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Regular_Male_Roughness.uasset",
+      "sha256": "727f3933e5198f69de99d0e81c09523a0fd630fc8b0b7b13ecf2a1280e370841",
+      "bytes": 1036342
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Superhero_Male_Dark.uasset",
+      "sha256": "8a321a37912aa558804b0ac8084a29b846b720ca3f50e0348d3f44b5b5fe3bd5",
+      "bytes": 375835
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Superhero_Male_Normal.uasset",
+      "sha256": "1710eeb4f1bfad51ad5580b6dbe6669c45adada007bc90a2431685bf553c96de",
+      "bytes": 1080511
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/T_Superhero_Male_Roughness.uasset",
+      "sha256": "42d0e5146182b09a25070e379f909e4f66f97e6efea9045c5e0324c485f707e4",
+      "bytes": 1014892
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/TrailRanger.uasset",
+      "sha256": "ed6da5f5e1adbd46bb28b6d13f948e40b1b1cec5a7b17500eeece1fd3e11b403",
+      "bytes": 6147841
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/TrailRanger_PhysicsAsset.uasset",
+      "sha256": "4e599fe49104cee38be194763da1ea6346815f34013a19e687d9d420c0873d42",
+      "bytes": 31887
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/TrailRanger_Skeleton.uasset",
+      "sha256": "ca103ab234630ccef305afa5f3e5cb65d432c7f1db40327eea60b7a78b91f405",
+      "bytes": 15051
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/walk.uasset",
+      "sha256": "d8b305308e553d01cd8f4780d6038f02280eb1539bbd450f073baa87fad058f7",
+      "bytes": 363970
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Characters/TrailRanger/walk_back.uasset",
+      "sha256": "032330a0650a03bcbd9ea6cc710636bc3915a960cb79bdac85914c19dfeacf48",
+      "bytes": 364020
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Alpaca.uasset",
+      "sha256": "11fc95e19b0c1fe8991685ebbe67476253c1a6953ac0d42b33e89844b045f64f",
+      "bytes": 845167
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Alpaca_PhysicsAsset.uasset",
+      "sha256": "0b980c125b478b294d1711d7fa74d8b5833f58c5b2ecdd1d44866629d018f683",
+      "bytes": 50451
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Alpaca_Skeleton.uasset",
+      "sha256": "f6ec5519a81f9c6fe2b445371b5ea3debc125d25606f4284bb1b8e083e24c334",
+      "bytes": 11265
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Attack_Headbutt.uasset",
+      "sha256": "9971b65209976e26cf6f115f85d43f4df355716e204935f7b8bc16f81ab89b96",
+      "bytes": 187224
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Attack_Kick.uasset",
+      "sha256": "debab9fb967b264e606fe64c63bec75ac125d27e10ba7325b70081027a41b8c3",
+      "bytes": 207024
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Death.uasset",
+      "sha256": "cf4eb9765e0df526f4cbfd0991938bce6045a0c64f87ab93c849de637af74019",
+      "bytes": 235540
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Eating.uasset",
+      "sha256": "79dc856054c7bad376f91e095df7b0dec5db80395eef5ba2b169d784490c6161",
+      "bytes": 516578
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Eyes_Black.uasset",
+      "sha256": "37c112b4f55185a2825d346de4bee440ad83f4273ed2a9c31a176f6c556f1116",
+      "bytes": 46397
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Eyes_White.uasset",
+      "sha256": "181ea59c33397599f8b8aa4eca03a264d067dd7a6422d3dc0ddff45b8ef3eadd",
+      "bytes": 45936
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Gallop.uasset",
+      "sha256": "e9ed9e37a1edb8d4db49372a1bb73eba32fe8ad3f5ca7fd7f212bff2c317f807",
+      "bytes": 205022
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Gallop_Jump.uasset",
+      "sha256": "32ebfbd9d8e1413e40dd3f9615f0bc2573c4f61d4a373cc0ac3a0e04bc0ca498",
+      "bytes": 335861
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Hooves.uasset",
+      "sha256": "92b7d6c23392d99f52f615d5b0aa2e01aaab68c976eadb07a2ba6f5177acd0b5",
+      "bytes": 46353
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Idle.uasset",
+      "sha256": "9827e317b49fe0af076b15116b441bd6305e59f360e0ebc5ce15025dc8c5e534",
+      "bytes": 382413
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Idle_2.uasset",
+      "sha256": "ff6f0ba1a5e8b01b1ef363a1f456cd6b5d9e6d84a7b53ef34a2ee6e00556f175",
+      "bytes": 398557
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Idle_Headlow.uasset",
+      "sha256": "710f3f1d2bc7e5b7a67c78422c8d4ef87addbeab978fa6ef2662a06a718a70f6",
+      "bytes": 334109
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Idle_HitReact1.uasset",
+      "sha256": "ae0aada110dbb408f9dac51a129708ae723c1e67da78649b4fec5651659c13d7",
+      "bytes": 172814
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Idle_HitReact2.uasset",
+      "sha256": "c4ceef50b52dccc4c101e610e60de73325403e5bc13ff9f68c705457aa05313a",
+      "bytes": 178319
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Jump_toIdle.uasset",
+      "sha256": "76e21491f8d4953a1937d64fdb1060ae8d10ed45d79086b5a4caecf7082a491f",
+      "bytes": 354038
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Main.uasset",
+      "sha256": "e7d67cc9ae43684ac2d0025de07e1b6060dd40166d6ef01576d3130d0e6a2b29",
+      "bytes": 46331
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Main_Dark.uasset",
+      "sha256": "02f4467ad204d7be253e73abb3769439463975e473763845388cfb905d805b09",
+      "bytes": 46386
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Main_Light.uasset",
+      "sha256": "bd8b2101d62e15b567008b0d8143208551064d181bed277112da2df83c7da699",
+      "bytes": 46397
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Muzzle.uasset",
+      "sha256": "92f869d729ff8f4d5ad30220aca45aff7571a14c3c6e164417783245fe618cef",
+      "bytes": 46353
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Alpaca/Walk.uasset",
+      "sha256": "0cd8459a438976a581429eab12374686dcd613364d8d286355e96f5ac31ada89",
+      "bytes": 250027
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Attack_Headbutt.uasset",
+      "sha256": "c795cff3074d313f4506f66508d2da4e33597ab280448ca22d2881c89d4f9f85",
+      "bytes": 179719
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Attack_Kick.uasset",
+      "sha256": "bd461550e91d39c3166057f9be92480ec59b7b8062c8de31db8cc97d45f79090",
+      "bytes": 189887
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Bull.uasset",
+      "sha256": "718cbb5c74d539aac0e6ffa144464fba562ed1aae5e52345d5a31e7d62b01516",
+      "bytes": 990021
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Bull_PhysicsAsset.uasset",
+      "sha256": "99ea8a568a264e72c3f9a8209efc63ab834fe9524ec08e05c13ab9dc7c176975",
+      "bytes": 58359
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Bull_Skeleton.uasset",
+      "sha256": "0c0d6aa9010a8aea1a871248d1970d845489a8e31e81b5b4a922324ffc86584a",
+      "bytes": 10453
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Death.uasset",
+      "sha256": "5b058c3b85c955c8c9fb77bcdd2546545bff4a48d4379968780b706c5c876809",
+      "bytes": 229507
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Eating.uasset",
+      "sha256": "4df9a389edfc4352ca5255c8f3579337be6f8f01f19a18690ef3ecd923b5e4c5",
+      "bytes": 461297
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Eye_Black.uasset",
+      "sha256": "f7e307b6bffa4e8cd890ad66232abd6734320151b4e0f328c04b847ee5f77109",
+      "bytes": 46333
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Eye_White.uasset",
+      "sha256": "ea20db70a8a5dacb0832148fee42b64cae38b531486af586cacd9aeef0a871e8",
+      "bytes": 45872
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Gallop.uasset",
+      "sha256": "e626618482c972327c625f922b7e9b6effce45d516ec323b15ff140e50b7be94",
+      "bytes": 183725
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Gallop_Jump.uasset",
+      "sha256": "76fd7269817ddd2d96a9931f6c4215b1735ce2492d98aac2d2d7f16234c0d9a0",
+      "bytes": 288128
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Hooves.uasset",
+      "sha256": "1caa908a05b46157793f7c46ffa9ca8f18efea3b9a10d9d4b5475e5a7f9e32f4",
+      "bytes": 46300
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Horns.uasset",
+      "sha256": "5154ee2f2fe641ceda43abd02dd666eb11efb84ca43a027b322ae40e265c056f",
+      "bytes": 46289
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Idle.uasset",
+      "sha256": "d043bbf6e8cc988bf966fc7cfaa605ef7104d3b3c8b239a3a302d52bae2c7c95",
+      "bytes": 338652
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Idle_2.uasset",
+      "sha256": "84ad8928aa91d05b91562700457ec058400441f935d221583212bf5a92cd161c",
+      "bytes": 354828
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Idle_Headlow.uasset",
+      "sha256": "c8b97b98f0512d9985ffbee6f50fd5ea8cd237e641a162438ea4cbcb1753999b",
+      "bytes": 319340
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Idle_HitReact1.uasset",
+      "sha256": "8258aa2ce93323c38e1b2f08aaf7747de4fdc0664fd847015f93ca05e8e1d27d",
+      "bytes": 170461
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Idle_HitReact2.uasset",
+      "sha256": "15486168ad2f07299244219911953c167e68574577cb99cf220c5b7145f3f8d5",
+      "bytes": 173910
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Jump_toIdle.uasset",
+      "sha256": "45a8367c3220b5c6bd7fcbc1356c797a9fa1d0d7f2698dbbb02c02b180be54bf",
+      "bytes": 317145
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Main.uasset",
+      "sha256": "4db6821cee03d43b174f9d9d531cd922186ac85de2dc7c4d3751165070e1c3ad",
+      "bytes": 46278
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Main_Light.uasset",
+      "sha256": "ca1b069ce2ce491004ee0cb94de58780197ce2569d02453b6aedc41950a2218e",
+      "bytes": 46344
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Muzzle.uasset",
+      "sha256": "c6e4ccf2dfb99133af34aaddf6d6af3eb89b914237708d0de5bc1c6263285089",
+      "bytes": 46300
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Bull/Walk.uasset",
+      "sha256": "b1869cffb8ba19f3c21186edad4080659830fbd65fd0bb73ae0092d6186afebe",
+      "bytes": 217586
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Attack_Headbutt.uasset",
+      "sha256": "9d389cb51083477b0d055b11330b30afce1838011502a8b1532dbcd178d04edb",
+      "bytes": 174132
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Attack_Kick.uasset",
+      "sha256": "767af85e813a9898cac90a874e97a029a2073f4264ab7b8bfe6dbf6fb997edaa",
+      "bytes": 190892
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Death.uasset",
+      "sha256": "e7426bafe6936428208bdef84cfd5ae19e6e20ebb193a64b55f27431908f75e8",
+      "bytes": 211312
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Deer.uasset",
+      "sha256": "9ef818afea90246b9b9f8384647a6371c1e5bc7ab4c7d2596eb0085ad9c6399e",
+      "bytes": 894564
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Deer_PhysicsAsset.uasset",
+      "sha256": "b9f877aa9d33fe5fe61794ca45dc303e1e0ad37b522fcc7a8ad627bf00490cb1",
+      "bytes": 52389
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Deer_Skeleton.uasset",
+      "sha256": "8179d52aabd5e5d24e7416ef96ad4eb09aac1e53199b6a01b34277fdf8a82598",
+      "bytes": 11241
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Eating.uasset",
+      "sha256": "18145ac01d3d9b8a30ed04d8fdb6537e7a245de6a3db8388a843001c290149f0",
+      "bytes": 437630
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Eye_Black.uasset",
+      "sha256": "c01a4894dd9023e5ee0966f6abe8bdb535562eb434b781daa19628076e282379",
+      "bytes": 46327
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Eye_Lighter.uasset",
+      "sha256": "33c1d8d1c7b1e3ad66fcac67ea8f4f230f3d71ad3045df0c0fb9b39e7a48e879",
+      "bytes": 46349
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Eye_White.uasset",
+      "sha256": "c82146eba587cfa882712d5b9fcec83bd5f2034844f0c34469abd41e9496c094",
+      "bytes": 46327
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Gallop.uasset",
+      "sha256": "8f85115ccb6ce8e8eb2273138a8cd648c942dd16ab413f6b9eb9770e0e7ad80d",
+      "bytes": 189754
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Gallop_Jump.uasset",
+      "sha256": "b5bcf3ffc5cc1ffd52abae9d28c823ab30362b141732e2eb1af1061f4fc20bcd",
+      "bytes": 294733
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Hooves.uasset",
+      "sha256": "a08201e1c2f7ccb05513603de064c4005edf158b44518a722678507aef420e86",
+      "bytes": 46294
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Idle.uasset",
+      "sha256": "2139354ac5e5c83baaf6547e7619660f1c0401e6ba2ec95f37e77cf1fad6a2fc",
+      "bytes": 333577
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Idle_2.uasset",
+      "sha256": "bd0ca06465ed93ad07cca7e070c21b321db74dcc86fe9bc53b94bea6461892fc",
+      "bytes": 343289
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Idle_Headlow.uasset",
+      "sha256": "77bc6f814c1b1f8f5694351bef7ed23f4766e8b2fbee93d93f2fcfed7ddb69ce",
+      "bytes": 288409
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Idle_HitReact1.uasset",
+      "sha256": "bce5132b1c54b56eec365437d7705aa0a938ef3a6286bf52e9d75fbb6fd53961",
+      "bytes": 161962
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Idle_HitReact2.uasset",
+      "sha256": "1736258aeb9e5828dec8445e8a5b17501a46d8f8fc5d400c5646870fb5df24ab",
+      "bytes": 167083
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Jump_toIdle.uasset",
+      "sha256": "e3f228d9bf7828f753d9be0b538a6b20f6e0929072e64ff6cae30245c2f9628d",
+      "bytes": 309550
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Main.uasset",
+      "sha256": "bd23993872b8908be15078c359c2ccdd40ab7dc53583c7da1e4555299df8f6a5",
+      "bytes": 46272
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Main_Dark.uasset",
+      "sha256": "381ba8d08deab7ed6081d97d5c0b8ecd295f065bde530fd80eb491018b877680",
+      "bytes": 46327
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Main_Light.uasset",
+      "sha256": "6e4a894e7e7e1536e6d7e8d70e7ac655786571f5fd05f2fe9a55b013884ce491",
+      "bytes": 46338
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Deer/Walk.uasset",
+      "sha256": "352880a9c2556e4c9bda89906a3ddec0b3abacaffd874f9f81a11fdac57b78b1",
+      "bytes": 226375
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Attack.uasset",
+      "sha256": "fdfa2ee897ca4514b01a6747a3c30be78b26efa37c7b511eb26e5b43e3eb06fb",
+      "bytes": 220557
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Black.uasset",
+      "sha256": "9b573b6fafaf817b7bb684565299e350231a9f2d816f359236e9889eb88c46f7",
+      "bytes": 46257
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Death.uasset",
+      "sha256": "24a851ce888909cd4adb2fdd4ee3b9f7b07fd45b3aff744f7e6dda77d583f0d6",
+      "bytes": 260387
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Eating.uasset",
+      "sha256": "a55b03855b6815d009a15d2427c3c0c8819e9bde3bada2baaac128f5d0102645",
+      "bytes": 327630
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Eyes.uasset",
+      "sha256": "dda7697b676884de73dd53940a34e18352f61e1af52a9eb9e57705f32eb81cef",
+      "bytes": 46246
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Fox.uasset",
+      "sha256": "d2efef9438bdd1552f97c94993d954d827567d9814d957d7503661e8173e6fcf",
+      "bytes": 764594
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Fox_PhysicsAsset.uasset",
+      "sha256": "3c30208e755d39a3131b5dbdfeba04df0582fb3179c117514e5db91532f21fdb",
+      "bytes": 56334
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Fox_Skeleton.uasset",
+      "sha256": "b4eeccdf43dfae74925d8f3228ef99d4453757bf97f770ad59067b2f253eacd3",
+      "bytes": 12194
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Gallop.uasset",
+      "sha256": "9f3fcea415c6d929266c733b20d729f8d75c6aa37165256c22959830f4351e1a",
+      "bytes": 193773
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Gallop_Jump.uasset",
+      "sha256": "664b689ed86b005d6585eeb89da6138f715c7bc9efd0570532c34fd38eca9409",
+      "bytes": 238175
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Grey.uasset",
+      "sha256": "f77202bc625a1825d000379190c2f9b72c54a480be4b6d367990d62c5ff1dd2d",
+      "bytes": 46246
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Idle.uasset",
+      "sha256": "234163ed273c3808b1db245c77c0e280bc52e5ef445940fb80ad3ef30d157c32",
+      "bytes": 318876
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Idle_2.uasset",
+      "sha256": "43ffbecba74809edd1d46ecb51f105a6fc01e177b4ce4064fbf5c8350b76a9a9",
+      "bytes": 347980
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Idle_2_HeadLow.uasset",
+      "sha256": "74d0e1caa04a74b30f496a72470dce17bfab786d635f3f511247fbc4498a6454",
+      "bytes": 362560
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Idle_HitReact1.uasset",
+      "sha256": "0df914912d1ac6e2a1c42f5667005d3ef024e2bad49fe69b8491084fa3ad2e33",
+      "bytes": 193757
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Idle_HitReact2.uasset",
+      "sha256": "5054ab3a342849dac016993b920f0069c97574d5b230b3ee563c942096a35b01",
+      "bytes": 195773
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Jump_ToIdle.uasset",
+      "sha256": "4dade9d8b043058beb06af99615d949cdfdbdb07a4a06f2eedc32d12ed7e11b0",
+      "bytes": 292875
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Main.uasset",
+      "sha256": "6c5e13d094a90dec07394fda48bf0e5e969753656468c5499415d7656dd5e34e",
+      "bytes": 46246
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Main_Light.uasset",
+      "sha256": "3bb6e7d9bb1d19aa5824fd8a3f559030e04d4d49bd031ee964f443b6d4464d46",
+      "bytes": 46312
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Fox/Walk.uasset",
+      "sha256": "e2e7cdb2b2f79af92a953e87130b609e87ff08b13aefc5239251bc05b6f93b87",
+      "bytes": 238308
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Attack_Headbutt.uasset",
+      "sha256": "4ea04399846a4e4b436f1d805d5e9f3fbfdbc7430ecc213447dd15f921892934",
+      "bytes": 210813
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Attack_Kick.uasset",
+      "sha256": "84df42ff65919a57ccc9a17e79d87f3c997356fef38ea80881cd4dfaf3c92ceb",
+      "bytes": 231701
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Death.uasset",
+      "sha256": "8c28ce5043010122512e90b2328488d2392e99ee0292117374fcd9634b2f52e5",
+      "bytes": 252473
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Eating.uasset",
+      "sha256": "086bdd44f3ab3e7db0ca17f0490a57f2cc2ccc7c7eeb984d2255320cbe3dec6c",
+      "bytes": 544167
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Eye_Black.uasset",
+      "sha256": "d797ebc8ab36c2c9f9c64223ffd8592036479ce7fb76a8da1140603beab1a689",
+      "bytes": 46360
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Eye_White.uasset",
+      "sha256": "b3919293e0ae5a3548e5d5584d059e773550bb8accd519bae6948f192edb7701",
+      "bytes": 46360
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Gallop.uasset",
+      "sha256": "741b70ad874ca88869f4bef78e8096850fefba6bf246ff98663be1a82f7ccd65",
+      "bytes": 216579
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Gallop_Jump.uasset",
+      "sha256": "afb5f6629f1da782ac4f393b4c3c84e8e0b324665f0728c2129f0f0cbeef7fe9",
+      "bytes": 340438
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Hair.uasset",
+      "sha256": "36f2424997794de7166fe5a63f35c6f109cd4369819a22c67a8100114e884349",
+      "bytes": 46305
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Hooves.uasset",
+      "sha256": "dc28614acba1382df610aca6db6aced8b3b01a82bd8e09f4c7a1cc6a1a1cb66d",
+      "bytes": 46327
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Horse.uasset",
+      "sha256": "4fdd36655d88c19bd2e683779693380cbe867b46841f56b60305aef882d45fc5",
+      "bytes": 900567
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Horse_PhysicsAsset.uasset",
+      "sha256": "0606937a9e04dda1b986c120d92abf30e24b6222409a91abc2f903070635a097",
+      "bytes": 70615
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Horse_Skeleton.uasset",
+      "sha256": "e03ff73563b21820dd387d7b9810c22fe14877275da7cfbba4f4668508cf8593",
+      "bytes": 12025
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Idle.uasset",
+      "sha256": "1f4522cc1e1de18704f19a549c6bb54e43a52bc9308cdc80b1527149a7cc181e",
+      "bytes": 395923
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Idle_2.uasset",
+      "sha256": "50f3d92c7eb250ab753427d869150a5fe5a1d1a6253652bd2fa050665e305c88",
+      "bytes": 415331
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Idle_Headlow.uasset",
+      "sha256": "64a7ec3faa755747606c53d39fb9f52eb368fd4636361650c5ef8f8b0290335f",
+      "bytes": 383075
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Idle_HitReact1.uasset",
+      "sha256": "fb305a0fb5a33acab8476e2e6ceb95efb0b7435a54749c277ab78feccdaba855",
+      "bytes": 203475
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Idle_HitReact2.uasset",
+      "sha256": "77c9d9e48acbf594af2ba27ef7f362b0f50bb307e8308079fe3b1779b854400c",
+      "bytes": 204924
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Jump_toIdle.uasset",
+      "sha256": "5ffde7509b9e7cf3db3cabb0e878455cdc2653d4261884a1e33f964c4a124629",
+      "bytes": 367551
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Main.uasset",
+      "sha256": "66695ec3799a241ac4bf09b191381731d2335babab1974dd5d76bed27c750614",
+      "bytes": 46305
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Main_Dark.uasset",
+      "sha256": "7d0f70d9b681e3ad6f311a60df2fa91ae699d55704a9d24e07d13ee197eb693e",
+      "bytes": 46360
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Main_Light.uasset",
+      "sha256": "c236d4f344e87a5a9b4c99298fe38aa6d16a9093a5cd14b7ca640bb2480d9d4f",
+      "bytes": 46371
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Muzzle.uasset",
+      "sha256": "a30cf0e4d7e1bd60aa52890b9aa1e42565bb8c7203bda7d0e06a9034246e8c23",
+      "bytes": 46327
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Horse/Walk.uasset",
+      "sha256": "0a73cc3b2cf3d9f24a7a8de084a36398fd6c8ae614c7513c62b035072f170007",
+      "bytes": 256376
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Attack_Headbutt.uasset",
+      "sha256": "a4c5cf0678d65d965f17ae1b123e3ed7c902c0e93bffc776f64c79d9191982dc",
+      "bytes": 152174
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Attack_Kick.uasset",
+      "sha256": "e91999b08f99fbca5c444a70ecf296662e7dd8f0aae8df7262ee9b5d80056aa9",
+      "bytes": 158534
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Death.uasset",
+      "sha256": "cedb913615035666cdd79cf57f99fc580706a3801958b9824f032cb9c0e69324",
+      "bytes": 208106
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Eating.uasset",
+      "sha256": "389d2dab71c5ca016073e667cc7ebbd2710bbde0ae201c8b5c42978cddfba544",
+      "bytes": 623801
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Gallop.uasset",
+      "sha256": "f8344e656cad5c7c3aa98374242a368c236cac9a59995cf87eafbb88609ccc5c",
+      "bytes": 155348
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Gallop_Jump.uasset",
+      "sha256": "b4c7c531e046051c6fc605e72e2f7e88e20f4a49bc4972258d5716d60de5d2d6",
+      "bytes": 244806
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Idle.uasset",
+      "sha256": "b3fc159ecf005881f38c0e9ff9c47135d9078425aa7e6923236b8aa332282626",
+      "bytes": 289027
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Idle_2.uasset",
+      "sha256": "1da96fdb5e27cd58a33df4958182ece449ba8249e5bce14c3d716f168a4655a3",
+      "bytes": 298739
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Idle_Headlow.uasset",
+      "sha256": "096d814c3f9ba7a35a05b5660f8d42e5fc56365c891455b3d578957896377df4",
+      "bytes": 276179
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Idle_HitReact1.uasset",
+      "sha256": "eae5af65830fc691daaae751e5fd0d16c4d13f9f1bb31f7cce00bd2fbf321742",
+      "bytes": 136804
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Idle_HitReact2.uasset",
+      "sha256": "d2cade9038869b16f610f28c34394685b9ecb037036a0e700bf33e60195f0edc",
+      "bytes": 141909
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Jump_toIdle.uasset",
+      "sha256": "acbf0b4ec87772869c401aec323dbbe70a230d4b5be04cde54f36f09b9632370",
+      "bytes": 255799
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Material.uasset",
+      "sha256": "2ea30bf98f73e952fd1af9bd3289d732ae2d62a1645a6d475c9388418784c158",
+      "bytes": 46268
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Material_001.uasset",
+      "sha256": "c74a4a3d781919b8777e093088b689b28fd2d7339566f38136ead9a73cbc6efd",
+      "bytes": 46360
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Material_003.uasset",
+      "sha256": "29cc1bcc7f155166748a6df88a82a40fc31fc5c9e470cd11de2a68443edb1509",
+      "bytes": 46360
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Material_010.uasset",
+      "sha256": "ef52990cc3c452ab9597111ee31dd771023c93f30a6b85176b20598197bcd71d",
+      "bytes": 46360
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Material_011.uasset",
+      "sha256": "f868cf48633f6522ddc635f4dde1b8eb1d485e535f57d612bba84d8f7284d04c",
+      "bytes": 46360
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Stag.uasset",
+      "sha256": "d16638d8a71b075230490ef50e2ee2298991ac64a978a6538886945b94b726a0",
+      "bytes": 1457878
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Stag_PhysicsAsset.uasset",
+      "sha256": "b716d687ef7ea183c977e1e03d58d13b95cb1cd84131333419e5189c1cfab375",
+      "bytes": 49944
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Stag_Skeleton.uasset",
+      "sha256": "a6a0db93e0abc1ee8d559acfcd9087be8601ced1ff242aa3ee488e35fc724e9f",
+      "bytes": 9681
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Stag/Walk.uasset",
+      "sha256": "b49029ef8c07936fb4d9cf7bcb48a2a2ced8b81572f0b649e4975d222165d855",
+      "bytes": 188529
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Attack.uasset",
+      "sha256": "2b8cfa51905f12926846a40ea06d040a8cbc521d7563528a1553c85d399e77ed",
+      "bytes": 220055
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Death.uasset",
+      "sha256": "38dd6b025330e5fe09e496e035d223cf808248a91e199b5cf1a75a08d0ea25d8",
+      "bytes": 260941
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Eating.uasset",
+      "sha256": "bdef757a2356fea51ce794f41e76131101df44746ae36b48e81e4bb31e39529c",
+      "bytes": 324664
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Eyes_Black.uasset",
+      "sha256": "85d2992f09264a465589ba89d1ddc0aac049913ad36026b97cc059f894deb079",
+      "bytes": 46344
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Gallop.uasset",
+      "sha256": "5e4fca4d2b8ce7fc2fc39d3ec4e78d80f73f4c7a14f5776f96ab8dea2d55db67",
+      "bytes": 193271
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Gallop_Jump.uasset",
+      "sha256": "2bc98fa2b32bd3ad274fcdbb50bd75acdf2f0e1b8991ceed73b6512097ccd799",
+      "bytes": 236745
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Idle.uasset",
+      "sha256": "beb85121f109e32fdd151beaf96ac7227327e950c4f57f9f8bc627611af681f4",
+      "bytes": 318374
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Idle_2.uasset",
+      "sha256": "2c0f5c1425b9bfe56c992d024dc24429355a0777f5114e9bc4ed682f3a63bc03",
+      "bytes": 350710
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Idle_2_HeadLow.uasset",
+      "sha256": "9b77f2dc8fc18105a95c230f85e83ebcdcf701840ff74a67cd8933bd1efe4d1d",
+      "bytes": 362058
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Idle_HitReact1.uasset",
+      "sha256": "89d865a61748dd7038826a22daeca19b679be7dba22d659e8717f110838360c8",
+      "bytes": 193255
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Idle_HitReact2.uasset",
+      "sha256": "4fe70128d0dceee28bb0b8ce9cdc7f3030c3a39647ebde97f13e41510e45868d",
+      "bytes": 195271
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Jump_ToIdle.uasset",
+      "sha256": "ea24d75107a5920757d45a42d0a675ca461543800f2e9322f717c35df31cfd57",
+      "bytes": 291061
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Main.uasset",
+      "sha256": "de3f95456d82c794ce454aa2f960b16a332a834f90dc35c6043e20b21b6ff0eb",
+      "bytes": 46278
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Main_Light.uasset",
+      "sha256": "461b4c55b7bc63baa42d901f129ffdb16c20340e3d2da342a250bb44c4438cc4",
+      "bytes": 46344
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Nose.uasset",
+      "sha256": "718d574d0e2cca147232cd6c6d23fe5e9a219dd1d818a66be8ad1a8d8d5ad7dc",
+      "bytes": 46278
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Walk.uasset",
+      "sha256": "3308c17e1d93eb66a7ef5d36b7e7333c9d9d228f85cca8d5522c75824b2bd83b",
+      "bytes": 236750
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Wolf.uasset",
+      "sha256": "2b6c309f45183bb6c8477f324ff4fad278ea9081758ed5c610ce9eed6c0ab057",
+      "bytes": 800840
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Wolf_PhysicsAsset.uasset",
+      "sha256": "fd53c98ea5899e7f49891d97258ad648ba2a72585ff5f515b5335ceb2999ced7",
+      "bytes": 54359
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Fauna/Wolf/Wolf_Skeleton.uasset",
+      "sha256": "529e7a83a26a94281ecd45ad483a0cd3483ffbe334d97eed0141e8bfeae5c252",
+      "bytes": 12206
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_Fern/Materials/fern_02.uasset",
+      "sha256": "eb1cc84baf964dfb4595a6af661c2a2e41a4b1352744e38f958e823d646b2d03",
+      "bytes": 59983
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_Fern/Textures/fern_02_diff-fern_02_alpha.uasset",
+      "sha256": "cee82db5e96e2dc9316efda0deceacfb7ab55c792f833a7c015a5ca8ada843b6",
+      "bytes": 1091272
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_Fern/Textures/fern_02_nor_gl.uasset",
+      "sha256": "61880755f7e63752862f1b5efa692faac8b015f38b2266f71d518307a10696cb",
+      "bytes": 1203953
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_Fern/Textures/fern_02_rough.uasset",
+      "sha256": "0bef391ad31c4f2beaeee2df23a11f70a6183d0a6111796c95440a19b7feac0a",
+      "bytes": 703043
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_Fern.uasset",
+      "sha256": "5e707c9afbf1857acd403bc7bae4970ee4b865d4b1c7c34c774c3aa14eef75a3",
+      "bytes": 93363
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_Grass/Materials/grass_medium_01.uasset",
+      "sha256": "83724871f2af18c91ea0e2e7697903d5669ba25b2572f296269f3b3db15d8fec",
+      "bytes": 59953
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_Grass/Textures/grass_medium_01_diff-grass_medium_01_alpha.uasset",
+      "sha256": "c4aabf020dc0e79547927aef6826f06d2515889b96877f043039b1ca6a7a3b7a",
+      "bytes": 904714
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_Grass/Textures/grass_medium_01_nor_gl.uasset",
+      "sha256": "a0fca2531265d80842f6abc405922d73fe82514bca26af0f3e0bc4afef85f4b6",
+      "bytes": 2410936
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_Grass/Textures/grass_medium_01_rough.uasset",
+      "sha256": "7027b4175fba3ef0e1f53c83aa919ec7714e3e828cd104f5d503c505deceda85",
+      "bytes": 1700885
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_Grass.uasset",
+      "sha256": "2a8ec45a948dedc5e1bf355a2ca868044899eeccfdf21e792ac9a4e1fdf5137f",
+      "bytes": 72520
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineA/Materials/pine_sapling_small_bark.uasset",
+      "sha256": "fa28ba1c36c92a36355d617a514bd0a0bbcc5bdcbb6169aafece1fcbd4de82c1",
+      "bytes": 60513
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineA/Materials/pine_sapling_small_twig.uasset",
+      "sha256": "de4f517bfb5a285c0c9a1d24c3fd47142ebaf11a13a0c5526b993c1df379a713",
+      "bytes": 61123
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineA/Textures/pine_sapling_small_bark_diff.uasset",
+      "sha256": "5ad52e3dd29c472ac1d3d29c63a90fc08621b228592672b0d959c10d65c1bca7",
+      "bytes": 1466888
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineA/Textures/pine_sapling_small_bark_nor_gl.uasset",
+      "sha256": "8cbf4b80301ee946e1d63ddaac72b8bffe9ebc313aa28d61c678f726eddfcbd3",
+      "bytes": 2504976
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineA/Textures/pine_sapling_small_bark_rough.uasset",
+      "sha256": "746a16d5435dd87ea751ffb94b66a02dc3f3b18f8050050402b2b666dcc111ff",
+      "bytes": 1964484
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineA/Textures/pine_sapling_small_twig_diff.uasset",
+      "sha256": "487c0448fa526ae215e934b85fb0d9bf84afcf79106173d9f6a1873ac33d255d",
+      "bytes": 1254811
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineA/Textures/pine_sapling_small_twig_nor_gl.uasset",
+      "sha256": "b68b8232359e8ca61bc7f17d6073c071efa787fb72e2a94584b37dbf8e7a43d6",
+      "bytes": 1867613
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineA/Textures/pine_sapling_small_twig_rough.uasset",
+      "sha256": "26d3e5b5ce77c837374dc451a8024f79ef53fa7a152968eb6e90d117f9ccf992",
+      "bytes": 1084071
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineA.uasset",
+      "sha256": "ef6b34ce2fad187a0e7ae6eb8a4f3a42aa112cf3ed3bb21dc724da0883e959a5",
+      "bytes": 4487726
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineB/Materials/pine_sapling_small_bark.uasset",
+      "sha256": "c4520f566e14b6a4bbed26c9d0fe7f4c41777c72cc93054b369084a46dc5fac3",
+      "bytes": 60520
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineB/Materials/pine_sapling_small_twig.uasset",
+      "sha256": "06391be83d77feadf5ef1a506dda8fba6e798f39aea63ab1b1ae3111ef9caa66",
+      "bytes": 61130
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineB/Textures/pine_sapling_small_bark_diff.uasset",
+      "sha256": "abb1b8ff359ce788109c2b17b8fb0c6ddfe9889b97eb5f6d026f49e4f2a0ba01",
+      "bytes": 1466895
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineB/Textures/pine_sapling_small_bark_nor_gl.uasset",
+      "sha256": "69a8fcda54fb6e603fc508eebd4b185aaedd17da68fa89771ba8a230cae88595",
+      "bytes": 2504983
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineB/Textures/pine_sapling_small_bark_rough.uasset",
+      "sha256": "22c18358fb55163077893a9e96db7c235797fa2bbc2ec524858a833324ee053a",
+      "bytes": 1964491
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineB/Textures/pine_sapling_small_twig_diff.uasset",
+      "sha256": "c475d84484579e2449301e9a6da0d783ee3bd9e16fae3275dc2028223f9f1d53",
+      "bytes": 1254818
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineB/Textures/pine_sapling_small_twig_nor_gl.uasset",
+      "sha256": "d2798154bac20c2f3fef8ab49cd838170f1503490f877a0ff5c98f7b42c9571a",
+      "bytes": 1867620
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineB/Textures/pine_sapling_small_twig_rough.uasset",
+      "sha256": "8a16bbddb14ff80deecefea687ea1ef8b9a0bfa6d8aedc10143937903440f367",
+      "bytes": 1084078
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineB.uasset",
+      "sha256": "862eab393536a3799a4ef628f13ec182e023d9606fb4f23d2e6aea5ac1442523",
+      "bytes": 3840801
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineC/Materials/pine_sapling_small_bark.uasset",
+      "sha256": "1c78da5764dbb5e7a8d475f2be738478f55acd320caf6075956af4d2125293af",
+      "bytes": 60520
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineC/Materials/pine_sapling_small_twig.uasset",
+      "sha256": "ca3f72b5a4d570856f60e6235349ce9ddddea374f0e97418390ebb93d151028a",
+      "bytes": 61130
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineC/Textures/pine_sapling_small_bark_diff.uasset",
+      "sha256": "8c72f5b826726138d8b6753daff1cf601fc513f35a0380a94f4ff0b71dae41ab",
+      "bytes": 1466895
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineC/Textures/pine_sapling_small_bark_nor_gl.uasset",
+      "sha256": "4cd0072f3897dc7f53d1d3578ce44c780eb836a147a19a300bc531157f7b336e",
+      "bytes": 2504983
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineC/Textures/pine_sapling_small_bark_rough.uasset",
+      "sha256": "717308eac06286b1a79d3d353b91fa012dcfd0e08aea3e4bfe9754692bcb0397",
+      "bytes": 1964491
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineC/Textures/pine_sapling_small_twig_diff.uasset",
+      "sha256": "bb7c291fb1ad630cbdb3e48e4ef81245345749f0298373871a0ef381d1e491d9",
+      "bytes": 1254818
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineC/Textures/pine_sapling_small_twig_nor_gl.uasset",
+      "sha256": "f88b07c0ffeb40582fec51c81106ada4b11a9bb1566a97a813a2c28817897670",
+      "bytes": 1867620
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineC/Textures/pine_sapling_small_twig_rough.uasset",
+      "sha256": "a4bdb4dcef69401f37a51bdf6e4434e7df40b969e341a53ee8f009920216f57c",
+      "bytes": 1084078
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Foliage/SM_PineC.uasset",
+      "sha256": "e17f844f89cdfd9ec59b0747767389948eee5c40b1f22b4895d3111d050f79db",
+      "bytes": 4175125
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_AmmoBox/Materials/Brass.uasset",
+      "sha256": "9cd2d407b9127afa3d4e13b4e55af4460ff495ee5d3b32325bcb877c54a1c360",
+      "bytes": 52420
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_AmmoBox/Materials/Metal.uasset",
+      "sha256": "bcb6fc127402481d1c035a4512be38ea8aaea3a22a08d172bae2e9ec1177df32",
+      "bytes": 52420
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_AmmoBox/Materials/Wood.uasset",
+      "sha256": "b2a1fedec9c781de1b4a10821b1ce01b690ee57a0ed80a34ab27cf4bd444513e",
+      "bytes": 52409
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_AmmoBox.uasset",
+      "sha256": "cdcfbfdb2cfe16e8100dec0c6d6056b7c757ba5f3d29f41ba56573098cda9ec4",
+      "bytes": 79441
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_FieldVest/Materials/Cloth.uasset",
+      "sha256": "3ef37bab8ffee5604eb431e51e226de8e1c868de509dfd5053097c78e206e704",
+      "bytes": 52439
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_FieldVest/Materials/Rubber.uasset",
+      "sha256": "77a226a3d0bd537516f7f638d5fc54bf18ce9e7391c9310a8bb4cc5a47a3d313",
+      "bytes": 52450
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_FieldVest.uasset",
+      "sha256": "e574426157cfef9861c8e62369993dccf901fde91c6f9695645bb45cc80bd2ec",
+      "bytes": 78419
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_MedicalBag/Materials/Cloth.uasset",
+      "sha256": "c1ca9aac148d22b1bf34b7fe416cd5d3eabe326f64f99463d01e7f9b9ffcc2d1",
+      "bytes": 52452
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_MedicalBag/Materials/Red.uasset",
+      "sha256": "147b615b761918a7fa6a8c37abe448ada17a2a0d25709f71d1bb8493f8770ec8",
+      "bytes": 52430
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_MedicalBag/Materials/Rubber.uasset",
+      "sha256": "f5a9a9876205668fc7f8d13b6a85753801a25beeeb13e3bf8e2a49d9dc6b4658",
+      "bytes": 52463
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_MedicalBag/Materials/White.uasset",
+      "sha256": "cd19c431767c86b647367198b02c535d00027b2b6aff8056dc09aec706004b08",
+      "bytes": 52452
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_MedicalBag.uasset",
+      "sha256": "c7831728a7411ce2049aad9ccec201055d2532274e97e99e9a663f4427a283f6",
+      "bytes": 88204
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_RangerCabin/Materials/Roof.uasset",
+      "sha256": "2df93a401be353d14069eb11dfb414b72c045821c1a27427e0518d23e79e9700",
+      "bytes": 52461
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_RangerCabin/Materials/Stone.uasset",
+      "sha256": "f7699a7d98afe94619f41abcd17e090e2a1f67333d35feeb5bbdf7018226b5c4",
+      "bytes": 52472
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_RangerCabin/Materials/White.uasset",
+      "sha256": "ae4d9c5a172e91a715d2832e27b12de69b75e6f215020bd7bcafda5561d7138a",
+      "bytes": 52472
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_RangerCabin/Materials/Wood.uasset",
+      "sha256": "ade83368b12e349128f43562a4b4fbbe78b4da8803b1a545a2d7abd4adf1204b",
+      "bytes": 52461
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_RangerCabin.uasset",
+      "sha256": "ce7700ca709c61dd7fda4357fd1fa19480bc5b0d99fde436e974d23013c913f0",
+      "bytes": 127970
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_RationTins/Materials/Metal.uasset",
+      "sha256": "2c129604ec546b19f4d8d22edf0febc3bdbc35f4c4f51e64c95d7635e0aa1a1c",
+      "bytes": 52459
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_RationTins/Materials/Paint.uasset",
+      "sha256": "3d601f41cebf4dbee4c22b1bf401fdba66361ebd8434be16994e6c0902bc5a6f",
+      "bytes": 52459
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_RationTins.uasset",
+      "sha256": "45daa8fe73dc7547ec9939a329220b2f16df26c0c09bb2ae3b0a9664ff38d34a",
+      "bytes": 75809
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_RiverBoat/Materials/Metal.uasset",
+      "sha256": "dc60b3578d0b5e5f0f0c90e891f34d9e57d8b328347742bfa763008dd5e57f9b",
+      "bytes": 52446
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_RiverBoat/Materials/Paint.uasset",
+      "sha256": "77fb1eea77353f929bbd37485df930f5f5134bd060de43b54524834b5ecb72d8",
+      "bytes": 52446
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_RiverBoat/Materials/Wood.uasset",
+      "sha256": "4757f18317cd0ddcbc7e537085214e5e1c6100f7a342b52681101cddee7f8121",
+      "bytes": 52435
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_RiverBoat.uasset",
+      "sha256": "702530d2ad7a1805969df77d404182065c3be392aeae0ea6fcce3d398f498640",
+      "bytes": 92489
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_ServiceCase/Materials/Metal.uasset",
+      "sha256": "ca65a7f4d89951aa39c8d1de03330115f88d37232c7df986358d1be2fbb028f9",
+      "bytes": 52472
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_ServiceCase/Materials/Paint.uasset",
+      "sha256": "9b903c6197654850f5b53b7e24a4d7ceb5bfdfdfaa1bc855711f2e632cb0ba34",
+      "bytes": 52472
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_ServiceCase/Materials/Rubber.uasset",
+      "sha256": "34da519ed04896e96e45accc8b9eb4d17901eba2b6ae7a072f0c887ff75b0b1f",
+      "bytes": 52483
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_ServiceCase.uasset",
+      "sha256": "36bf8e01c01bf66ce65180883478dbe619b0bfbc05e93535bdacc17f78193e5a",
+      "bytes": 80482
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_TrailTruck/Materials/Glass.uasset",
+      "sha256": "f9f9020e2c5160215a3e154fccad05788237ae4d90ee26b3995370327b09bc92",
+      "bytes": 52459
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_TrailTruck/Materials/Metal.uasset",
+      "sha256": "271d1af9ba190e1ff3ef82dc46c0e4f5322cb379e9fefd1613032bb35a42c672",
+      "bytes": 52459
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_TrailTruck/Materials/Paint.uasset",
+      "sha256": "e1811b773d8130fd888da4a5f083dfb2999608f277589074e395fe6eee892123",
+      "bytes": 52459
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_TrailTruck/Materials/Red.uasset",
+      "sha256": "f3aa73fcdfef7a7d21952701a0d395ead8d11609ac5f68275d84e9249f09c24e",
+      "bytes": 52437
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_TrailTruck/Materials/Rubber.uasset",
+      "sha256": "ca21e2d9481d39172c177bf94b6b3d2b4154ec00ade2e788b8308ded0058a3ea",
+      "bytes": 52470
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_TrailTruck/Materials/White.uasset",
+      "sha256": "8ec7448ef13715f62c6b63fbff5212ce2f95f9210614e1c3a8ba27803d9394de",
+      "bytes": 52459
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Reserve/SM_TrailTruck.uasset",
+      "sha256": "c86f7c2e42e08f0ec4fb354677a723a032a4845c95b2bf432939fb2fc77a4251",
+      "bytes": 171093
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/T_CedarAtlas.uasset",
+      "sha256": "1ea784887eca271242a32e0bd7426e2565a677fad553508dd23142f16d68570a",
+      "bytes": 322641
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/T_ReserveAtlas.uasset",
+      "sha256": "2f32b6c4791b60b8ed2e06ba9a8459a5f65d8ca6375e846ee5f8fdec880c56a1",
+      "bytes": 3208363
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/grass_medium_01_arm_1k.uasset",
+      "sha256": "cb4e4cdfb9a8d84af88e05c446b591d915fc5122d70ebbfedf38be757a7c620a",
+      "bytes": 690079
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/grass_medium_01_diff_1k.uasset",
+      "sha256": "ce2119ceec1abe893d6edd51ec105b9989a188e3a219c12e3384c5ca2c2ce53b",
+      "bytes": 406217
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/grass_medium_01_nor_gl_1k.uasset",
+      "sha256": "4aa976b22dcc9ffb7fe2585a48d956986503b46e1808a5df26b0e87f35cf4f86",
+      "bytes": 967127
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/GrassAlpha.uasset",
+      "sha256": "d46cb5f329d93b843b6453f75d84f8cbb3bc89c71ee17d883db52bd419ce0697",
+      "bytes": 457657
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/MeadowDetail.uasset",
+      "sha256": "ed7198d51fb8453eee12d123551d4dab571aadd62fd5b53b7ffcd055c76593ec",
+      "bytes": 2634766
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/MeadowDetailArm.uasset",
+      "sha256": "531ccab1b0d03a83f5551f1aaf37f7bddebf6272abf4741545f0f5ca50c36b3e",
+      "bytes": 955537
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/MeadowDetailNormal.uasset",
+      "sha256": "bd490571d06f81fd04fadc1dcb3cac6d650c7f131dd53effc7155713bc95c1b5",
+      "bytes": 3809661
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/pine_sapling_small_bark_arm_1k.uasset",
+      "sha256": "9aa355d2c80bd989b94809fcaaad0a373cf55ec33148f193cf91d84c23559cc5",
+      "bytes": 812024
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/pine_sapling_small_bark_diff_1k.uasset",
+      "sha256": "adf8f6540138c74469f816f729b0ab969b5ee077c8b9da522582a74b28c38529",
+      "bytes": 735994
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/pine_sapling_small_bark_nor_gl_1k.uasset",
+      "sha256": "5ea05d77887a7e6255815adfbb12196859bcb9193e7350526b99dac884dba182",
+      "bytes": 1027995
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/pine_sapling_small_twig_alpha_1k.uasset",
+      "sha256": "321649977381d533d9388fc68ad695d1f0de32fbf8d6e2cb6bae8f271a0e4735",
+      "bytes": 179435
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/pine_sapling_small_twig_arm_1k.uasset",
+      "sha256": "fda08d8cd817559154175161e9531bda25d62cbc3034a50ddc5b5b72f1f20c1a",
+      "bytes": 404802
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/pine_sapling_small_twig_diff_1k.uasset",
+      "sha256": "4dc2582277a20e7b17ce742be556d7599aed9efd587aa6e59969656a0cbe066f",
+      "bytes": 488670
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/pine_sapling_small_twig_nor_gl_1k.uasset",
+      "sha256": "3e0acb4b3b0ac5b38b3776595144991d873859fae81be6d8e46bf100866f8ca7",
+      "bytes": 703857
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/Rock.uasset",
+      "sha256": "5267f0f29db2aabca72c93edb1ac9abfc79a30f0d886fe33321eecdcb7dcb8bf",
+      "bytes": 937037
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/RockNormal.uasset",
+      "sha256": "750cd43cf361dc48635ea5c8a9ec648d5483bd6bdca31f8cdef24fb8e4b5e8fd",
+      "bytes": 1157248
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Forest_diffuse.uasset",
+      "sha256": "d9bb34bfe78f73e9fc7ec9c1daec8c6ccfba28f752fdc50f5f21359c3f00f6a7",
+      "bytes": 1678329
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Forest_nor_gl.uasset",
+      "sha256": "cd55053f60638a79b61a0ef0f2d4071d71695698ac855001cc180ae571bf65a1",
+      "bytes": 2334569
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Forest_rough.uasset",
+      "sha256": "98c9e83388abfc8a835e134546b9c7f797b5fc7e36bd4e5c9828a456ea021816",
+      "bytes": 734058
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_Cloth_boots_Color.uasset",
+      "sha256": "7eb634ebf12bb0547c7556d075f3c771d900d97a458ad6efdf9095fcd2a293f0",
+      "bytes": 112295
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_Cloth_jeans_Color.uasset",
+      "sha256": "18c4d37143806692597b8d3bc99967eb06edaecc30c5c11a2442a52a5348e463",
+      "bytes": 95052
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_Cloth_shirt_Color.uasset",
+      "sha256": "cef0f4dca9a844fff38a7cee86d50cccc7bbc363729c9f6b7a1e1a26a1e783df",
+      "bytes": 55759
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_Eye_Color.uasset",
+      "sha256": "57e05df26ad34b17b1b53dc2cbfc95b3e7ae403ed7b7559f6291dcd318cdd973",
+      "bytes": 108314
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_Eyebrow_Color.uasset",
+      "sha256": "559b0437b701d730d71e05c0d658935cf44f7cb4b06cc5db95def077a7d27944",
+      "bytes": 133392
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_Eyelash_Color.uasset",
+      "sha256": "fb1c2b2314fb5dcfe8b11150b4f90c832c2a95919d8d6499cd4c2ff04f810152",
+      "bytes": 115699
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_Hair_ponytail01_Color.uasset",
+      "sha256": "978e0ba83f05408826a330695a23276a079a3532dba63f329df53ca3e2df4668",
+      "bytes": 1015574
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_Iris_Color.uasset",
+      "sha256": "728ac1a0ad400ef9953eea6515ec736b0b44b97c7cda375f68104396f03b9064",
+      "bytes": 108341
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_MI_Eyes_Color.uasset",
+      "sha256": "980dc06372e7fd1afa89bed4118e8667f2ff96c542e964fe851274e5a93e6030",
+      "bytes": 40296
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_MI_Hair_1_001_Color.uasset",
+      "sha256": "034140d232dae82daeb0f371be2d494acf1196c3ed761cfd2414bc14f09ba54e",
+      "bytes": 562361
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_MI_Hair_1_002_Color.uasset",
+      "sha256": "af23032e33edd66f50cb21a8f0074dadd7f0ea9e02a5e9a08b7e7942c6f33dd2",
+      "bytes": 562361
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_MI_Hair_1_Color.uasset",
+      "sha256": "799d025779fc46cd22802fc59f80052644caa6058c5c5f51bda0dc545142feb6",
+      "bytes": 562256
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_MI_Ranger_001_Color.uasset",
+      "sha256": "d3d67cd38d44c4427b6bff37e083560b361b6d7ffe468dc83d0fb2a064f6bfe0",
+      "bytes": 855381
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_MI_Ranger_Color.uasset",
+      "sha256": "d0bd51f70911838340a042d87c116a129d1eaf769d792ce6068f3451d0827e2c",
+      "bytes": 855278
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_MI_Regular_Male_Color.uasset",
+      "sha256": "30d22f9104e7d803c93295f1ec0a6ac15c6af1d519171ec718baa7a3cb891161",
+      "bytes": 345373
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_MI_Superhero_Male_Color.uasset",
+      "sha256": "06579c8e1cbf9f1c9c57e480fefc591e72da46a7106823b6238dfa7f8a37d30b",
+      "bytes": 370439
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_Skin_Color.uasset",
+      "sha256": "ba7946fcc83c5d67a9a57b386cad929f6098c7623baa2b8d68678b144de1e944",
+      "bytes": 484051
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_Teeth_Color.uasset",
+      "sha256": "6235c97e01a7487f62bc0739d18363bf60bcac96759e6f981775d44d9c77c903",
+      "bytes": 61659
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ranger_Tongue_Color.uasset",
+      "sha256": "6b21fa72119a26e73cb8f1d804c7ed3aab28b9ab0ce99e772f0d97ec334c96dc",
+      "bytes": 30242
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Reserve_ForestFloor.uasset",
+      "sha256": "901f0222fa7fb5f6884ed29f75b5bd0953767aaed2ca8bfad8cc1379e266f205",
+      "bytes": 1340056
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Reserve_MeadowDetail.uasset",
+      "sha256": "5e84da31168ff43da1bd7a3f70c62d25b982cb59ca79dc77bad0bfcdde1ef8e4",
+      "bytes": 2634865
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Reserve_Rock.uasset",
+      "sha256": "a84b493e3f94797e0bb39cbb402e29d9c41973f46ce880e4451761aeb3bacd46",
+      "bytes": 937102
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Reserve_Sand.uasset",
+      "sha256": "eef72cb8245d536c580b95dfd6c51c8bba7c09349ebad6be4b3c237f566d41e6",
+      "bytes": 957244
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Reserve_Snow.uasset",
+      "sha256": "1058a995c0d836419d2e3118ffb9bdaaa948d046700d721455d5544216273eee",
+      "bytes": 335519
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Reserve_WeatheredMetal.uasset",
+      "sha256": "9f22302d79a5b464c883a7914303dd17dcd59c1545c10220eb9e7d1c881a0470",
+      "bytes": 222368
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Reserve_WeatheredWood.uasset",
+      "sha256": "ccedd49ce8efc62a027617566b2cd52b63ec6736c07dc3ac7f2fbb57e8491f71",
+      "bytes": 238533
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ridge_diff.uasset",
+      "sha256": "85610e2f1bc59395557259eb63efb7918d982a3c32f46429983dac7f52c7d3f7",
+      "bytes": 3298158
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ridge_nor_gl.uasset",
+      "sha256": "0d9baa08dacaead23e9afda3eea801aadc61f547cf4c24be1d32abc62a28a5b7",
+      "bytes": 4160557
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Textures/T_Ridge_rough.uasset",
+      "sha256": "da1968cf5cba66e0bd36a286c01333fa0240f0d956b7ccb8adcebd3df29293f2",
+      "bytes": 1671169
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/UI/T_Ammo.uasset",
+      "sha256": "04d500f522c8c99ba100c9d9e2804c8e46ffe95e384ac5df0d95f9fc21d570eb",
+      "bytes": 10161
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/UI/T_Food.uasset",
+      "sha256": "e29eb581219fa4825813622ec01975114527b58e54b2c719a08431893f26f391",
+      "bytes": 10066
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/UI/T_Medkit.uasset",
+      "sha256": "77c13a2b3e91833b329f4ce0086d22fcd1dea95596818b7f46f6e6a9ee6e7080",
+      "bytes": 10160
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/UI/T_PistolIcon.uasset",
+      "sha256": "7e2f130746ac137b4deada7832173a197d970d58069acce493dd4c84e15e1a3f",
+      "bytes": 36282
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/UI/T_Plate.uasset",
+      "sha256": "36da543bd7e7c39dc4f650663d46f8a65fe14d12f8b5a1b224c12de9f90ef9d2",
+      "bytes": 10222
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/UI/T_RifleIcon.uasset",
+      "sha256": "bd19ad90fd422bb5cdc4ec5561e3db0ba30ffe07cdd2ee2c0bc529ce6a13fec2",
+      "bytes": 24351
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/UI/T_Vest.uasset",
+      "sha256": "f10824d63a1d3be379c7c5bb74ce27c792734bb0abd72d9b7cda056d7622e2fa",
+      "bytes": 10274
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Pistol/Materials/service_pistol.uasset",
+      "sha256": "e65fcd5ab75201fd9ffc39a8a3e65f9b125dc21ea37ca6449cddc606556bb4e9",
+      "bytes": 59037
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Pistol/Textures/service_pistol_diff.uasset",
+      "sha256": "565af289a97f90e34e28373647828fcf0195421eade9afaef270fa7e1f946cd8",
+      "bytes": 1643785
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Pistol/Textures/service_pistol_metal-service_pistol_rough.uasset",
+      "sha256": "178f34b8b663a437cf3eb690760c79772d5e9a2643dd5fdd0bc9bf02847952af",
+      "bytes": 2323094
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Pistol/Textures/service_pistol_nor_gl.uasset",
+      "sha256": "cabd214a78eeff1e192a5e141079f942b213b72014bc1b7e375d8fa03a654b65",
+      "bytes": 1657309
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Pistol.uasset",
+      "sha256": "50918e7087a4eb676aa6bb327e71f56235e35c0a6811c92324d84a9ce1c87b92",
+      "bytes": 479088
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle/Materials/bolt_action_rifle_7_62.uasset",
+      "sha256": "63f3a275e4f851a4614d3582b6d48e2e5f98c546abb9635dc88b0a90001480f9",
+      "bytes": 59379
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle/Materials/bolt_action_rifle_7_62_accesories.uasset",
+      "sha256": "f67cb51b9dfab45fa9da8b9679dc9cfda772131f684a32ea910ccfc1be4640d1",
+      "bytes": 59946
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle/Materials/bolt_action_rifle_7_62_accesories_glass.uasset",
+      "sha256": "a4e6652107d9fcbfa5ea618af15025662f543c2d180db20c7980fb8bae56b178",
+      "bytes": 60544
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle/Textures/bolt_action_rifle_7_62_accesories_diff-bolt_action_rifle_7_62_accesories_alpha.uasset",
+      "sha256": "6a855d3c2f22f4eb7404b471ee34e319705a36ffed678102263c75c466a1be52",
+      "bytes": 1804097
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle/Textures/bolt_action_rifle_7_62_accesories_diff.uasset",
+      "sha256": "c078b701ef4b832a53f2399e1e5bb046edad683a085311977d3b48af6452a2cc",
+      "bytes": 1803617
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle/Textures/bolt_action_rifle_7_62_accesories_metal-bolt_action_rifle_7_62_accesories_rough.uasset",
+      "sha256": "8e1fe92fc7323f3662bb07aec56d516f82f0e800cbe5b8c92b16e5a2131559c8",
+      "bytes": 2413250
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle/Textures/bolt_action_rifle_7_62_accesories_metal-bolt_action_rifle_7_62_accesories_rough1.uasset",
+      "sha256": "c1cd180a7e0554c7dd3ccc0d379a691a7c03fd579a6ffa4d9354cf905fd824f1",
+      "bytes": 2413262
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle/Textures/bolt_action_rifle_7_62_accesories_nor_gl.uasset",
+      "sha256": "5beb46a2a8dcc1eae41f3a340229e5d12c9e77239a297d63739a78a893729a7c",
+      "bytes": 2390456
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle/Textures/bolt_action_rifle_7_62_accesories_nor_gl1.uasset",
+      "sha256": "029f8b513a1b3058929c04e7702e26404981f3976275d82728f488176840b382",
+      "bytes": 2390468
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle/Textures/bolt_action_rifle_7_62_diff.uasset",
+      "sha256": "3896a501e1d9cb8e87ef6b442af4487158201e9c7fed417359e3d997eec84f13",
+      "bytes": 1992495
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle/Textures/bolt_action_rifle_7_62_metal-bolt_action_rifle_7_62_rough.uasset",
+      "sha256": "a4fe4be34955888627c68a0b9a22c1a7919c06afef439b92ce6fc66310d7cca3",
+      "bytes": 2245097
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle/Textures/bolt_action_rifle_7_62_nor_gl.uasset",
+      "sha256": "a2dd97c40624e0327fbb3fdbaaca330c910edcdbeb0591f164b861238989243b",
+      "bytes": 1823770
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/Weapons/SM_Rifle.uasset",
+      "sha256": "771c1ce64317f77524bb67e82d135ae04e513abd623c4e81bd11e63aebec99f9",
+      "bytes": 594224
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/World/SM_Lake/StaticMeshes/SM_Lake.uasset",
+      "sha256": "b36457e9a69ff697e06568f1d061d18b3d4a21f3956a580a09439fce01b1fa64",
+      "bytes": 63569
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/World/SM_Limestone.uasset",
+      "sha256": "8bf2c6040b692af377565f14ce059bf45e6a73435c6f51c00fee9abb39143a16",
+      "bytes": 69207
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Art/World/SM_TrunkCollision.uasset",
+      "sha256": "bf4d2e0e26f1e4e51d6078ffe8cf27d01df72920a284c67923faea3c9da7f2f6",
+      "bytes": 29950
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/ArmorHit.uasset",
+      "sha256": "a114ab1b07db369013265c20a148844cd85bf33371cc87f3eab8fa73f126ae71",
+      "bytes": 5508
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/Birds.uasset",
+      "sha256": "878d586784daa10039da290490d7e4feddb528aaa82aa67d76dd9588e543bc86",
+      "bytes": 1494203
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/Canid.uasset",
+      "sha256": "aa87cf5b6d69824063f5e338967559b9c435c1faa8393e8a7da83f464f33c718",
+      "bytes": 28511
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/Elimination.uasset",
+      "sha256": "725cc004606398cac3d0a09820153e9175cce9f8894ef665640d2fba1e375e81",
+      "bytes": 8303
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/Elk.uasset",
+      "sha256": "e6db8e1557f515204c4a4ba93208253c9842f022d8ee96d0b1f07f136eb116b3",
+      "bytes": 221272
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/Goat.uasset",
+      "sha256": "5d3ee8405686ffb1d59659262f6f15cd91d08e11c0665c274abdc0b13d7dd9ae",
+      "bytes": 74192
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/GrassStep0.uasset",
+      "sha256": "712f8c8152039725a202f7f2cdf02da6661355a4cc43482ad5019e3882caac20",
+      "bytes": 8808
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/GrassStep1.uasset",
+      "sha256": "b659b52daa74c1b12d7971b026f588206a71cf5ccb068c39ef651b16eccdbd93",
+      "bytes": 9899
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/GrassStep2.uasset",
+      "sha256": "dbe7cfc7deeaff38911a1e09c3e08639fd328aaa68e5b8fd8ca9645b871f50cd",
+      "bytes": 9843
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/GrassStep3.uasset",
+      "sha256": "ab123875d36d90fd078af624ab03771bd07be2f1660a8d8efcd58fab64ebc6e3",
+      "bytes": 8180
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/GrassStep4.uasset",
+      "sha256": "d817155ab9ca3b905a890e717eb4f205b63ea731feb59ab04b3406468421ae3a",
+      "bytes": 7954
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/Hit.uasset",
+      "sha256": "e4a3935d76d49c9ae9b9cd414ad2697f7b5b31979c5d4a1f48cd9482b38d050f",
+      "bytes": 4599
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/Hurt.uasset",
+      "sha256": "9989570e20bdb2f3a20475de93fb927afa64fee5e33cff4219ac515a7cb1d38e",
+      "bytes": 5699
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/Pistol.uasset",
+      "sha256": "68593d496f2929b0b0260e4992eba46d7aa447d8adf0ba75f680f071192e4efe",
+      "bytes": 55503
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/Reload.uasset",
+      "sha256": "3c97e2fd7d3522d1652d28b13c8e0b00109c6f92882b698eef6d2f67caa48d21",
+      "bytes": 14498
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/Rifle.uasset",
+      "sha256": "0d3d76d71903b4f35b5e4b7c10e126924f9060482c103cd43bab213fcd34f5f8",
+      "bytes": 37864
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Audio/Step.uasset",
+      "sha256": "36f04e7954763a0427e312d1eceb413bf6ea865e52cbd711e43129c65edc808d",
+      "bytes": 8642
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Data/DT_Weapons.uasset",
+      "sha256": "ae1fc571cdae4e53ba07aa92d831a8094b4038987f7110a50a4143d566a9b737",
+      "bytes": 8035
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Maps/CedarCrossing.umap",
+      "sha256": "11eafbc02d604ae1c1838f5ee4456c2ffff06f21996b9a93e8544dd3e491ce27",
+      "bytes": 17159589
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Maps/WildfrontReserve.umap",
+      "sha256": "aaf18d11c99d9828359191de4fbb9b3d60c3f19541715a9eef31c2698618c9dc",
+      "bytes": 47346764
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_Cloth_boots.uasset",
+      "sha256": "f31163ba9d51b4bfe2e6d056a245473722efba84d617a2b244bd2a1cf7ffa591",
+      "bytes": 7590
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_Cloth_jeans.uasset",
+      "sha256": "97e4f72f0d130ef2b8cb3d3d51214bcffe4791bcb1b5a58334cc1ddca4fe201b",
+      "bytes": 7590
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_Cloth_shirt.uasset",
+      "sha256": "8d42b181fad6a130ca0bb53354bcf104091740dc7bf124200ffec283bcb98e10",
+      "bytes": 7590
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_Cornea.uasset",
+      "sha256": "1833abde7e518fe80ac6f0e54c0ab15a18409aa3d4947990b9363209df21fa96",
+      "bytes": 6315
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_Eye.uasset",
+      "sha256": "aef762332d0a149389675a9b931f4e0db8d8fc41207168e960da5e5f8853acdb",
+      "bytes": 7534
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_Eyebrow.uasset",
+      "sha256": "6adc68200524b49e2619eafd193d8a6b12b107b0018cdccb5fa54b993234e3e4",
+      "bytes": 7752
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_Eyelash.uasset",
+      "sha256": "c84cc065ac9d53de599aadb7bb97f52f3c9a7e961f77dae3b25f456f54ab0932",
+      "bytes": 7752
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_Hair_ponytail01.uasset",
+      "sha256": "414fdbdb75be1f94f9ba67c4729d86c2457a994db1850c209c55195f27ac90c0",
+      "bytes": 7808
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_Iris.uasset",
+      "sha256": "51fc7e606cda0f8690bcd0ea3d79ebe7267fe67262572751d49ae9207169d23f",
+      "bytes": 7541
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_MI_Eyes.uasset",
+      "sha256": "bdc57207262eeeb9568b2c5b3a34fa170e35c9139a9661fadced4767a6890628",
+      "bytes": 6585
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_MI_Hair_1.uasset",
+      "sha256": "6c2c6be14586fc910a6bcd1485de69fcda4702e07074f01b787afc770b0adf83",
+      "bytes": 6595
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_MI_Hair_1_001.uasset",
+      "sha256": "33657dc81387ef346c92021dc91d22f8d604840bbe3e9c2976331c035818a3a3",
+      "bytes": 6627
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_MI_Hair_1_002.uasset",
+      "sha256": "2f422dec05df03160569d1fdcf71642f1e76df2d62ce631d607d043a5b3dce00",
+      "bytes": 6627
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_MI_Ranger.uasset",
+      "sha256": "7643b5d5032c279d1575ae1ea8abb5d2b00970a2b598588ac81abd7270c83ac0",
+      "bytes": 6599
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_MI_Ranger_001.uasset",
+      "sha256": "3f65a0aafb728e7bc9679385521aa4f0dbd7550f1c5f8d9650e387488d0a39c8",
+      "bytes": 6627
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_MI_Regular_Male.uasset",
+      "sha256": "cb149702d2bbd318468cd2454b28c6c190de528e501ed6f6495872722b3a3678",
+      "bytes": 6641
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_MI_Superhero_Male.uasset",
+      "sha256": "d8dac660053ff5b79913a69d3670080d01136cd2f3ad2b1f7b9d4dc052f2a971",
+      "bytes": 6655
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_Skin.uasset",
+      "sha256": "d9ad1ba031639f908d3d48a278cd0f1913361a512a1284c39270effd35af15af",
+      "bytes": 7573
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_Teeth.uasset",
+      "sha256": "1c9f69b980ab5f79c40171844f26a3ba27de1e5232f7bfe8a8d588e24c0ea49d",
+      "bytes": 7548
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Characters/M_Ranger_Tongue.uasset",
+      "sha256": "549a1d73b5c4418e8206f64fbf0c84636e1f6aa153d95b3e0086966948cd13a7",
+      "bytes": 7555
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/M_LakeSurface.uasset",
+      "sha256": "3dd87a4662d321a2dd36b2190f3707d5d3783ba40a476be737f92702950b35dc",
+      "bytes": 12246
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/M_LowGrass.uasset",
+      "sha256": "dde37974ed07ef4b2b4996e3263bc168ad75386927c182abe1ffe33816b35763",
+      "bytes": 8715
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/M_PineBark.uasset",
+      "sha256": "13804f4a4bf053f8c5fd7038887306aa8c7cac127951598f83741b6f5ddadb9c",
+      "bytes": 6600
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/M_PineNeedles.uasset",
+      "sha256": "18f23ba82a0b48e598cdf1bdf1e0e79ceac8c89b904ddb42f99779b74e9c3201",
+      "bytes": 8871
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/M_ReserveTerrain.uasset",
+      "sha256": "475b6b125b60e6fd9f5909095b790f92d38cd88b36cd54e7880ee6ce46691e78",
+      "bytes": 47577
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/M_StormSurface.uasset",
+      "sha256": "ddbcfdc2913124ff9cac06a4436eee0636d9b87921be6704d7f0b4ddf1e66335",
+      "bytes": 8218
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/M_Supply.uasset",
+      "sha256": "eb192f7c4f917ab886ce784d56e057f3df85176114e27e23b9548b55d6d3eea7",
+      "bytes": 5258
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/M_Terrain.uasset",
+      "sha256": "2db0ecd27e882e50e545c75fe7c570bdd179f6452235a2d3d522e42cac366b68",
+      "bytes": 53350
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/M_WildRage.uasset",
+      "sha256": "484b53187fea109a3dab289884b4c05320b0557cb2f70a302bd5c14b7bf6629f",
+      "bytes": 5955
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Reserve/M_Reserve_Brass.uasset",
+      "sha256": "4b06c8e9e66d7ce13f4c77824585e4867d6095fd957fec625dfd3acee5f0f209",
+      "bytes": 5757
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Reserve/M_Reserve_Cloth.uasset",
+      "sha256": "fc649e10afa53aa767f46ecd812040ea6787db64a35e914be5d81543a4e8eb71",
+      "bytes": 5728
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Reserve/M_Reserve_Glass.uasset",
+      "sha256": "11bbf69eb7ab798f7a6d3bb8e09a8d358843413d87fc7e121434263716bbd40d",
+      "bytes": 5728
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Reserve/M_Reserve_Metal.uasset",
+      "sha256": "9749e77cbdb6dfe6446a5861639cb9a09d469792482e3b0658bb188f2c44d60b",
+      "bytes": 8550
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Reserve/M_Reserve_Paint.uasset",
+      "sha256": "764c3d31b893ca6f76114b9c2a6c1820cb564610c4d74671242703971e2e27ab",
+      "bytes": 5728
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Reserve/M_Reserve_Red.uasset",
+      "sha256": "65a61ba32a0f26a8d660a6489f6fff5852022d9a754e7f17c877d1ecc4eb8eab",
+      "bytes": 5718
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Reserve/M_Reserve_Roof.uasset",
+      "sha256": "648dc3d3bf4df515d5b43a81101b58b4f3c4606f8378908af7e067fafa9db965",
+      "bytes": 5723
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Reserve/M_Reserve_Rubber.uasset",
+      "sha256": "c9e1acb709d638e3cc5800e6ae1bd21ae6abeaf1d676efbf5f64f4e459e7e6b5",
+      "bytes": 5733
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Reserve/M_Reserve_Stone.uasset",
+      "sha256": "e9a7dfb1aa6b2a8b09d432481c24f8d38322116106cb77763c2ffa4c2a43fbeb",
+      "bytes": 8501
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Reserve/M_Reserve_White.uasset",
+      "sha256": "9a63799f493692aff810ba89b6e1024773beedfa008c98c25ab2aaea9f421ade",
+      "bytes": 5728
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Reserve/M_Reserve_Wood.uasset",
+      "sha256": "5557d8ab29547a1314d72c14b64c0a78d1fa5ada951598ff1ea37253f3eb0422",
+      "bytes": 8514
+    },
+    {
+      "path": "Unreal/Pinefall/Content/Pinefall/Materials/Reserve/M_ReserveRoad.uasset",
+      "sha256": "b5ecb9d780778c36626b51a1194764efe54ebf027a4f951e1983b4601b537fce",
+      "bytes": 5073
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/TrailRanger/preparation.json",
+      "sha256": "bf5b8bd2fe5d9054d1ce099e045c7c4219a330a427c67206c73522d56a18b7e5",
+      "bytes": 527
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/TrailRanger/Textures/materials.json",
+      "sha256": "59db51da4630cda0a1da257e76716dd06c4aab080470b0e277a65e20733c03f7",
+      "bytes": 1323
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/TrailRanger/Textures/MI_Eyes.png",
+      "sha256": "560afa766d6158e0b9b18d99a086e06840a8472c967b1b99441723fac19375e4",
+      "bytes": 27383
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/TrailRanger/Textures/MI_Hair_1.png",
+      "sha256": "56ca103efbe672ffdbabc034811f7633afc8411cc6292486a8a706e3415010c6",
+      "bytes": 515060
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/TrailRanger/Textures/MI_Hair_1_001.png",
+      "sha256": "56ca103efbe672ffdbabc034811f7633afc8411cc6292486a8a706e3415010c6",
+      "bytes": 515060
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/TrailRanger/Textures/MI_Hair_1_002.png",
+      "sha256": "56ca103efbe672ffdbabc034811f7633afc8411cc6292486a8a706e3415010c6",
+      "bytes": 515060
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/TrailRanger/Textures/MI_Ranger.png",
+      "sha256": "25d4afa8be0b581fbf493bc86f560eeb67066eea0416cf3c86b1f71a75f8aeb9",
+      "bytes": 755107
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/TrailRanger/Textures/MI_Ranger_001.png",
+      "sha256": "25d4afa8be0b581fbf493bc86f560eeb67066eea0416cf3c86b1f71a75f8aeb9",
+      "bytes": 755107
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/TrailRanger/Textures/MI_Regular_Male.png",
+      "sha256": "5be737a10600c024c8737c67c5d3d2af18f24eb1a2baf5ba994c9e5dcaf6a121",
+      "bytes": 295184
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/TrailRanger/Textures/MI_Superhero_Male.png",
+      "sha256": "2c7802108b13b831a058eed2586da6d2b5b937acc69c8e8887c236bc65c65311",
+      "bytes": 317525
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/TrailRanger/TrailRanger.glb",
+      "sha256": "2a6ae60f967ad54593e86d66cdd9255409c1a445628ee22e8adfda40ee93c9a7",
+      "bytes": 10854768
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/Reserve/provenance.json",
+      "sha256": "bd812fd444d33d4296f4b0ffd5259419f883bb7feaefa8aea56eb8ba2663ce7d",
+      "bytes": 361
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/Reserve/ReserveAtlas.png",
+      "sha256": "c6f9d5819cd4735ba999fcad187a0996cf9809eeb04be2843ed9be32ef584ad2",
+      "bytes": 3049804
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/Reserve/SM_AmmoBox.glb",
+      "sha256": "7b25e78db25830173daf2729299da92939ee3e9214b96dd38ec14e0ae6384beb",
+      "bytes": 24400
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/Reserve/SM_FieldVest.glb",
+      "sha256": "ffbb138dfb946e6e08b62168a02a61a652d46d8433cb9aa88391baa5253bae48",
+      "bytes": 39992
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/Reserve/SM_MedicalBag.glb",
+      "sha256": "de691a0cbb15b52162ae05fd09a497be9253060f2d36fc2f8e1fc08ac3c27166",
+      "bytes": 48620
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/Reserve/SM_RangerCabin.glb",
+      "sha256": "2f03af873b4f94aaaf75e61ead70c82a9bad1eaef03824caa9efb1a2e4fde759",
+      "bytes": 215716
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/Reserve/SM_RationTins.glb",
+      "sha256": "69191555c4eeb5cb3df0bef5d2a035f6f6d899fe0558f025a64c0b66d67503e4",
+      "bytes": 22508
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/Reserve/SM_RiverBoat.glb",
+      "sha256": "3ee0e8da8634f348cd2108103ce7c1c495e7787eb8364e82d6ef2542b0101d6d",
+      "bytes": 75772
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/Reserve/SM_ServiceCase.glb",
+      "sha256": "49cf6addb7f10da1ecfe1d33f91b651955b6b6e9b9fcc22c1554cefb92f8e223",
+      "bytes": 32580
+    },
+    {
+      "path": "Unreal/Pinefall/SourceArt/Prepared/Reserve/SM_TrailTruck.glb",
+      "sha256": "e08f702e18c440d77e14db10c62a411deb7fceb86015798bc7a1c9f4953a6361",
+      "bytes": 334928
+    }
+  ],
+  "fingerprint_text_policy": "SHA-256 after CRLF-to-LF normalization for source text; binary bytes unchanged"
+}

@@ -1,0 +1,90 @@
+[
+  {
+    "name": "MI_Hair_1",
+    "color": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "MI_Hair_1.png"
+  },
+  {
+    "name": "MI_Ranger_001",
+    "color": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "MI_Ranger_001.png"
+  },
+  {
+    "name": "MI_Regular_Male",
+    "color": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "MI_Regular_Male.png"
+  },
+  {
+    "name": "MI_Ranger",
+    "color": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "MI_Ranger.png"
+  },
+  {
+    "name": "MI_Eyes",
+    "color": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "MI_Eyes.png"
+  },
+  {
+    "name": "MI_Superhero_Male",
+    "color": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "MI_Superhero_Male.png"
+  },
+  {
+    "name": "MI_Hair_1_001",
+    "color": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "MI_Hair_1_001.png"
+  },
+  {
+    "name": "MI_Hair_1_002",
+    "color": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "alpha": "OPAQUE",
+    "color_file": "MI_Hair_1_002.png"
+  }
+]

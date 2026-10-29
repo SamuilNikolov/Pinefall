@@ -1,7 +1,10 @@
-#include "PFInterface.h"
 #include "PFCombatHUD.h"
+#include "PFInterface.h"
 #include "PFCharacter.h"
 #include "PFPlayerController.h"
+#include "PFInventoryComponent.h"
+#include "PFMatchState.h"
+#include "Engine/Texture2D.h"
 #include "Rendering/DrawElements.h"
 #include "Styling/CoreStyle.h"
 
@@ -136,5 +139,62 @@ int32 UPFInterface::PaintCombat(const FGeometry &G, FSlateWindowElementList &Out
                                          ESlateDrawEffect::None, Color, true, 4);
         }
     }
-    return Layer + 3;
+    // Equipment tiles use cached inventory icons; the aiming area stays clear.
+    DrawLayer = Layer + 3;
+    float Tile = 66, Gap = 6;
+    FVector2D Start(Size.X - 30 - 6 * (Tile + Gap), Size.Y - 94);
+    int32 N = 0;
+    for (const auto &Stack : Player->Inventory->Slots)
+    {
+        if (Stack.Count <= 0 || N >= 6)
+            continue;
+        FVector2D At = Start + FVector2D(N * (Tile + Gap), 0);
+        const FLinearColor Tiers[] = {FLinearColor(.38, .43, .44), FLinearColor(.22, .55, .3),
+                                      FLinearColor(.2, .43, .78), FLinearColor(.56, .3, .78),
+                                      FLinearColor(.84, .56, .17)};
+        bool Equipped = Stack.Kind == EPFItemKind::Weapon && Stack.WeaponId == Player->WeaponId;
+        Box(At, FVector2D(Tile),
+            Equipped ? FLinearColor(.20, .28, .29, .94) : FLinearColor(.025, .045, .055, .84));
+        Box(At + FVector2D(0, Tile - 4), FVector2D(Tile, 4), Tiers[FMath::Min<int32>(Stack.Rarity, 4)]);
+        int32 Icon = Stack.Kind == EPFItemKind::Weapon       ? (Stack.WeaponId == TEXT("Ridgeline") ? 0 : 1)
+                     : Stack.Kind == EPFItemKind::Ammo       ? 2
+                     : Stack.Kind == EPFItemKind::Food       ? 3
+                     : Stack.Kind == EPFItemKind::Medkit     ? 4
+                     : Stack.Kind == EPFItemKind::ArmorPlate ? 5
+                                                             : 6;
+        if (ItemIcons.IsValidIndex(Icon))
+        {
+            FSlateBrush Brush;
+            Brush.SetResourceObject(ItemIcons[Icon]);
+            Brush.ImageSize = FVector2D(128);
+            FSlateDrawElement::MakeBox(
+                Out, DrawLayer + 1,
+                G.ToPaintGeometry(FVector2D(54, 42), FSlateLayoutTransform(At + FVector2D(6, 4))), &Brush,
+                ESlateDrawEffect::None, FLinearColor::White);
+        }
+        FString Count =
+            Stack.Kind == EPFItemKind::Weapon
+                ? FString::Printf(TEXT("%s  %d"), Stack.WeaponId == TEXT("Ridgeline") ? TEXT("1") : TEXT("2"),
+                                  Equipped ? Player->Ammo : Stack.Magazine)
+                : FString::FromInt(Stack.Count);
+        FSlateDrawElement::MakeText(
+            Out, DrawLayer + 2,
+            G.ToPaintGeometry(FVector2D(60, 18), FSlateLayoutTransform(At + FVector2D(7, 44))), Count,
+            FCoreStyle::GetDefaultFontStyle(TEXT("Bold"), 12), ESlateDrawEffect::None,
+            FLinearColor(.95, .96, .9));
+        N++;
+    }
+    FSlateDrawElement::MakeText(
+        Out, DrawLayer + 2,
+        G.ToPaintGeometry(FVector2D(240, 20), FSlateLayoutTransform(Start + FVector2D(0, -22))),
+        TEXT("Hold Alt inventory · M map"), FCoreStyle::GetDefaultFontStyle(TEXT("Regular"), 12),
+        ESlateDrawEffect::None, FLinearColor(.8, .87, .85));
+    FRotator View = PC->GetControlRotation();
+    int32 Heading = FMath::RoundToInt(FMath::Fmod(View.Yaw + 360, 360));
+    FSlateDrawElement::MakeText(
+        Out, DrawLayer + 2,
+        G.ToPaintGeometry(FVector2D(170, 22), FSlateLayoutTransform(FVector2D(Center.X - 45, 14))),
+        FString::Printf(TEXT("%03d°"), Heading), FCoreStyle::GetDefaultFontStyle(TEXT("Bold"), 16),
+        ESlateDrawEffect::None, FLinearColor(.94, .96, .9));
+    return Layer + 6;
 }

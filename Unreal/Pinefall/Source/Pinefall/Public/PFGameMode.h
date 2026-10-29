@@ -6,6 +6,7 @@
 class APFMatchState;
 class APFCharacter;
 class APFWildlife;
+class APFVehicle;
 UCLASS()
 class PINEFALL_API APFPlayerState : public APlayerState
 {
@@ -49,6 +50,7 @@ class PINEFALL_API APFGameMode : public AGameModeBase
     void RunWildlifeProbe();
     void RunCombatProbe();
     void RunWorldProbe();
+    void RunReserveProbe();
 
   private:
     void RoundSecond();
@@ -76,4 +78,8 @@ class PINEFALL_API APFGameMode : public AGameModeBase
     UPROPERTY() TObjectPtr<AActor> ProbeCover;
     FVector ProbeHostOrigin = FVector::ZeroVector;
     FVector ProbeRemoteOrigin = FVector::ZeroVector;
+    UPROPERTY() TObjectPtr<APFVehicle> ProbeVehicle;
+    FVector ReserveProbeOrigin = FVector::ZeroVector;
+    float ReserveProbeYaw = 0;
+    int32 ReserveProbeFood = 0, ReserveProbePickups = 0;
 };

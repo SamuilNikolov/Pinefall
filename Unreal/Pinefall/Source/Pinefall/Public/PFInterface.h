@@ -54,6 +54,7 @@ class PINEFALL_API UPFInterface : public UUserWidget
     UPROPERTY() TObjectPtr<UBorder> RoundPanel;
     UPROPERTY() TObjectPtr<UBorder> InventoryPanel;
     UPROPERTY() TObjectPtr<UPFTacticalMap> TacticalMap;
+    UPROPERTY() TObjectPtr<UPFTacticalMap> Minimap;
     UPROPERTY() TObjectPtr<UTextBlock> RoundTitle;
     UPROPERTY() TObjectPtr<UTextBlock> RoundInfo;
     UPROPERTY() TObjectPtr<UTextBlock> Roster;

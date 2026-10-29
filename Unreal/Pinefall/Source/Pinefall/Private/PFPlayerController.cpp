@@ -1,4 +1,5 @@
 #include "PFPlayerController.h"
+#include "Net/UnrealNetwork.h"
 #include "PFInterface.h"
 #include "PFCharacter.h"
 #include "PFGameMode.h"
@@ -336,4 +337,10 @@ void APFPlayerController::CalcCamera(float Delta, FMinimalViewInfo &Out)
         return;
     }
     Super::CalcCamera(Delta, Out);
+}
+
+void APFPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+    DOREPLIFETIME_CONDITION(APFPlayerController, MapMarkers, COND_OwnerOnly);
 }

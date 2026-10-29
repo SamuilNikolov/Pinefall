@@ -1,0 +1,15 @@
+{
+  "author": "Original Pinefall procedural mesh preparation",
+  "generator": "Scripts/prepare_reserve_props.py, Blender 4.3",
+  "commercial_assets_copied": false,
+  "meshes": [
+    "SM_TrailTruck",
+    "SM_RiverBoat",
+    "SM_RangerCabin",
+    "SM_MedicalBag",
+    "SM_RationTins",
+    "SM_AmmoBox",
+    "SM_FieldVest",
+    "SM_ServiceCase"
+  ]
+}

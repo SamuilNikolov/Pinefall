@@ -6,7 +6,8 @@
 #include "Interfaces/IPv4/IPv4Endpoint.h"
 void UPFGameInstance::HostRange()
 {
-    UGameplayStatics::OpenLevel(this, TEXT("/Game/Pinefall/Maps/CedarCrossing"), true, TEXT("listen?play"));
+    UGameplayStatics::OpenLevel(this, TEXT("/Game/Pinefall/Maps/WildfrontReserve"), true,
+                                TEXT("listen?play"));
 }
 bool UPFGameInstance::JoinRange(const FString &Input)
 {
@@ -32,7 +33,7 @@ bool UPFGameInstance::JoinRange(const FString &Input)
 void UPFGameInstance::HostBattleRoyale(int32 TeamSize)
 {
     TeamSize = TeamSize == 2 || TeamSize == 4 ? TeamSize : 1;
-    UGameplayStatics::OpenLevel(this, TEXT("/Game/Pinefall/Maps/CedarCrossing"), true,
+    UGameplayStatics::OpenLevel(this, TEXT("/Game/Pinefall/Maps/WildfrontReserve"), true,
                                 FString::Printf(TEXT("listen?br?play?team=%d"), TeamSize));
 }
 FString UPFGameInstance::LocalAddress() const

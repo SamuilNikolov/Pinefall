@@ -13,7 +13,8 @@ enum class EPFItemKind : uint8
     ArmorPlate,
     LightVest,
     FieldVest,
-    HeavyVest
+    HeavyVest,
+    ServiceKit
 };
 USTRUCT(BlueprintType)
 struct FPFItemStack
@@ -43,6 +44,8 @@ class PINEFALL_API UPFInventoryComponent : public UActorComponent
     int32 Reserve(FName Id) const;
     int32 TakeAmmo(FName Id, int32 Wanted);
     void DropEverything();
+    int32 CountKind(EPFItemKind Kind) const;
+    bool ConsumeKind(EPFItemKind Kind);
     UFUNCTION(Server, Reliable) void ServerUseSlot(int32 Index, uint32 Revision);
     UFUNCTION(Server, Reliable) void ServerDropSlot(int32 Index, int32 Count, uint32 Revision);
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const override;

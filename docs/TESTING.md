@@ -1,6 +1,12 @@
 # Verification and reproducible checks
 
-## Active Unreal round build
+## Active Unreal reserve build
+
+`tools/Test-UnrealReserve.ps1` launches the actual 2 km reserve in two processes. The owner boards/drives/steers a truck, opens settings while moving, exits, services with a real inventory kit, boards/drives a boat, and drops/picks up inventory through ordinary validated requests. Authority arranges positions/stock/damage for determinism. The 32 checks include owning-client crouch/uncrouch, a lowered animated head observed on the host, stock counts, persistent character materials, upright cabins and actual capsule doorway/wall collision. The client must not bootstrap duplicate authoritative vehicles/loot. The map-feed check excludes an enemy-occupied truck. This is not a rendered frame-rate, engine-audio, WAN or twenty-player stress test.
+
+Use `Setup-Unreal.ps1 -RebuildReserve` only to regenerate the reserve/atlas. The optional external atlas authoring step needs Python with NumPy/Pillow; normal build/play uses committed map/assets. Use explicit keyword arguments for editor `unreal.Rotator`, whose positional order differs from C++.
+
+## Earlier native checks
 
 `tools/Test-UnrealCombat.ps1 -PacketLagMs 80` fires from actual owning controllers into standing, crouched and moving player skeletal collision, with current-cover, FP/TP, ammunition and skull checks. The setting delays outgoing packets on both processes; it is a specific artificial-delay case, not general WAN/loss evidence. Fixtures arrange positions, health and cover, never accepted hits. `tools/Test-UnrealWorld.ps1` checks saved trunk/rock cover with capsule sweeps and bullets, automatic water entry/exit, immersion and arranged air/drowning/recovery cases. Render and audible reviews remain separate.
 

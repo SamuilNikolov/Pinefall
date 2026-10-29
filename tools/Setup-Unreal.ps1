@@ -1,7 +1,9 @@
 param(
     [string]$EngineRoot = "$env:ProgramFiles\Epic Games\UE_5.6",
     [switch]$RebuildEnvironment,
-    [switch]$RebuildRoundAssets
+    [switch]$RebuildRoundAssets,
+    [switch]$RebuildReserve,
+    [switch]$RebuildCharacterMaterials
 )
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path $PSScriptRoot -Parent
@@ -43,10 +45,14 @@ if ($RebuildEnvironment -or !(Test-Path -LiteralPath $map)) {
 }
 $passes = @()
 if ($RebuildEnvironment -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Materials\M_LakeSurface.uasset'))) {$passes += 'upgrade_world.py'}
-if (!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Art\Characters\Ranger\FieldRanger.uasset'))) {$passes += 'import_ranger.py'}
+if (!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Art\Characters\TrailRanger\TrailRanger.uasset'))) {$passes += 'import_stylized_ranger.py'}
 if ($RebuildEnvironment -or $RebuildRoundAssets -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Materials\M_WildRage.uasset'))) {$passes += 'build_round_assets.py'}
 if (!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Audio\GrassStep4.uasset'))) {$passes += 'build_combat_audio.py'}
 if (!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Art\Fauna\Alpaca\Walk.uasset'))) {$passes += 'import_wildlife.py'}
+if ($RebuildCharacterMaterials -or $passes -contains 'import_stylized_ranger.py' -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Materials\Characters\M_Ranger_MI_Ranger.uasset'))) {$passes += 'fix_stylized_materials.py'}
+$needsReserve=$RebuildReserve -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Maps\WildfrontReserve.umap'))
+if($needsReserve){$passes+='build_reserve.py'}
+if($needsReserve -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Art\T_ReserveAtlas.uasset'))){$passes+='import_reserve_atlas.py'}
 foreach ($pass in $passes) {
     $logFolder = Join-Path $repo 'artifacts'
     New-Item -ItemType Directory -Path $logFolder -Force | Out-Null
@@ -54,5 +60,9 @@ foreach ($pass in $passes) {
     $script = Join-Path $projectRoot ('Scripts\' + $pass)
     & $editor $project -run=pythonscript "-script=$script" -PFImportAllWildlife -unattended -nullrhi -SCCProvider=None "-abslog=$log"
     if ($LASTEXITCODE -ne 0 -or (Select-String -LiteralPath $log -Pattern 'Log.*: Error:|Ensure condition failed' -Quiet)) {throw "Asset generation did not pass. Inspect $log"}
+    if($pass -eq 'build_reserve.py'){
+        & python -X utf8 (Join-Path $projectRoot 'Scripts\bake_reserve_atlas.py')
+        if($LASTEXITCODE -ne 0){throw 'Atlas authoring requires Python with NumPy and Pillow. Normal play/build uses committed assets.'}
+    }
 }
 Write-Host 'Unreal round ready. Run tools\Run-Unreal.ps1 or open Unreal\Pinefall\Pinefall.uproject.'
