@@ -295,6 +295,7 @@ void UPFInterface::UpdateExpeditionUI()
                                  *Transport->Label(), Transport->Health / 5, Transport->Fuel);
     else if (auto *Pickup = Player->FocusedPickup.Get())
         Prompt = FString::Printf(TEXT("E  %s  ×%d"), *Pickup->Item.Label(), Pickup->Item.Count);
+    if (Prompt.IsEmpty() && Player->bSliding) Prompt = TEXT("SLIDE · release Ctrl · Space jump");
     PickupPrompt->SetText(
         FText::FromString(PC->bMenuOpen || Round || PC->bInventoryOpen ? TEXT("") : Prompt));
     if (PC->bInventoryOpen)

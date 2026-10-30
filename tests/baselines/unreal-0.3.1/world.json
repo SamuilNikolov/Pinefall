@@ -1,0 +1,20 @@
+{
+	"passed": [
+		"saved forest contains physical trunk instances",
+		"player capsule cannot cross a tree trunk",
+		"tree trunk blocks bullets while its collision mesh stays hidden",
+		"saved scene contains rock cover with explicit collision",
+		"player capsule cannot cross a rock outcrop",
+		"rock surface blocks bullets",
+		"lake has a real swimming volume",
+		"water volume excludes rectangular corners outside the shoreline",
+		"entering lake selects water physics automatically",
+		"entering lake starts native predicted swimming",
+		"swimming immersion matches the actual lake surface",
+		"submerged head consumes air",
+		"drowning damages health and bypasses armor",
+		"leaving the lake restores land movement",
+		"air replenishes after leaving water"
+	],
+	"failed": []
+}

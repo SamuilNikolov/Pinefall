@@ -161,7 +161,7 @@ TSharedRef<SWidget> UPFInterface::RebuildWidget()
     Button(Stack, TEXT("Quit"), TEXT("Quit"));
     MenuStatus = Label(Stack,
                        TEXT("WASD move · mouse look\nLMB fire · RMB aim · R reload\nShift sprint · Ctrl "
-                            "crouch · Space jump\n1 rifle · 2 pistol · V camera · Esc menu"),
+                            "crouch/slide · hold Space hop\n1 rifle · 2 pistol · V camera · Esc menu"),
                        14, PFStyle::Muted);
     BuildExpeditionUI(Canvas, VitalsStack);
     return Super::RebuildWidget();

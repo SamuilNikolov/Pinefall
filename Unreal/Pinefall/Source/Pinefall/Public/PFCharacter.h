@@ -24,6 +24,7 @@ class PINEFALL_API APFCharacter : public ACharacter
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type Reason) override;
     virtual void Tick(float Delta) override;
+    virtual void CheckJumpInput(float DeltaTime) override;
     virtual void PreReplication(IRepChangedPropertyTracker &Tracker) override;
     virtual void PawnClientRestart() override;
     virtual void SetupPlayerInputComponent(UInputComponent *Component) override;
@@ -50,6 +51,7 @@ class PINEFALL_API APFCharacter : public ACharacter
     UPROPERTY(Replicated, BlueprintReadOnly) int32 Ammo = 5;
     UPROPERTY(Replicated, BlueprintReadOnly) bool bReloading = false;
     UPROPERTY(Replicated, BlueprintReadOnly) bool bAiming = false;
+    UPROPERTY(Replicated, BlueprintReadOnly) bool bSliding = false;
     UPROPERTY(ReplicatedUsing = OnRep_Weapon, BlueprintReadOnly) FName WeaponId = TEXT("Ridgeline");
     UPROPERTY(Replicated) double MovementPoseTime = 0;
     double RenderedPoseTime() const;
@@ -74,6 +76,10 @@ class PINEFALL_API APFCharacter : public ACharacter
     void RunCombatViewProbe();
     void RunCombatProbeInput();
     void RunReserveProbeInput();
+    void RunMovementProbeInput();
+    UFUNCTION(Server, Reliable) void ServerMovementProbeReady();
+    UFUNCTION(Client, Reliable) void ClientPlaceMovementProbe(FVector Point, bool Crouched);
+    bool bMovementProbeReady = false;
     void Reload();
     void ResetForRound(int32 Kit);
     void EquipInventoryWeapon(FName Id);
@@ -147,7 +153,11 @@ class PINEFALL_API APFCharacter : public ACharacter
     bool bEnvironmentalDamage = false;
     bool bDeathPresented = false;
     bool bReloadPresented = false;
-    bool bCombatProbe = false, bReserveProbe = false;
+    bool bCombatProbe = false, bReserveProbe = false, bMovementProbe = false;
+    int32 LastMovementCase = -1;
+    bool bMovementPeerObserved = false;
+    bool bMovementCaptured = false;
+    double MovementCaptureAfter = 0;
     int32 LastReserveProbeCase = 0;
     bool bSwimUpHeld = false, bSwimDownHeld = false;
     int32 LastCombatProbeCase = 0;

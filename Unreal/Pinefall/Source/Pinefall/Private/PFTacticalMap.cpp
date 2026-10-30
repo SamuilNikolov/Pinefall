@@ -170,7 +170,7 @@ int32 UPFTacticalMap::NativePaint(const FPaintArgs &Args, const FGeometry &G, co
     for (APlayerState *Entry : Match->PlayerArray)
         if (auto *P = Cast<APFPlayerState>(Entry))
         {
-            FVector Point;
+            FVector Point = FVector::ZeroVector;
             bool Show = false;
             if (Match->Phase == EPFRoundPhase::Landing)
             {

@@ -1,5 +1,13 @@
 # Pinefall Wildfront changelog
 
+## Unreal 0.3.1 traversal checkpoint - 2026-10-29
+
+- Added fast-crouch sliding, buffered air-crouch landings, low-drag steering and slope response through engine walking collision.
+- Added held/timed chained hops with substantial speed gain, prediction/replay state, replicated slide stance and traversal reset paths.
+- Reduced sprint fatigue, silenced walking steps during slides, added modest speed FOV and contextual slide controls.
+- Passed 24 delayed and 24 rendered-owner movement/ceiling/menu/reset/peer checks plus the existing combat, reserve, survival, round, wildlife and remote shooting regressions. Evidence: tests/baselines/unreal-0.3.1.
+
+
 ## Unreal 0.3 reserve checkpoint - 2026-10-29
 
 - Added a separate 2,016 m reserve with eight named settlements, 64 enterable cabins, graded road links, a lake/piers, 208 stock placements, sixteen trucks and three boats.

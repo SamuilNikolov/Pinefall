@@ -14,7 +14,7 @@ The active ranger is a textured, stylized hooded adventurer with a readable gree
 
 ## Playing the native Unreal build
 
-Unreal 5.6.1, native version **0.3.0**. Matching Unreal clients are required. This is a development build launched through the installed editor, not a packaged replacement for the Unity release.
+Unreal 5.6.1, native version **0.3.1**. Matching Unreal clients are required. This is a development build launched through the installed editor, not a packaged replacement for the Unity release.
 
 ## Start and join
 
@@ -78,3 +78,13 @@ The larger biome reserve, dense named villages, branching caves, usable cars/boa
 The atlas currently shows Cedar Crossing, storm circles, public landing choices and relevant teammates; it never draws ordinary enemy positions. Rarity metadata exists but its full combat/modifier presentation is unfinished.
 
 See `Design/UNREAL-STATUS.md` for exact evidence and unverified areas. Compilation and headless tests do not establish visual quality, frame rate, moving-player hit fairness or internet reliability.
+
+## Traversal update (0.3.1)
+
+Sprint with Shift and press/hold Ctrl while moving faster than 6.5 m/s to slide. A slow or stationary crouch remains ordinary crouching. Holding crouch while airborne also buffers a slide on a fast landing. Sliding carries speed, lets you steer gradually, gains speed downhill and slows uphill. Release Ctrl to stand or press Space to jump out. The generous slide limit is 26 m/s.
+
+Hold Space while moving to keep jumping after landings. Timed follow-up jumps within 150 ms add 1.7 m/s per hop, up to 24 m/s; ordinary sprint is 9.4 m/s. Releasing Space ends automatic hops. This preserves momentum through short ground contacts rather than accelerating normal walking to that speed. Water, vehicles, death/round resets and teleports clear traversal state. Low hunger/stamina prevents speed bonuses. A blocked ceiling prevents standing/jumping through it.
+
+Sprint stamina drain is four points per second, with sixteen-point recovery when not actively sprinting on the ground. Sliding has no walking footstep events; the current slide pose reuses the planted crouch rather than a finished dedicated animation. A modest field-of-view increase conveys speed and yields to weapon aiming.
+
+Use matching 0.3.1 builds: compressed movement input and replicated slide presentation changed. Broad packet loss/jitter and uneven-terrain handling remain validation targets; flat-fixture checks are not a full terrain certification.

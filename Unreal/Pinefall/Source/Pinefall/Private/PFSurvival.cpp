@@ -33,6 +33,7 @@ void APFCharacter::ResetForRound(int32 Kit)
 {
     if (!HasAuthority())
         return;
+    CastChecked<UPFMovementComponent>(GetCharacterMovement())->ResetTraversal();
     Health = 100;
     Armor = 0;
     ArmorTier = 0;
@@ -105,7 +106,7 @@ void APFCharacter::SurvivalSecond()
     bool Moving = GetVelocity().Size2D() > 500;
     auto *Water = Cast<APFWaterBody>(GetPhysicsVolume());
     bool HeadUnderwater =
-        Water && GetActorLocation().Z + (bIsCrouched ? 40 : 65) < Water->SurfaceHeight() - 5;
+        Water && GetActorLocation().Z + (bIsCrouched ? 55 : 65) < Water->SurfaceHeight() - 5;
     Oxygen = FMath::Clamp(Oxygen + (HeadUnderwater ? -4.f : 24.f), 0.f, 100.f);
     if (HeadUnderwater && Oxygen <= 0)
     {
@@ -114,8 +115,9 @@ void APFCharacter::SurvivalSecond()
             return;
     }
     Hunger = FMath::Max(0.f, Hunger - (Moving ? .15f : .065f));
-    bool Sprinting = GetVelocity().Size2D() > 650;
-    Stamina = FMath::Clamp(Stamina + (Sprinting ? -7.f : 16.f), 0.f, 100.f);
+    const auto* Movement = CastChecked<UPFMovementComponent>(GetCharacterMovement());
+    const bool Sprinting = Movement->bWantsSprint && Movement->IsMovingOnGround() && !Movement->IsSliding() && GetVelocity().Size2D() > 650;
+    Stamina = FMath::Clamp(Stamina + (Sprinting ? -4.f : 16.f), 0.f, 100.f);
     if (Hunger <= 0)
     {
         if (++StarvationTimer >= 3)

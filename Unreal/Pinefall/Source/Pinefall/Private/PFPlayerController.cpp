@@ -50,6 +50,7 @@ void APFPlayerController::BeginPlay()
     Super::BeginPlay();
     if (!IsLocalController())
         return;
+    if (FParse::Param(FCommandLine::Get(),TEXT("PFMovementProbe"))) InitializeMovementProbeGeometry();
     bRoundProbe = FParse::Param(FCommandLine::Get(), TEXT("PFRoundProbe"));
     Interface = CreateWidget<UPFInterface>(this, UPFInterface::StaticClass());
     if (Interface)

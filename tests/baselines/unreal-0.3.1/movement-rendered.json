@@ -1,0 +1,31 @@
+{
+	"passed": [
+		"remote movement stays on the elevated collision fixture",
+		"stationary crouch does not create a slide",
+		"ordinary remote crouch retains matching collision",
+		"owning client sprint reaches full ground speed",
+		"fast owning-client crouch becomes authoritative slide",
+		"slide carries sprint momentum instead of crouch-walking",
+		"slide presents crouched stance to host",
+		"release crouch exits slide and restores stance",
+		"held jump creates repeated real landings and takeoffs",
+		"chained hops gain substantial speed above sprint",
+		"bunny-hop momentum remains within generous 24 m per second bound",
+		"remote hopping produces actual world travel",
+		"releasing jump ends the repeated hop chain",
+		"opening menu clears held hop without freezing physics",
+		"low hunger prevents sprint and boosted hop momentum",
+		"jump cannot force an uncrouch through a low ceiling",
+		"listen host uses the same slide mechanics",
+		"teleport clears stale traversal momentum and held hops",
+		"entering water clears airborne traversal state",
+		"host slide exits normally on release",
+		"owning client takes off before buffered air crouch",
+		"air-crouch buffers a real landing into slide",
+		"buffered landing slide preserves fast arrival speed",
+		"buffered landing slide exits on crouch release"
+	],
+	"failed": [],
+	"hops": 11,
+	"peak_cm_s": 2400
+}

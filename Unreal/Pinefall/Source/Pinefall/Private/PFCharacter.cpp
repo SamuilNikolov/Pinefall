@@ -96,6 +96,7 @@ void APFCharacter::BeginPlay()
     Super::BeginPlay();
     bCombatProbe = FParse::Param(FCommandLine::Get(), TEXT("PFCombatProbe"));
     bReserveProbe = FParse::Param(FCommandLine::Get(), TEXT("PFReserveProbe"));
+    bMovementProbe = FParse::Param(FCommandLine::Get(), TEXT("PFMovementProbe"));
     if (HasAuthority())
         Inventory->InitializeLoadout(true, 0);
     ApplyWeapon();
@@ -168,8 +169,12 @@ void APFCharacter::Tick(float Delta)
         FVector Offset = WeaponId == TEXT("ServiceNine") ? FVector(9, 0, 4) : FVector(28, 0, 4);
         WorldWeapon->SetWorldLocationAndRotation(Grip + Aim.RotateVector(Offset), Aim);
     }
+    if (bMovementProbe && !IsLocallyControlled() && bSliding && !bMovementPeerObserved)
+    { bMovementPeerObserved = true; UE_LOG(LogTemp,Display,TEXT("PF_MOVEMENT_PEER_SLIDE")); }
     if (IsLocallyControlled())
     {
+        if (!AcceptsInput()) { auto* Movement = CastChecked<UPFMovementComponent>(GetCharacterMovement()); Movement->bWantsHop = false; Movement->bWantsSprint = false; StopJumping(); }
+        if (bMovementProbe) RunMovementProbeInput();
         if (bReserveProbe)
             RunReserveProbeInput();
         if (Vehicle)
@@ -220,8 +225,9 @@ void APFCharacter::Tick(float Delta)
             FMath::VInterpTo(ViewWeapon->GetRelativeLocation(), WeaponPose, Delta, 18));
         ViewWeapon->SetRelativeRotation(
             FRotator(WeaponKick * 2 - (bReloading ? 20 : 0), 0, bReloading ? -18 : 0));
+        const float TravelFOV = bSliding ? 89.f : 85.f + FMath::Clamp((float(GetVelocity().Size2D()) - 940.f) / 1460.f, 0.f, 1.f) * 6.f;
         Camera->SetFieldOfView(
-            FMath::FInterpTo(Camera->FieldOfView, bAiming ? Weapon.AimFOV : 85, Delta, 16));
+            FMath::FInterpTo(Camera->FieldOfView, bAiming ? Weapon.AimFOV : TravelFOV, Delta, 16));
         GetMesh()->SetOwnerNoSee(bFirstPerson || Vehicle != nullptr);
         WorldWeapon->SetVisibility(!Vehicle);
         WorldWeapon->SetOwnerNoSee(bFirstPerson);
@@ -257,7 +263,7 @@ void APFCharacter::Tick(float Delta)
                 Underwater ? FLinearColor(.26, .62, .68) : FLinearColor(.35, .48, 1);
         }
     }
-    if (Health > 0 && GetCharacterMovement()->IsMovingOnGround() && GetVelocity().Size2D() > 120)
+    if (Health > 0 && !bSliding && GetCharacterMovement()->IsMovingOnGround() && GetVelocity().Size2D() > 120)
     {
         Travelled += FVector::Dist2D(GetActorLocation(), PreviousPosition);
         if (Travelled > (GetVelocity().Size2D() > 650 ? 240 : 180))
@@ -388,15 +394,30 @@ void APFCharacter::Look(const FInputActionValue &Value)
     AddControllerYawInput(Axis.X * Sensitivity * AimSensitivity);
     AddControllerPitchInput(Axis.Y * Sensitivity * AimSensitivity);
 }
+void APFCharacter::CheckJumpInput(float Delta)
+{
+    auto* Movement = CastChecked<UPFMovementComponent>(GetCharacterMovement());
+    if (!CanFight()) { StopJumping(); Movement->bWantsHop = false; return; }
+    if (Movement->bWantsHop && Movement->IsMovingOnGround() && Health > 0 && !bDowned && !Vehicle)
+    {
+        if (bIsCrouched) { UnCrouch(); Movement->UnCrouch(false); }
+        Jump();
+    }
+    Super::CheckJumpInput(Delta);
+}
 void APFCharacter::StartJump()
 {
     bSwimUpHeld = true;
-    if (AcceptsInput() && !bDowned)
+    if (AcceptsInput() && !bDowned && !Vehicle)
+    {
+        CastChecked<UPFMovementComponent>(GetCharacterMovement())->bWantsHop = true;
         Jump();
+    }
 }
 void APFCharacter::EndJump()
 {
     bSwimUpHeld = false;
+    CastChecked<UPFMovementComponent>(GetCharacterMovement())->bWantsHop = false;
     StopJumping();
 }
 void APFCharacter::StartSprint()
@@ -797,6 +818,7 @@ void APFCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLife
     DOREPLIFETIME_CONDITION(APFCharacter, Ammo, COND_OwnerOnly);
     DOREPLIFETIME(APFCharacter, bReloading);
     DOREPLIFETIME(APFCharacter, bAiming);
+    DOREPLIFETIME_CONDITION(APFCharacter, bSliding, COND_SkipOwner);
     DOREPLIFETIME(APFCharacter, WeaponId);
     DOREPLIFETIME(APFCharacter, MovementPoseTime);
     DOREPLIFETIME(APFCharacter, Vehicle);

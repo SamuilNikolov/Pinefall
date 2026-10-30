@@ -23,6 +23,7 @@ class PINEFALL_API APFPlayerController : public APlayerController
     UPROPERTY(Replicated) TArray<FPFMapMarker> MapMarkers;
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &Out) const override;
     virtual void BeginPlay() override;
+    void InitializeMovementProbeGeometry();
     virtual void SetupInputComponent() override;
     virtual void PlayerTick(float Delta) override;
     virtual void CalcCamera(float Delta, FMinimalViewInfo &Out) override;

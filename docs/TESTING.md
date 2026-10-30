@@ -1,5 +1,9 @@
 # Verification and reproducible checks
 
+## Native traversal checks
+
+`tools/Test-UnrealMovement.ps1` uses two actual processes, ordinary owner input and a shared flat collision fixture. Its 24 assertions check stationary crouch versus fast slide, buffered air-crouch landing, carry speed, real chained jumps and limits, release/menu/hunger behavior, a low ceiling, host-to-client slide state and reset paths. `-PacketLagMs 80` adds artificial per-sender delay; `-Rendered` captures the actual client stance. Keep rendered checks separate from headless latency evidence. Regenerate a fresh checkpoint rather than overwriting prior results.
+
 ## Active Unreal reserve build
 
 `tools/Test-UnrealReserve.ps1` launches the actual 2 km reserve in two processes. The owner boards/drives/steers a truck, opens settings while moving, exits, services with a real inventory kit, boards/drives a boat, and drops/picks up inventory through ordinary validated requests. Authority arranges positions/stock/damage for determinism. The 32 checks include owning-client crouch/uncrouch, a lowered animated head observed on the host, stock counts, persistent character materials, upright cabins and actual capsule doorway/wall collision. The client must not bootstrap duplicate authoritative vehicles/loot. The map-feed check excludes an enemy-occupied truck. This is not a rendered frame-rate, engine-audio, WAN or twenty-player stress test.

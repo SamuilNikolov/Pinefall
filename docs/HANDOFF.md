@@ -4,6 +4,16 @@
 
 The final Unity 0.9.1 suite was cancelled on the user's switch request. Prior frontier/fieldcraft and performance evidence exists, but there is no completed final-build full-suite claim. Do not relabel older measurements with a newer build hash. Preserve unfinished Unity work without resuming it.
 
+## Unreal 0.3.1 traversal checkpoint
+
+`PFMovementComponent` owns fast-crouch sliding and chained-hop momentum. Compressed custom input flag 0 is sprint; flag 1 is held hop. `FSavedMove_PF` snapshots slide/landing/flight/previous-crouch/momentum state for replay and prevents combining traversal moves. Server derives speed/eligibility through the same movement hooks; clients do not submit speed claims. `APFCharacter::CheckJumpInput` repeats a held jump only on real ground and tries a collision-checked uncrouch. Death/downed/vehicle/round restrictions still reject jumps. `bSliding` skips owner replication because owner presentation is predicted; peers receive authority's state. Matching 0.3.1 builds are required.
+
+Air crouch preserves horizontal speed. `ProcessLanded` enters a buffered slide before remaining landing physics can clamp it to crouch-walk speed. Normal sprint is 940 cm/s, hop gains 170 cm/s per landing within 150 ms up to 2,400, slide limit 2,600. Walking steps are suppressed during slides; aiming overrides the modest speed FOV. Dedicated slide animation/foley remains first-pass work, not finished art.
+
+`PFMovementProbe` is opt-in only. It creates identical local static floor/low-ceiling geometry, waits for client-owned-pawn readiness after travel and acknowledges synchronized fixture teleports/posture before advancing input cases. A locally spawned movable platform has no shared network identity: relative movement corrections used the wrong client height. Keep fixture basing static and verify `PF_MOVEMENT_CLIENT_ON_FIXTURE` plus the rendered floor. Count accepted server takeoffs rather than sampled air/ground transitions, which miss very short landings. `Test-UnrealMovement.ps1 -Rendered` captures actual owned sliding stance. Headless delay checks, actual rendering and broad terrain/frame-rate/audio/WAN claims are separate gates.
+
+See [the 0.3.1 checkpoint](../tests/baselines/unreal-0.3.1/README.md) for the completed final-build evidence. Earlier failed development runs stay in ignored artifacts. The full Unity game remains migration work.
+
 ## Active Unreal 0.3 reserve
 
 Read [native status](../Design/UNREAL-STATUS.md), [controls/rules](../Unreal/Pinefall/PLAYING.md) and [hit registration](../Design/HIT-REGISTRATION.md). Active map is WildfrontReserve: 2,016 m, eight named settlements/64 enterable cabins, connected graded roads, 208 supplies, sixteen trucks/three boats. Cedar Crossing remains the separate 504 m regression arena. This is not full Unity parity.
@@ -20,7 +30,7 @@ Reserve authoring: optional Blender `prepare_reserve_props.py`, then editor `bui
 
 Verification is tracked separately from implementation in `tests/baselines/unreal-0.3`. `Test-UnrealReserve.ps1` exercises real remote drive/steer, pause-menu motion, repair/refuel, boat motion, destructive exit, inventory transfers, privacy/bootstrap and replicated crouch/uncrouch. Presentation hooks (`PFCombatView`) are opt-in captures only, not combat evidence. No microphone capture was enabled. Keep rendering/imports separate from latency/performance evidence. No rendered-FPS or public-internet performance claim is made for this sweep.
 
-Remaining priorities: finished art/hand grips and cabin variety, biome ecology/navigation, passenger/suspension/audio, full Unity arsenal/attachments, building/editing/harvesting/pads, sliding/bunny hopping, voice, customization, weather/day cycle, narrator/emotes, caves and lobby-sized world crops. Do not label the 120-rule catalog complete.
+Remaining priorities: finished art/hand grips and cabin variety, biome ecology/navigation, passenger/suspension/audio, full Unity arsenal/attachments, building/editing/harvesting/pads, dedicated slide animation/foley, voice, customization, weather/day cycle, narrator/emotes, caves and lobby-sized world crops. Do not label the 120-rule catalog complete.
 
 ## Frozen Unity handoff
 

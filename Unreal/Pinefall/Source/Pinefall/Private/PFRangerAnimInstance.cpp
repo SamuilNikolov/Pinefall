@@ -39,9 +39,9 @@ class FPFRangerAnimProxy : public FAnimInstanceProxy
             Name = Velocity.Z > 100 ? TEXT("jump") : TEXT("fall");
         if (Player->GetCharacterMovement()->IsSwimming())
             Name = Speed < 15 ? TEXT("swim_idle") : TEXT("swim");
-        if (Player->Vehicle)
+        if (Player->Vehicle || Player->bSliding)
             Name = TEXT("CrouchIdle");
-        if (Player->bIsCrouched && Anim->Clips.Contains(TEXT("CrouchIdle")))
+        if (!Player->bSliding && Player->bIsCrouched && Anim->Clips.Contains(TEXT("CrouchIdle")))
             Name = Speed < 15 ? TEXT("CrouchIdle") : TEXT("CrouchWalk");
         UAnimSequence *Next = Anim->Clips.FindRef(Name).Get();
         if (Next && Next != Lower)

@@ -51,6 +51,7 @@ class PINEFALL_API APFGameMode : public AGameModeBase
     void RunCombatProbe();
     void RunWorldProbe();
     void RunReserveProbe();
+    void RunMovementProbe();
 
   private:
     void RoundSecond();
@@ -81,5 +82,10 @@ class PINEFALL_API APFGameMode : public AGameModeBase
     UPROPERTY() TObjectPtr<APFVehicle> ProbeVehicle;
     FVector ReserveProbeOrigin = FVector::ZeroVector;
     float ReserveProbeYaw = 0;
+    int32 MovementProbeJumps = 0;
+    int32 MovementPendingCase = 0;
+    float MovementPendingWait = 0;
+    bool bMovementProbeWasAir = false;
+    float MovementProbePeak = 0;
     int32 ReserveProbeFood = 0, ReserveProbePickups = 0;
 };

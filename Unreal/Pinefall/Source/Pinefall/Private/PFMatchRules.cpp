@@ -33,10 +33,13 @@ void APFGameMode::BeginPlay()
     }
     if (!FParse::Param(FCommandLine::Get(), TEXT("PFCombatProbe")) &&
         !FParse::Param(FCommandLine::Get(), TEXT("PFWorldProbe")) &&
-        !FParse::Param(FCommandLine::Get(), TEXT("PFReserveProbe")))
+        !FParse::Param(FCommandLine::Get(), TEXT("PFReserveProbe")) &&
+        !FParse::Param(FCommandLine::Get(), TEXT("PFMovementProbe")))
         GetWorld()->SpawnActor<APFWildlifeDirector>();
     GetWorldTimerManager().SetTimer(RoundTimer, this, &APFGameMode::RoundSecond, 1, true);
-    if (FParse::Param(FCommandLine::Get(), TEXT("PFReserveProbe")))
+    if (FParse::Param(FCommandLine::Get(), TEXT("PFMovementProbe")))
+        GetWorldTimerManager().SetTimer(ProbeTimer,this,&APFGameMode::RunMovementProbe,.05,true);
+    else if (FParse::Param(FCommandLine::Get(), TEXT("PFReserveProbe")))
         GetWorldTimerManager().SetTimer(ProbeTimer, this, &APFGameMode::RunReserveProbe, .25, true);
     else if (FParse::Param(FCommandLine::Get(), TEXT("PFRoundProbe")))
         GetWorldTimerManager().SetTimer(ProbeTimer, this, &APFGameMode::RunRoundProbe, .5, true);

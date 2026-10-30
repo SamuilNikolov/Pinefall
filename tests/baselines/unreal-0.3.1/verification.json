@@ -1,0 +1,325 @@
+{
+  "date": "2026-10-29",
+  "engine": "Unreal 5.6.1",
+  "version": "0.3.1-unreal-traversal",
+  "base_commit": "abdd4bb",
+  "native_build": "Development Editor 14 succeeded",
+  "checks": {
+    "movement_delayed": 24,
+    "movement_rendered": 24,
+    "combat_delayed": 16,
+    "reserve": 32,
+    "world": 15,
+    "round": 36,
+    "wildlife": 15,
+    "remote_species": 3,
+    "scoped_fire": 5
+  },
+  "movement_delay_ms_each_sender": 80,
+  "observed_hops_in_fixture": 11,
+  "peak_horizontal_cm_per_second": 2400,
+  "runs": {
+    "movement-delayed": "unreal-movement/20261029-231444",
+    "movement-rendered": "unreal-movement/20261029-231127",
+    "combat": "unreal-combat/20261029-231556",
+    "reserve": "unreal-reserve/20261029-231702",
+    "world": "unreal-world/20261029-231753",
+    "round": "unreal-battle/20261029-231804",
+    "wildlife": "unreal-wildlife/20261029-231839",
+    "scoped-fire": "unreal-tests/20261029-231900"
+  },
+  "fingerprint_text_policy": "SHA-256 after CRLF-to-LF normalization",
+  "source_fingerprints": [
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Pinefall.Build.cs",
+      "sha256": "0a275bf44496fcf54dccee176f6a4f8c6e63456b7ce6df32cc7949aea9456963"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFCharacter.cpp",
+      "sha256": "cd04400059273c775906dbf51d738dd29ecdb040df4aa8b815903de9a7ac1613"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFCharacterVehicle.cpp",
+      "sha256": "a48eaf768088ec10c511709f8765d63de849c81f2c3c741343e21ac289585f07"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFCombatHUD.cpp",
+      "sha256": "1da3282d15aabb76b0d43d9745b67d3d95089801201a1a3feda1d1facbff21ad"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFCombatProbe.cpp",
+      "sha256": "05d02efa3f2c7f2bf83179e8ac7b3cc936e639af2bc11d86dbb0879ff9514f37"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFExpeditionUI.cpp",
+      "sha256": "d6b59b4dcc729b9939902877b1704631638d429b4875af3b43e3c4c7e07f77b9"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFGameInstance.cpp",
+      "sha256": "5d027f71d03d7cbd7b7a445d43d569579ee2633b8ce7a08fdca349b12beae5e1"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFGameMode.cpp",
+      "sha256": "19836d00073241a7d98727c745589aa2e9d60333d74df637b5c10cbe33c6f298"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFHitHistoryComponent.cpp",
+      "sha256": "e00688875e6ffc7684293e82da1a0829e40d67a2075b010835471af40c9e5dc6"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFInterface.cpp",
+      "sha256": "291ab251134bbc98da46b8ecda7ea03d8efa2a49c9d75d0649d8453d4bac1f1b"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFInventoryComponent.cpp",
+      "sha256": "77ae33c69d12a76efb100d1b7cdda96bc2a734ecb0f12884b5fe71b3c9aaf9dd"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFItemButton.cpp",
+      "sha256": "f000f2d5ddab9039608cee6f8ce9d0ee9a0582dec3b8baaa3324c60e114aaf35"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFMatchProbe.cpp",
+      "sha256": "1c129e482244fc1401f2aace0b307d89c7548843115005446afc86ad64d11164"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFMatchRules.cpp",
+      "sha256": "bca7504af017c5fa31005b21116fb9551f89c008a33cb74630afb7d82b151ea3"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFMatchState.cpp",
+      "sha256": "fb5612d19231369d569c803655deeeef22ed0a751e56667429d2d18f197d4a19"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFMovementComponent.cpp",
+      "sha256": "6d7b433ead797eff9fc98ad562b3e6028d39c9cd7adeffea44cbda329767b652"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFMovementProbe.cpp",
+      "sha256": "22b77dfd3609bb200f986ec028911ace1fb962bd0537b6ffff2e3898c1ff9717"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFPlayerController.cpp",
+      "sha256": "4e5c52849a1bab6720eb7cd58c4061e52320a662fd4af4458015e310d09763a2"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFRangerAnimInstance.cpp",
+      "sha256": "70b382057e85b454cbdb3d26939b238bef8c71e59115d09ce4bc760143f88b61"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFRangeTarget.cpp",
+      "sha256": "e04219e37c35b161041ae9a0eba09192b2f4639eb5125b5dfdd33be5ee96dcce"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFReserveLayout.cpp",
+      "sha256": "a4ba3f56d608aefc53a076455dab4fc7406d6496ea5f56feedc1817a08631cd3"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFReserveProbe.cpp",
+      "sha256": "af89722e6a87806388860db6cf147eeb38c426aaf2a66b78174054ad8d0e290c"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFReserveWorld.cpp",
+      "sha256": "c5e512e7b4b50f93376b9f49ae0ac922a11fcfb070e59cada300db6f02a9505a"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFStormVisual.cpp",
+      "sha256": "f5c68cd256233d58241a6d9f152bd40e5240eec9d1981bd0056156cf7f8adf2d"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFSurvival.cpp",
+      "sha256": "6211cbe849e8e4a8a8c41a908b3159e172b6ebd6feb17a48c0c19c9cb983ffde"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFTacticalMap.cpp",
+      "sha256": "6628415fb82e741f1055351610ea050ba1e9c08a28f2c4d7ca6135d051a4647a"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFUserSettings.cpp",
+      "sha256": "6addb14500b20e7f7c2ad5f886d32c9456befe3ae4cbb158f5922ea24a944279"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFVehicle.cpp",
+      "sha256": "14aab716145e5e7c6512706763511970cd1741f181a9973f4364fc3d3d91f458"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFWaterBody.cpp",
+      "sha256": "c612ea77429aea8790b29546b4a0dd218b7c0d1b81623124623bb576c13e8bde"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFWildlife.cpp",
+      "sha256": "826b1325f26ee4b117bda15ea5eb2ca2acf94d72d90212eda1f4857dddf0c128"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFWildlifeProbe.cpp",
+      "sha256": "a12c3e4c35ca15fe7dd9d09adcd8b039713d1d84f85d90abf4ece1c3b03b8bbf"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFWorldPickup.cpp",
+      "sha256": "73af02d83b296d3f8aa60b92e692c4d71e7bc580c258bcaed8bf0069a3390695"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/PFWorldProbe.cpp",
+      "sha256": "7e341af154e1cdebc17139491581e0ce47e979a9c09c864c2f5672976ff5a7e1"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Private/Pinefall.cpp",
+      "sha256": "8aba13a9ac1142a75373328f963d95d4f011b24be24d4d54c27307da2604cd12"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFCharacter.h",
+      "sha256": "7b01351b5e699122d0f5c749e2af8d23c2aec0b4b05a44d1727e33d0eb0dae1f"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFCombatHUD.h",
+      "sha256": "88c23c061afad82ae4d5a8d237608457c8ca9c35e804aac3af2edd5ec7a28cea"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFGameInstance.h",
+      "sha256": "23f9679b9b3589ba23501944d86ba951fdf22775dd25760b47c56418350ff03e"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFGameMode.h",
+      "sha256": "621109b43b6d6a866f60d7198c2926186007eb45358dbb5d1efce6a3df44cc4c"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFHitHistoryComponent.h",
+      "sha256": "8ba71030c0523e877dd68c41f8b2540ede9cf32f0d2c990a8db582bce9bc9d38"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFInterface.h",
+      "sha256": "89f0ccb0dcf6a58b2d26f138e7dad444b3de65bb645433cfee850bd076079538"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFInventoryComponent.h",
+      "sha256": "30e05a0a4e050f1235e21c4df449cae93c93ca5364cbb6e246443d1fc6f91b27"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFItemButton.h",
+      "sha256": "edd71c359129a285056696ab437e38750ef7e4a945e9335e623421c25e20ad41"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFMatchState.h",
+      "sha256": "d28e178c66ad799e19bf1f8ad59a19d1c2c7071f836e8470c42406927dad9a27"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFMovementComponent.h",
+      "sha256": "2e7abcf4b28d38461c5856cf8a2b6a7921dfc7405a30f1efea489038a54040d9"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFPlayerController.h",
+      "sha256": "840254f3c3616207bafbce49f5b4b2105fdf47a1e8b77e54fda09b93802aeaca"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFRangerAnimInstance.h",
+      "sha256": "87e35a23b8e59017b0e6ebbef7cb935e94f71b08669b3ae724c2859bc03b47b8"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFRangeTarget.h",
+      "sha256": "f62888c693dd0fa16054d5cabac016204268afc19a79061c450e07e9fc8d71f4"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFReserveLayout.h",
+      "sha256": "0f1c38197c4f70e85dbc14414ac87e01890e2e9e4be704d7085173a1d436163f"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFReserveWorld.h",
+      "sha256": "724016cd1076831e9d348ae9b7f1d0c1bfcba8c189af4aa59cb017b8ca86cff2"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFStormVisual.h",
+      "sha256": "d53ea7d4002c66a8d91073d4808ed3d318efbb5bacbd57270c052a2a69a0099b"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFTacticalMap.h",
+      "sha256": "f46a00df0350862fba42806f60ec674bb8b9a64f4862df7391e761b4616091b8"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFUserSettings.h",
+      "sha256": "f7993d11cd58091e505ffa992cc321aef00a31f9bc05d8735e29af2caad26334"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFVehicle.h",
+      "sha256": "861d13d7e7955a2a03964f237507fd9435f3ec6fd42948f43537fcdefc301f63"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFWaterBody.h",
+      "sha256": "69484131451503e3f482e2647f973f9249146122cb796e616654e7be79077c87"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFWeaponDefinition.h",
+      "sha256": "72d49d5783885aa878c1915e97cb37277fe4189bd66cda62edde4bb703cbb048"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFWildlife.h",
+      "sha256": "a767c22cd7f0774714d6b715187cb314ed76e3c9528b6f4da73c9a1d06f8f6bd"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall/Public/PFWorldPickup.h",
+      "sha256": "37e90b6229c8b37fb1f70069dcc8098a1bfbdbaf2aa4c3dfdb9212c2a103d299"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/Pinefall.Target.cs",
+      "sha256": "961b50a5667434da7c2ab3fc88cb315c9151db58fd1801ee994b73eb2e9c0739"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/PinefallEditor.Build.cs",
+      "sha256": "06333bd1d9754873a50ddb050b2c66035eb78b0921f69c6eca23bbfbe546d5fb"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/Private/PFRangerAssetTools.cpp",
+      "sha256": "f696e2c63b8f0427888d67c67ede141d2e42380dcc4f81f1b9a6eb8565906fe4"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/Private/PFReserveBuilder.cpp",
+      "sha256": "9619421889a7adc3fb5bd106113e3ca5ee5c613031416fab8c182cfe90acb228"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/Private/PFWorldBuilder.cpp",
+      "sha256": "889dcf0b40eb08a3f5ceea964f73066fff7f926f068845e43d86a20c731b88cc"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/Private/PinefallEditor.cpp",
+      "sha256": "ad3c53937d30a168d1554a6e5bbb976045e07737a17527bc214fd91d79418a76"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/Public/PFRangerAssetTools.h",
+      "sha256": "1be5d5829b169631e9138b70dd27b12e27f95075cdef6678af8bc42761b75070"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor/Public/PFWorldBuilder.h",
+      "sha256": "8c47fa4ffaea4780637a717bcc0750854f7983696cb5b03f5b64af35bbb2b3fe"
+    },
+    {
+      "path": "Unreal/Pinefall/Source/PinefallEditor.Target.cs",
+      "sha256": "1db4e3e13023ec757ff656e34a7b31a26b29dac4c5c482138207479c7788662e"
+    },
+    {
+      "path": "Unreal/Pinefall/Config/DefaultEngine.ini",
+      "sha256": "1b59943e517173a009e75febaa4666af466c81636c780dc7ce1a4f3d396ca885"
+    },
+    {
+      "path": "Unreal/Pinefall/Config/DefaultGame.ini",
+      "sha256": "6d0186752aebd8bf45465b979e69e8b906285766de1a7681530ce8b27d29e57e"
+    },
+    {
+      "path": "Unreal/Pinefall/Config/DefaultInput.ini",
+      "sha256": "e37c479035e491d9f0b15b4e38712a598213481b785da3a6630d01bbda2bb646"
+    },
+    {
+      "path": "Unreal/Pinefall/Config/DefaultScalability.ini",
+      "sha256": "fb2344b4f536c9e2596c35bebe19d5375daef63ee102b2a511589d90cd22172a"
+    },
+    {
+      "path": "tools/Test-UnrealMovement.ps1",
+      "sha256": "266ee89935f25a3509bbf28cc9ca5e31b43dad346c7d69866e1d01209e58af29"
+    }
+  ],
+  "unchanged_art_baseline": "unreal-0.3",
+  "limits": [
+    "Collision positions and temporary geometry are fixtures; ordinary owner inputs drive movement",
+    "No certification of all uneven terrain, ledges or moving platforms",
+    "No dedicated slide animation or audible slide mix verification",
+    "No rendered FPS, high-speed aerial gunfight stress, broad WAN/jitter/loss, twenty-human or packaged release claim"
+  ]
+}

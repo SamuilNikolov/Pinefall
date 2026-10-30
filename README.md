@@ -1,6 +1,6 @@
 # Pinefall Wildfront
 
-**Active development has moved to Unreal Engine 5.6.1.** The native project is in [`Unreal/Pinefall`](Unreal/Pinefall/README.md). Start with `tools/Setup-Unreal.ps1`, then `PLAY-UNREAL.cmd`. Native 0.3 adds a separate 2 km reserve, eight settlements, trucks/boats, world loot, a zoomable map/minimap, equipment HUD and textured ranger to the existing round/survival/wildlife/combat foundation. It does not yet provide full Unity feature parity or a packaged replacement release. Read the [native controls and rules](Unreal/Pinefall/PLAYING.md).
+**Active development has moved to Unreal Engine 5.6.1.** The native project is in [`Unreal/Pinefall`](Unreal/Pinefall/README.md). Start with `tools/Setup-Unreal.ps1`, then `PLAY-UNREAL.cmd`. Native 0.3.1 adds fast-crouch sliding and chained hopping to the existing 2 km reserve, named settlements, trucks/boats, loot, map/HUD and round/survival/wildlife/combat foundation. It does not yet provide full Unity feature parity or a packaged replacement release. Read the [native controls and rules](Unreal/Pinefall/PLAYING.md).
 
 Read the [migration plan](Design/UNREAL-MIGRATION.md), [120 source-linked game rules](Design/RULES-CATALOG.md), [presentation direction](Design/UNREAL-PRESENTATION.md), and [current Unreal status](Design/UNREAL-STATUS.md). Unity development was stopped by the user; its unfinished 0.9.1 edits and historical evidence remain intact below as a reference.
 

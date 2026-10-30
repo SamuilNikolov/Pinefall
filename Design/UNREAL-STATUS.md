@@ -1,6 +1,6 @@
 # Unreal implementation and verification status
 
-October 29, 2026. Native 0.3 reserve working tree; **not full Unity parity or a finished visual release**.
+October 29, 2026. Native 0.3.1 traversal checkpoint; **not full Unity parity or a finished visual release**.
 
 ## Implemented first passes
 
@@ -24,6 +24,10 @@ Vehicles use server movement with ground/water queries, responsive steering, boo
 
 The HUD has a compact equipment strip, minimap, compass and vehicle dashboard. Full map supports wheel zoom/middle drag and named sites. Owner-only transport/team snapshots exclude enemy-occupied vehicles and live enemies. Wildlife replenishment grows to 84 in the reserve with most spawn attempts near living players; Cedar's original budget remains 28. Biome visuals and species variety need further production work.
 
+## Traversal integration (0.3.1)
+
+Native movement now includes fast-crouch sliding and buffered air-crouch landings with normal engine walking collision, low drag/gradual steering, downhill acceleration and uphill speed loss. Held or timed chained jumps preserve landing momentum and add 170 cm/s per takeoff up to 2,400 cm/s; slide ceiling is 2,600 cm/s. Inputs use compressed movement flags and custom saved-move state for correction/replay. Slide state is replicated for peer presentation. Jump/stance still respect ceiling collision. Menu opening clears held hops while simulation continues; water/vehicle/teleport/round/death resets discard momentum. Ground sprint fatigue is reduced. Dedicated slide animation/foley and broad terrain/latency validation remain open.
+
 ## Earlier combat/world sweep
 
 The earlier 0.2.1 sweep replaced the mannequin with a CC0 MakeHuman-derived clothed ranger and eighteen clips, a native locomotion/weapon pose blend, original grip/reload/crouch poses and fitted separate skull/neck collision. The pistol scan now omits its detached empty magazine and seats its loaded magazine; aiming uses a fitted sight height. The first-person camera pivots at the same eye height used by authority rather than orbiting from a rotated socket offset.
@@ -33,6 +37,8 @@ Shots carry a measured server-clock view time. Authority retains sixteen sampled
 Cedar now has scanned 2K forest-floor/rock maps, triplanar cliff color, gentler ridge detail, a limited Landscape LOD range, denser planted pines, trunk-base-centered meshes and fitted hidden trunk collision. Rock cover uses actual surface collision. The elliptical lake has animated ripples, depth-faded shores and a real water volume, native predicted swimming, air depletion/recovery and armor-bypassing drowning damage. First-person hands, final grip/animation polish, production foliage and measured rendered performance remain open.
 
 ## Verification
+
+[The 0.3.1 checkpoint](../tests/baselines/unreal-0.3.1/README.md) records 24 delayed movement checks and 24 rendered-client checks, plus the final combat/reserve/world/round/wildlife/remote-fire regressions on native build 14. Actual synchronized collision, posture and buffered landing were checked. Dedicated slide art/foley and broad terrain/performance/WAN gates remain open.
 
 [The 0.3 checkpoint](../tests/baselines/unreal-0.3/README.md) records 32 reserve checks, sixteen delayed combat checks, fifteen world checks, 36 round checks, fifteen wildlife checks/three remote species and five scoped-fire checks. Actual character/crouch, map, village, transport and loot renders were reviewed. Weapon-hand contact and production world art remain unfinished. No rendered-performance claim.
 
