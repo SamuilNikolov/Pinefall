@@ -9,11 +9,17 @@ void UPFUserSettings::SetToDefaults()
 {
     Super::SetToDefaults();
     ScalabilityQuality.SetFromSingleQualityLevel(2);
+    bBalancedLighting = false;
     SetFrameRateLimit(90);
     SetVSyncEnabled(false);
 }
 void UPFUserSettings::ApplyNonResolutionSettings()
 {
+    if (bBalancedLighting)
+    {
+        ScalabilityQuality.GlobalIlluminationQuality = 1;
+        ScalabilityQuality.ReflectionQuality = 1;
+    }
     Super::ApplyNonResolutionSettings();
     if (GEngine)
     {

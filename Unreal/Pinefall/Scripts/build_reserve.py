@@ -223,6 +223,13 @@ LIB.save_loaded_asset(road)
 world = unreal.EditorLoadingAndSavingUtils.new_blank_map(False)
 actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 unreal.PFWorldBuilder.build_reserve_landscape()
+for landscape in unreal.get_editor_subsystem(unreal.EditorActorSubsystem).get_all_level_actors():
+    if isinstance(landscape, unreal.Landscape):
+        landscape.set_editor_property('enable_nanite', True)
+        landscape.set_editor_property('nanite_skirt_enabled', True)
+        landscape.set_editor_property('nanite_skirt_depth', 50.0)
+if not unreal.PFWorldBuilder.build_reserve_nanite():
+    raise RuntimeError('Reserve landscape Nanite data did not build')
 unreal.PFWorldBuilder.populate_reserve(
     [
         unreal.load_asset("/Game/Pinefall/Art/Scenery/" + x)
@@ -373,7 +380,7 @@ settings = post.get_editor_property("settings")
 for name, value in [
     ("auto_exposure_min_brightness", 9),
     ("auto_exposure_max_brightness", 14),
-    ("auto_exposure_bias", 0.35),
+    ("auto_exposure_bias", -0.35),
     ("bloom_intensity", 0.18),
     ("motion_blur_amount", 0),
 ]:

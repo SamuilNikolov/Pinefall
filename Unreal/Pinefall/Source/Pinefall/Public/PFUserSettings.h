@@ -9,6 +9,7 @@ class PINEFALL_API UPFUserSettings : public UGameUserSettings
   public:
     UPROPERTY(Config) float MouseSensitivity = .12f;
     UPROPERTY(Config) float MasterVolume = .8f;
+    UPROPERTY(Config) bool bBalancedLighting = false;
     virtual void ApplyNonResolutionSettings() override;
     virtual void SetToDefaults() override;
     static UPFUserSettings *Get();

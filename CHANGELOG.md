@@ -1,5 +1,11 @@
 # Pinefall Wildfront changelog
 
+## Nanite terrain rendering follow-up — 2026-10-31
+
+- Built Nanite Landscape data for the reserve while retaining the collision/fallback heightfield and dense scanned scenery. Excluded short grass from persistent indirect-lighting contributions without reducing density or receiving light.
+- Added slope-aware scanned rock projections and subtle wetland material response, and reduced daylight exposure bias. Graphics measurements and limitations are recorded in `docs/PERFORMANCE.md`.
+- Added a saved Balanced graphics option: High scenery/texture/shadow detail with lighter indirect lighting/reflections, plus a same-process rendered comparison that checks unchanged density, resolution, peers and animal population.
+
 ## Unreal 0.5 construction/presentation checkpoint — 2026-10-31
 
 - Added player-relative editable walls, floors, ramps and cones, materials/harvesting, supported collapse, shared resource drops and multiplayer prediction. First pieces fit terrain without another build; connected ramps continue upward.

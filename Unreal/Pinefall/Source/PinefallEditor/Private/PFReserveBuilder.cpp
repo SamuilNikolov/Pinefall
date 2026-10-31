@@ -2,6 +2,8 @@
 #include "Editor.h"
 #include "Engine/StaticMesh.h"
 #include "Landscape.h"
+#include "LandscapeSubsystem.h"
+#include "EngineUtils.h"
 #include "Materials/MaterialInterface.h"
 #include "PFReserveLayout.h"
 #include "PFWorldBuilder.h"
@@ -41,6 +43,31 @@ void UPFWorldBuilder::BuildReserveLandscape()
     Land->PostEditChange();
     UE_LOG(LogTemp, Display, TEXT("PF_RESERVE_LANDSCAPE_OK span=2016m samples=505"));
 }
+bool UPFWorldBuilder::BuildReserveNanite()
+{
+    UWorld *World = GEditor->GetEditorWorldContext().World();
+    if (!World)
+        return false;
+    TArray<ALandscapeProxy *> Proxies;
+    for (TActorIterator<ALandscape> It(World); It; ++It)
+    {
+        // Keep the separate Cedar regression arena unchanged.
+        if (!It->GetActorLabel().StartsWith(TEXT("Wildfront Reserve")))
+            continue;
+        It->Modify();
+        if (!It->IsNaniteEnabled())
+            return false;
+        Proxies.Add(*It);
+    }
+    if (Proxies.IsEmpty())
+        return false;
+    World->GetSubsystem<ULandscapeSubsystem>()->BuildNanite(UE::Landscape::EBuildFlags::None, Proxies);
+    for (auto *Proxy : Proxies)
+        if (!Proxy->IsNaniteMeshUpToDate() || !Proxy->HasNaniteComponents())
+            return false;
+    UE_LOG(LogTemp, Display, TEXT("PF_RESERVE_NANITE_OK landscapes=%d"), Proxies.Num());
+    return true;
+}
 void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStaticMesh *Grass,
                                       UStaticMesh *Fern)
 {
@@ -79,6 +106,10 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
     Trunks->SetCastShadow(false);
     auto *Low = Create(Grass, TEXT("Reserve low meadow and woodland grass"), 5500, false);
     Low->SetCastShadow(false);
+    // Fine, short-lived ground cover receives lighting, but must not populate
+    // Lumen's persistent scene alongside the landscape and scanned canopy.
+    Low->SetAffectDynamicIndirectLighting(false);
+    Low->SetAffectDistanceFieldLighting(false);
     Low->bEnableDensityScaling = true;
     auto LoadScenery = [](const TCHAR *Name) {
         return LoadObject<UStaticMesh>(
@@ -87,6 +118,8 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
     auto *Dry =
         Create(LoadScenery(TEXT("SM_DryGrassPatch")), TEXT("Reserve dry short grass"), 6000, false);
     Dry->SetCastShadow(false);
+    Dry->SetAffectDynamicIndirectLighting(false);
+    Dry->SetAffectDistanceFieldLighting(false);
     Dry->bEnableDensityScaling = true;
     auto *Brush = Create(Fern, TEXT("Reserve scanned understory"), 18000, false);
     auto *Rocks =

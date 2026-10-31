@@ -19,6 +19,7 @@
 #include "Serialization/JsonWriter.h"
 #include "Misc/App.h"
 #include "Misc/FileHelper.h"
+#include "Misc/Paths.h"
 #include "HAL/FileManager.h"
 #include "HAL/IConsoleManager.h"
 
@@ -139,7 +140,9 @@ void APFPlayerController::RecordRenderFrame()
     Report->SetNumberField(TEXT("minimum_free_physical_gb"),double(RenderMinimumFreeMemory)/(1024.*1024.*1024.));
     Report->SetNumberField(TEXT("process_physical_gb"),double(FPlatformMemory::GetStats().UsedPhysical)/(1024.*1024.*1024.));
     for (const TCHAR *Name : {TEXT("r.Nanite"), TEXT("r.ScreenPercentage"), TEXT("r.ViewDistanceScale"),
-                              TEXT("foliage.DensityScale"), TEXT("t.MaxFPS"), TEXT("r.VSync")})
+                              TEXT("foliage.DensityScale"), TEXT("t.MaxFPS"), TEXT("r.VSync"),
+                              TEXT("landscape.RenderNanite"), TEXT("sg.GlobalIlluminationQuality"),
+                              TEXT("sg.ReflectionQuality")})
         if (auto *Variable = IConsoleManager::Get().FindConsoleVariable(Name))
             Report->SetNumberField(Name, Variable->GetFloat());
     if (auto *Settings = UPFUserSettings::Get())
@@ -150,6 +153,38 @@ void APFPlayerController::RecordRenderFrame()
     bool Saved = FFileHelper::SaveStringToFile(Json, *RenderReportPath);
     UE_LOG(LogTemp, Display, TEXT("PF_RENDER_REPORT rendered=%d saved=%d frames=%d peers=%d"), Rendered,
            Saved, RenderFrameTimes.Num(), Match ? Match->PlayerArray.Num() - 1 : 0);
+    if (!bRenderComparisonDone && FParse::Param(FCommandLine::Get(), TEXT("PFRenderCompareLighting")))
+    {
+        bRenderComparisonDone = true;
+        auto *Settings = UPFUserSettings::Get();
+        if (Settings)
+        {
+            bRenderOriginalBalanced = Settings->bBalancedLighting;
+            RenderOriginalGI = Settings->GetGlobalIlluminationQuality();
+            RenderOriginalReflections = Settings->GetReflectionQuality();
+            Settings->bBalancedLighting = true;
+            // Exercise the actual profile application, without saving test settings.
+            Settings->ApplyNonResolutionSettings();
+            if (auto *Cap = IConsoleManager::Get().FindConsoleVariable(TEXT("t.MaxFPS")))
+                Cap->Set(0.f, ECVF_SetByConsole);
+        }
+        RenderReportPath = FPaths::GetPath(RenderReportPath) / TEXT("render-balanced.json");
+        RenderStartedAt = 0;
+        RenderReadyAt = Now + 12;
+        RenderMinimumPlayers = MAX_int32;
+        RenderMinimumFreeMemory = MAX_uint64;
+        RenderFrameTimes.Reset();RenderGPUTimes.Reset();RenderGameTimes.Reset();RenderDrawTimes.Reset();RenderRHITimes.Reset();
+        return;
+    }
+    if (bRenderComparisonDone)
+        if (auto *Settings = UPFUserSettings::Get())
+        {
+            // Restore saved-settings state without disturbing the final image.
+            // No benchmark profile is persisted when the process exits.
+            Settings->bBalancedLighting = bRenderOriginalBalanced;
+            Settings->SetGlobalIlluminationQuality(RenderOriginalGI);
+            Settings->SetReflectionQuality(RenderOriginalReflections);
+        }
     RenderReportPath.Empty();
     RenderFrameTimes.Empty();
     RenderGPUTimes.Empty();RenderGameTimes.Empty();RenderDrawTimes.Empty();RenderRHITimes.Empty();

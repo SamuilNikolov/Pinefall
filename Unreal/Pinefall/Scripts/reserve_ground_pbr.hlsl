@@ -43,12 +43,42 @@ float wa=sand*(1-snow)*(1-cliff);
 float ws=snow*(1-cliff*.65);
 float wr=cliff*(1-snow*.35);
 float total=max(.001,wf+wm+wa+ws+wr);
-float2 dx=ddx(P.xy),dy=ddy(P.xy);float3 color=0,n=0,c,nn;float rough=0,r;
+float3 worldDx=ddx(P),worldDy=ddy(P);
+float2 dx=worldDx.xy,dy=worldDy.xy;float3 color=0,n=0,c,nn;float rough=0,r;
 [branch] if(wf>.001){sampleGround.Sample(ForestC,ForestCSampler,ForestS,ForestSSampler,P.xy/300,dx/300,dy/300,c,nn,r);color+=c*float3(.6,.72,.50)*wf;n+=nn*wf;rough+=r*wf;}
 [branch] if(wm>.001){sampleGround.Sample(MeadowC,MeadowCSampler,MeadowS,MeadowSSampler,P.xy/500,dx/500,dy/500,c,nn,r);color+=c*float3(.45,.95,.42)*wm;n+=nn*wm;rough+=r*wm;}
 [branch] if(wa>.001){sampleGround.Sample(SandC,SandCSampler,SandS,SandSSampler,P.xy/800,dx/800,dy/800,c,nn,r);color+=c*wa;n+=nn*wa;rough+=r*wa;}
 [branch] if(ws>.001){sampleGround.Sample(SnowC,SnowCSampler,SnowS,SnowSSampler,P.xy/300,dx/300,dy/300,c,nn,r);color+=c*ws;n+=nn*ws;rough+=r*ws;}
-[branch] if(wr>.001){sampleGround.Sample(RockC,RockCSampler,RockS,RockSSampler,P.xy/400,dx/400,dy/400,c,nn,r);color+=c*wr;n+=nn*wr;rough+=r*wr;}
+[branch] if(wr>.001)
+{
+    // Project cliff scans along their dominant planes, rather than stretching
+    // the horizontal terrain UVs into vertical stripes on steep landforms.
+    float3 axes=pow(abs(N),4);axes/=max(dot(axes,float3(1,1,1)),.001);
+    float3 rc=0,gradient=0;float rr=0;
+    [branch] if(axes.z>.001)
+    {
+        sampleGround.Sample(RockC,RockCSampler,RockS,RockSSampler,P.xy/400,dx/400,dy/400,c,nn,r);
+        rc+=c*axes.z;rr+=r*axes.z;gradient+=float3(nn.xy,0)*axes.z;
+    }
+    [branch] if(axes.y>.001)
+    {
+        sampleGround.Sample(RockC,RockCSampler,RockS,RockSSampler,P.xz/400,worldDx.xz/400,worldDy.xz/400,c,nn,r);
+        rc+=c*axes.y;rr+=r*axes.y;gradient+=float3(nn.x,0,nn.y)*axes.y;
+    }
+    [branch] if(axes.x>.001)
+    {
+        sampleGround.Sample(RockC,RockCSampler,RockS,RockSSampler,P.yz/400,worldDx.yz/400,worldDy.yz/400,c,nn,r);
+        rc+=c*axes.x;rr+=r*axes.x;gradient+=float3(0,nn.xy)*axes.x;
+    }
+    float3 tangent=normalize(float3(N.z,0,-N.x));
+    float3 bitangent=normalize(cross(N,tangent));
+    float3 rockNormal=normalize(N+gradient*.65);
+    float3 localNormal=float3(dot(rockNormal,tangent),dot(rockNormal,bitangent),dot(rockNormal,N));
+    color+=rc*wr;n+=localNormal*wr;rough+=rr*wr;
+}
 OutNormal=normalize(n);OutRoughness=saturate(rough/total);
 float macro=.95+.045*sin(P.x/1900+sin(P.y/3300))+.025*sin(P.y/7100);
-return color/total*macro;
+// Subtle wetland response remains in the material, rather than a global filter.
+float moisture=wet*(1-snow)*(1-sand)*(1-cliff);
+OutRoughness=clamp(OutRoughness-moisture*.1,.35,1);
+return color/total*macro*(1-moisture*.12);

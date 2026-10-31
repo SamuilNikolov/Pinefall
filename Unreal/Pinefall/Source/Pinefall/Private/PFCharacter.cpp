@@ -893,16 +893,17 @@ void APFCharacter::RunCombatViewProbe()
     if (!IsLocallyControlled() || !FParse::Value(FCommandLine::Get(), TEXT("PFCombatView="), Mode))
         return;
     if(RunConstructionViewProbe(Mode))return;
-    struct FBiomeView{const TCHAR *Name;FVector2D Point;float Yaw;};
+    struct FBiomeView{const TCHAR *Name;FVector2D Point;float Yaw;float Pitch=-5;};
     const FBiomeView Views[]={
         {TEXT("Forest"),{-41000,-17000},45},{TEXT("Meadow"),{-2000,10000},30},
+        {TEXT("ForestGround"),{-41000,-17000},45,-42},
         {TEXT("Jungle"),{-4000,61000},-70},{TEXT("Desert"),{-66000,-67000},40},
         {TEXT("Snow"),{66000,65000},-120},{TEXT("Highland"),{68000,-53000},-45}};
     for(const auto &View:Views)if(Mode==View.Name&&HasAuthority())
     {
         FVector Point(View.Point,0);FHitResult Ground;FCollisionQueryParams Query(SCENE_QUERY_STAT(PFBiomeCapture),false,this);
         if(GetWorld()->LineTraceSingleByObjectType(Ground,Point+FVector(0,0,24000),Point-FVector(0,0,20000),FCollisionObjectQueryParams(ECC_WorldStatic),Query))SetActorLocation(Ground.ImpactPoint+FVector(0,0,100));
-        Controller->SetControlRotation(FRotator(-5,View.Yaw,0));bFirstPerson=false;
+        Controller->SetControlRotation(FRotator(View.Pitch,View.Yaw,0));bFirstPerson=false;
         FRotator ShotRotation=Controller->GetControlRotation();FVector Anchor=GetActorLocation()+FVector(0,0,60);
         FVector ShotPosition=Anchor-ShotRotation.Vector()*400+FRotationMatrix(ShotRotation).GetUnitAxis(EAxis::Y)*80;FHitResult Cover;
         if(GetWorld()->LineTraceSingleByChannel(Cover,Anchor,ShotPosition,ECC_Camera,Query))ShotPosition=Cover.ImpactPoint+Cover.ImpactNormal*15;

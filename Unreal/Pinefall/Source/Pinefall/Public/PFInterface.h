@@ -95,6 +95,7 @@ class PINEFALL_API UPFInterface : public UUserWidget
     UFUNCTION() void Quality();
     UFUNCTION() void Quit();
     UFUNCTION() void Volume(float Value);
+    UPROPERTY() TObjectPtr<UTextBlock> QualityReadout;
     UFUNCTION() void Sensitivity(float Value);
     void BuildExpeditionUI(UCanvasPanel *Canvas, UVerticalBox *Vitals);
     void UpdateExpeditionUI();

@@ -81,6 +81,9 @@ class PINEFALL_API APFPlayerController : public APlayerController
     bool bQuitAfterCapture = false;
     int32 RenderExpectedPlayers = 1, RenderMinimumPlayers = MAX_int32;
     FString RenderReportPath;
+    bool bRenderComparisonDone = false;
+    bool bRenderOriginalBalanced = false;
+    int32 RenderOriginalGI = 2, RenderOriginalReflections = 2;
     TWeakObjectPtr<class APFWildlifeDirector> RenderDirector;
     TArray<float> RenderFrameTimes, RenderGPUTimes, RenderGameTimes, RenderDrawTimes, RenderRHITimes;
     uint64 RenderMinimumFreeMemory = MAX_uint64;

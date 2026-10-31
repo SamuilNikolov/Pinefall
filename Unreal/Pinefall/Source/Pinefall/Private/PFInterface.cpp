@@ -62,6 +62,8 @@ void UPFInterface::Button(UVerticalBox *Parent, const FString &Value, FName Hand
     auto *Button = WidgetTree->ConstructWidget<UButton>();
     Button->SetBackgroundColor(Primary ? PFStyle::Amber : FLinearColor(.10f, .16f, .17f, 1));
     auto *Text = PFStyle::Text(WidgetTree, Value, 18, Primary ? PFStyle::Ink : PFStyle::Paper);
+    if (Handler == TEXT("Quality"))
+        QualityReadout = Text;
     Text->SetMargin(FMargin(14, 12));
     Button->SetContent(Text);
     FScriptDelegate Delegate;
@@ -161,7 +163,10 @@ TSharedRef<SWidget> UPFInterface::RebuildWidget()
                                     : .24f);
     SensitivitySlider->OnValueChanged.AddDynamic(this, &UPFInterface::Sensitivity);
     Stack->AddChildToVerticalBox(SensitivitySlider)->SetPadding(FMargin(0, 0, 0, 17));
-    Button(Stack, TEXT("Change graphics quality"), TEXT("Quality"));
+    const int32 QualityLevel = Settings ? Settings->GetOverallScalabilityLevel() : 2;
+    const TCHAR *QualityName = Settings && Settings->bBalancedLighting ? TEXT("Balanced") :
+        QualityLevel == 1 ? TEXT("Medium") : QualityLevel == 3 ? TEXT("Epic") : TEXT("High");
+    Button(Stack, FString::Printf(TEXT("Graphics: %s  /  Change"), QualityName), TEXT("Quality"));
     Button(Stack, TEXT("Leave session"), TEXT("LeaveSession"));
     Button(Stack, TEXT("Quit"), TEXT("Quit"));
     MenuStatus = Label(Stack,
@@ -284,15 +289,21 @@ void UPFInterface::Quality()
 {
     if (auto *Settings = UPFUserSettings::Get())
     {
-        int32 Next = Settings->GetOverallScalabilityLevel() + 1;
-        if (Next > 3 || Next < 1)
-            Next = 1;
+        // Medium -> Balanced -> High -> Epic. Balanced preserves all High
+        // geometry, textures, shadows and foliage, changing only GI/reflections.
+        const int32 Current = Settings->GetOverallScalabilityLevel();
+        const bool WasBalanced = Settings->bBalancedLighting;
+        Settings->bBalancedLighting = !WasBalanced && (Current == 1 || Current < 0);
+        const int32 Next = WasBalanced || Settings->bBalancedLighting ? 2 : Current == 2 ? 3 : 1;
         Settings->SetOverallScalabilityLevel(Next);
         Settings->ApplySettings(false);
-        MenuStatus->SetText(
-            FText::FromString(FString::Printf(TEXT("Graphics: %s"), Next == 1   ? TEXT("Medium")
-                                                                    : Next == 2 ? TEXT("High")
-                                                                                : TEXT("Epic"))));
+        const TCHAR *Name = Settings->bBalancedLighting ? TEXT("Balanced") :
+            Next == 1 ? TEXT("Medium") : Next == 2 ? TEXT("High") : TEXT("Epic");
+        if (QualityReadout)
+            QualityReadout->SetText(FText::FromString(FString::Printf(TEXT("Graphics: %s  /  Change"), Name)));
+        MenuStatus->SetText(FText::FromString(Settings->bBalancedLighting
+            ? TEXT("Balanced: high-detail scenery, textures and shadows. Lighter indirect lighting and reflections for faster play.")
+            : FString::Printf(TEXT("Graphics: %s. Balanced keeps High scenery detail with lighter lighting; High/Epic use Lumen."), Name)));
     }
 }
 void UPFInterface::Quit()
