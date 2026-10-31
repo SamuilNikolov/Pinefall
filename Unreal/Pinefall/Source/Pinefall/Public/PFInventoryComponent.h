@@ -14,7 +14,10 @@ enum class EPFItemKind : uint8
     LightVest,
     FieldVest,
     HeavyVest,
-    ServiceKit
+    ServiceKit,
+    Wood,
+    Stone,
+    Metal
 };
 USTRUCT(BlueprintType)
 struct FPFItemStack
@@ -38,6 +41,7 @@ class PINEFALL_API UPFInventoryComponent : public UActorComponent
     UPROPERTY(Replicated, BlueprintReadOnly) TArray<FPFItemStack> Slots;
     void InitializeLoadout(bool Range, int32 Kit);
     int32 Add(const FPFItemStack &Stack);
+    int32 CapacityFor(const FPFItemStack &Stack) const;
     bool HasWeapon(FName Id) const;
     int32 Magazine(FName Id) const;
     void StoreMagazine(FName Id, int32 Amount);

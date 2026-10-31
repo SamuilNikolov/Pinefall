@@ -1,4 +1,5 @@
 #include "PFInventoryComponent.h"
+#include "PFConstructionComponent.h"
 #include "PFCharacter.h"
 #include "PFMatchState.h"
 #include "PFWorldPickup.h"
@@ -10,6 +11,9 @@ FString FPFItemStack::Label() const
 {
     switch (Kind)
     {
+    case EPFItemKind::Wood:return TEXT("Wood");
+    case EPFItemKind::Stone:return TEXT("Stone");
+    case EPFItemKind::Metal:return TEXT("Metal");
     case EPFItemKind::ServiceKit:
         return TEXT("Vehicle service kit");
     case EPFItemKind::Weapon:
@@ -32,7 +36,7 @@ FString FPFItemStack::Label() const
 }
 int32 FPFItemStack::Capacity() const
 {
-    return Kind == EPFItemKind::ServiceKit ? 3
+    return Kind>=EPFItemKind::Wood&&Kind<=EPFItemKind::Metal ? 999 : Kind == EPFItemKind::ServiceKit ? 3
            : Kind == EPFItemKind::Weapon || (Kind >= EPFItemKind::LightVest && Kind <= EPFItemKind::HeavyVest)
                ? 1
            : Kind == EPFItemKind::Ammo   ? 400
@@ -93,24 +97,37 @@ void UPFInventoryComponent::InitializeLoadout(bool Range, int32 Kit)
         Add(Stack);
     }
 }
+int32 UPFInventoryComponent::CapacityFor(const FPFItemStack &Stack) const
+{
+    if(Stack.Count<=0||Stack.Rarity>4||uint8(Stack.Kind)>uint8(EPFItemKind::Metal))return 0;
+    if(Stack.Kind>=EPFItemKind::Wood)
+    {
+        auto *Tools=GetOwner()->FindComponentByClass<UPFConstructionComponent>();
+        return Tools?FMath::Min(Stack.Count,FMath::Max(0,PFBuildGrid::ResourceCap-Tools->Resources.Get(int32(Stack.Kind)-int32(EPFItemKind::Wood)))):0;
+    }
+    if(Stack.Kind==EPFItemKind::Weapon&&(HasWeapon(Stack.WeaponId)||(Stack.WeaponId!=TEXT("Ridgeline")&&Stack.WeaponId!=TEXT("ServiceNine"))))return 0;
+    int32 Allowed=Stack.Kind==EPFItemKind::Weapon?1:Stack.Count;
+    if(Stack.Kind==EPFItemKind::Ammo||Stack.Kind==EPFItemKind::Food||Stack.Kind==EPFItemKind::Medkit||Stack.Kind==EPFItemKind::ArmorPlate)
+    {
+        int32 Held=0;for(const auto &Slot:Slots)if(Slot.Count>0&&Slot.Kind==Stack.Kind&&(Stack.Kind!=EPFItemKind::Ammo||Slot.WeaponId==Stack.WeaponId))Held+=Slot.Count;
+        Allowed=FMath::Min(Allowed,FMath::Max(0,Stack.Capacity()-Held));
+    }
+    int32 Space=0;
+    for(const auto &Slot:Slots)
+    {
+        if(Slot.Count<=0)Space+=Stack.Capacity();
+        else if(Stack.Kind!=EPFItemKind::Weapon&&Slot.Kind==Stack.Kind&&Slot.WeaponId==Stack.WeaponId&&Slot.Rarity==Stack.Rarity)Space+=FMath::Max(0,Slot.Capacity()-Slot.Count);
+    }
+    return FMath::Min(Allowed,Space);
+}
 int32 UPFInventoryComponent::Add(const FPFItemStack &Stack)
 {
-    if (!GetOwner()->HasAuthority() || Stack.Count <= 0 || Stack.Rarity > 4)
-        return 0;
-    if (Stack.Kind == EPFItemKind::Weapon &&
-        (HasWeapon(Stack.WeaponId) ||
-         (Stack.WeaponId != TEXT("Ridgeline") && Stack.WeaponId != TEXT("ServiceNine"))))
-        return 0;
-    int32 Allowed = Stack.Count;
-    if (Stack.Kind == EPFItemKind::Ammo || Stack.Kind == EPFItemKind::Food ||
-        Stack.Kind == EPFItemKind::Medkit || Stack.Kind == EPFItemKind::ArmorPlate)
+    if(!GetOwner()->HasAuthority())return 0;
+    int32 Allowed=CapacityFor(Stack);if(Allowed<=0)return 0;
+    if(Stack.Kind>=EPFItemKind::Wood&&Stack.Kind<=EPFItemKind::Metal)
     {
-        int32 Held = 0;
-        for (const auto &Slot : Slots)
-            if (Slot.Kind == Stack.Kind &&
-                (Stack.Kind != EPFItemKind::Ammo || Slot.WeaponId == Stack.WeaponId))
-                Held += Slot.Count;
-        Allowed = FMath::Min(Allowed, FMath::Max(0, Stack.Capacity() - Held));
+        auto *Tools=GetOwner()->FindComponentByClass<UPFConstructionComponent>();int32 Kind=int32(Stack.Kind)-int32(EPFItemKind::Wood);
+        Tools->Resources.At(Kind)+=Allowed;Tools->Resources.Revision++;GetOwner()->ForceNetUpdate();return Allowed;
     }
     int32 Left = Allowed;
     for (auto &Slot : Slots)
@@ -198,6 +215,7 @@ void UPFInventoryComponent::ServerUseSlot_Implementation(int32 Index, uint32 Rev
         if(Nearest)Consume=Nearest->Repair(Character);break;
     }
     case EPFItemKind::Weapon:
+        Character->Construction->Combat();
         Character->EquipInventoryWeapon(Item.WeaponId);
         break;
     case EPFItemKind::Food:
@@ -254,6 +272,7 @@ void UPFInventoryComponent::ServerDropSlot_Implementation(int32 Index, int32 Cou
         return;
     auto *Character = CastChecked<APFCharacter>(GetOwner());
     Character->StoreMagazine();
+
     FPFItemStack Stack = Slots[Index];
     Stack.Count = FMath::Min(Count, Stack.Count);
     FVector Position =
@@ -275,6 +294,13 @@ void UPFInventoryComponent::DropEverything()
         return;
     auto *Character = CastChecked<APFCharacter>(GetOwner());
     Character->StoreMagazine();
+    for(int32 Kind=0;Kind<3;Kind++)
+    {
+        auto *Tools=Character->Construction.Get();int32 Count=Tools->Resources.Get(Kind);if(Count<=0)continue;
+        FActorSpawnParameters Params;Params.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        if(auto *Drop=GetWorld()->SpawnActor<APFWorldPickup>(Character->GetActorLocation()+FVector(-90+Kind*90,90,-60),FRotator::ZeroRotator,Params))
+        {FPFItemStack Stack;Stack.Kind=EPFItemKind(int32(EPFItemKind::Wood)+Kind);Stack.Count=Count;Drop->Initialize(Stack);Tools->Resources.At(Kind)=0;Tools->Resources.Revision++;}
+    }
     int32 Index = 0;
     for (auto &Slot : Slots)
         if (Slot.Count > 0)

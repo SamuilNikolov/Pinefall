@@ -1,3 +1,5 @@
+#include "PFConstructionComponent.h"
+#include "PFBuildPiece.h"
 #include "PFCharacter.h"
 #include "PFVehicle.h"
 #include "PFGameMode.h"
@@ -44,6 +46,7 @@ void APFCharacter::ResetForRound(int32 Kit)
     Knocks = 0;
     BleedOutAt = 0;
     ReviveProgress = 0;
+    Construction->Resources=FPFBuildResources();Construction->Combat();
     Inventory->InitializeLoadout(false, Kit);
     WeaponId = Kit == 5 ? TEXT("Ridgeline") : TEXT("ServiceNine");
     ApplyWeapon();
@@ -163,6 +166,7 @@ void APFCharacter::SurvivalSecond()
 }
 void APFCharacter::BeginInteract()
 {
+    if(FocusedBuild.IsValid()){int32 Column;if(PFBuildGrid::IsDoor(FocusedBuild->Build.Mask,Column)){ServerBuildDoor(FocusedBuild.Get());return;}}
     if (!AcceptsInput())
         return;
     if (Vehicle)

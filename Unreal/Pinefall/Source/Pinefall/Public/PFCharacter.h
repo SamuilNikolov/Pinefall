@@ -15,6 +15,8 @@ class APFWorldPickup;
 class UParticleSystem;
 class APFVehicle;
 class UPFHitHistoryComponent;
+class UPFConstructionComponent;
+class APFBuildPiece;
 UCLASS()
 class PINEFALL_API APFCharacter : public ACharacter
 {
@@ -37,6 +39,7 @@ class PINEFALL_API APFCharacter : public ACharacter
     UPROPERTY(VisibleAnywhere) TObjectPtr<UStaticMeshComponent> ViewWeapon;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<UPFInventoryComponent> Inventory;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UPFHitHistoryComponent> HitHistory;
+    UPROPERTY(VisibleAnywhere) TObjectPtr<UPFConstructionComponent> Construction;
     UPROPERTY(ReplicatedUsing = OnRep_Health, BlueprintReadOnly) float Health = 100.f;
     UPROPERTY(Replicated, BlueprintReadOnly) float Armor = 0.f;
     UPROPERTY(Replicated, BlueprintReadOnly) int32 ArmorTier = 0;
@@ -67,6 +70,8 @@ class PINEFALL_API APFCharacter : public ACharacter
     bool bFirstPerson = true;
     UPROPERTY(ReplicatedUsing = OnRep_Vehicle) TObjectPtr<APFVehicle> Vehicle;
     UPROPERTY() TWeakObjectPtr<APFVehicle> FocusedVehicle;
+    UPROPERTY() TWeakObjectPtr<APFBuildPiece> FocusedBuild;
+    UFUNCTION(Server,Reliable) void ServerBuildDoor(APFBuildPiece *Target);
     UFUNCTION() void OnRep_Vehicle();
     UFUNCTION(Server, Unreliable) void ServerDrive(FVector2D Axes, bool Boost, bool Brake);
     UFUNCTION(Server, Reliable) void ServerVehicleInteract(APFVehicle *Target, bool Service);
@@ -74,8 +79,14 @@ class PINEFALL_API APFCharacter : public ACharacter
     void StopAim();
     void RunFireProbe();
     void RunCombatViewProbe();
+    bool RunConstructionViewProbe(const FString &Mode);
     void RunCombatProbeInput();
     void RunReserveProbeInput();
+    UFUNCTION(Client,Reliable) void ClientReservePlacement(FVector Point,int32 Token);
+    UFUNCTION(Server,Reliable) void ServerReservePlaced(int32 Token);
+    bool bReservePlacementReady=false;
+    int32 ReservePlacementToken=0;
+    FVector ReservePlacementPoint=FVector::ZeroVector;
     void RunMovementProbeInput();
     UFUNCTION(Server, Reliable) void ServerMovementProbeReady();
     UFUNCTION(Client, Reliable) void ClientPlaceMovementProbe(FVector Point, bool Crouched);
@@ -88,6 +99,8 @@ class PINEFALL_API APFCharacter : public ACharacter
     void EnvironmentalDamage(float Amount);
     void SurvivalSecond();
     bool CanFight() const;
+    void ClearOverlayInput();
+    USoundBase *HitConfirmationSound() const {return HitSound.Get();}
     void BeginInteract();
     void EndInteract();
     UFUNCTION(Server, Reliable) void ServerInteract(APFWorldPickup *Pickup);
@@ -109,7 +122,9 @@ class PINEFALL_API APFCharacter : public ACharacter
     UPROPERTY() TObjectPtr<UParticleSystem> ImpactEffect;
     void CreateActions();
     void AddMapping();
+  public:
     bool AcceptsInput() const;
+  protected:
     void Move(const FInputActionValue &Value);
     void Look(const FInputActionValue &Value);
     void StartJump();
@@ -119,7 +134,9 @@ class PINEFALL_API APFCharacter : public ACharacter
     void StartCrouch();
     void EndCrouch();
     void StartFire();
+    void FireReleasedInput();
     void StartAim();
+    void AimReleasedInput();
     void ToggleCamera();
     void WeaponOne();
     void WeaponTwo();

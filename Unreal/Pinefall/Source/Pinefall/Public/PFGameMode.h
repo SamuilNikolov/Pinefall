@@ -52,6 +52,9 @@ class PINEFALL_API APFGameMode : public AGameModeBase
     void RunWorldProbe();
     void RunReserveProbe();
     void RunMovementProbe();
+    void RunConstructionProbe();
+    FVector ConstructionProbeOrigin=FVector::ZeroVector;
+    int32 ConstructionProbePlayers=0;
 
   private:
     void RoundSecond();

@@ -1,5 +1,15 @@
 # Pinefall Wildfront changelog
 
+## Unreal 0.5 construction/presentation checkpoint — 2026-10-31
+
+- Added player-relative editable walls, floors, ramps and cones, materials/harvesting, supported collapse, shared resource drops and multiplayer prediction. First pieces fit terrain without another build; connected ramps continue upward.
+- Fixed procedural build triangle winding so capsule contact normals face outward. A real remote owner now ascends a ramp and holds position under simulated latency. Grounded previews avoid putting the player beneath a ramp midpoint.
+- Moved the minimap/status to the top left. Added a prominent live local arrow independent of the team feed, with spectated-pawn fallback. Kept it visible beside the right-side inventory. Fixed-key equipment, pickaxe/build binds, darker backplates and aligned readable inventory cards improve the HUD.
+- Added scanned biome scenery/short instanced ground cover, stochastic PBR terrain, revised original houses/vehicles, natural animal coat detail, restrained loot rarity cues, a 4K atlas and a clearer storm wall. Animal meshes remain temporary stylized art.
+- Removed continuous supported-animal bone physics. Shots/swings query the same authored animated primitives on demand, while movement capsules, current cover and player lag compensation remain intact. Unsupported shape assets keep ordinary query collision.
+- Current forest measurements retain scenery and all 84 animals: 51.5 FPS for one instance and 47.8 FPS for a rendered host with two local headless clients at 1600×900 on the measured laptop. These are static-scene results, not a whole-match or universal hardware guarantee.
+- Development checkpoint only: full Unity parity, packaged distribution, production character/animal art, broad biome/vehicle/WAN/20-human playtesting and final audio remain open. See the checkpoint evidence and native handoff.
+
 ## Unreal 0.3.1 traversal checkpoint - 2026-10-29
 
 - Added fast-crouch sliding, buffered air-crouch landings, low-drag steering and slope response through engine walking collision.

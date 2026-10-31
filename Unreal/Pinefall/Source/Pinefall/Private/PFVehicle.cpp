@@ -25,6 +25,14 @@ APFVehicle::APFVehicle()
     Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Vehicle body"));
     Body->SetupAttachment(Collision);
     Body->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    for (int32 I = 0; I < 4; I++)
+    {
+        auto *Wheel = CreateDefaultSubobject<UStaticMeshComponent>(
+            FName(*FString::Printf(TEXT("Cosmetic wheel %d"), I)));
+        Wheel->SetupAttachment(Body);
+        Wheel->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        Wheels.Add(Wheel);
+    }
 }
 void APFVehicle::BeginPlay()
 {
@@ -42,6 +50,16 @@ void APFVehicle::RefreshVisual()
     Body->SetRelativeLocation(FVector(0, 0, bBoat ? -55 : -110));
     Body->SetRelativeRotation(FRotator(0, 90, 0));
     Collision->SetBoxExtent(bBoat ? FVector(205, 88, 45) : FVector(200, 100, 100));
+    auto *WheelMesh =
+        bBoat ? nullptr
+              : LoadObject<UStaticMesh>(
+                    nullptr, TEXT("/Game/Pinefall/Art/Reserve/SM_OffroadWheel.SM_OffroadWheel"));
+    for (int32 I = 0; I < Wheels.Num(); I++)
+    {
+        Wheels[I]->SetStaticMesh(WheelMesh);
+        Wheels[I]->SetVisibility(!bBoat);
+        Wheels[I]->SetRelativeLocation(FVector(I % 2 == 0 ? -104 : 104, I < 2 ? -132 : 134, 46));
+    }
 }
 FString APFVehicle::Label() const
 {
@@ -52,13 +70,19 @@ bool APFVehicle::Enter(APFCharacter *Player)
     if (!HasAuthority() || !IsValid(Player) || Driver || Player->Vehicle || !Player->CanFight() ||
         Health <= 0 ||
         FVector::DistSquared(Player->GetActorLocation(), GetActorLocation()) > FMath::Square(500.f))
+    {
+        if(bProbe)UE_LOG(LogTemp,Display,TEXT("PF_VEHICLE_ENTER_REJECT distance=%.0f driver=%s health=%.0f player_health=%.0f fight=%d"),Player?FVector::Dist(Player->GetActorLocation(),GetActorLocation()):-1,*GetNameSafe(Driver),Health,Player?Player->Health:-1,Player?Player->CanFight():false);
         return false;
+    }
     FHitResult Hit;
     FCollisionQueryParams Q(SCENE_QUERY_STAT(PFEnterVehicle), false, Player);
     Q.AddIgnoredActor(this);
-    if (GetWorld()->LineTraceSingleByChannel(Hit, Player->GetActorLocation(), GetActorLocation(),
+    if (GetWorld()->LineTraceSingleByChannel(Hit, Player->GetPawnViewLocation(), GetActorLocation()+FVector(0,0,bBoat?20:40),
                                              ECC_Visibility, Q))
+    {
+        if(bProbe)UE_LOG(LogTemp,Display,TEXT("PF_VEHICLE_ENTER_COVER actor=%s component=%s distance=%.0f"),*GetNameSafe(Hit.GetActor()),*GetNameSafe(Hit.GetComponent()),FVector::Dist(Player->GetActorLocation(),GetActorLocation()));
         return false;
+    }
     Driver = Player;
     Collision->IgnoreActorWhenMoving(Player, true);
     Player->Vehicle = this;
@@ -123,7 +147,10 @@ void APFVehicle::Input(APFCharacter *Player, FVector2D Axes, bool Boost, bool Br
 {
     if (!HasAuthority() || Driver != Player || !FMath::IsFinite(Axes.X) || !FMath::IsFinite(Axes.Y))
         return;
-    Control = Axes.GetClampedToMaxSize(1);
+    // Steering and throttle are separate pedals/axes; turning must not reduce
+    // full forward throttle to 71 percent through vector normalization.
+    Control = FVector2D(FMath::Clamp(Axes.X, -1.f, 1.f), FMath::Clamp(Axes.Y, -1.f, 1.f));
+    Steering = Control.X;
     bBoost = Boost;
     bBrake = Brake;
     LastInput = GetWorld()->GetTimeSeconds();
@@ -131,6 +158,7 @@ void APFVehicle::Input(APFCharacter *Player, FVector2D Axes, bool Boost, bool Br
 void APFVehicle::Tick(float Delta)
 {
     Super::Tick(Delta);
+    AnimateWheels(Delta);
     if (!HasAuthority())
     {
         if (Driver && bHasNetPose)
@@ -280,6 +308,17 @@ void APFVehicle::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifeti
     DOREPLIFETIME(APFVehicle, Health);
     DOREPLIFETIME(APFVehicle, Fuel);
     DOREPLIFETIME(APFVehicle, Speed);
+    DOREPLIFETIME(APFVehicle, Steering);
+}
+
+void APFVehicle::AnimateWheels(float Delta)
+{
+    if (bBoat)
+        return;
+    WheelRoll = FMath::Fmod(WheelRoll - Speed / 46.f * FMath::RadiansToDegrees(Delta), 360.f);
+    WheelSteer = FMath::FInterpTo(WheelSteer, Steering * 28.f, Delta, 12);
+    for (int32 I = 0; I < Wheels.Num(); I++)
+        Wheels[I]->SetRelativeRotation(FRotator(0, I < 2 ? WheelSteer : 0, WheelRoll));
 }
 
 void APFVehicle::PostNetReceiveLocationAndRotation()

@@ -33,14 +33,14 @@ try {
         if((Get-Date) -gt $deadline){throw "Reserve integration test timed out. Inspect $run"};Start-Sleep -Milliseconds 500
     }
     $data=Get-Content -LiteralPath $report -Raw | ConvertFrom-Json
-    if($data.failed.Count -gt 0 -or $data.passed.Count -lt 32){throw "Reserve integration failed: $($data.failed -join ', ')"}
+    if($data.failed.Count -gt 0 -or $data.passed.Count -lt 83){throw "Reserve integration failed: $($data.failed -join ', ')"}
     foreach($role in @('host','client')) {
         $log=Join-Path $run ($role+'.log')
         if(Select-String -LiteralPath $log -Pattern 'Fatal error:|Log.*: Error:|Ensure condition failed' -Quiet){throw "Runtime errors in $role log."}
     }
     $clientLog=Join-Path $run 'client.log'
     if(!(Select-String -LiteralPath $clientLog -SimpleMatch 'PF_RESERVE_CLIENT stock=0 authoritative_world=0' -Quiet)){throw 'Client reserve bootstrap or authority check failed.'}
-    @{packet_lag_ms_each_sender=$PacketLagMs;passed=$data.passed.Count;failed=0;scope='Two-process reserve fixture: remote driving/steering, settings, fuel/service, boat, loot, replicated crouch and private map feed; no rendered FPS, audible mix or general WAN claim'} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $run 'summary.json') -Encoding utf8
+    @{packet_lag_ms_each_sender=$PacketLagMs;passed=$data.passed.Count;failed=0;scope='Two-process reserve fixture: 51 first-piece terrain checks across three biomes;  remote driving/steering, settings, fuel/service, boat, loot, replicated crouch and private map feed; no rendered FPS, audible mix or general WAN claim'} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $run 'summary.json') -Encoding utf8
     Write-Output "Reserve integration passed $($data.passed.Count) checks; per-sender artificial lag $PacketLagMs ms. Evidence: $run"
 } finally {
     foreach($child in $children){if(!$child.HasExited){Stop-Process -Id $child.Id -Force -ErrorAction SilentlyContinue}}

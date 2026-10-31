@@ -1,0 +1,177 @@
+{
+  "asset": "rock_moss_set_01",
+  "source_page": "https://polyhaven.com/a/rock_moss_set_01",
+  "license": "CC0-1.0",
+  "license_url": "https://polyhaven.com/license",
+  "gltf_url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/rock_moss_set_01/rock_moss_set_01_2k.gltf",
+  "upstream_gltf_md5": "c45cebb55c848a11233126f691557ca0",
+  "original_buffer_url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/rock_moss_set_01/rock_moss_set_01.bin",
+  "original_buffer_md5": "207a51c9f56d34732e9814bbf9cc07b1",
+  "selected_nodes": "all",
+  "selected_ranges": [
+    {
+      "buffer_view": 0,
+      "offset": 0,
+      "bytes": 72936,
+      "sha256": "45a6e384295591a6461751b8c011af95365dbd4989f2ba3c1c6b9ba20a8060ca"
+    },
+    {
+      "buffer_view": 1,
+      "offset": 72936,
+      "bytes": 72936,
+      "sha256": "a846ae260f7b3b99ee25a3d3e2628913bba8c4e65aef32d2d6e592b0bb5c7e87"
+    },
+    {
+      "buffer_view": 2,
+      "offset": 145872,
+      "bytes": 48624,
+      "sha256": "3affbaf3bffeefe3115521a9e6d3cf64b00d400ff2fe712f55360e82f4e2e296"
+    },
+    {
+      "buffer_view": 3,
+      "offset": 194496,
+      "bytes": 66000,
+      "sha256": "a250e8d14d3dc57c0514e06326aeda4ff46b739d2304c7c97b24d54ee04b9196"
+    },
+    {
+      "buffer_view": 4,
+      "offset": 260496,
+      "bytes": 74304,
+      "sha256": "c8f5bd99f492c803894986282fdc57f05d0443ac5b15e57365acb3d21a24475f"
+    },
+    {
+      "buffer_view": 5,
+      "offset": 334800,
+      "bytes": 74304,
+      "sha256": "3ddada0702392b0db0ad01cbc1bd0f4911774af44ecc85b5c1bebc33e1652832"
+    },
+    {
+      "buffer_view": 6,
+      "offset": 409104,
+      "bytes": 49536,
+      "sha256": "5d0419dc399478214961e040070025f4e0d5738832fc9f6a25fa81b9fe1a7e28"
+    },
+    {
+      "buffer_view": 7,
+      "offset": 458640,
+      "bytes": 65976,
+      "sha256": "1bcbede08901bd838b4942e4debc79a141072596107f1ce5797672d4c694ac47"
+    },
+    {
+      "buffer_view": 8,
+      "offset": 524616,
+      "bytes": 32892,
+      "sha256": "ba13fcbea84d3623800f75d7801166193cd8745032c03eed86b0a36c34e04df0"
+    },
+    {
+      "buffer_view": 9,
+      "offset": 557508,
+      "bytes": 32892,
+      "sha256": "86756a30bc95c9a3fb3ca49a24e2b0d1bc7679b1c945d0c152109a777e5bb107"
+    },
+    {
+      "buffer_view": 10,
+      "offset": 590400,
+      "bytes": 21928,
+      "sha256": "c29be0a3ca1fc1eea93c6fc15ad168c85f2721534e7effcee6bb39295dd30250"
+    },
+    {
+      "buffer_view": 11,
+      "offset": 612328,
+      "bytes": 30000,
+      "sha256": "c967f98745c7b10160f20b48b149ce90a4fb05b5b2028e8760ca8073450ecc62"
+    },
+    {
+      "buffer_view": 12,
+      "offset": 642328,
+      "bytes": 68292,
+      "sha256": "5d32f151be6128e60a2775540e755decfc988382f6232c4cdfa87aedd4f0fa68"
+    },
+    {
+      "buffer_view": 13,
+      "offset": 710620,
+      "bytes": 68292,
+      "sha256": "1dae9fc2744ad81e921306531e08e1dc5f83e015e23825027ff400d8997dd7b2"
+    },
+    {
+      "buffer_view": 14,
+      "offset": 778912,
+      "bytes": 45528,
+      "sha256": "1420ca90b1d71324149e87b055162bace6c3326b9d47a607bd990c8215763433"
+    },
+    {
+      "buffer_view": 15,
+      "offset": 824440,
+      "bytes": 63534,
+      "sha256": "edb509da15f5359eb2f8f72c70269f308a73719f10f1eac965c94e7f5bdb8ee0"
+    },
+    {
+      "buffer_view": 16,
+      "offset": 887976,
+      "bytes": 102456,
+      "sha256": "fbe45f2e7290cb9cc31981d960a8ba211b5bf5931d46f8decf2c1af2962e98ea"
+    },
+    {
+      "buffer_view": 17,
+      "offset": 990432,
+      "bytes": 102456,
+      "sha256": "a8ac68a334f8cc9bc06949992301ef04a2fdbe0567172c48d783e0dc6426688c"
+    },
+    {
+      "buffer_view": 18,
+      "offset": 1092888,
+      "bytes": 68304,
+      "sha256": "bfdc10d39a25537aca5519e2f7a86f3d1b84bbccd4ebbb37d5586855aa0fabe9"
+    },
+    {
+      "buffer_view": 19,
+      "offset": 1161192,
+      "bytes": 99288,
+      "sha256": "9f6ff7718bc06c03612646050d7d1bbbf3b98a8a18f6752f3e4e822a5156e007"
+    },
+    {
+      "buffer_view": 20,
+      "offset": 1260480,
+      "bytes": 56976,
+      "sha256": "f20f743cd44c86e4ce4dc0d07b650b0fcd40b9d774a708166f21fdaa7905c60f"
+    },
+    {
+      "buffer_view": 21,
+      "offset": 1317456,
+      "bytes": 56976,
+      "sha256": "ff60737f360e093edc8c0909f5e6951d9be10e865f10145bf7376b19ac707d67"
+    },
+    {
+      "buffer_view": 22,
+      "offset": 1374432,
+      "bytes": 37984,
+      "sha256": "5f687e6fb9c5c7070cfdaf34a2734e2ca4d2b37a756720fa5a9005931fc75709"
+    },
+    {
+      "buffer_view": 23,
+      "offset": 1412416,
+      "bytes": 53964,
+      "sha256": "31f575eeecdbe7eb5da1d1d8796e705d8eb8f192e17a6060b1347cedc416389f"
+    }
+  ],
+  "textures": [
+    {
+      "path": "textures/rock_moss_set_01_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/rock_moss_set_01/rock_moss_set_01_nor_gl_2k.jpg",
+      "md5": "88be6d9cf2927a09182e2bfccc9b8b56",
+      "sha256": "f11c238a203eebd5e82da3a50468040a78d25fd2e46783c4ad79b1022b144c0d"
+    },
+    {
+      "path": "textures/rock_moss_set_01_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/rock_moss_set_01/rock_moss_set_01_diff_2k.jpg",
+      "md5": "d3e1292c9e34bd6b4a236698a1b41290",
+      "sha256": "bdee6da8baba67bd7e85e414e669cd46aab9afaf755114fb5163f0e68775c3d6"
+    },
+    {
+      "path": "textures/rock_moss_set_01_rough_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/rock_moss_set_01/rock_moss_set_01_rough_2k.jpg",
+      "md5": "f7b3045b503fbde038598f8586ac25ef",
+      "sha256": "a05a8bd9f2563cf55b738484b894671df7b2391aa02d66451366c5ad38077cd2"
+    }
+  ]
+}

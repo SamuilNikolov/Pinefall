@@ -1,3 +1,5 @@
+#include "PFConstructionWorld.h"
+#include "PFConstructionSubsystem.h"
 #include "PFGameMode.h"
 #include "PFReserveWorld.h"
 #include "PFWaterBody.h"
@@ -23,6 +25,7 @@ APFMatchState *APFGameMode::Match() const
 void APFGameMode::BeginPlay()
 {
     Super::BeginPlay();
+    GetWorld()->SpawnActor<APFConstructionWorld>();
     if (GetWorld()->URL.HasOption(TEXT("br")))
     {
         auto *State = Match();
@@ -34,10 +37,13 @@ void APFGameMode::BeginPlay()
     if (!FParse::Param(FCommandLine::Get(), TEXT("PFCombatProbe")) &&
         !FParse::Param(FCommandLine::Get(), TEXT("PFWorldProbe")) &&
         !FParse::Param(FCommandLine::Get(), TEXT("PFReserveProbe")) &&
-        !FParse::Param(FCommandLine::Get(), TEXT("PFMovementProbe")))
+        !FParse::Param(FCommandLine::Get(), TEXT("PFMovementProbe")) &&
+        !FParse::Param(FCommandLine::Get(), TEXT("PFConstructionProbe")))
         GetWorld()->SpawnActor<APFWildlifeDirector>();
     GetWorldTimerManager().SetTimer(RoundTimer, this, &APFGameMode::RoundSecond, 1, true);
-    if (FParse::Param(FCommandLine::Get(), TEXT("PFMovementProbe")))
+    if (FParse::Param(FCommandLine::Get(), TEXT("PFConstructionProbe")))
+        GetWorldTimerManager().SetTimer(ProbeTimer,this,&APFGameMode::RunConstructionProbe,.2,true);
+    else if (FParse::Param(FCommandLine::Get(), TEXT("PFMovementProbe")))
         GetWorldTimerManager().SetTimer(ProbeTimer,this,&APFGameMode::RunMovementProbe,.05,true);
     else if (FParse::Param(FCommandLine::Get(), TEXT("PFReserveProbe")))
         GetWorldTimerManager().SetTimer(ProbeTimer, this, &APFGameMode::RunReserveProbe, .25, true);
@@ -250,6 +256,7 @@ bool APFGameMode::SelectLanding(APlayerController *Player, FVector Point, bool C
 }
 void APFGameMode::StartBattle()
 {
+    if(auto *Registry=GetWorld()->GetSubsystem<UPFConstructionSubsystem>();Registry&&Registry->Manager)Registry->Manager->Reset();
     auto *Round = Match();
     Round->Phase = EPFRoundPhase::Active;
     Round->TurnPlayerId = -1;

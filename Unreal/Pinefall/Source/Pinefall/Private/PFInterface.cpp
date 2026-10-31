@@ -1,4 +1,6 @@
 #include "PFInterface.h"
+#include "PFConstructionComponent.h"
+#include "PFBuildPiece.h"
 #include "PFCombatHUD.h"
 #include "PFPlayerController.h"
 #include "PFCharacter.h"
@@ -69,6 +71,7 @@ void UPFInterface::Button(UVerticalBox *Parent, const FString &Value, FName Hand
 }
 TSharedRef<SWidget> UPFInterface::RebuildWidget()
 {
+    SetIsFocusable(true);
     if (!WidgetTree)
         WidgetTree = NewObject<UWidgetTree>(this);
     auto *Canvas = WidgetTree->ConstructWidget<UCanvasPanel>();
@@ -81,15 +84,17 @@ TSharedRef<SWidget> UPFInterface::RebuildWidget()
     CombatSlot->SetAnchors(FAnchors(0, 0, 1, 1));
     CombatSlot->SetOffsets(FMargin(0));
     CombatSlot->SetZOrder(-100);
-    auto *Brand = PFStyle::Text(WidgetTree, TEXT("PINEFALL"), 38, PFStyle::Paper);
-    PFStyle::Place(Canvas, Brand, FAnchors(0, 0), FVector2D::ZeroVector, FMargin(28, 22, 300, 58));
-    auto *Place = PFStyle::Text(WidgetTree,
+    BrandLabel = PFStyle::Text(WidgetTree, TEXT("PINEFALL"), 38, PFStyle::Paper);
+    PFStyle::Place(Canvas, BrandLabel, FAnchors(0, 0), FVector2D::ZeroVector, FMargin(28, 22, 300, 58));
+    LocationLabel = PFStyle::Text(WidgetTree,
                                 GetWorld()->GetMapName().Contains(TEXT("WildfrontReserve"))
                                     ? TEXT("Wildfront Reserve")
                                     : TEXT("Cedar Crossing / Practice"),
                                 14, PFStyle::Muted);
-    PFStyle::Place(Canvas, Place, FAnchors(0, 0), FVector2D::ZeroVector, FMargin(30, 76, 400, 35));
-    auto *Vitals = WidgetTree->ConstructWidget<UBorder>();
+    PFStyle::Place(Canvas, LocationLabel, FAnchors(0, 0), FVector2D::ZeroVector, FMargin(30, 76, 400, 35));
+    VitalsPanel = WidgetTree->ConstructWidget<UBorder>();
+    auto *Vitals = VitalsPanel.Get();
+    Vitals->SetVisibility(ESlateVisibility::Collapsed);
     Vitals->SetBrushColor(FLinearColor(.02f, .035f, .04f, .76f));
     Vitals->SetPadding(FMargin(18));
     auto *VitalsStack = WidgetTree->ConstructWidget<UVerticalBox>();
@@ -161,7 +166,7 @@ TSharedRef<SWidget> UPFInterface::RebuildWidget()
     Button(Stack, TEXT("Quit"), TEXT("Quit"));
     MenuStatus = Label(Stack,
                        TEXT("WASD move · mouse look\nLMB fire · RMB aim · R reload\nShift sprint · Ctrl "
-                            "crouch/slide · hold Space hop\n1 rifle · 2 pistol · V camera · Esc menu"),
+                            "crouch/slide · hold Space hop\n1 pickaxe · 2 rifle · 3 pistol · V camera\nQ build · F1–F4 pieces · F edit · R rotate · RMB material · Esc menu"),
                        14, PFStyle::Muted);
     BuildExpeditionUI(Canvas, VitalsStack);
     return Super::RebuildWidget();
@@ -177,8 +182,9 @@ void UPFInterface::NativeTick(const FGeometry &Geometry, float Delta)
     RefreshRemaining -= Delta;
     if (RefreshRemaining > 0)
         return;
-    RefreshRemaining = .05f;
+    RefreshRemaining = .1f;
     UpdateExpeditionUI();
+    UpdateHUDData();
     auto *Character = Cast<APFCharacter>(GetOwningPlayerPawn());
     if (!Character)
         return;
@@ -190,6 +196,8 @@ void UPFInterface::NativeTick(const FGeometry &Geometry, float Delta)
             float Fraction = 0;
             if (auto *Animal = Cast<APFWildlife>(Target))
                 Fraction = Animal->Health / FMath::Max(1.f, Animal->MaxHealth);
+            else if (auto *Build = Cast<APFBuildPiece>(Target))
+                Fraction=Build->Health/Build->Maximum();
             else if (auto *Opponent = Cast<APFCharacter>(Target))
                 Fraction = Opponent->Health / 100.f;
             FHitResult Cover;
@@ -211,6 +219,12 @@ void UPFInterface::NativeTick(const FGeometry &Geometry, float Delta)
                 }
             }
         }
+    if(Now<Character->Construction->HarvestBarUntil&&Character->Construction->HarvestBarFraction>0)
+    {
+        FVector2D Point;
+        if(UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(GetOwningPlayer(),Character->Construction->HarvestBarPoint,Point,false))
+        {bShowTargetBar=true;TargetBarPosition=Point;TargetBarFraction=Character->Construction->HarvestBarFraction;}
+    }
     HealthBar->SetPercent(Character->Health / 100.f);
     HealthText->SetText(FText::FromString(
         FString::Printf(TEXT("Health %.0f   Armor %.0f"), Character->Health, Character->Armor)));
@@ -230,7 +244,7 @@ void UPFInterface::NativeTick(const FGeometry &Geometry, float Delta)
     HitText->SetColorAndOpacity(Character->bLastHitKill    ? PFStyle::Amber
                                 : Character->bLastHitArmor ? PFStyle::Ice
                                                            : PFStyle::Paper);
-    DamageText->SetRenderOpacity(FMath::Clamp((Character->DamageUntil - Now) / .6f, 0.f, 1.f));
+    DamageText->SetRenderOpacity(0); // Directional/color feedback carries this; avoid redundant center text.
     DamageText->SetText(FText::FromString(Character->bDamageWasEnvironmental ? TEXT("Survival damage")
                                           : Character->bDamageWasArmor       ? TEXT("Armor hit")
                                                                              : TEXT("Taking damage")));
@@ -299,4 +313,21 @@ void UPFInterface::Sensitivity(float Value)
 {
     if (auto *Settings = UPFUserSettings::Get())
         Settings->MouseSensitivity = FMath::Lerp(.03f, .4f, Value);
+}
+
+FReply UPFInterface::NativeOnKeyDown(const FGeometry &Geometry,const FKeyEvent &Event)
+{
+    if(auto *PC=Cast<APFPlayerController>(GetOwningPlayer()))
+    {
+        if(Event.GetKey()==EKeys::Tab&&!Event.IsRepeat()&&!PC->bMenuOpen&&!PC->RoundPanelOpen()){PC->ToggleInventory();return FReply::Handled();}
+        if(Event.GetKey()==EKeys::Escape&&!Event.IsRepeat()){PC->ToggleMenu();return FReply::Handled();}
+        if((Event.GetKey()==EKeys::LeftAlt||Event.GetKey()==EKeys::RightAlt)&&!Event.IsRepeat()){PC->InventoryPressed();return FReply::Handled();}
+    }
+    return Super::NativeOnKeyDown(Geometry,Event);
+}
+FReply UPFInterface::NativeOnKeyUp(const FGeometry &Geometry,const FKeyEvent &Event)
+{
+    if(Event.GetKey()==EKeys::LeftAlt||Event.GetKey()==EKeys::RightAlt)
+        if(auto *PC=Cast<APFPlayerController>(GetOwningPlayer())){PC->AltInventoryReleased();return FReply::Handled();}
+    return Super::NativeOnKeyUp(Geometry,Event);
 }

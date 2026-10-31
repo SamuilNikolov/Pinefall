@@ -1,5 +1,14 @@
 # Unreal implementation and verification status
 
+## October 31 unreleased 0.5 working tree
+
+Native construction/harvesting, editable structures/support, fixed-key inventory/HUD, scanned biome scenery/short ground cover, revised original props, natural coat-detail materials and more visible storm presentation are implemented in the working tree. This is not full Unity parity or a final art release. The animals retain temporary stylized Quaternius meshes.
+
+First-piece terrain placement was expanded to actual footprint/contact sampling and bounded vertical fitting for new unsupported grids; existing connected grids keep their anchors. The final terrain/reserve run passed 83 checks (`artifacts/unreal-reserve/20261031-183032`), including 51 biome/orientation foundations plus remote trucks/boats, service, sharing and crouch. Construction now passes 40 delayed three-process checks including actual ramp ascent/idle footing; inventory passes 18 UI/transaction checks. Other native combat/traversal/survival/round/join regressions also passed, as recorded in the checkpoint.
+
+The early rendered candidates failed performance (6.9/8.7 FPS with local peers; 15.5 FPS alone). A CPU trace located substantial end-physics waits and animated-body work. On-demand authored animal geometry queries removed that redundant work without reducing scenery. With all 84 animals loaded, current forest measurements are 51.5 FPS alone (p95 26.5 ms, p99 30.6 ms) and 47.8 FPS with two local headless clients (p95 27.7 ms, p99 32.2 ms), at 1600×900 on the recorded i5/RTX 4060 laptop. The original candidates did not record settled population, so do not claim a controlled percentage speedup. Static-scene evidence is not whole-match, 20-human, other-hardware or WAN certification. [Checkpoint evidence](../tests/baselines/unreal-0.5/README.md) records exact scope and remaining gates.
+
+
 October 29, 2026. Native 0.3.1 traversal checkpoint; **not full Unity parity or a finished visual release**.
 
 ## Implemented first passes

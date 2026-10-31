@@ -1,4 +1,5 @@
 #include "PFTacticalMap.h"
+#include "PFHUDStyle.h"
 #include "PFMatchState.h"
 #include "PFGameMode.h"
 #include "PFReserveLayout.h"
@@ -17,13 +18,18 @@ float UPFTacticalMap::HalfExtent() const
 void UPFTacticalMap::NativeConstruct()
 {
     Super::NativeConstruct();
+    PlayerArrowPoints.Reserve(5);PlayerSpinePoints.Reserve(2);
     SetClipping(EWidgetClipping::ClipToBounds);
     bReserve = GetWorld()->GetMapName().Contains(TEXT("WildfrontReserve"));
-    Atlas =
-        LoadObject<UTexture2D>(nullptr, bReserve ? TEXT("/Game/Pinefall/Art/T_ReserveAtlas.T_ReserveAtlas")
-                                                 : TEXT("/Game/Pinefall/Art/T_CedarAtlas.T_CedarAtlas"));
+    Atlas = LoadObject<UTexture2D>(nullptr,
+                                   bReserve ? TEXT("/Game/Pinefall/Art/T_ReserveAtlas.T_ReserveAtlas")
+                                            : TEXT("/Game/Pinefall/Art/T_CedarAtlas.T_CedarAtlas"));
+    LabelFont =
+        LoadObject<UObject>(nullptr, TEXT("/Game/Pinefall/Art/UI/F_PinefallDisplay.F_PinefallDisplay"));
+    for (const auto &Site : FPFReserveLayout::Sites())
+        SiteLabels.Add(FString(Site.Name).ToUpper());
     AtlasBrush.SetResourceObject(Atlas);
-    AtlasBrush.ImageSize = FVector2D(2048);
+    AtlasBrush.ImageSize = FVector2D(4096);
     AtlasBrush.DrawAs = ESlateBrushDrawType::Image;
 }
 void UPFTacticalMap::ClampCenter()
@@ -42,8 +48,9 @@ void UPFTacticalMap::NativeTick(const FGeometry &G, float Delta)
         if (bMini)
         {
             Zoom = FMath::Max(1.f, HalfExtent() / 22000);
-            if (auto *Pawn = GetOwningPlayerPawn())
-                Center = FVector2D(Pawn->GetActorLocation());
+            APawn *Tracked=GetOwningPlayerPawn();
+            if(!Tracked&&GetOwningPlayer())Tracked=Cast<APawn>(GetOwningPlayer()->GetViewTarget());
+            if(Tracked)Center=FVector2D(Tracked->GetActorLocation());
             ClampCenter();
         }
         InvalidateLayoutAndVolatility();
@@ -58,48 +65,49 @@ int32 UPFTacticalMap::NativePaint(const FPaintArgs &Args, const FGeometry &G, co
     auto *Mine = PC ? PC->GetPlayerState<APFPlayerState>() : nullptr;
     if (!Match || !Mine)
         return Layer;
-    float Margin = bMini ? 4 : 16, Side = FMath::Min(G.GetLocalSize().X, G.GetLocalSize().Y) - Margin * 2;
+    float Margin = bMini ? 4 : 16,
+          Side = FMath::Min(G.GetLocalSize().X, G.GetLocalSize().Y) - Margin * 2;
     FVector2D Origin((G.GetLocalSize().X - Side) * .5, Margin);
     float Half = HalfExtent() / Zoom;
     auto *White = FCoreStyle::Get().GetBrush(TEXT("WhiteBrush"));
-    auto Box = [&](FVector2D P, FVector2D S, FLinearColor C, const FSlateBrush *B = nullptr)
-    {
-        FSlateDrawElement::MakeBox(Out, Layer, G.ToPaintGeometry(S, FSlateLayoutTransform(P)), B ? B : White,
-                                   ESlateDrawEffect::None, C);
+    auto Box = [&](FVector2D P, FVector2D S, FLinearColor C, const FSlateBrush *B = nullptr) {
+        FSlateDrawElement::MakeBox(Out, Layer, G.ToPaintGeometry(S, FSlateLayoutTransform(P)),
+                                   B ? B : White, ESlateDrawEffect::None, C);
     };
     auto Project = [&](FVector P) {
         return Origin +
                FVector2D(.5 + (P.Y - Center.Y) / (Half * 2), .5 - (P.X - Center.X) / (Half * 2)) * Side;
     };
-    auto Line = [&](TArray<FVector2D> Points, FLinearColor C, float Width = 1.5f)
-    {
-        FSlateDrawElement::MakeLines(Out, Layer + 2, G.ToPaintGeometry(), Points, ESlateDrawEffect::None, C,
-                                     true, Width);
+    auto Line = [&](TArray<FVector2D> Points, FLinearColor C, float Width = 1.5f) {
+        FSlateDrawElement::MakeLines(Out, Layer + 2, G.ToPaintGeometry(), Points, ESlateDrawEffect::None,
+                                     C, true, Width);
     };
-    auto Text = [&](FVector2D P, const FString &Value, int32 Font, FLinearColor C)
-    {
-        const FSlateFontInfo FontInfo = FCoreStyle::GetDefaultFontStyle(TEXT("Bold"), Font);
-        const FVector2D Size = FSlateApplication::Get().GetRenderer()->GetFontMeasureService()->Measure(Value, FontInfo);
+    auto Text = [&](FVector2D P, const FString &Value, int32 Font, FLinearColor C, bool Badge = false) {
+        const FSlateFontInfo FontInfo = Badge && LabelFont
+                                            ? FSlateFontInfo(LabelFont, Font + 2)
+                                            : FCoreStyle::GetDefaultFontStyle(TEXT("Bold"), Font);
+        const FVector2D Size =
+            FSlateApplication::Get().GetRenderer()->GetFontMeasureService()->Measure(Value, FontInfo);
         P.X = FMath::Clamp(P.X, Origin.X + 3, FMath::Max(Origin.X + 3, Origin.X + Side - Size.X - 3));
         P.Y = FMath::Clamp(P.Y, Origin.Y + 3, FMath::Max(Origin.Y + 3, Origin.Y + Side - Size.Y - 3));
+        if (Badge)
+            Box(P - FVector2D(4, 1), Size + FVector2D(8, 3), FLinearColor(.012, .025, .04, .72));
         for (FVector2D Offset : {FVector2D(1, 1), FVector2D(-1, -1)})
             FSlateDrawElement::MakeText(
                 Out, Layer + 3, G.ToPaintGeometry(FVector2D(180, 24), FSlateLayoutTransform(P + Offset)),
-                Value, FCoreStyle::GetDefaultFontStyle(TEXT("Bold"), Font), ESlateDrawEffect::None,
-                FLinearColor(0, 0, 0, .95));
-        FSlateDrawElement::MakeText(
-            Out, Layer + 4, G.ToPaintGeometry(FVector2D(180, 24), FSlateLayoutTransform(P)), Value,
-            FCoreStyle::GetDefaultFontStyle(TEXT("Bold"), Font), ESlateDrawEffect::None, C);
+                Value, FontInfo, ESlateDrawEffect::None, FLinearColor(0, 0, 0, .95));
+        FSlateDrawElement::MakeText(Out, Layer + 4,
+                                    G.ToPaintGeometry(FVector2D(180, 24), FSlateLayoutTransform(P)),
+                                    Value, FontInfo, ESlateDrawEffect::None, C);
     };
     Box(FVector2D::ZeroVector, G.GetLocalSize(), FLinearColor(.025, .04, .045, .94));
     FSlateBrush ViewBrush = AtlasBrush;
-    ViewBrush.SetUVRegion(FBox2f(
-        FVector2f(.5f + (Center.Y - Half) / (HalfExtent() * 2), .5f - (Center.X + Half) / (HalfExtent() * 2)),
-        FVector2f(.5f + (Center.Y + Half) / (HalfExtent() * 2),
-                  .5f - (Center.X - Half) / (HalfExtent() * 2))));
+    ViewBrush.SetUVRegion(FBox2f(FVector2f(.5f + (Center.Y - Half) / (HalfExtent() * 2),
+                                           .5f - (Center.X + Half) / (HalfExtent() * 2)),
+                                 FVector2f(.5f + (Center.Y + Half) / (HalfExtent() * 2),
+                                           .5f - (Center.X - Half) / (HalfExtent() * 2))));
     Box(Origin, FVector2D(Side), FLinearColor::White, Atlas ? &ViewBrush : White);
-    auto Circle = [&](FVector P, float R, FLinearColor C)
-    {
+    auto Circle = [&](FVector P, float R, FLinearColor C) {
         TArray<FVector2D> Points;
         FVector2D At = Project(P);
         for (int32 I = 0; I <= 96; I++)
@@ -115,27 +123,54 @@ int32 UPFTacticalMap::NativePaint(const FPaintArgs &Args, const FGeometry &G, co
         if (Match->bClosing)
             Circle(Match->CenterTo, Match->RadiusTo, FLinearColor(1, 1, .9, 1));
     }
+    TArray<FBox2D, TInlineAllocator<32>> LabelBoxes;
     if (bReserve)
-        for (const auto &Site : FPFReserveLayout::Sites())
+        for (int32 Index = 0; Index < FPFReserveLayout::Sites().Num(); Index++)
         {
-            FVector2D Pos = Project(FVector(Site.Point, 0));
-            if (Pos.X < Origin.X + 12 || Pos.Y < Origin.Y + 24 || Pos.X > Origin.X + Side - 12 ||
-                Pos.Y > Origin.Y + Side - 18)
+            const auto &Site = FPFReserveLayout::Sites()[Index];
+            FVector2D Pin = Project(FVector(Site.Point, 0));
+            if (Pin.X < Origin.X + 12 || Pin.Y < Origin.Y + 24 || Pin.X > Origin.X + Side - 12 ||
+                Pin.Y > Origin.Y + Side - 18)
                 continue;
-            if (bMini)
+            int32 Font = bMini ? 11 : Zoom > 1 ? 15 : 13;
+            auto Info = LabelFont ? FSlateFontInfo(LabelFont, Font + 2)
+                                  : FCoreStyle::GetDefaultFontStyle(TEXT("Bold"), Font);
+            FVector2D Extent = FSlateApplication::Get().GetRenderer()->GetFontMeasureService()->Measure(
+                SiteLabels[Index], Info);
+            FVector2D Choices[] = {
+                Pin - FVector2D(Extent.X * .5, Extent.Y + 8), Pin + FVector2D(-Extent.X * .5, 10),
+                Pin - FVector2D(Extent.X + 12, Extent.Y * .5), Pin + FVector2D(12, -Extent.Y * .5)};
+            FVector2D At = Choices[0];
+            for (auto Candidate : Choices)
             {
-                if (Zoom < 3)
-                    continue;
-                Text(Pos + FVector2D(5, -20), Site.Name, 10, FLinearColor(.97, .95, .84));
+                Candidate.X = FMath::Clamp(Candidate.X, Origin.X + 8,
+                                           FMath::Max(Origin.X + 8, Origin.X + Side - Extent.X - 8));
+                Candidate.Y = FMath::Clamp(Candidate.Y, Origin.Y + 24,
+                                           FMath::Max(Origin.Y + 24, Origin.Y + Side - Extent.Y - 8));
+                FBox2D R(Candidate - FVector2D(6, 3), Candidate + Extent + FVector2D(6, 3));
+                bool Overlap = false;
+                for (const auto &Existing : LabelBoxes)
+                    if (R.Intersect(Existing))
+                    {
+                        Overlap = true;
+                        break;
+                    }
+                At = Candidate;
+                if (!Overlap)
+                {
+                    LabelBoxes.Add(R);
+                    break;
+                }
             }
-            else
-                Text(FVector2D(FMath::Clamp(Pos.X - 55, Origin.X + 4, Origin.X + Side - 135), Pos.Y - 22),
-                     Site.Name, Zoom > 1 ? 14 : 12, FLinearColor(.98, .97, .9));
+            Box(Pin - FVector2D(2), FVector2D(4), FLinearColor(.95, .82, .52));
+            Text(At, SiteLabels[Index], Font, FLinearColor(.98, .98, .94), true);
         }
     for (const auto &Pin : PC->MapMarkers)
     {
-        FVector Point=Pin.Position;
-        if(Pin.Kind==0&&Pin.PlayerId==Mine->GetPlayerId())if(auto* Pawn=GetOwningPlayerPawn())Point=Pawn->GetActorLocation();
+        FVector Point = Pin.Position;
+        if (Pin.Kind == 0 && Pin.PlayerId == Mine->GetPlayerId())
+            if (auto *Pawn = GetOwningPlayerPawn())
+                Point = Pawn->GetActorLocation();
         FVector2D Pos = Project(Point);
         if (Pos.X < Origin.X + 9 || Pos.X > Origin.X + Side - 9 || Pos.Y < Origin.Y + 9 ||
             Pos.Y > Origin.Y + Side - 9)
@@ -143,9 +178,10 @@ int32 UPFTacticalMap::NativePaint(const FPaintArgs &Args, const FGeometry &G, co
         if (Pin.Kind == 0)
         {
             Box(Pos - FVector2D(4), FVector2D(8),
-                Pin.PlayerId == Mine->GetPlayerId() ? FLinearColor::White : FLinearColor(.2, .8, 1));
+                Pin.PlayerId == Mine->GetPlayerId() ? FLinearColor::White
+                                                    : PFHUDStyle::TeamColor(Pin.PlayerId));
             if (!bMini)
-                Text(Pos + FVector2D(7, 5), Pin.Label, 11, FLinearColor(.45, .86, 1));
+                Text(Pos + FVector2D(7, 5), Pin.Label, 11, PFHUDStyle::TeamColor(Pin.PlayerId));
         }
         else
         {
@@ -192,10 +228,24 @@ int32 UPFTacticalMap::NativePaint(const FPaintArgs &Args, const FGeometry &G, co
                     Text(Pos + FVector2D(7, 4), P->GetPlayerName().Left(20), 11, FLinearColor::White);
             }
         }
+    // The local arrow never depends on a delayed team feed and is painted last.
+    APawn *Tracked=GetOwningPlayerPawn();
+    if(!Tracked&&PC)Tracked=Cast<APawn>(PC->GetViewTarget());
+    if(Tracked)
+    {
+        FVector2D At=Project(Tracked->GetActorLocation());
+        At.X=FMath::Clamp(At.X,Origin.X+15,Origin.X+Side-15);At.Y=FMath::Clamp(At.Y,Origin.Y+15,Origin.Y+Side-15);
+        const float Yaw=FMath::DegreesToRadians(PC->GetControlRotation().Yaw);
+        FVector2D Forward(FMath::Sin(Yaw),-FMath::Cos(Yaw)),Right(FMath::Cos(Yaw),FMath::Sin(Yaw));
+        PlayerArrowPoints.Reset();PlayerArrowPoints.Append({At+Forward*12,At-Forward*8+Right*8,At-Forward*3,At-Forward*8-Right*8,At+Forward*12});
+        for(auto Pass:{0,1})FSlateDrawElement::MakeLines(Out,Layer+7+Pass,G.ToPaintGeometry(),PlayerArrowPoints,ESlateDrawEffect::None,Pass?FLinearColor::White:FLinearColor(.015,.025,.04,1),true,Pass?3.5f:8.f);
+        PlayerSpinePoints.Reset();PlayerSpinePoints.Append({At-Forward*2,At+Forward*7});
+        FSlateDrawElement::MakeLines(Out,Layer+9,G.ToPaintGeometry(),PlayerSpinePoints,ESlateDrawEffect::None,FLinearColor(.15,.8,1),true,4.f);
+    }
     Text(Origin + FVector2D(7, 5),
          bMini ? TEXT("N") : FString::Printf(TEXT("N   %.1f×   Wheel zoom · middle drag"), Zoom),
          bMini ? 12 : 13, FLinearColor(.94, .96, .9));
-    return Layer + 5;
+    return Layer + 10;
 }
 FReply UPFTacticalMap::NativeOnMouseButtonDown(const FGeometry &G, const FPointerEvent &E)
 {
@@ -236,8 +286,8 @@ FReply UPFTacticalMap::NativeOnMouseMove(const FGeometry &G, const FPointerEvent
     if (!bDragging)
         return FReply::Unhandled();
     float Side = FMath::Min(G.GetLocalSize().X, G.GetLocalSize().Y) - 32;
-    auto Delta =
-        G.AbsoluteToLocal(E.GetScreenSpacePosition()) - G.AbsoluteToLocal(E.GetLastScreenSpacePosition());
+    auto Delta = G.AbsoluteToLocal(E.GetScreenSpacePosition()) -
+                 G.AbsoluteToLocal(E.GetLastScreenSpacePosition());
     Center += FVector2D(Delta.Y, -Delta.X) * (HalfExtent() * 2 / Zoom / Side);
     ClampCenter();
     return FReply::Handled();

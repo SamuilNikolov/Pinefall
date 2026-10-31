@@ -105,3 +105,16 @@ The native collision derivatives `Art/World/SM_Limestone` and `SM_TrunkCollision
 ## Unreal 0.3 stylized character and reserve derivatives
 
 The active TrailRanger reuses the Quaternius CC0 character/outfit and Universal Animation Library assets already credited above. Sources are the existing Hunter.glb and Animations.glb inputs; no new proprietary character assets were added. Pinefall authors the assembly, local-rest retarget, combat/crouch poses and derived imports. Palette textures retain their CC0 source terms. Native reserve cabins, transport and supply models are original project geometry. Their reused CC0 ground/wood/metal surfaces retain the licenses credited above; the 2K map atlas is original project-generated artwork.
+
+## Native construction and scenery working tree (0.5)
+
+The additional scanned scenery is Poly Haven CC0: [Fir Tree 01](https://polyhaven.com/a/fir_tree_01), [Tree Small 02](https://polyhaven.com/a/tree_small_02), [Island Tree 02](https://polyhaven.com/a/island_tree_02), [Quiver Tree 01](https://polyhaven.com/a/quiver_tree_01), [Grass Bermuda 01](https://polyhaven.com/a/grass_bermuda_01), [Wild Rooibos Bush](https://polyhaven.com/a/wild_rooibos_bush), [Rock Moss Set 01](https://polyhaven.com/a/rock_moss_set_01) and [Rock Face 02](https://polyhaven.com/a/rock_face_02). See [publisher terms](https://polyhaven.com/license) and individual `SourceArt/Scenery/*/provenance.json`. Prepared derivatives select/normalize geometry, assemble instanced grass patches and adapt materials. Source glTF/image checksums and selected buffer-range SHA-256 values are recorded; the upstream full-buffer MD5 is metadata, not a claim of downloading/verifying the complete upstream buffer.
+
+Expansion ground scans are also Poly Haven CC0:
+- [aerial_grass_rock](https://polyhaven.com/a/aerial_grass_rock) — Meadow diffuse, OpenGL normal and roughness inputs.
+- [aerial_sand](https://polyhaven.com/a/aerial_sand) — Sand diffuse, OpenGL normal and roughness inputs.
+- [snow_02](https://polyhaven.com/a/snow_02) — Snow diffuse, OpenGL normal and roughness inputs.
+
+Barlow Condensed SemiBold is used under the SIL Open Font License 1.1. Its font and complete license are under `Unreal/Pinefall/SourceArt/UI/Fonts` (upstream: https://github.com/google/fonts/tree/main/ofl/barlowcondensed). Original HUD symbols, construction geometry, pickaxe, resource bundles, loot halo/beacon shaders, revised house/truck/boat geometry and wheel meshes were made for Pinefall. No Fortnite/Apex assets or branding are included.
+
+`SourceArt/FaunaCoats/NeutralFur-v1.png` is an original AI-generated neutral fur-detail bitmap made for this project; its rest-space material mapping and species colors are original code. Existing animal meshes, rigs and animations retain their previously credited Quaternius CC0 origin. Adding the coat material does not make these temporary stylized meshes realistic production animal models.

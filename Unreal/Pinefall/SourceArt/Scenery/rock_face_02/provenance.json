@@ -1,0 +1,57 @@
+{
+  "asset": "rock_face_02",
+  "source_page": "https://polyhaven.com/a/rock_face_02",
+  "license": "CC0-1.0",
+  "license_url": "https://polyhaven.com/license",
+  "gltf_url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/rock_face_02/rock_face_02_2k.gltf",
+  "upstream_gltf_md5": "7b1b847ea6973314a45fb4ff2c392a03",
+  "original_buffer_url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/rock_face_02/rock_face_02.bin",
+  "original_buffer_md5": "add01c9b573fdddd688acb6378c78c3b",
+  "selected_nodes": "all",
+  "selected_ranges": [
+    {
+      "buffer_view": 0,
+      "offset": 0,
+      "bytes": 196752,
+      "sha256": "b5f16eb314b969b06d491264889fe3b7ca301dc98c7111754662cc9c075dd155"
+    },
+    {
+      "buffer_view": 1,
+      "offset": 196752,
+      "bytes": 196752,
+      "sha256": "7fe5541d5582af8254ea09db524de9d38983d5887b16ceea290ad946b72cf32c"
+    },
+    {
+      "buffer_view": 2,
+      "offset": 393504,
+      "bytes": 131168,
+      "sha256": "ef6f5522ff8ee6baa119f5d94d4038028813e4b85f2c7ac875ee16965b5b2b78"
+    },
+    {
+      "buffer_view": 3,
+      "offset": 524672,
+      "bytes": 177396,
+      "sha256": "bc8aee0f6437dd57c1d87f81c115a2d8950b505fd5474cababf451a809a0ce1b"
+    }
+  ],
+  "textures": [
+    {
+      "path": "textures/rock_face_02_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/rock_face_02/rock_face_02_nor_gl_2k.jpg",
+      "md5": "75fefd78ed2907afe5226b2e135e3a3d",
+      "sha256": "bb1a4cd13b02346f90efc95e71f9e019a7bc4169bd5f5d2b38825694b3c81253"
+    },
+    {
+      "path": "textures/rock_face_02_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/rock_face_02/rock_face_02_diff_2k.jpg",
+      "md5": "263a22b1df5710561739ab3fe891df1d",
+      "sha256": "928fe2b96672ed5104abbeb5eaa7611ac65218d6b4e392f523549426284e2379"
+    },
+    {
+      "path": "textures/rock_face_02_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/rock_face_02/rock_face_02_arm_2k.jpg",
+      "md5": "f97d2c8c50734f828cd3e2d5c1d70f85",
+      "sha256": "06e106bf0d1c885cb245b5a85fb283d00e5871116c5bc8cc39bea150799dd4b8"
+    }
+  ]
+}

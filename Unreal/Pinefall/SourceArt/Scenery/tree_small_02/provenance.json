@@ -1,0 +1,159 @@
+{
+  "asset": "tree_small_02",
+  "source_page": "https://polyhaven.com/a/tree_small_02",
+  "license": "CC0-1.0",
+  "license_url": "https://polyhaven.com/license",
+  "gltf_url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/tree_small_02/tree_small_02_2k.gltf",
+  "upstream_gltf_md5": "7b77f2ca02edf5d7964ca3514e66c6b7",
+  "original_buffer_url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/tree_small_02/tree_small_02.bin",
+  "original_buffer_md5": "7a7019a87e6fe0d7475c0fa2e08d8962",
+  "selected_nodes": "all",
+  "selected_ranges": [
+    {
+      "buffer_view": 0,
+      "offset": 0,
+      "bytes": 753264,
+      "sha256": "0b8f47eb0cb85985783c2bfd913bd3e0c694f3c76a0b5a85150462d4d2679c86"
+    },
+    {
+      "buffer_view": 1,
+      "offset": 753264,
+      "bytes": 753264,
+      "sha256": "7ff1362b12502e686087086e3620a8b0cdb99f83fa82059e8e2cdfe7716da9fb"
+    },
+    {
+      "buffer_view": 2,
+      "offset": 1506528,
+      "bytes": 502176,
+      "sha256": "1af9492e7ea390dae9f6fa6bbfbeb2d4306481c7e25ca66e803e3d76a1545433"
+    },
+    {
+      "buffer_view": 3,
+      "offset": 2008704,
+      "bytes": 502176,
+      "sha256": "48fa3ef2a6387c2d8829abb74e7453671d881e2d3e7cb975246dc5e817f4e369"
+    },
+    {
+      "buffer_view": 4,
+      "offset": 2510880,
+      "bytes": 568884,
+      "sha256": "14e272ef2c03ced183b9382404b0173222a024bd3ec8d2fcb2696becef49933e"
+    },
+    {
+      "buffer_view": 5,
+      "offset": 3079764,
+      "bytes": 20382828,
+      "sha256": "77a8e303d47eec2784469f6c7a5b2566115d987ff10847c99afa14bd9a97b591"
+    },
+    {
+      "buffer_view": 6,
+      "offset": 23462592,
+      "bytes": 20382828,
+      "sha256": "18462c3f74db59f67242caac80d27fb645555f2527677dccbb4fc4094f95624f"
+    },
+    {
+      "buffer_view": 7,
+      "offset": 43845420,
+      "bytes": 13588552,
+      "sha256": "58067e02312689976ccf83099769d3aa121cb32a17182f59f7c1c393c9814d41"
+    },
+    {
+      "buffer_view": 8,
+      "offset": 57433972,
+      "bytes": 13588552,
+      "sha256": "afd864ee2df5f0f2a293eae435cc2c8529bc73d737ee433e52d6dc07e6a0b9f4"
+    },
+    {
+      "buffer_view": 9,
+      "offset": 71022524,
+      "bytes": 23272560,
+      "sha256": "26b73de7166164cd13f7f838540711ab864b232e247873a22a931cbfba145613"
+    },
+    {
+      "buffer_view": 10,
+      "offset": 94295084,
+      "bytes": 191244,
+      "sha256": "ccac534c2e60e46f261cd6e2f46f5679ad14994fe8a921f4610ad57f811cc7a3"
+    },
+    {
+      "buffer_view": 11,
+      "offset": 94486328,
+      "bytes": 191244,
+      "sha256": "0c9c7664e489246c8fefa7bcb96fb492250f895a509bf965a44fe6e2b38afcd0"
+    },
+    {
+      "buffer_view": 12,
+      "offset": 94677572,
+      "bytes": 127496,
+      "sha256": "ec60ccad4b3bc969d0d02034a46d7ddbc9314e3da7ccff5dcac4c4b0b54d0572"
+    },
+    {
+      "buffer_view": 13,
+      "offset": 94805068,
+      "bytes": 127496,
+      "sha256": "b20e0ba4989b7a7ca3f10f6b5adb9733e79716b374300d02d4c73e5979a928ad"
+    },
+    {
+      "buffer_view": 14,
+      "offset": 94932564,
+      "bytes": 169758,
+      "sha256": "009554e6dac064133aa9ef7d2ae1353802498dbb070b666f43f5d2cb83c45b73"
+    }
+  ],
+  "textures": [
+    {
+      "path": "textures/tree_small_02_branch_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_branch_nor_gl_2k.jpg",
+      "md5": "12286d5b329b4fb4203fc155a01b0a04",
+      "sha256": "368505992d867bb50eccc00d77940a7a3eaf32f42de9f536d105407b0d6df3fd"
+    },
+    {
+      "path": "textures/tree_small_02_branch_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_branch_diff_2k.jpg",
+      "md5": "5ba327fc166360fcbb44f2eb04fbd8d8",
+      "sha256": "9032de9e063ee7e3763a6b10d19d89302f5776e85a966b6dd1c3a5634b2a80e1"
+    },
+    {
+      "path": "textures/tree_small_02_branch_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_branch_arm_2k.jpg",
+      "md5": "d6a0921ec6dbeaaf22a4b91d68fe16d1",
+      "sha256": "82da928cc4e8a45c559f6abe8053227c7ae6cc14eb8d026a30c203aedd087042"
+    },
+    {
+      "path": "textures/tree_small_02_leaves_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_leaves_nor_gl_2k.jpg",
+      "md5": "ab509e55b5d763f68195e0eb257bb5e3",
+      "sha256": "40c956e345430562cdb4d0470c7d499aa160f1fa3dd7555d88be2dedf0d7ff2e"
+    },
+    {
+      "path": "textures/tree_small_02_leaves_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_leaves_diff_2k.jpg",
+      "md5": "021ddc0cf1d94b99716a106cede576c7",
+      "sha256": "6c984a46861562f2a20381c54106aa5e07ce0d3fce785907f8d263157e7561af"
+    },
+    {
+      "path": "textures/tree_small_02_leaves_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_leaves_arm_2k.jpg",
+      "md5": "4b88d67947fe214f2afc65beb83bee02",
+      "sha256": "a126c0d92b60c44c0664e4d3651831970e259b0d5a1fb39ebb67081cbecaca96"
+    },
+    {
+      "path": "textures/tree_small_02_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_nor_gl_2k.jpg",
+      "md5": "064c3e1d08f010c732e7af6395a66769",
+      "sha256": "cb7897fc0aea602964836116ecf631614ece2970f579647fe1070bccb428fe89"
+    },
+    {
+      "path": "textures/tree_small_02_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_diff_2k.jpg",
+      "md5": "ff4d82640b7e0daaec0b71bfc1cef76c",
+      "sha256": "4ab3210b6ec6bb1181145500bca71d1c1f81ead6baaa8600f5979c2cec50c6a4"
+    },
+    {
+      "path": "textures/tree_small_02_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_arm_2k.jpg",
+      "md5": "038ad0c1968be6802b20d084cdf30603",
+      "sha256": "e96b4e84e9786b982d01562e0d249f6e58db1b656dd511db7c034d6ed60b1c92"
+    }
+  ]
+}

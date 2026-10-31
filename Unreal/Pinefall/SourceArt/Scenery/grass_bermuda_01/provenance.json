@@ -1,0 +1,513 @@
+{
+  "asset": "grass_bermuda_01",
+  "source_page": "https://polyhaven.com/a/grass_bermuda_01",
+  "license": "CC0-1.0",
+  "license_url": "https://polyhaven.com/license",
+  "gltf_url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/grass_bermuda_01/grass_bermuda_01_2k.gltf",
+  "upstream_gltf_md5": "9d5408f29b56cea1dccaa6e10f1c15c1",
+  "original_buffer_url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/grass_bermuda_01/grass_bermuda_01.bin",
+  "original_buffer_md5": "2940aa3405004b62983fd70bede8e47f",
+  "selected_nodes": "all",
+  "selected_ranges": [
+    {
+      "buffer_view": 0,
+      "offset": 0,
+      "bytes": 144,
+      "sha256": "d034325384d59ccc2e80d9f032e3addf12b44ea2ad02c35d888deee5e3edc0b3"
+    },
+    {
+      "buffer_view": 1,
+      "offset": 144,
+      "bytes": 144,
+      "sha256": "d7db066d8e669dea9863b05307395a07cb29e6eab4f55d68c7132c3a5b3a1338"
+    },
+    {
+      "buffer_view": 2,
+      "offset": 288,
+      "bytes": 96,
+      "sha256": "646db6852a4e4c0440ca0d61e97ffb6be292763e607d6dfa886677f8862072f7"
+    },
+    {
+      "buffer_view": 3,
+      "offset": 384,
+      "bytes": 72,
+      "sha256": "c54a0a8d78bd3545f55570871295e7d6cdaa3918161871bf9d3bb6b32b47ebb5"
+    },
+    {
+      "buffer_view": 4,
+      "offset": 456,
+      "bytes": 144,
+      "sha256": "972fe19e3652918eba87cad7db458686865ce88b2fa8586c3476d8f3f22000e0"
+    },
+    {
+      "buffer_view": 5,
+      "offset": 600,
+      "bytes": 144,
+      "sha256": "75848a394f830bc882d7b63ad12f0c813d5156d242528a0aaa12ba10c47bd74f"
+    },
+    {
+      "buffer_view": 6,
+      "offset": 744,
+      "bytes": 96,
+      "sha256": "646db6852a4e4c0440ca0d61e97ffb6be292763e607d6dfa886677f8862072f7"
+    },
+    {
+      "buffer_view": 7,
+      "offset": 840,
+      "bytes": 216,
+      "sha256": "4bf46e9dc5526010967023df897a305fa3db13a0839e73f7c33bae23b8b73e96"
+    },
+    {
+      "buffer_view": 8,
+      "offset": 1056,
+      "bytes": 216,
+      "sha256": "6c2c13c17cf1f41be9f6954623927d380b3a3515d5d12aeef846217bfb3cfdd7"
+    },
+    {
+      "buffer_view": 9,
+      "offset": 1272,
+      "bytes": 144,
+      "sha256": "c2ac51fd9c448f4b25bf4eea6044447b6ff9d43ef36e6a449cc3404ab2691b8b"
+    },
+    {
+      "buffer_view": 10,
+      "offset": 1416,
+      "bytes": 114,
+      "sha256": "d31a54a7bedb8c657c7882e1199177ac33908455d30313114ba8a65c2b06dbcb"
+    },
+    {
+      "buffer_view": 11,
+      "offset": 1532,
+      "bytes": 192,
+      "sha256": "b0377d16a2d4b50bb6241fea686a3bfc7118a0a02f127271e2ef0b7630f923c0"
+    },
+    {
+      "buffer_view": 12,
+      "offset": 1724,
+      "bytes": 192,
+      "sha256": "df4e67e66427739e452a8c812fccbed6830b5ed3c551e723782a86b025ffbb0d"
+    },
+    {
+      "buffer_view": 13,
+      "offset": 1916,
+      "bytes": 128,
+      "sha256": "722bae6585ff6755f0c6db17727a8a0bf24c0899a840a86de71bbe6dbd6be523"
+    },
+    {
+      "buffer_view": 14,
+      "offset": 2044,
+      "bytes": 102,
+      "sha256": "39eccd2b475641899245e705e3202a0b1c0dcc2b11ee8f08315f541d9d53b654"
+    },
+    {
+      "buffer_view": 15,
+      "offset": 2148,
+      "bytes": 108,
+      "sha256": "04261a3172dfbdea7ca7f167a0d7e372ba352aa3d4a7f283580e22defb58ab13"
+    },
+    {
+      "buffer_view": 16,
+      "offset": 2256,
+      "bytes": 108,
+      "sha256": "e34edb8d75494202f249a7cec4ac862497fcb56aa6c939dd120ca4a23a52a2ab"
+    },
+    {
+      "buffer_view": 17,
+      "offset": 2364,
+      "bytes": 72,
+      "sha256": "cf9c37ec811b3a08098618e7309f16ab6801489a7f0aa69ec9662666fd360a38"
+    },
+    {
+      "buffer_view": 18,
+      "offset": 2436,
+      "bytes": 48,
+      "sha256": "f31c3d98607b441a6f14ab3f5a1ca49bdca048446a301881270b4d5bdb7f7c95"
+    },
+    {
+      "buffer_view": 19,
+      "offset": 2484,
+      "bytes": 252,
+      "sha256": "b4fdfa853351d430ca0be3d5eb189a6e1d17dce15c0a022a4ece7009cc45aea8"
+    },
+    {
+      "buffer_view": 20,
+      "offset": 2736,
+      "bytes": 252,
+      "sha256": "66a15d944fd104a496c345fe31deade6cd9b24265ba8afc0deb6a20c5a5a3044"
+    },
+    {
+      "buffer_view": 21,
+      "offset": 2988,
+      "bytes": 168,
+      "sha256": "3cf241b8df79b57c030d2877283f9de3b110df9114e000ec9fc6c19f6133dbc4"
+    },
+    {
+      "buffer_view": 22,
+      "offset": 3156,
+      "bytes": 120,
+      "sha256": "07694419aca54c0818c1b805ef424c9c1e03e13619c8d023c92813677de16c3b"
+    },
+    {
+      "buffer_view": 23,
+      "offset": 3276,
+      "bytes": 156,
+      "sha256": "e70cabbc9dbfbeba033039dd3286cd27a650fb4fba6d5f78adf436410c998160"
+    },
+    {
+      "buffer_view": 24,
+      "offset": 3432,
+      "bytes": 156,
+      "sha256": "90961f5bcdd0780113ff52e6ce60e6d3b8a9b15037c033c03757d7b96f0dbccf"
+    },
+    {
+      "buffer_view": 25,
+      "offset": 3588,
+      "bytes": 104,
+      "sha256": "71a7686f9c520deaf15cd578027c5b5d391cd39bb35b1667c4d21b1503962f30"
+    },
+    {
+      "buffer_view": 26,
+      "offset": 3692,
+      "bytes": 84,
+      "sha256": "dc0e3775db4f76a5fe80b25d79b812277707b041fda9fa262ac5624734030622"
+    },
+    {
+      "buffer_view": 27,
+      "offset": 3776,
+      "bytes": 288,
+      "sha256": "5959a52b2c8507c73ef8349a518defd6dab08d8728be7c75a3599776b5aa4693"
+    },
+    {
+      "buffer_view": 28,
+      "offset": 4064,
+      "bytes": 288,
+      "sha256": "b2ac88bc9ef19517ff728347d92f439dbefacaaaa67f90ac8d5c7c0349f3c03e"
+    },
+    {
+      "buffer_view": 29,
+      "offset": 4352,
+      "bytes": 192,
+      "sha256": "33468686ce3b5098ca7c0130e5eace93f4925246b0a7e7c0b8bd7bb0bdb1615d"
+    },
+    {
+      "buffer_view": 30,
+      "offset": 4544,
+      "bytes": 144,
+      "sha256": "9436b47d48175ce69c9182cf7f0cd60644177f37833e95a1513c370b59578ff0"
+    },
+    {
+      "buffer_view": 31,
+      "offset": 4688,
+      "bytes": 336,
+      "sha256": "20cbce191d19569caf73a35606320738675f0269fd1c2f28940fe57ee218e76d"
+    },
+    {
+      "buffer_view": 32,
+      "offset": 5024,
+      "bytes": 336,
+      "sha256": "679fb91ea8a63781089d7f6d48100f8ded9386ab20955653dcc6f4c1f9fa021d"
+    },
+    {
+      "buffer_view": 33,
+      "offset": 5360,
+      "bytes": 224,
+      "sha256": "a028760dec94e65d8eb9cd30a2a930305212a6e6a8f775cd265b3a00e27e370f"
+    },
+    {
+      "buffer_view": 34,
+      "offset": 5584,
+      "bytes": 180,
+      "sha256": "9c75d3b20562127b2fa587356f1fbe5b3a52b303beb6ece4344f18a31be0d993"
+    },
+    {
+      "buffer_view": 35,
+      "offset": 5764,
+      "bytes": 1500,
+      "sha256": "59851536e3f94d1053f5a3d548805762215d66b2e33146cc26a761cdfd4f4c92"
+    },
+    {
+      "buffer_view": 36,
+      "offset": 7264,
+      "bytes": 1500,
+      "sha256": "d2124e7ed04679edb98ae97ee55198570a264d16ff16d490bd9fb9ed06117f9b"
+    },
+    {
+      "buffer_view": 37,
+      "offset": 8764,
+      "bytes": 1000,
+      "sha256": "92b1ffec85f2632cc6c7a3a18496599a5f7b5d376dc07e77602e0435d0f1988b"
+    },
+    {
+      "buffer_view": 38,
+      "offset": 9764,
+      "bytes": 882,
+      "sha256": "38a8705c213ff15c375435aa2421ede1986ead245f6a56b2bc331c9f13028ead"
+    },
+    {
+      "buffer_view": 39,
+      "offset": 10648,
+      "bytes": 1416,
+      "sha256": "49761b65c41bb53ce5ca2eab2457f284eb2c43e0b85e3a972911a4827544665c"
+    },
+    {
+      "buffer_view": 40,
+      "offset": 12064,
+      "bytes": 1416,
+      "sha256": "caf788094b4408362d6e246cbdb8d4463456286b88e246cb10d716f415525486"
+    },
+    {
+      "buffer_view": 41,
+      "offset": 13480,
+      "bytes": 944,
+      "sha256": "6634aae365f854c236d8e227d83b8c9bf32fadb4f2254561739a2badeccb71d8"
+    },
+    {
+      "buffer_view": 42,
+      "offset": 14424,
+      "bytes": 840,
+      "sha256": "d56effa2eadddc25423e069177371657ad777cf484f712473f0bce6c677f76f1"
+    },
+    {
+      "buffer_view": 43,
+      "offset": 15264,
+      "bytes": 1296,
+      "sha256": "90518f62fc42d34eca72341bf42ccf10dae94621252cae7f6f2193394960142c"
+    },
+    {
+      "buffer_view": 44,
+      "offset": 16560,
+      "bytes": 1296,
+      "sha256": "2630ad302b1702d4c1ec67d0f43402a30d739509bf4f013ba7be1794b68bb66d"
+    },
+    {
+      "buffer_view": 45,
+      "offset": 17856,
+      "bytes": 864,
+      "sha256": "d87b425e82c2b30f627c105f229322e3c2ce3e63f07a3e6b34876a9ea934c2c9"
+    },
+    {
+      "buffer_view": 46,
+      "offset": 18720,
+      "bytes": 768,
+      "sha256": "4e6700502a8f3e927ba476e4659acc06dddeb3fb3935e5587cdeec5470604c6a"
+    },
+    {
+      "buffer_view": 47,
+      "offset": 19488,
+      "bytes": 2712,
+      "sha256": "7dca5b2c27713f2428f6434c64c5bb5e4bbba56c31f4aea1f8f20d8b7c9a0e7e"
+    },
+    {
+      "buffer_view": 48,
+      "offset": 22200,
+      "bytes": 2712,
+      "sha256": "fd1fbc1008b2141ce3228cabb941d23247df5ae0671389a747d49a4615c98c8e"
+    },
+    {
+      "buffer_view": 49,
+      "offset": 24912,
+      "bytes": 1808,
+      "sha256": "00162b5617d9f9fa1493a00b45b05bcd56d89919ea28317b1da3296cb5c319a3"
+    },
+    {
+      "buffer_view": 50,
+      "offset": 26720,
+      "bytes": 1608,
+      "sha256": "3a05f0a973e8c407e3cff76333cd2a3f5b3805a09abad02d203e568a9feca480"
+    },
+    {
+      "buffer_view": 51,
+      "offset": 28328,
+      "bytes": 204,
+      "sha256": "14bbd345ee99f79ec311ca975da44f499e9d4ecf322db92e78e35b01c28d419d"
+    },
+    {
+      "buffer_view": 52,
+      "offset": 28532,
+      "bytes": 204,
+      "sha256": "8020fcb66507e87714c1463b2d64de60877223eceb6ab5422472a955d2a0f645"
+    },
+    {
+      "buffer_view": 53,
+      "offset": 28736,
+      "bytes": 136,
+      "sha256": "023a1a3049b211abe4bdfa0bf1e37f270f58aa1279889bc42fc0c1cf37363cfa"
+    },
+    {
+      "buffer_view": 54,
+      "offset": 28872,
+      "bytes": 90,
+      "sha256": "b5bc75d0500ac7e3d7ee50cee905c9bdbfa4e7f1714e85ed8f2c23893ad3e3bf"
+    },
+    {
+      "buffer_view": 55,
+      "offset": 28964,
+      "bytes": 204,
+      "sha256": "aca8115931d775443d360a5c574b4e5fd358d5a6e632ce089037f03cc65962d7"
+    },
+    {
+      "buffer_view": 56,
+      "offset": 29168,
+      "bytes": 204,
+      "sha256": "8020fcb66507e87714c1463b2d64de60877223eceb6ab5422472a955d2a0f645"
+    },
+    {
+      "buffer_view": 57,
+      "offset": 29372,
+      "bytes": 136,
+      "sha256": "8a56d8596dd881dce93aa822b59a3ff4a66f103ab08a6eb99b060661ce59ed39"
+    },
+    {
+      "buffer_view": 58,
+      "offset": 29508,
+      "bytes": 144,
+      "sha256": "b3747927a56ada46d2151baf4b91249d686adaf4d793dedd269c449ce0080690"
+    },
+    {
+      "buffer_view": 59,
+      "offset": 29652,
+      "bytes": 144,
+      "sha256": "a59002d15ccc9271292e6c69c8c6564f63d25c761b8d933f6ae5f4fb88a1c591"
+    },
+    {
+      "buffer_view": 60,
+      "offset": 29796,
+      "bytes": 96,
+      "sha256": "332bbc3d6f9f5df3d2f3be89f0060ff8c27192dcf2ba04bd65d7434f4519f52a"
+    },
+    {
+      "buffer_view": 61,
+      "offset": 29892,
+      "bytes": 144,
+      "sha256": "90f9d9d000a0c1935bf05b35c07b2cb23bddc9c0cf2a0de4d9aa744bc1e5e8ce"
+    },
+    {
+      "buffer_view": 62,
+      "offset": 30036,
+      "bytes": 144,
+      "sha256": "92e834d590b4edce59f4a28401b28762f723ba3306ac553006b5fc57794d9478"
+    },
+    {
+      "buffer_view": 63,
+      "offset": 30180,
+      "bytes": 96,
+      "sha256": "332bbc3d6f9f5df3d2f3be89f0060ff8c27192dcf2ba04bd65d7434f4519f52a"
+    },
+    {
+      "buffer_view": 64,
+      "offset": 30276,
+      "bytes": 240,
+      "sha256": "3e3d7502da02cccb49c98b61cf82690dfac8adce024acd49f5125fe20e82d636"
+    },
+    {
+      "buffer_view": 65,
+      "offset": 30516,
+      "bytes": 240,
+      "sha256": "dda158034f1205111a17f7ee52d2e50aa18e3d57c8c3ef4a8ada7b83f22532a5"
+    },
+    {
+      "buffer_view": 66,
+      "offset": 30756,
+      "bytes": 160,
+      "sha256": "845c607c9d6bbf9739d3be056c62b05dfadf023700cb247b5b05a30df97b4d6c"
+    },
+    {
+      "buffer_view": 67,
+      "offset": 30916,
+      "bytes": 108,
+      "sha256": "530e962a1707194f04e9caa676623177830134be800c5813bad931ebaa258797"
+    },
+    {
+      "buffer_view": 68,
+      "offset": 31024,
+      "bytes": 132,
+      "sha256": "0657a906b5177a3efa31489b567c965dc385d7cf6648899957b8fedc8b1394f3"
+    },
+    {
+      "buffer_view": 69,
+      "offset": 31156,
+      "bytes": 132,
+      "sha256": "197bc41408ddabe64c47959ea30c10a8f641bc673da40169d03f1c301346c9a0"
+    },
+    {
+      "buffer_view": 70,
+      "offset": 31288,
+      "bytes": 88,
+      "sha256": "a2ebccec0bb3cbd93f5e11168470757fe1106f2e739f3750eeff0060c218e24d"
+    },
+    {
+      "buffer_view": 71,
+      "offset": 31376,
+      "bytes": 60,
+      "sha256": "ed2f8d879bdee583572918aeb7319f3ff574c77ebad568cf2a1ac2f09c9d3963"
+    },
+    {
+      "buffer_view": 72,
+      "offset": 31436,
+      "bytes": 132,
+      "sha256": "696bd95889c393653a514bd7bcb26e2e422b6b4c5cc5987986dfb7e8f97293d2"
+    },
+    {
+      "buffer_view": 73,
+      "offset": 31568,
+      "bytes": 132,
+      "sha256": "cfff93c3a7da486f5b70198e7baa509e39d5b306fd401d7185fc6960442bf8fe"
+    },
+    {
+      "buffer_view": 74,
+      "offset": 31700,
+      "bytes": 88,
+      "sha256": "23ca649cb8e9fb614c76359de1c15591846f181e8a72544a6299a1370d19b20c"
+    },
+    {
+      "buffer_view": 75,
+      "offset": 31788,
+      "bytes": 60,
+      "sha256": "d6be424018a50c7278eb02f21a43d7a1e7b89940abd61d655ded1db14859c360"
+    },
+    {
+      "buffer_view": 76,
+      "offset": 31848,
+      "bytes": 132,
+      "sha256": "91c4ed8e8a67453ebab3b7b5469fcacb8a0bb8713fe56049c687ce91464d9042"
+    },
+    {
+      "buffer_view": 77,
+      "offset": 31980,
+      "bytes": 132,
+      "sha256": "cd78a414d3473f7a673be30d38a48e9197175947e5840abc63d0ae67c334ee9b"
+    },
+    {
+      "buffer_view": 78,
+      "offset": 32112,
+      "bytes": 88,
+      "sha256": "f43f7c0bd8cf3b13237ed0abf6befe88274a676c549e14bc77441fc1a0ce637d"
+    },
+    {
+      "buffer_view": 79,
+      "offset": 32200,
+      "bytes": 60,
+      "sha256": "f25532433d9e4986bbc10201085f0c0f0805bf635d1cd038991cf57c39ce855a"
+    }
+  ],
+  "textures": [
+    {
+      "path": "textures/grass_bermuda_01_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/grass_bermuda_01/grass_bermuda_01_nor_gl_2k.jpg",
+      "md5": "95ce5f93d1acf2844129597d132ea9ae",
+      "sha256": "d8a16471065a1206e455d0c4128694b56d265d7cb9908718fc83c581fddb1dc8"
+    },
+    {
+      "path": "textures/grass_bermuda_01_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/grass_bermuda_01/grass_bermuda_01_diff_2k.jpg",
+      "md5": "16d1d5cccc2966fff5abeeb2e91b44a2",
+      "sha256": "30183c203739dee9812b70f21916fcdcd88719dcfe4fa3270d8ce208369ec933"
+    },
+    {
+      "path": "textures/grass_bermuda_01_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/grass_bermuda_01/grass_bermuda_01_arm_2k.jpg",
+      "md5": "9410e1cda53af41a242399ea257d9f23",
+      "sha256": "ab8f1a577b768906222f52c7e51855408c795e497344b15e337bf87ec0aabd1f"
+    }
+  ]
+}

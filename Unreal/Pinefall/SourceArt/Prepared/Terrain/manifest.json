@@ -1,0 +1,32 @@
+[
+  {
+    "role": "Forest",
+    "source_stem": "forest_leaves_02",
+    "normal_space": "DirectX tangent XY",
+    "channels": "R normal X, G normal Y, B roughness, A reserved 1"
+  },
+  {
+    "role": "Rock",
+    "source_stem": "rocky_terrain",
+    "normal_space": "DirectX tangent XY",
+    "channels": "R normal X, G normal Y, B roughness, A reserved 1"
+  },
+  {
+    "role": "Meadow",
+    "source_stem": "Expansion/Meadow",
+    "normal_space": "DirectX tangent XY",
+    "channels": "R normal X, G normal Y, B roughness, A reserved 1"
+  },
+  {
+    "role": "Sand",
+    "source_stem": "Expansion/Sand",
+    "normal_space": "DirectX tangent XY",
+    "channels": "R normal X, G normal Y, B roughness, A reserved 1"
+  },
+  {
+    "role": "Snow",
+    "source_stem": "Expansion/Snow",
+    "normal_space": "DirectX tangent XY",
+    "channels": "R normal X, G normal Y, B roughness, A reserved 1"
+  }
+]

@@ -1,4 +1,12 @@
 #include "PFCharacter.h"
+#include "PFAnimalHitQueries.h"
+#include "Engine/DamageEvents.h"
+#include "PFPickaxeDamageType.h"
+#include "PFConstructionComponent.h"
+#include "PFConstructionSubsystem.h"
+#include "PFConstructionWorld.h"
+#include "PFBuildPiece.h"
+#include "Components/InstancedStaticMeshComponent.h"
 #include "PFMovementComponent.h"
 #include "PFPlayerController.h"
 #include "PFGameMode.h"
@@ -41,6 +49,7 @@ APFCharacter::APFCharacter(const FObjectInitializer &Init)
 {
     PrimaryActorTick.bCanEverTick = true;
     Inventory = CreateDefaultSubobject<UPFInventoryComponent>(TEXT("Inventory"));
+    Construction = CreateDefaultSubobject<UPFConstructionComponent>(TEXT("Construction"));
     HitHistory = CreateDefaultSubobject<UPFHitHistoryComponent>(TEXT("HitHistory"));
     bReplicates = true;
     SetReplicateMovement(true);
@@ -229,9 +238,9 @@ void APFCharacter::Tick(float Delta)
         Camera->SetFieldOfView(
             FMath::FInterpTo(Camera->FieldOfView, bAiming ? Weapon.AimFOV : TravelFOV, Delta, 16));
         GetMesh()->SetOwnerNoSee(bFirstPerson || Vehicle != nullptr);
-        WorldWeapon->SetVisibility(!Vehicle);
+        WorldWeapon->SetVisibility(!Vehicle && Construction->Mode==EPFConstructionMode::Combat);
         WorldWeapon->SetOwnerNoSee(bFirstPerson);
-        ViewWeapon->SetVisibility(!Vehicle && bFirstPerson && Health > 0 &&
+        ViewWeapon->SetVisibility(Construction->Mode==EPFConstructionMode::Combat && !Vehicle && bFirstPerson && Health > 0 &&
                                   !(AimAlpha > .92f && Weapon.AimFOV <= 35));
         if (bFireHeld && AcceptsInput() && GetWorld()->GetTimeSeconds() >= NextLocalShot)
             FireLocal();
@@ -241,21 +250,20 @@ void APFCharacter::Tick(float Delta)
             FocusTimer = .1f;
             FHitResult Focus;
             FCollisionQueryParams Query(SCENE_QUERY_STAT(PFPickupFocus), false, this);
-            GetWorld()->LineTraceSingleByChannel(Focus, Camera->GetComponentLocation(),
-                                                 Camera->GetComponentLocation() +
-                                                     Camera->GetForwardVector() * 400,
-                                                 ECC_GameTraceChannel1, Query);
-            FocusedPickup = Cast<APFWorldPickup>(Focus.GetActor());
-            FocusedVehicle = Cast<APFVehicle>(Focus.GetActor());
+            FVector ViewLocation;FRotator ViewRotation;Controller->GetPlayerViewPoint(ViewLocation,ViewRotation);
+            float CameraOffset=FVector::Dist(ViewLocation,GetActorLocation());
+            GetWorld()->LineTraceSingleByChannel(Focus,ViewLocation,ViewLocation+ViewRotation.Vector()*(400+CameraOffset),ECC_GameTraceChannel1,Query);
+            float Reach=FVector::Dist(Focus.ImpactPoint,GetActorLocation());
+            bool Alive=CanFight();
+            FocusedPickup=Alive&&Reach<=350?Cast<APFWorldPickup>(Focus.GetActor()):nullptr;
+            FocusedVehicle=Alive&&Reach<=450?Cast<APFVehicle>(Focus.GetActor()):nullptr;
+            FocusedBuild=Alive&&Reach<=330?Cast<APFBuildPiece>(Focus.GetActor()):nullptr;
         }
         if (auto *Match = GetWorld()->GetGameState<APFMatchState>())
         {
             auto *Water = Cast<APFWaterBody>(GetPhysicsVolume());
             bool Underwater = Water && Camera->GetComponentLocation().Z < Water->SurfaceHeight() - 5;
-            float Weight = Underwater ? .75f
-                           : Match->Phase == EPFRoundPhase::Active && Match->Outside(GetActorLocation())
-                               ? .65f
-                               : 0;
+            float Weight = Underwater ? .75f : 0.f;
             Camera->PostProcessBlendWeight =
                 FMath::FInterpTo(Camera->PostProcessBlendWeight, Weight, Delta, 4);
             Camera->PostProcessSettings.bOverride_SceneColorTint = true;
@@ -321,8 +329,8 @@ void APFCharacter::CreateActions()
                    EKeys::RightMouseButton,
                    EKeys::R,
                    EKeys::V,
-                   EKeys::One,
-                   EKeys::Two};
+                   EKeys::Two,
+                   EKeys::Three};
     for (int32 Index = 0; Index < 9; Index++)
         Mapping->MapKey(Actions[Index + 2], Keys[Index]);
 }
@@ -358,13 +366,16 @@ void APFCharacter::SetupPlayerInputComponent(UInputComponent *Component)
     Input->BindAction(Actions[4], ETriggerEvent::Started, this, &APFCharacter::StartCrouch);
     Input->BindAction(Actions[4], ETriggerEvent::Completed, this, &APFCharacter::EndCrouch);
     Input->BindAction(Actions[5], ETriggerEvent::Started, this, &APFCharacter::StartFire);
-    Input->BindAction(Actions[5], ETriggerEvent::Completed, this, &APFCharacter::StopFire);
+    Input->BindAction(Actions[5], ETriggerEvent::Completed, this, &APFCharacter::FireReleasedInput);
+    Input->BindAction(Actions[5], ETriggerEvent::Canceled, this, &APFCharacter::StopFire);
     Input->BindAction(Actions[6], ETriggerEvent::Started, this, &APFCharacter::StartAim);
-    Input->BindAction(Actions[6], ETriggerEvent::Completed, this, &APFCharacter::StopAim);
+    Input->BindAction(Actions[6], ETriggerEvent::Completed, this, &APFCharacter::AimReleasedInput);
+    Input->BindAction(Actions[6], ETriggerEvent::Canceled, this, &APFCharacter::StopAim);
     Input->BindAction(Actions[7], ETriggerEvent::Started, this, &APFCharacter::Reload);
     Input->BindAction(Actions[8], ETriggerEvent::Started, this, &APFCharacter::ToggleCamera);
     Input->BindAction(Actions[9], ETriggerEvent::Started, this, &APFCharacter::WeaponOne);
     Input->BindAction(Actions[10], ETriggerEvent::Started, this, &APFCharacter::WeaponTwo);
+    Construction->Bind(Component);
     AddMapping();
 }
 void APFCharacter::Move(const FInputActionValue &Value)
@@ -456,6 +467,7 @@ void APFCharacter::EndCrouch()
 }
 void APFCharacter::StartFire()
 {
+    if(Construction->PrimaryPressed())return;
     if (AcceptsInput())
     {
         bFireHeld = true;
@@ -464,10 +476,12 @@ void APFCharacter::StartFire()
 }
 void APFCharacter::StopFire()
 {
+    Construction->CancelHeldInput();
     bFireHeld = false;
 }
 void APFCharacter::StartAim()
 {
+    if(Construction->SecondaryPressed())return;
     if (AcceptsInput())
     {
         bAiming = true;
@@ -487,6 +501,7 @@ void APFCharacter::ServerAim_Implementation(bool Value)
 }
 void APFCharacter::Reload()
 {
+    if(Construction->Rotate())return;
     if (!Vehicle && FocusedVehicle.IsValid())
     {
         ServerVehicleInteract(FocusedVehicle.Get(), true);
@@ -502,11 +517,13 @@ void APFCharacter::ToggleCamera()
 }
 void APFCharacter::WeaponOne()
 {
+    if(AcceptsInput())Construction->Combat();
     if (AcceptsInput())
         ServerEquip(TEXT("Ridgeline"));
 }
 void APFCharacter::WeaponTwo()
 {
+    if(AcceptsInput())Construction->Combat();
     if (AcceptsInput())
         ServerEquip(TEXT("ServiceNine"));
 }
@@ -601,7 +618,7 @@ void APFCharacter::ServerFire_Implementation(FVector_NetQuantize AimPoint, uint3
     if (bCombatProbe)
         UE_LOG(LogTemp, Display, TEXT("PF_COMBAT_REQUEST age=%.3f ammo=%d seq=%u"), Now - ViewTime, Ammo,
                Sequence);
-    if (!CanFight() || WeaponId.IsNone() || bReloading || Ammo <= 0 || Sequence <= ServerSequence ||
+    if (!CanFight() || Construction->Mode!=EPFConstructionMode::Combat || WeaponId.IsNone() || bReloading || Ammo <= 0 || Sequence <= ServerSequence ||
         AimPoint.ContainsNaN() || !FMath::IsFinite(ViewTime) ||
         Now - ViewTime > UPFHitHistoryComponent::MaxRewindSeconds || ViewTime > Now + .075 ||
         Now + .015 < NextServerShot)
@@ -642,6 +659,9 @@ void APFCharacter::ServerFire_Implementation(FVector_NetQuantize AimPoint, uint3
                         bHit = true;
                     }
                 }
+    FHitResult AnimalHit;
+    if(GetWorld()->GetSubsystem<UPFAnimalHitQueries>()->Trace(Start,End,AnimalHit)&&AnimalHit.Distance<Nearest)
+    {Hit=AnimalHit;bHit=true;}
     if (bHit)
     {
         if (bCombatProbe)
@@ -674,6 +694,15 @@ void APFCharacter::ServerFire_Implementation(FVector_NetQuantize AimPoint, uint3
                                                    Controller, this, UDamageType::StaticClass());
             if (Actual > 0)
                 ClientConfirmed(Actual, false, Animal->Health <= 0, false, Animal);
+        }
+        else if(auto *Build=Cast<APFBuildPiece>(Hit.GetActor()))
+        {
+            float Actual=UGameplayStatics::ApplyPointDamage(Build,Damage,Direction.GetSafeNormal(),Hit,Controller,this,UDamageType::StaticClass());
+            if(Actual>0)ClientConfirmed(Actual,false,Build->Health<=0,false,Build);
+        }
+        else if(auto *Registry=GetWorld()->GetSubsystem<UPFConstructionSubsystem>();Registry&&Registry->Manager&&Hit.Item>=0&&Hit.GetComponent()&&Hit.GetComponent()->IsA<UInstancedStaticMeshComponent>())
+        {
+            int32 Yield;uint8 Material;float Fraction;Registry->Manager->DamageHarvest(Hit,Damage,Yield,Material,Fraction);
         }
         else if (auto *Target = Cast<APFRangeTarget>(Hit.GetActor()))
         {
@@ -771,7 +800,7 @@ float APFCharacter::TakeDamage(float Amount, FDamageEvent const &Event, AControl
     }
     float Factor = ArmorTier == 1 ? .25f : ArmorTier == 3 ? .5f : .35f;
     float Old = Health,
-          Absorbed = bEnvironmentalDamage ? 0 : FMath::Min(Armor, FMath::CeilToFloat(Amount * Factor));
+          Absorbed = (bEnvironmentalDamage || (Event.DamageTypeClass&&Event.DamageTypeClass->IsChildOf(UPFPickaxeDamageType::StaticClass()))) ? 0 : FMath::Min(Armor, FMath::CeilToFloat(Amount * Factor));
     Armor -= Absorbed;
     ServerRevive(false);
     Health = FMath::Max(0.f, Health - (Amount - Absorbed));
@@ -863,6 +892,23 @@ void APFCharacter::RunCombatViewProbe()
     FString Mode;
     if (!IsLocallyControlled() || !FParse::Value(FCommandLine::Get(), TEXT("PFCombatView="), Mode))
         return;
+    if(RunConstructionViewProbe(Mode))return;
+    struct FBiomeView{const TCHAR *Name;FVector2D Point;float Yaw;};
+    const FBiomeView Views[]={
+        {TEXT("Forest"),{-41000,-17000},45},{TEXT("Meadow"),{-2000,10000},30},
+        {TEXT("Jungle"),{-4000,61000},-70},{TEXT("Desert"),{-66000,-67000},40},
+        {TEXT("Snow"),{66000,65000},-120},{TEXT("Highland"),{68000,-53000},-45}};
+    for(const auto &View:Views)if(Mode==View.Name&&HasAuthority())
+    {
+        FVector Point(View.Point,0);FHitResult Ground;FCollisionQueryParams Query(SCENE_QUERY_STAT(PFBiomeCapture),false,this);
+        if(GetWorld()->LineTraceSingleByObjectType(Ground,Point+FVector(0,0,24000),Point-FVector(0,0,20000),FCollisionObjectQueryParams(ECC_WorldStatic),Query))SetActorLocation(Ground.ImpactPoint+FVector(0,0,100));
+        Controller->SetControlRotation(FRotator(-5,View.Yaw,0));bFirstPerson=false;
+        FRotator ShotRotation=Controller->GetControlRotation();FVector Anchor=GetActorLocation()+FVector(0,0,60);
+        FVector ShotPosition=Anchor-ShotRotation.Vector()*400+FRotationMatrix(ShotRotation).GetUnitAxis(EAxis::Y)*80;FHitResult Cover;
+        if(GetWorld()->LineTraceSingleByChannel(Cover,Anchor,ShotPosition,ECC_Camera,Query))ShotPosition=Cover.ImpactPoint+Cover.ImpactNormal*15;
+        auto *SceneCamera=GetWorld()->SpawnActor<ACameraActor>();SceneCamera->SetActorLocationAndRotation(ShotPosition,ShotRotation);SceneCamera->GetCameraComponent()->SetFieldOfView(Camera->FieldOfView);
+        if(auto *PC=Cast<APlayerController>(Controller)){PC->bAutoManageActiveCameraTarget=false;PC->SetViewTarget(SceneCamera);}
+    }
     if (Mode == TEXT("Scope"))
         StartAim();
     if (Mode == TEXT("Pistol") || Mode == TEXT("CharacterPistol"))
@@ -917,4 +963,16 @@ void APFCharacter::RunCombatViewProbe()
             },
             4.8f, false);
     }
+}
+
+void APFCharacter::FireReleasedInput(){Construction->PrimaryReleased();StopFire();}
+void APFCharacter::AimReleasedInput(){if(!Construction->SecondaryReleased())StopAim();}
+void APFCharacter::ClearOverlayInput()
+{
+    StopFire();StopAim();EndInteract();EndSprint();EndJump();DriveAxes=FVector2D::ZeroVector;bDriveBoost=false;bDriveBrake=false;bSwimUpHeld=false;bSwimDownHeld=false;
+}
+
+void APFCharacter::ServerBuildDoor_Implementation(APFBuildPiece *Target)
+{
+    if(CanFight()&&Target)Target->ToggleDoor(this);
 }

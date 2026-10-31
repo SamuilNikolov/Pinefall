@@ -1,5 +1,16 @@
 # Performance engineering
 
+## Native Unreal 0.5
+
+See [exact checkpoint evidence](../tests/baselines/unreal-0.5/README.md). Native profiling uses real graphics, frame tails, game/render/RHI/GPU timing, minimum physical memory, peer count and settled wildlife population. Test clients are capped at 30 FPS; run graphics measurement separately from integration tests. Cold editor startup/shader/asset work is excluded from samples, and the 84-animal reserve budget must be populated before recording.
+
+The important CPU fix is `PFAnimalHitQueries`: cached authored sphere/capsule/box templates are transformed by current animated bones only when a shot, pickaxe swing or relevant bite query needs them. Supported animal meshes do not maintain per-bone Chaos query bodies every frame. Movement capsules, animation, damage authority, current cover and player rewind are retained. Unsupported convex/tapered assets fall back to ordinary collision instead of receiving an inaccurate substitute.
+
+Fine grass fades over 55/60 m (green/dry), uses instancing/density scaling and does not cast grass shadows. Trees/rocks use Nanite detail reduction; do not mistake their nominal HISM cull distances for a hard Nanite cutoff. Visibility changes must never remove collision. No vendor-name special case, driver change or machine power-setting edit was used. A command-list batching experiment did not justify changing engine defaults.
+
+## Historical Unity engineering
+
+
 ## Why host-only stutter mattered
 
 The host renders and simulates every authoritative actor. Guests do not run the full wildlife, physics and loot work. In 0.7, extra world content multiplied a CPU-heavy terrain function and idle vehicle checks. Reducing UI cost alone would not explain or solve this asymmetry. The GPU was already active.

@@ -32,15 +32,15 @@ bool FPFReserveLayout::Water(float X, float Y)
 }
 uint8 FPFReserveLayout::Biome(float X, float Y)
 {
-    if (X > 33000 && Y > 18000)
+    if (X > 25000 && Y > 15000)
         return 4;
-    if (X > 25000 && Y < -17000)
+    if (X > 18000 && Y < 0)
         return 2;
-    if (X < -33000 && Y < -28000)
+    if (X < -22000 && Y < -35000)
         return 3;
-    if (Water(X, Y) || (X > 5000 && Y > 12000))
+    if (Water(X, Y) || (X > -15000 && X < 40000 && Y > 18000))
         return 1;
-    return X < -20000 ? 0 : 5;
+    return X < -15000 ? 0 : 5;
 }
 float FPFReserveLayout::Height(float X, float Y)
 {

@@ -1,24 +1,25 @@
 #include "PFWildlife.h"
-#include "PFReserveLayout.h"
-#include "PFWaterBody.h"
-#include "EngineUtils.h"
-#include "PFCharacter.h"
-#include "PFMatchState.h"
-#include "PFInventoryComponent.h"
-#include "PFWorldPickup.h"
+#include "PFAnimalHitQueries.h"
 #include "Animation/AnimSequence.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Engine/SkeletalMesh.h"
 #include "Engine/DamageEvents.h"
+#include "Engine/SkeletalMesh.h"
+#include "EngineUtils.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "Materials/MaterialInterface.h"
 #include "Net/UnrealNetwork.h"
-#include "TimerManager.h"
-#include "Kismet/GameplayStatics.h"
-#include "Sound/SoundBase.h"
+#include "PFCharacter.h"
+#include "PFInventoryComponent.h"
+#include "PFMatchState.h"
+#include "PFReserveLayout.h"
+#include "PFWaterBody.h"
+#include "PFWorldPickup.h"
 #include "Sound/SoundAttenuation.h"
+#include "Sound/SoundBase.h"
+#include "TimerManager.h"
 
 APFWildlife::APFWildlife()
 {
@@ -30,11 +31,12 @@ APFWildlife::APFWildlife()
     SetNetCullDistanceSquared(FMath::Square(22000.f));
     GetCapsuleComponent()->InitCapsuleSize(40, 70);
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
-    GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     GetMesh()->SetCollisionResponseToAllChannels(ECR_Ignore);
     GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
     // The authority needs current bones even when its rendering camera looks away.
-    GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+    GetMesh()->VisibilityBasedAnimTickOption =
+        EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
     GetMesh()->bEnableUpdateRateOptimizations = true;
     GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
     AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
@@ -48,11 +50,13 @@ void APFWildlife::BeginPlay()
 {
     Super::BeginPlay();
     ApplySpecies();
+    if(HasAuthority())GetWorld()->GetSubsystem<UPFAnimalHitQueries>()->Register(this);
     ApplyRage();
     ApplyMotion();
     SetActorTickEnabled(HasAuthority());
-    UE_LOG(LogTemp, Display, TEXT("PF_FAUNA_SPAWN species=%s role=%d mesh=%s clips=%d"), *Species.ToString(),
-           int32(GetLocalRole()), *GetNameSafe(GetMesh()->GetSkeletalMeshAsset()), Clips.Num());
+    UE_LOG(LogTemp, Display, TEXT("PF_FAUNA_SPAWN species=%s role=%d mesh=%s clips=%d"),
+           *Species.ToString(), int32(GetLocalRole()), *GetNameSafe(GetMesh()->GetSkeletalMeshAsset()),
+           Clips.Num());
     Goal = GetActorLocation();
     NextWander = GetWorld()->GetTimeSeconds() + FMath::FRandRange(1.f, 4.f);
     NextVoice = GetWorld()->GetTimeSeconds() + FMath::FRandRange(5.f, 20.f);
@@ -91,6 +95,7 @@ void APFWildlife::ApplySpecies()
         BaseRadius = GetCapsuleComponent()->GetUnscaledCapsuleRadius();
         BaseMeshZ = GetMesh()->GetRelativeLocation().Z;
     }
+    CacheHitGeometry();
     Clips.Reset();
     const bool Canid = Species == TEXT("Wolf") || Species == TEXT("Fox");
     const TCHAR *Names[] = {TEXT("Idle"), TEXT("Walk"), TEXT("Gallop"),
@@ -112,9 +117,9 @@ void APFWildlife::ApplyRage()
     if (HasAuthority() && Lift > 1)
         SetActorLocation(GetActorLocation() + FVector(0, 0, Lift), false);
     GetMesh()->SetOverlayMaterial(
-        bEnraged
-            ? LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Pinefall/Materials/M_WildRage.M_WildRage"))
-            : nullptr);
+        bEnraged ? LoadObject<UMaterialInterface>(nullptr,
+                                                  TEXT("/Game/Pinefall/Materials/M_WildRage.M_WildRage"))
+                 : nullptr);
 }
 void APFWildlife::MulticastCall_Implementation()
 {
@@ -127,8 +132,8 @@ void APFWildlife::ApplyMotion()
 {
     const int32 Index = static_cast<int32>(Motion);
     if (Clips.IsValidIndex(Index) && Clips[Index])
-        GetMesh()->PlayAnimation(Clips[Index],
-                                 Motion != EPFWildlifeMotion::Attack && Motion != EPFWildlifeMotion::Dead);
+        GetMesh()->PlayAnimation(Clips[Index], Motion != EPFWildlifeMotion::Attack &&
+                                                   Motion != EPFWildlifeMotion::Dead);
     UE_LOG(LogTemp, Verbose, TEXT("PF_FAUNA_MOTION species=%s state=%d"), *Species.ToString(), Index);
 }
 void APFWildlife::SetMotion(EPFWildlifeMotion Value)
@@ -149,7 +154,7 @@ bool APFWildlife::ClearBite(APFCharacter *Player) const
     FCollisionQueryParams Query(SCENE_QUERY_STAT(PFAnimalBite), false, this);
     Query.AddIgnoredActor(Player);
     return !GetWorld()->LineTraceSingleByChannel(Hit, GetActorLocation(), Player->GetActorLocation(),
-                                                 ECC_Visibility, Query);
+                                                 ECC_Visibility, Query)&&!GetWorld()->GetSubsystem<UPFAnimalHitQueries>()->Trace(GetActorLocation(),Player->GetActorLocation(),Hit,0,this);
 }
 void APFWildlife::Think(const TArray<TWeakObjectPtr<APFCharacter>> &Players, bool Closing, int32 Stage,
                         float Half)
@@ -213,7 +218,8 @@ void APFWildlife::Think(const TArray<TWeakObjectPtr<APFCharacter>> &Players, boo
     if (Now < NextAttack - .9)
         return;
     bool Hostile = IsPredator() || bEnraged;
-    bool Threatened = Nearest && (Distance < FMath::Square(Hostile ? 4200.f : 2700.f) || Now < AlertUntil);
+    bool Threatened =
+        Nearest && (Distance < FMath::Square(Hostile ? 4200.f : 2700.f) || Now < AlertUntil);
     if (Threatened)
     {
         FVector Away = (GetActorLocation() - Nearest->GetActorLocation()).GetSafeNormal2D();
@@ -250,8 +256,8 @@ void APFWildlife::Think(const TArray<TWeakObjectPtr<APFCharacter>> &Players, boo
     FVector Check = GetActorLocation() + Direction * 260;
     FHitResult Ground;
     FCollisionQueryParams Query(SCENE_QUERY_STAT(PFAnimalGround), false, this);
-    bool Grounded = GetWorld()->LineTraceSingleByChannel(Ground, Check + FVector(0, 0, 300),
-                                                         Check - FVector(0, 0, 450), ECC_WorldStatic, Query);
+    bool Grounded = GetWorld()->LineTraceSingleByChannel(
+        Ground, Check + FVector(0, 0, 300), Check - FVector(0, 0, 450), ECC_WorldStatic, Query);
     bool Lake = (Half > 50000 && FPFReserveLayout::Water(Check.X, Check.Y)) ||
                 FMath::Square((Check.X - 9000) / 4200) + FMath::Square((Check.Y - 9500) / 6000) < 1 &&
                     Ground.ImpactPoint.Z < -130;
@@ -291,12 +297,11 @@ float APFWildlife::TakeDamage(float Amount, const FDamageEvent &Event, AControll
 }
 void APFWildlife::DropRewards()
 {
-    auto Spawn = [&](FPFItemStack Item)
-    {
+    auto Spawn = [&](FPFItemStack Item) {
         const FVector Offset = FVector(FMath::FRandRange(-65.f, 65.f), FMath::FRandRange(-65.f, 65.f),
                                        -GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight() + 35);
-        auto *Drop = GetWorld()->SpawnActorDeferred<APFWorldPickup>(APFWorldPickup::StaticClass(),
-                                                                    FTransform(GetActorLocation() + Offset));
+        auto *Drop = GetWorld()->SpawnActorDeferred<APFWorldPickup>(
+            APFWorldPickup::StaticClass(), FTransform(GetActorLocation() + Offset));
         if (Drop)
         {
             Drop->Item = Item;
@@ -421,7 +426,8 @@ bool APFWildlifeDirector::SpawnAnimal(float Half)
         {
             if (auto *Near = Players[FMath::RandHelper(Players.Num())].Get())
             {
-                float Angle = FMath::FRandRange(0.f, 2 * PI), Distance = FMath::FRandRange(4500.f, 16000.f);
+                float Angle = FMath::FRandRange(0.f, 2 * PI),
+                      Distance = FMath::FRandRange(4500.f, 16000.f);
                 Point = Near->GetActorLocation() +
                         FVector(FMath::Cos(Angle) * Distance, FMath::Sin(Angle) * Distance, 0);
                 Point.X = FMath::Clamp(Point.X, -Half + 1000, Half - 1000);
@@ -458,11 +464,22 @@ bool APFWildlifeDirector::SpawnAnimal(float Half)
             ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding);
         if (!Animal)
             return false;
-        Animal->Species = SpeciesList[FMath::RandRange(0, 6)];
+        // Habitat-aware distribution: woodland prey, meadow herds, arid
+        // horses/alpacas, and cold-country foxes/wolves. No runtime height synthesis.
+        const uint8 Habitat = Half > 50000 ? FPFReserveLayout::Biome(Point.X, Point.Y) : 0;
+        const int32 Choices[][6] = {{0, 0, 1, 2, 3, 0}, {0, 0, 4, 1, 0, 4}, {6, 6, 3, 2, 6, 1},
+                                    {5, 5, 6, 5, 6, 2}, {3, 2, 1, 3, 2, 1}, {4, 5, 0, 4, 5, 6}};
+        Animal->Species = SpeciesList[Choices[FMath::Min<uint8>(Habitat, 5)][FMath::RandRange(0, 5)]];
         Animal->Health = Animal->MaxHealth = Animal->Species == TEXT("Wolf") ? 100 : 65;
         Animal->FinishSpawning(Transform);
         Population.Add(Animal);
         return true;
     }
     return false;
+}
+
+void APFWildlife::EndPlay(EEndPlayReason::Type Reason)
+{
+    if(auto *Queries=GetWorld()->GetSubsystem<UPFAnimalHitQueries>())Queries->Unregister(this);
+    Super::EndPlay(Reason);
 }

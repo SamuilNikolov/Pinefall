@@ -12,7 +12,7 @@ void UPFItemButton::Setup(APlayerController *Player, int32 Index, bool Drop)
 }
 void UPFItemButton::Pressed()
 {
-    PressedRevision = Revision;
+    PressedRevision = Revision;PressedSlot=Slot;
 }
 void UPFItemButton::Clicked()
 {
@@ -22,11 +22,11 @@ void UPFItemButton::Clicked()
         return;
     if (bDrop)
     {
-        int32 Count = PC->IsInputKeyDown(EKeys::LeftShift) && Player->Inventory->Slots.IsValidIndex(Slot)
-                          ? Player->Inventory->Slots[Slot].Count
+        int32 Count = PC->IsInputKeyDown(EKeys::LeftShift) && Player->Inventory->Slots.IsValidIndex(PressedSlot)
+                          ? Player->Inventory->Slots[PressedSlot].Count
                           : 1;
-        Player->Inventory->ServerDropSlot(Slot, Count, PressedRevision);
+        Player->Inventory->ServerDropSlot(PressedSlot, Count, PressedRevision);
     }
-    else
-        Player->Inventory->ServerUseSlot(Slot, PressedRevision);
+    else if(Player->Inventory->Slots.IsValidIndex(PressedSlot)&&Player->Inventory->Slots[PressedSlot].Kind!=EPFItemKind::Ammo)
+        Player->Inventory->ServerUseSlot(PressedSlot, PressedRevision);
 }

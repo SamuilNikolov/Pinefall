@@ -1,6 +1,7 @@
 // Deliberate synthetic integration test. Never captures a microphone or runs in a normal game.
 #include "PFGameMode.h"
 #include "PFWildlife.h"
+#include "PFAnimalHitQueries.h"
 #include "PFCharacter.h"
 #include "PFMatchState.h"
 #include "PFWorldPickup.h"
@@ -69,6 +70,21 @@ void APFGameMode::RunWildlifeProbe()
     }
     else if (ProbeStep == 1)
     {
+        for(auto &Entry:ProbeAnimals)if(auto *Animal=Entry.Get())
+        {
+            const auto Bounds=Animal->GetMesh()->Bounds;
+            bool Found=false;FHitResult BodyHit;
+            for(int32 Level=1;Level<10&&!Found;Level++)
+            {
+                FVector Center=Bounds.Origin+FVector(0,0,Bounds.BoxExtent.Z*(Level/5.f-1.f));
+                Found=GetWorld()->GetSubsystem<UPFAnimalHitQueries>()->Trace(Center-FVector(Bounds.SphereRadius+100,0,0),Center+FVector(Bounds.SphereRadius+100,0,0),BodyHit)&&BodyHit.GetActor()==Animal&&!BodyHit.BoneName.IsNone();
+            }
+            Check(Found,TEXT("animated animal authored hit geometry is queryable without physics bodies"));
+            Check(Animal->GetMesh()->GetCollisionEnabled()==ECollisionEnabled::NoCollision,TEXT("supported animal avoids continuous skeletal physics proxies"));
+            FHitResult Miss;FVector Far=Bounds.Origin+FVector(0,0,Bounds.SphereRadius*3+100);
+            Check(!Animal->TraceAnimatedBody(Far-FVector(200,0,0),Far+FVector(200,0,0),Miss),TEXT("off-silhouette animal shot does not hit a coarse replacement collider"));
+        }
+
         auto *Deer = ProbeAnimals[0].Get();
         auto *Wolf = ProbeAnimals[1].Get();
         Check(FVector::DistSquared2D(Deer->GetActorLocation(), ProbeAnimalOrigins[0]) >

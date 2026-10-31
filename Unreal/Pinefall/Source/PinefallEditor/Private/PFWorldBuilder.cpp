@@ -1,16 +1,71 @@
 #include "PFWorldBuilder.h"
+#include "AssetCompilingManager.h"
+#include "ShaderCompiler.h"
+#include "Materials/Material.h"
+#include "Materials/MaterialExpressionConstant.h"
+#include "AssetRegistry/AssetRegistryModule.h"
+#include "Misc/FileHelper.h"
+#include "Components/HierarchicalInstancedStaticMeshComponent.h"
+#include "Components/SceneComponent.h"
 #include "Editor.h"
+#include "Engine/Font.h"
+#include "Engine/FontFace.h"
+#include "Engine/StaticMesh.h"
+#include "GameFramework/PlayerStart.h"
 #include "Landscape.h"
 #include "LandscapeInfo.h"
 #include "LandscapeProxy.h"
-#include "Components/HierarchicalInstancedStaticMeshComponent.h"
-#include "Components/SceneComponent.h"
 #include "Materials/MaterialInterface.h"
-#include "GameFramework/PlayerStart.h"
 #include "PFRangeTarget.h"
-#include "Engine/StaticMesh.h"
 #include "PhysicsEngine/BodySetup.h"
 #include "StaticMeshResources.h"
+
+bool UPFWorldBuilder::HasBuiltNaniteData(UStaticMesh *Mesh)
+{
+    return Mesh && Mesh->GetRenderData() && Mesh->GetRenderData()->HasValidNaniteData();
+}
+
+UFont *UPFWorldBuilder::CreateDisplayFontFromFile(const FString &Filename)
+{
+    TArray<uint8> Data;
+    if (!FFileHelper::LoadFileToArray(Data, *Filename) || Data.IsEmpty())
+        return nullptr;
+    auto *Package = CreatePackage(TEXT("/Game/Pinefall/Art/UI/F_PinefallFace"));
+    auto *Face = FindObject<UFontFace>(Package, TEXT("F_PinefallFace"));
+    if (!Face)
+    {
+        Face = NewObject<UFontFace>(Package, TEXT("F_PinefallFace"), RF_Public | RF_Standalone);
+        FAssetRegistryModule::AssetCreated(Face);
+    }
+    Face->Modify();
+    Face->FontFaceData->SetData(MoveTemp(Data));
+    Face->SourceFilename = TEXT("BarlowCondensed-SemiBold.ttf");
+    Face->LoadingPolicy = EFontLoadingPolicy::Inline;
+    Face->CacheSubFaces();
+    Face->MarkPackageDirty();
+    return CreateDisplayFont(Face);
+}
+
+UFont *UPFWorldBuilder::CreateDisplayFont(UFontFace *Face)
+{
+    if (!Face)
+        return nullptr;
+    auto *Package = CreatePackage(TEXT("/Game/Pinefall/Art/UI/F_PinefallDisplay"));
+    auto *Font = FindObject<UFont>(Package, TEXT("F_PinefallDisplay"));
+    if (!Font)
+    {
+        Font = NewObject<UFont>(Package, TEXT("F_PinefallDisplay"), RF_Public | RF_Standalone);
+        FAssetRegistryModule::AssetCreated(Font);
+    }
+    Font->Modify();
+    Font->FontCacheType = EFontCacheType::Runtime;
+    Font->CompositeFont.DefaultTypeface.Fonts.Reset();
+    auto &Entry = Font->CompositeFont.DefaultTypeface.Fonts.AddDefaulted_GetRef();
+    Entry.Name = TEXT("Regular");
+    Entry.Font = FFontData(Face);
+    Font->MarkPackageDirty();
+    return Font;
+}
 
 void UPFWorldBuilder::ConfigureCollision(UStaticMesh *Mesh, bool Complex)
 {
@@ -51,7 +106,8 @@ void UPFWorldBuilder::ConfigureMesh(UStaticMesh *Mesh, bool Nanite)
 
 float UPFWorldBuilder::HeightAt(float X, float Y)
 {
-    float Ridge = FMath::Exp(-(FMath::Square((X - 18500) / 6500) + FMath::Square((Y + 6500) / 10000))) * 7800;
+    float Ridge =
+        FMath::Exp(-(FMath::Square((X - 18500) / 6500) + FMath::Square((Y + 6500) / 10000))) * 7800;
     Ridge += FMath::Exp(-(FMath::Square((X + 18000) / 8000) + FMath::Square((Y - 16500) / 6000))) * 4200;
     // Break the smooth mound profile into ridges, smaller saddles and rock shelves.
     FVector2D Warped(X + FMath::PerlinNoise2D(FVector2D(X, Y) / 8500) * 1300,
@@ -59,7 +115,8 @@ float UPFWorldBuilder::HeightAt(float X, float Y)
     Ridge *= .90f + .10f * (1 - FMath::Abs(FMath::PerlinNoise2D(Warped / 4000)));
     Ridge += Ridge * .025f * FMath::PerlinNoise2D(Warped / 2500);
     float H = Ridge + 160 * FMath::Sin(X / 3500) * FMath::Cos(Y / 4700) +
-              FMath::PerlinNoise2D(FVector2D(X, Y) / 2200) * 110 + FMath::PerlinNoise2D(Warped / 420) * 28;
+              FMath::PerlinNoise2D(FVector2D(X, Y) / 2200) * 110 +
+              FMath::PerlinNoise2D(Warped / 420) * 28;
     float Pad = FVector2D(X + 4500, Y).Size();
     H *= FMath::SmoothStep(3400.f, 8000.f, Pad);
     float Lake = FVector2D((X - 9000) / 4200, (Y - 9500) / 6000).Size();
@@ -77,7 +134,8 @@ void UPFWorldBuilder::BuildLandscape()
     for (int32 Y = 0; Y < Size; Y++)
         for (int32 X = 0; X < Size; X++)
             Heights[Y * Size + X] = uint16(FMath::Clamp(
-                FMath::RoundToInt(32768 + HeightAt(-25200 + X * 200, -25200 + Y * 200) * 1.28f), 0, 65535));
+                FMath::RoundToInt(32768 + HeightAt(-25200 + X * 200, -25200 + Y * 200) * 1.28f), 0,
+                65535));
     auto *Landscape = World->SpawnActor<ALandscape>();
     Landscape->SetActorLabel(TEXT("Cedar Crossing · native landscape"));
     Landscape->SetActorLocation(FVector(-25200, -25200, 0));
@@ -115,8 +173,7 @@ void UPFWorldBuilder::PopulateFoliage(const TArray<UStaticMesh *> &Trees, UStati
     if (!World)
         return;
     FRandomStream Random(7319);
-    auto Create = [World](UStaticMesh *Mesh, const FString &Name, int32 Range, bool Collision)
-    {
+    auto Create = [World](UStaticMesh *Mesh, const FString &Name, int32 Range, bool Collision) {
         auto *Actor = World->SpawnActor<AActor>();
         Actor->SetActorLabel(Name);
         auto *Component = NewObject<UHierarchicalInstancedStaticMeshComponent>(Actor);
@@ -138,7 +195,8 @@ void UPFWorldBuilder::PopulateFoliage(const TArray<UStaticMesh *> &Trees, UStati
     for (int32 I = 0; I < Trees.Num(); I++)
         if (Trees[I])
         {
-            auto *Group = Create(Trees[I], FString::Printf(TEXT("Scanned pines %d"), I + 1), 35000, false);
+            auto *Group =
+                Create(Trees[I], FString::Printf(TEXT("Scanned pines %d"), I + 1), 35000, false);
             Group->bEnableDensityScaling = false;
             TreeGroups.Add(Group);
             float Height = Trees[I]->GetBounds().BoxExtent.Z * 2, Radius = 2;
@@ -158,9 +216,10 @@ void UPFWorldBuilder::PopulateFoliage(const TArray<UStaticMesh *> &Trees, UStati
         }
     // Canopies must not become giant invisible convex obstacles. Keep simple trunks
     // authoritative while the detailed needles remain a visual instance group.
-    auto *Trunks = Create(LoadObject<UStaticMesh>(
-                              nullptr, TEXT("/Game/Pinefall/Art/World/SM_TrunkCollision.SM_TrunkCollision")),
-                          TEXT("Tree trunk collision"), 55000, true);
+    auto *Trunks =
+        Create(LoadObject<UStaticMesh>(
+                   nullptr, TEXT("/Game/Pinefall/Art/World/SM_TrunkCollision.SM_TrunkCollision")),
+               TEXT("Tree trunk collision"), 55000, true);
     Trunks->SetHiddenInGame(true);
     Trunks->SetVisibility(false);
     Trunks->SetCastShadow(false);
@@ -197,7 +256,8 @@ void UPFWorldBuilder::PopulateFoliage(const TArray<UStaticMesh *> &Trees, UStati
             for (int32 Blade = 0; Blade < 7; Blade++)
             {
                 float GX = X + Random.FRandRange(-90, 90), GY = Y + Random.FRandRange(-90, 90);
-                FTransform Clump(FRotator(0, Random.FRandRange(0, 360), 0), FVector(GX, GY, HeightAt(GX, GY)),
+                FTransform Clump(FRotator(0, Random.FRandRange(0, 360), 0),
+                                 FVector(GX, GY, HeightAt(GX, GY)),
                                  FVector(Random.FRandRange(.8f, 1.35f)));
                 GrassGroup->AddInstance(Clump);
             }
@@ -212,4 +272,29 @@ void UPFWorldBuilder::PopulateFoliage(const TArray<UStaticMesh *> &Trees, UStati
         FernGroup->BuildTreeIfOutdated(false, true);
     UE_LOG(LogTemp, Display, TEXT("PF_FOLIAGE_BUILT trees=%d grass=%d"), TreeGroups.Num(),
            GrassGroup ? GrassGroup->GetInstanceCount() : 0);
+}
+
+void UPFWorldBuilder::ConfigureClearCoat(UMaterial *Material)
+{
+    if (!Material)
+        return;
+    Material->Modify();
+    Material->SetShadingModel(MSM_ClearCoat);
+    for (int32 I = 0; I < 2; I++)
+    {
+        auto *Value = NewObject<UMaterialExpressionConstant>(Material);
+        Value->R = I == 0 ? .8f : .16f;
+        Material->GetExpressionCollection().AddExpression(Value);
+        Material->GetExpressionInputForProperty(I == 0 ? MP_CustomData0 : MP_CustomData1)
+            ->Connect(0, Value);
+    }
+    Material->MarkPackageDirty();
+}
+
+void UPFWorldBuilder::FinishRenderingPreparation()
+{
+    FAssetCompilingManager::Get().FinishAllCompilation();
+    if (GShaderCompilingManager)
+        GShaderCompilingManager->FinishAllCompilation();
+    FAssetCompilingManager::Get().FinishAllCompilation();
 }

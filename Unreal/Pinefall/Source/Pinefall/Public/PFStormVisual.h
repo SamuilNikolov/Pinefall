@@ -3,6 +3,7 @@
 #include "GameFramework/Actor.h"
 #include "PFStormVisual.generated.h"
 class UStaticMeshComponent;
+class UPostProcessComponent;
 UCLASS()
 class PINEFALL_API APFStormVisual : public AActor
 {
@@ -14,4 +15,5 @@ class PINEFALL_API APFStormVisual : public AActor
 
   private:
     UPROPERTY() TObjectPtr<UStaticMeshComponent> Wall;
+    UPROPERTY() TObjectPtr<UPostProcessComponent> Atmosphere;
 };

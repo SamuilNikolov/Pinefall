@@ -10,6 +10,9 @@
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
 #include "PFCharacter.h"
+#include "PFBuildTypes.h"
+#include "PFConstructionSubsystem.h"
+#include "PFConstructionWorld.h"
 #include "PFGameMode.h"
 #include "PFInventoryComponent.h"
 #include "PFMatchState.h"
@@ -31,7 +34,7 @@ void APFCharacter::RunReserveProbeInput()
     int32 Case = FCString::Atoi(*Round->Announcement.Mid(14));
     if ((Case == 2 || Case == 7) && Vehicle)
     {
-        Move(FInputActionValue(FVector2D(Case == 2 ? .24f : .10f, 1.f)));
+        Move(FInputActionValue(FVector2D(Case == 2 ? .05f : .10f, Case == 2 ? .6f : 1.f)));
         bDriveBoost = true;
     }
     if (Case == LastReserveProbeCase)
@@ -118,6 +121,12 @@ void APFGameMode::RunReserveProbe()
             }
     if (!Remote || !HostPawn)
         return;
+    if (ProbeStep > 0 && !Remote->bReservePlacementReady)
+    {
+        // The first RPC can precede local possession while a large reserve loads.
+        Remote->ClientReservePlacement(Remote->ReservePlacementPoint, Remote->ReservePlacementToken);
+        return;
+    }
     APFReserveWorld *Reserve = nullptr;
     for (TActorIterator<APFReserveWorld> It(GetWorld()); It; ++It)
     {
@@ -152,8 +161,12 @@ void APFGameMode::RunReserveProbe()
     };
     auto Near = [&](APFVehicle *V) {
         Remote->GetCharacterMovement()->StopMovementImmediately();
-        Remote->SetActorLocation(V->GetActorLocation() + V->GetActorRightVector() * 260 +
-                                 FVector(0, 0, 25));
+        Remote->ReservePlacementPoint =
+            V->GetActorLocation() + V->GetActorRightVector() * 260 + FVector(0, 0, 25);
+        Remote->bReservePlacementReady = false;
+        Remote->ReservePlacementToken++;
+        Remote->SetActorLocation(Remote->ReservePlacementPoint);
+        Remote->ClientReservePlacement(Remote->ReservePlacementPoint, Remote->ReservePlacementToken);
     };
     auto Announce = [&](int32 Case, float Wait) {
         Match()->Announcement = FString::Printf(TEXT("PFReserveCase:%d"), Case);
@@ -211,11 +224,49 @@ void APFGameMode::RunReserveProbe()
             Check(!Door, TEXT("actual player capsule fits through cabin doorway"));
             Check(Wall, TEXT("actual player capsule cannot cross cabin rear wall"));
         }
+        if (auto *Registry = GetWorld()->GetSubsystem<UPFConstructionSubsystem>();
+            Registry && Registry->Manager)
+        {
+            FPFBuildRequest Request;
+            Request.Yaw = 37;
+            Request.FrameNonce = 991;
+            for (FVector2D Site :
+                 {FVector2D(-41000, -17000), FVector2D(-66000, -67000), FVector2D(66000, 65000)})
+            {
+                FVector Ground(Site, 0);
+                bool Found = GroundPoint(Ground);
+                if (Found)
+                {
+                    Request.Origin = Ground - FVector(0, 0, 100);
+                    HostPawn->SetActorLocation(Ground);
+                    FString Error;
+                    Check(Registry->Manager->CanPlace(HostPawn, Request, Error),
+                          TEXT("first wall can anchor on real biome terrain without another build"));
+                    for (int32 Kind = 0; Kind < 4; Kind++)
+                        for (int32 Turn = 0; Turn < 4; Turn++)
+                        {
+                            Request.Kind = EPFBuildKind(Kind);
+                            Request.Turn = Turn;
+                            Request.Origin = Ground + FVector(0, 0, 10);
+                            Registry->Manager->FitTerrainFoundation(Request);
+                            Check(Registry->Manager->CanPlace(HostPawn, Request, Error),
+                                  *FString::Printf(
+                                      TEXT("terrain foundation kind=%d turn=%d without another build"),
+                                      Kind, Turn));
+                        }
+                    Request.Kind = EPFBuildKind::Wall;
+                    Request.Turn = 0;
+                }
+                else
+                    Check(false, TEXT("real biome terrain foundation sample resolves"));
+            }
+        }
         ProbeVehicle = Reserve->Vehicles[0];
-        FVector Place(-32000, -27000, 0);
+        // Use the cleared village street; dense forest is intentionally solid.
+        FVector Place(-32000, -23000, 0);
         if (GroundPoint(Place))
-            Place.Z += 10;
-        ProbeVehicle->SetActorLocationAndRotation(Place, FRotator(0, -90, 0));
+            Place.Z += 10; // GroundPoint already includes the pawn-height 100 cm offset.
+        ProbeVehicle->SetActorLocationAndRotation(Place, FRotator(0, 90, 0));
         Near(ProbeVehicle);
         ProbeStep = 1;
         ProbeReserve = 0;
@@ -232,6 +283,8 @@ void APFGameMode::RunReserveProbe()
     {
         Check(Remote->Vehicle == ProbeVehicle && ProbeVehicle->Driver == Remote,
               TEXT("remote owning client enters truck through validated request"));
+        HostPawn->SetActorLocation(ProbeVehicle->GetActorLocation() -
+                                   ProbeVehicle->GetActorRightVector() * 260 + FVector(0, 0, 25));
         Check(!ProbeVehicle->Enter(HostPawn), TEXT("occupied driver seat rejects a second entrant"));
         Check(Remote->GetAttachParentActor() == ProbeVehicle,
               TEXT("driver attachment is authoritative"));
@@ -252,7 +305,7 @@ void APFGameMode::RunReserveProbe()
     if (ProbeStep == 2)
     {
         Check(FVector::Dist2D(ReserveProbeOrigin, ProbeVehicle->GetActorLocation()) > 800,
-              TEXT("real remote throttle drives truck across terrain"));
+              *FString::Printf(TEXT("real remote throttle drives truck across terrain (distance=%.0f cm)"),FVector::Dist2D(ReserveProbeOrigin, ProbeVehicle->GetActorLocation())));
         Check(FMath::Abs(
                   FRotator::NormalizeAxis(ProbeVehicle->GetActorRotation().Yaw - ReserveProbeYaw)) > 8,
               TEXT("real remote steering changes truck heading"));
@@ -401,4 +454,33 @@ void APFGameMode::RunReserveProbe()
               TEXT("owning client uncrouch restores standing capsule on host"));
         Finish();
     }
+}
+
+void APFCharacter::ClientReservePlacement_Implementation(FVector Point, int32 Token)
+{
+    if (!bReserveProbe || !IsLocallyControlled() || HasAuthority() || Token < ReservePlacementToken)
+        return;
+    ReservePlacementToken = Token;
+    if (Vehicle)
+    {
+        FTimerHandle Retry;
+        GetWorldTimerManager().SetTimer(
+            Retry,
+            FTimerDelegate::CreateWeakLambda(
+                this, [this, Point, Token]() { ClientReservePlacement_Implementation(Point, Token); }),
+            .1, false);
+        return;
+    }
+    GetCharacterMovement()->StopMovementImmediately();
+    TeleportTo(Point, FRotator::ZeroRotator, false, true);
+    GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+    ServerReservePlaced(Token);
+}
+void APFCharacter::ServerReservePlaced_Implementation(int32 Token)
+{
+    if (!bReserveProbe || Token != ReservePlacementToken)
+        return;
+    SetActorLocation(ReservePlacementPoint);
+    bReservePlacementReady = true;
+    UE_LOG(LogTemp, Display, TEXT("PF_RESERVE_PLACEMENT_READY token=%d"), Token);
 }

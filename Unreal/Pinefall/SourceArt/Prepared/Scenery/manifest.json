@@ -1,0 +1,142 @@
+[
+  {
+    "name": "SM_ForestFir",
+    "source": "fir_tree_01",
+    "node": "all",
+    "height_m": 19,
+    "cluster": false,
+    "vertices": 630314,
+    "triangles": 505494,
+    "bytes": 54153372,
+    "materials": [
+      "PH_fir_tree_01_fir_tree_01_bark",
+      "PH_fir_tree_01_fir_tree_01_twig",
+      "PH_fir_tree_01_fir_tree_01_dead_branches",
+      "PH_fir_tree_01_fir_tree_01_trunk_c"
+    ]
+  },
+  {
+    "name": "SM_WoodlandTree",
+    "source": "tree_small_02",
+    "node": "all",
+    "height_m": 12,
+    "cluster": false,
+    "vertices": 1205175,
+    "triangles": 1134366,
+    "bytes": 85970244,
+    "materials": [
+      "PH_tree_small_02_tree_small_02_branches",
+      "PH_tree_small_02_tree_small_02_leaves",
+      "PH_tree_small_02_tree_small_02_trunk"
+    ]
+  },
+  {
+    "name": "SM_JungleTree",
+    "source": "island_tree_02",
+    "node": "all",
+    "height_m": 17,
+    "cluster": false,
+    "vertices": 874494,
+    "triangles": 1072212,
+    "bytes": 60265972,
+    "materials": [
+      "PH_island_tree_02_island_tree_02",
+      "PH_island_tree_02_island_tree_02_leaves",
+      "PH_island_tree_02_island_tree_02_branches"
+    ]
+  },
+  {
+    "name": "SM_DesertTree",
+    "source": "quiver_tree_01",
+    "node": "all",
+    "height_m": 5.5,
+    "cluster": false,
+    "vertices": 88548,
+    "triangles": 150124,
+    "bytes": 25234332,
+    "materials": [
+      "PH_quiver_tree_01_quiver_tree_01_trunk",
+      "PH_quiver_tree_01_quiver_tree_01_leaf"
+    ]
+  },
+  {
+    "name": "SM_ScrubBush",
+    "source": "wild_rooibos_bush",
+    "node": "wild_rooibos_bush_a",
+    "height_m": 0.85,
+    "cluster": false,
+    "vertices": 16227,
+    "triangles": 13151,
+    "bytes": 8395768,
+    "materials": [
+      "PH_wild_rooibos_bush_wild_rooibos_bush_twigs",
+      "PH_wild_rooibos_bush_wild_rooibos_bush_leaves",
+      "PH_wild_rooibos_bush_wild_rooibos_bush"
+    ]
+  },
+  {
+    "name": "SM_MossRock",
+    "source": "rock_moss_set_01",
+    "node": "rock_moss_set_01_rock01",
+    "height_m": 1.7,
+    "cluster": false,
+    "vertices": 6078,
+    "triangles": 11000,
+    "bytes": 2046492,
+    "materials": [
+      "PH_rock_moss_set_01_rock_moss_set_01"
+    ]
+  },
+  {
+    "name": "SM_FieldRock",
+    "source": "rock_moss_set_01",
+    "node": "rock_moss_set_01_rock03",
+    "height_m": 1.4,
+    "cluster": false,
+    "vertices": 2741,
+    "triangles": 5000,
+    "bytes": 1903704,
+    "materials": [
+      "PH_rock_moss_set_01_rock_moss_set_01"
+    ]
+  },
+  {
+    "name": "SM_CliffFace",
+    "source": "rock_face_02",
+    "node": "all",
+    "height_m": 6,
+    "cluster": false,
+    "vertices": 16396,
+    "triangles": 29566,
+    "bytes": 11100936,
+    "materials": [
+      "PH_rock_face_02_rock_face_02"
+    ]
+  },
+  {
+    "name": "SM_GrassPatch",
+    "source": "grass_bermuda_01",
+    "node": "grass_bermuda_01_medium_a",
+    "height_m": 0.24,
+    "cluster": true,
+    "vertices": 2048,
+    "triangles": 2176,
+    "bytes": 4804744,
+    "materials": [
+      "PH_grass_bermuda_01_grass_bermuda_01"
+    ]
+  },
+  {
+    "name": "SM_DryGrassPatch",
+    "source": "grass_bermuda_01",
+    "node": "grass_bermuda_01_dead_a",
+    "height_m": 0.2,
+    "cluster": true,
+    "vertices": 384,
+    "triangles": 384,
+    "bytes": 4727424,
+    "materials": [
+      "PH_grass_bermuda_01_grass_bermuda_01"
+    ]
+  }
+]

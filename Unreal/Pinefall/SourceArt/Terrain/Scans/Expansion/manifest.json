@@ -1,0 +1,80 @@
+[
+  {
+    "role": "Meadow",
+    "asset": "aerial_grass_rock",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/aerial_grass_rock",
+    "files": {
+      "diff": {
+        "path": "Meadow_diff.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/aerial_grass_rock/aerial_grass_rock_diff_2k.jpg",
+        "md5": "024018554c0002620127749d1f585f3d",
+        "sha256": "1a2ddfa4652adbe00447b940c40019d46f4b88245bc1b341cdf622c2110b7bc5"
+      },
+      "nor_gl": {
+        "path": "Meadow_nor_gl.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/aerial_grass_rock/aerial_grass_rock_nor_gl_2k.jpg",
+        "md5": "0c5423ce365169df7c242933b5137696",
+        "sha256": "c6aa14b042ce243f93a6ca807f46a085711c23ad316b104578e92df7770ee285"
+      },
+      "rough": {
+        "path": "Meadow_rough.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/aerial_grass_rock/aerial_grass_rock_rough_2k.jpg",
+        "md5": "8d181000237d420a73f99dfc260dab17",
+        "sha256": "fc0fff40e3378f2f54d225db6e3e566a8563bb2c143eef0f09b543c9d4698776"
+      }
+    }
+  },
+  {
+    "role": "Sand",
+    "asset": "aerial_sand",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/aerial_sand",
+    "files": {
+      "diff": {
+        "path": "Sand_diff.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/aerial_sand/aerial_sand_diff_2k.jpg",
+        "md5": "5071857be3645fec2f85b49e4112199f",
+        "sha256": "98eddd01834e996cda3fa20dbc769ae38e87277ad0c62650604572fb2e646cd1"
+      },
+      "nor_gl": {
+        "path": "Sand_nor_gl.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/aerial_sand/aerial_sand_nor_gl_2k.jpg",
+        "md5": "3e1b2d9ef1628fb5e0db05c69147cd06",
+        "sha256": "d4ce3a47379acd398c657adf89611df3843872a76dd3bd9e76f62ee1fb0363ef"
+      },
+      "rough": {
+        "path": "Sand_rough.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/aerial_sand/aerial_sand_rough_2k.jpg",
+        "md5": "f8fe99fa041fbd9e8d76769da05f3a72",
+        "sha256": "d6b80e523363c7960f3dc59d02e8ca902e4b9ea642353cc01c3b39eb1a5063c5"
+      }
+    }
+  },
+  {
+    "role": "Snow",
+    "asset": "snow_02",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/snow_02",
+    "files": {
+      "diff": {
+        "path": "Snow_diff.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/snow_02/snow_02_diff_2k.jpg",
+        "md5": "5541e5601951b071691238ddc70632c0",
+        "sha256": "d185c2853c7e674161789db4eed1c5708d85e4f6e3dcb5698209568adf02aa98"
+      },
+      "nor_gl": {
+        "path": "Snow_nor_gl.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/snow_02/snow_02_nor_gl_2k.jpg",
+        "md5": "ef128fbdf1b31932c792eb6472c84574",
+        "sha256": "288539ee33387e91035be4dc8d10da574bf6a95c8374d33b6b1dc465c6949e8f"
+      },
+      "rough": {
+        "path": "Snow_rough.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/snow_02/snow_02_rough_2k.jpg",
+        "md5": "8b9787b4c7b1d7390a4b4a1ae67728b1",
+        "sha256": "9cfa994318ef190d4540875a166c7c745184c1a166e82271bca7c0a628f8820f"
+      }
+    }
+  }
+]

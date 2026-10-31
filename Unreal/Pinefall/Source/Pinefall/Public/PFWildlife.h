@@ -1,6 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "PFHitHistoryComponent.h"
 #include "PFWildlife.generated.h"
 class APFCharacter;
 class UAnimSequence;
@@ -24,6 +25,8 @@ class PINEFALL_API APFWildlife : public ACharacter
     APFWildlife();
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaSeconds) override;
+    virtual void EndPlay(EEndPlayReason::Type Reason) override;
+    bool TraceAnimatedBody(const FVector &Start,const FVector &End,FHitResult &Hit,float SweepRadius=0) const;
     virtual float TakeDamage(float Amount, const FDamageEvent &Event, AController *Instigator,
                              AActor *Causer) override;
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &Out) const override;
@@ -44,6 +47,8 @@ class PINEFALL_API APFWildlife : public ACharacter
     UFUNCTION() void ApplyRage();
 
   private:
+    void CacheHitGeometry();
+    TArray<FPFHitShape,TInlineAllocator<32>> ShotShapes;
     void SetMotion(EPFWildlifeMotion Value);
     void DropRewards();
     bool ClearBite(APFCharacter *Player) const;

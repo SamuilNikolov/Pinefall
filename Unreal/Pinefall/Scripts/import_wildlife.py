@@ -55,7 +55,11 @@ for name in names:
     if any(x.get_editor_property('skeleton')!=skeleton or x.get_play_length()<=0 for x in animations):raise RuntimeError('Invalid animation skeleton/length: '+name)
     physics=bodies[0].get_editor_property('physics_asset')
     report[name]={'body':bodies[0].get_path_name(),'animations':{x.get_name():x.get_path_name() for x in animations},'physicsAsset':physics.get_path_name() if physics else None}
-    for asset in objects:LIB.save_loaded_asset(asset)
+    for asset in objects:
+        if isinstance(asset,unreal.Material):
+            unreal.MaterialEditingLibrary.set_material_usage(asset,unreal.MaterialUsage.MATUSAGE_SKELETAL_MESH)
+            unreal.MaterialEditingLibrary.recompile_material(asset)
+        LIB.save_loaded_asset(asset,False)
     unreal.log('PF_WILDLIFE_IMPORTED '+name+' animations='+str(len(animations)))
 path=PROJECT/'Saved/WildlifeImport.json';path.write_text(json.dumps(report,indent=2),encoding='utf-8')
 unreal.log('PF_WILDLIFE_IMPORT_OK '+str(path))

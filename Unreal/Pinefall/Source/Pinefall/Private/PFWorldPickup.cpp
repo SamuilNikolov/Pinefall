@@ -22,7 +22,9 @@ APFWorldPickup::APFWorldPickup()
     Body->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     Detail = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Supply detail"));
     Detail->SetupAttachment(Interaction);
-    Detail->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    Detail->SetCollisionEnabled(ECollisionEnabled::NoCollision);Detail->SetCastShadow(false);Detail->SetCullDistance(9000);
+    Beacon=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Rarity beacon"));Beacon->SetupAttachment(Interaction);Beacon->SetCollisionEnabled(ECollisionEnabled::NoCollision);Beacon->SetCastShadow(false);Beacon->SetCullDistance(6000);
+    Body->SetCullDistance(12000);
 }
 void APFWorldPickup::BeginPlay()
 {
@@ -44,10 +46,14 @@ void APFWorldPickup::RefreshVisual()
     Body->SetRelativeScale3D(FVector(.27, .18, .13));
     Body->SetRelativeLocation(FVector(0, 0, 10));
     Body->SetRelativeRotation(FRotator::ZeroRotator);
-    Detail->SetStaticMesh(Cube);
-    Detail->SetRelativeScale3D(FVector(.07, .185, .135));
-    Detail->SetRelativeLocation(FVector(0, 0, 10));
-    Detail->SetVisibility(true);
+    static const FLinearColor Tiers[]={FLinearColor(.46,.53,.6),FLinearColor(.2,.8,.35),FLinearColor(.15,.5,1),FLinearColor(.65,.2,1),FLinearColor(1,.57,.08)};
+    FLinearColor Rarity=Tiers[FMath::Min<int32>(Item.Rarity,4)];
+    Detail->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Plane.Plane")));Detail->SetRelativeScale3D(FVector(.7,.7,1));Detail->SetRelativeLocation({0,0,1});Detail->SetVisibility(true);
+    Beacon->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Cylinder.Cylinder")));Beacon->SetRelativeScale3D({.006,.006,.65});Beacon->SetRelativeLocation({0,0,33});
+    if(!HaloMaterial)if(auto *Base=LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/Pinefall/Materials/M_LootHalo.M_LootHalo")))HaloMaterial=UMaterialInstanceDynamic::Create(Base,this);
+    if(!BeaconMaterial)if(auto *Base=LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/Pinefall/Materials/M_LootBeacon.M_LootBeacon")))BeaconMaterial=UMaterialInstanceDynamic::Create(Base,this);
+    if(HaloMaterial){HaloMaterial->SetVectorParameterValue(TEXT("Tint"),Rarity);Detail->SetMaterial(0,HaloMaterial);}
+    if(BeaconMaterial){BeaconMaterial->SetVectorParameterValue(TEXT("Tint"),Rarity);Beacon->SetMaterial(0,BeaconMaterial);}
     FLinearColor Color(.18, .25, .23), Stripe(.65, .72, .66);
     if (Item.Kind == EPFItemKind::Weapon)
     {
@@ -57,8 +63,13 @@ void APFWorldPickup::RefreshVisual()
         Body->SetRelativeScale3D(FVector(.8));
         Body->SetRelativeRotation(FRotator(0, 0, 85));
         Body->SetRelativeLocation(FVector(0, 0, 12));
-        Detail->SetVisibility(false);
         return;
+    }
+    if(Item.Kind>=EPFItemKind::Wood&&Item.Kind<=EPFItemKind::Metal)
+    {
+        const TCHAR *Names[]={TEXT("SM_WoodBundle"),TEXT("SM_StoneStack"),TEXT("SM_MetalBundle")};const TCHAR *Name=Names[int32(Item.Kind)-int32(EPFItemKind::Wood)];
+        if(auto *Model=LoadObject<UStaticMesh>(nullptr,*FString::Printf(TEXT("/Game/Pinefall/Art/Construction/%s.%s"),Name,Name)))
+        {Body->SetStaticMesh(Model);Body->SetRelativeScale3D(FVector(1));Body->SetRelativeLocation({0,0,2});return;}
     }
     if (Item.Kind == EPFItemKind::Food)
     {
@@ -93,22 +104,6 @@ void APFWorldPickup::RefreshVisual()
         Body->SetStaticMesh(Model);
         Body->SetRelativeScale3D(FVector(1));
         Body->SetRelativeLocation(FVector(0, 0, 2));
-        // A small rarity plate anchors supplies without obscuring the actual model.
-        Detail->SetStaticMesh(
-            LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cylinder.Cylinder")));
-        Detail->SetRelativeScale3D(FVector(.48, .48, .012));
-        Detail->SetRelativeLocation(FVector(0, 0, 1));
-        const FLinearColor Tiers[] = {FLinearColor(.35, .39, .4), FLinearColor(.22, .57, .3),
-                                      FLinearColor(.2, .45, .85), FLinearColor(.56, .3, .8),
-                                      FLinearColor(.85, .57, .16)};
-        auto *Base =
-            LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Pinefall/Materials/M_Supply.M_Supply"));
-        if (Base)
-        {
-            auto *Mark = UMaterialInstanceDynamic::Create(Base, this);
-            Mark->SetVectorParameterValue(TEXT("Tint"), Tiers[FMath::Min<int32>(Item.Rarity, 4)]);
-            Detail->SetMaterial(0, Mark);
-        }
         return;
     }
     auto *Material =
@@ -127,4 +122,11 @@ void APFWorldPickup::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLi
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(APFWorldPickup, Item);
+}
+
+void APFWorldPickup::SetFocused(bool Focused)
+{
+    if(HaloMaterial)HaloMaterial->SetScalarParameterValue(TEXT("Strength"),Focused?1.5f:.75f);
+    if(BeaconMaterial)BeaconMaterial->SetScalarParameterValue(TEXT("Strength"),Focused?1.35f:.65f);
+    if(Beacon){Beacon->SetRelativeScale3D(FVector(.006,.006,Focused?.95:.65));Beacon->SetRelativeLocation(FVector(0,0,Focused?48:33));}
 }

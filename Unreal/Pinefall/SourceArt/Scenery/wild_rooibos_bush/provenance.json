@@ -1,0 +1,405 @@
+{
+  "asset": "wild_rooibos_bush",
+  "source_page": "https://polyhaven.com/a/wild_rooibos_bush",
+  "license": "CC0-1.0",
+  "license_url": "https://polyhaven.com/license",
+  "gltf_url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/2k/wild_rooibos_bush/wild_rooibos_bush_2k.gltf",
+  "upstream_gltf_md5": "72698fe321de65c3958cbc6d53bfe887",
+  "original_buffer_url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/wild_rooibos_bush/wild_rooibos_bush.bin",
+  "original_buffer_md5": "0d6c39ac444bac0381ecdff32a191a9c",
+  "selected_nodes": "all",
+  "selected_ranges": [
+    {
+      "buffer_view": 0,
+      "offset": 0,
+      "bytes": 31548,
+      "sha256": "f570b38aeb0d67da419e784ac980a47145358d239e947534f36cb18cf6a76064"
+    },
+    {
+      "buffer_view": 1,
+      "offset": 31548,
+      "bytes": 31548,
+      "sha256": "de54b415a79b32cf24d420d5f911531c866e748060536ec42b55ca96dbd808f7"
+    },
+    {
+      "buffer_view": 2,
+      "offset": 63096,
+      "bytes": 21032,
+      "sha256": "e0fd4da93bc2aa1959303179af870bd865526940cb5a45897c44b34378d8d033"
+    },
+    {
+      "buffer_view": 3,
+      "offset": 84128,
+      "bytes": 14298,
+      "sha256": "2b691f7f391754f4109a4af953cb4bf15e276733f457075851c9ae8fda7082c0"
+    },
+    {
+      "buffer_view": 4,
+      "offset": 98428,
+      "bytes": 118824,
+      "sha256": "e71969d2b08aceb862b83c9a58894ef69ce34123da7ed791023c6b4d788417c4"
+    },
+    {
+      "buffer_view": 5,
+      "offset": 217252,
+      "bytes": 118824,
+      "sha256": "6577087984472e0025774016c3dbc5317570afc55928920627854481eba74782"
+    },
+    {
+      "buffer_view": 6,
+      "offset": 336076,
+      "bytes": 79216,
+      "sha256": "8a45a7f392acd511050d6538593f6f8e58c3f54eee31e8f2eb1f120e04bd795a"
+    },
+    {
+      "buffer_view": 7,
+      "offset": 415292,
+      "bytes": 39480,
+      "sha256": "b72d084bdd57412948f8186b2f910397ef412500b7e7af1b039fa025d2bc380b"
+    },
+    {
+      "buffer_view": 8,
+      "offset": 454772,
+      "bytes": 44352,
+      "sha256": "24dcf41439a0d2d110a6d4adcd597c428af3acaca237d016e1466b95e039491a"
+    },
+    {
+      "buffer_view": 9,
+      "offset": 499124,
+      "bytes": 44352,
+      "sha256": "539d34d3094453759b33bcdfe9a27303a75fb665ae3659bbea6f52ef092d1cbd"
+    },
+    {
+      "buffer_view": 10,
+      "offset": 543476,
+      "bytes": 29568,
+      "sha256": "0f1170131240bc87f66bf0add281a12d91e187ad4019e850699da84572353463"
+    },
+    {
+      "buffer_view": 11,
+      "offset": 573044,
+      "bytes": 25128,
+      "sha256": "0f798c1f93915ef63fb5ad641fea5d947202b569b13aa088dd0fba4218237576"
+    },
+    {
+      "buffer_view": 12,
+      "offset": 598172,
+      "bytes": 14340,
+      "sha256": "f241d59f208ff7aef01c5ae09809a62e3c02afd95afee3b0938127fb276f95df"
+    },
+    {
+      "buffer_view": 13,
+      "offset": 612512,
+      "bytes": 14340,
+      "sha256": "4fb586da9167b9972e8ce1fdabf74d1beed1c9109c9a01faeccc8b2d948bdc54"
+    },
+    {
+      "buffer_view": 14,
+      "offset": 626852,
+      "bytes": 9560,
+      "sha256": "eb545c927d35fd274c3f04b23aa73025efdc65bbf7805a22754666f3d0d67559"
+    },
+    {
+      "buffer_view": 15,
+      "offset": 636412,
+      "bytes": 6402,
+      "sha256": "a5d631bca344d6a86a3bbf6d00bf941d87f914661268e1623a1ef0649eebf987"
+    },
+    {
+      "buffer_view": 16,
+      "offset": 642816,
+      "bytes": 48240,
+      "sha256": "564dbda25694956dbd186063b37ea54a9283cb7752337f153140c49c60744443"
+    },
+    {
+      "buffer_view": 17,
+      "offset": 691056,
+      "bytes": 48240,
+      "sha256": "ba83402e43b2a8b991632f99403b70f64c2689db7d18ac7c55574ceaa7558933"
+    },
+    {
+      "buffer_view": 18,
+      "offset": 739296,
+      "bytes": 32160,
+      "sha256": "eef0dac7b2e147f1385358a49ffd3c8c269994e9a5f3f6555d657ebebf251d27"
+    },
+    {
+      "buffer_view": 19,
+      "offset": 771456,
+      "bytes": 16008,
+      "sha256": "95c4f7b9c647216431a8e4c44715946f44d575aad696dbebd73d10c7903930a4"
+    },
+    {
+      "buffer_view": 20,
+      "offset": 787464,
+      "bytes": 26460,
+      "sha256": "dabcd9e4a88f03761a9a6034259c388d1ceb3425088adedc376714cf34684f72"
+    },
+    {
+      "buffer_view": 21,
+      "offset": 813924,
+      "bytes": 26460,
+      "sha256": "6af1224756c2e6d7093c965542d059e5175cc2db467fbaf28a4a3aa3c127f82c"
+    },
+    {
+      "buffer_view": 22,
+      "offset": 840384,
+      "bytes": 17640,
+      "sha256": "da2f980f59341ca222ed5655aa6f07ccf3b41dd9f190a071ef35d4db8029beb8"
+    },
+    {
+      "buffer_view": 23,
+      "offset": 858024,
+      "bytes": 15312,
+      "sha256": "c51555884fbcf2fd19afa1df59fd57384cd76769afbd769a761a9849461e8890"
+    },
+    {
+      "buffer_view": 24,
+      "offset": 873336,
+      "bytes": 9432,
+      "sha256": "d3fd3d908f42cc70c36248c17d26cb30037a5013b53c3689b0afcad3cdacdb95"
+    },
+    {
+      "buffer_view": 25,
+      "offset": 882768,
+      "bytes": 9432,
+      "sha256": "76cf6802f5b5729455dc9abae84dfa0ee2f2218de2457ea88d2b49cf1a969aba"
+    },
+    {
+      "buffer_view": 26,
+      "offset": 892200,
+      "bytes": 6288,
+      "sha256": "991f82be1c4181df637d17f036cf1c6ec4f6db94a350371fd129aed68185b552"
+    },
+    {
+      "buffer_view": 27,
+      "offset": 898488,
+      "bytes": 4248,
+      "sha256": "63d2f90447d63ce77e5faaf3cd0388be7259821bf2370e91cbdb3b04def16902"
+    },
+    {
+      "buffer_view": 28,
+      "offset": 902736,
+      "bytes": 36936,
+      "sha256": "a1535189207838ad146a4499066080ab0b8db0fc0e4ecc87167c57038d2ef193"
+    },
+    {
+      "buffer_view": 29,
+      "offset": 939672,
+      "bytes": 36936,
+      "sha256": "c39cf8879927f11661cc04247419b79311a9bb7f8bbfe62d8f6f27524ccde3a9"
+    },
+    {
+      "buffer_view": 30,
+      "offset": 976608,
+      "bytes": 24624,
+      "sha256": "7005c4ec5cd97b455b2592c5cfcbc981ffa317494750f9c7344b16edac773a0a"
+    },
+    {
+      "buffer_view": 31,
+      "offset": 1001232,
+      "bytes": 12264,
+      "sha256": "8336ceb037213d76de7483229419e3c911ddea9d213e53552f4f05db02f4006a"
+    },
+    {
+      "buffer_view": 32,
+      "offset": 1013496,
+      "bytes": 15396,
+      "sha256": "75758b05bde8c4ad02ef581c3c004e87c48ec245f6ce855e2aee5080d32ee206"
+    },
+    {
+      "buffer_view": 33,
+      "offset": 1028892,
+      "bytes": 15396,
+      "sha256": "e7916d2239026aa14249a24d5222e2c653e6d1da22dd398300123aa94b0c59c8"
+    },
+    {
+      "buffer_view": 34,
+      "offset": 1044288,
+      "bytes": 10264,
+      "sha256": "c91b68b84d5ab6d977bbc0400d23a683c4660e9e16980efd4cd912bc56734cd1"
+    },
+    {
+      "buffer_view": 35,
+      "offset": 1054552,
+      "bytes": 8712,
+      "sha256": "bb2889451546de370a46eae242e4ff09606686a94394a788c052efde6d396af4"
+    },
+    {
+      "buffer_view": 36,
+      "offset": 1063264,
+      "bytes": 5112,
+      "sha256": "ad13d5474fce7c7e6eb8f812a0a0ea414cc77d14162c8cb297c19427cda0ac6e"
+    },
+    {
+      "buffer_view": 37,
+      "offset": 1068376,
+      "bytes": 5112,
+      "sha256": "e7f3efadf2c83f7b47dbd37585123ad4e82b187db5e38578ded207b1c301ae0e"
+    },
+    {
+      "buffer_view": 38,
+      "offset": 1073488,
+      "bytes": 3408,
+      "sha256": "e9d4627da275bce785f9b064652370c8729a8548dd5666a62c5a4f2d6ce51692"
+    },
+    {
+      "buffer_view": 39,
+      "offset": 1076896,
+      "bytes": 2280,
+      "sha256": "2019d7023f52b6aeac949277bc546237bb87557e651905545d0a9f14017615b7"
+    },
+    {
+      "buffer_view": 40,
+      "offset": 1079176,
+      "bytes": 24768,
+      "sha256": "bec6aa86d5372eb16c3f59da571defb456dcb0a32573cf48ca2d5dce0667b655"
+    },
+    {
+      "buffer_view": 41,
+      "offset": 1103944,
+      "bytes": 24768,
+      "sha256": "2eca159d175188ed9a0d898cc5fb62dddc7f8b27f6a9b6652ab93a17c20d7b4a"
+    },
+    {
+      "buffer_view": 42,
+      "offset": 1128712,
+      "bytes": 16512,
+      "sha256": "f21e42af528f2170c4d69f52f79b1bc490290f7ad07ebf6dd35f0a610bb40c2c"
+    },
+    {
+      "buffer_view": 43,
+      "offset": 1145224,
+      "bytes": 8208,
+      "sha256": "c55da2db494c9506d76be69093e108ffb373cbb7737bf545d2db73af4e3a9fbd"
+    },
+    {
+      "buffer_view": 44,
+      "offset": 1153432,
+      "bytes": 9540,
+      "sha256": "fb8a5ce110d03258337d2698204a4c9a8229716eb246c76ad66aacf29475f205"
+    },
+    {
+      "buffer_view": 45,
+      "offset": 1162972,
+      "bytes": 9540,
+      "sha256": "774fc4a0d606c5573411126d77f96e84794fd8665d8cfd6532faa3b97aa06cde"
+    },
+    {
+      "buffer_view": 46,
+      "offset": 1172512,
+      "bytes": 6360,
+      "sha256": "1bd83de5ad789c4a79212c6ac24a43a54526f9bcd66c04cdf76d3f1774150a51"
+    },
+    {
+      "buffer_view": 47,
+      "offset": 1178872,
+      "bytes": 5616,
+      "sha256": "7b9f6fbae0896149adeb23acc8ea8799752e21c038deb7c88960fe01dde92656"
+    },
+    {
+      "buffer_view": 48,
+      "offset": 1184488,
+      "bytes": 2100,
+      "sha256": "96c3a115df6c6b4859e24bf8191dd597e1116865d48998c85bc0153119aa33ca"
+    },
+    {
+      "buffer_view": 49,
+      "offset": 1186588,
+      "bytes": 2100,
+      "sha256": "8070114f1318303ab40a17bbc2b7c55da9b151e4fb897a316cb201a687109a3a"
+    },
+    {
+      "buffer_view": 50,
+      "offset": 1188688,
+      "bytes": 1400,
+      "sha256": "7ee2166fb46cac2821842002f3d54efc19673db097e0ac7a7e78eaa2f119260b"
+    },
+    {
+      "buffer_view": 51,
+      "offset": 1190088,
+      "bytes": 918,
+      "sha256": "9291637e406a853c395bfcd9e423df99142a11a4a09d9c7527d44c3a4d209a77"
+    },
+    {
+      "buffer_view": 52,
+      "offset": 1191008,
+      "bytes": 10080,
+      "sha256": "0e292d4d8a278185e4ebe3011d7347746c0bf51c55a0b8e0e6d7b6ddb23bc5a1"
+    },
+    {
+      "buffer_view": 53,
+      "offset": 1201088,
+      "bytes": 10080,
+      "sha256": "c2e8be3331b2d6c0e5a510c6dfdd1059530c2fc21340782d38c04470676a34d9"
+    },
+    {
+      "buffer_view": 54,
+      "offset": 1211168,
+      "bytes": 6720,
+      "sha256": "6fa50ae28d6776aef3f34be706dda45888652adbb1b446b224ad744c2126754f"
+    },
+    {
+      "buffer_view": 55,
+      "offset": 1217888,
+      "bytes": 3336,
+      "sha256": "e6959380eb6f2f037dc01e981452a340c480627a35fb416e5ec56d4de4d75c53"
+    },
+    {
+      "buffer_view": 56,
+      "offset": 1221224,
+      "bytes": 4800,
+      "sha256": "64255f867752887bc180a64f08b908bf43a701edc0ffdfd96eddbcdbe7f62dbf"
+    },
+    {
+      "buffer_view": 57,
+      "offset": 1226024,
+      "bytes": 4800,
+      "sha256": "353440a4737703213aef1d330cbd2bbd3fc35ee306b14c6451a18a4c26e26bbd"
+    },
+    {
+      "buffer_view": 58,
+      "offset": 1230824,
+      "bytes": 3200,
+      "sha256": "d655094f0602196865ddcafd2254cefa8ee68b490c00201988da1c53d58ff007"
+    },
+    {
+      "buffer_view": 59,
+      "offset": 1234024,
+      "bytes": 2904,
+      "sha256": "98d63bbeefd5d49a90314252bb8abf7f21b646676a7311541096a665c8cfc8d7"
+    }
+  ],
+  "textures": [
+    {
+      "path": "textures/wild_rooibos_bush_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/wild_rooibos_bush/wild_rooibos_bush_nor_gl_2k.jpg",
+      "md5": "d03a229d64ce136e9bd1b8f723b41d6a",
+      "sha256": "f04d9e1d566bedd7d5c870b9a713450b4fcf5519aa3f44b14d6c94008f449ba9"
+    },
+    {
+      "path": "textures/wild_rooibos_bush_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/wild_rooibos_bush/wild_rooibos_bush_diff_2k.jpg",
+      "md5": "620baee5986d736ab68603c4a2e938eb",
+      "sha256": "9c8f32906f59483b576448d4b8815449ee395c49ff020f16af81aac6931c8049"
+    },
+    {
+      "path": "textures/wild_rooibos_bush_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/wild_rooibos_bush/wild_rooibos_bush_arm_2k.jpg",
+      "md5": "0934d20e828feefac3ca5accb3aca52f",
+      "sha256": "6ac603cae5f4cd8f85209f8204b7e9acd097fd28a792313757b9d686249e479b"
+    },
+    {
+      "path": "textures/wild_rooibos_bush_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/wild_rooibos_bush/wild_rooibos_bush_diff_2k.jpg",
+      "md5": "620baee5986d736ab68603c4a2e938eb",
+      "sha256": "9c8f32906f59483b576448d4b8815449ee395c49ff020f16af81aac6931c8049"
+    },
+    {
+      "path": "textures/wild_rooibos_bush_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/wild_rooibos_bush/wild_rooibos_bush_diff_2k.jpg",
+      "md5": "620baee5986d736ab68603c4a2e938eb",
+      "sha256": "9c8f32906f59483b576448d4b8815449ee395c49ff020f16af81aac6931c8049"
+    }
+  ]
+}

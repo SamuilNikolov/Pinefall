@@ -159,6 +159,9 @@ void APFReserveWorld::RefreshMapFeed()
                         Pin.Kind = 0;
                         Pin.Label = Ally->GetPlayerName().Left(24);
                         Pin.Condition = Pawn->Health;
+                        Pin.Armor = Pawn->Armor;
+                        Pin.ArmorMax = Pawn->ArmorTier == 1 ? 50 : Pawn->ArmorTier == 2 ? 75 : 100;
+                        Pin.bDowned = Pawn->bDowned;
                         Pin.PlayerId = Ally->GetPlayerId();
                         PC->MapMarkers.Add(Pin);
                     }

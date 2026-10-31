@@ -21,11 +21,13 @@ class PINEFALL_API APFVehicle : public AActor
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &Out) const override;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UBoxComponent> Collision;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UStaticMeshComponent> Body;
+    UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<UStaticMeshComponent>> Wheels;
     UPROPERTY(EditAnywhere, ReplicatedUsing = RefreshVisual) bool bBoat = false;
     UPROPERTY(ReplicatedUsing = OnRep_Driver) TObjectPtr<APFCharacter> Driver;
     UPROPERTY(Replicated) float Health = 500;
     UPROPERTY(Replicated) float Fuel = 100;
     UPROPERTY(Replicated) float Speed = 0;
+    UPROPERTY(Replicated) float Steering = 0;
     bool Enter(APFCharacter *Player);
     bool Exit(bool Force = false);
     void Input(APFCharacter *Player, FVector2D Axes, bool Boost, bool Brake);
@@ -35,11 +37,13 @@ class PINEFALL_API APFVehicle : public AActor
     UFUNCTION() void OnRep_Driver();
 
   private:
+    float WheelRoll = 0, WheelSteer = 0;
+    void AnimateWheels(float Delta);
     UPROPERTY() TArray<TWeakObjectPtr<APFWaterBody>> Waters;
     FVector2D Control = FVector2D::ZeroVector;
     double LastInput = 0;
     bool bBoost = false, bBrake = false;
     FVector NetLocation = FVector::ZeroVector;
     FRotator NetRotation = FRotator::ZeroRotator;
-    bool bHasNetPose = false,bProbe=false,bLoggedContact=false,bLoggedWater=false;
+    bool bHasNetPose = false, bProbe = false, bLoggedContact = false, bLoggedWater = false;
 };

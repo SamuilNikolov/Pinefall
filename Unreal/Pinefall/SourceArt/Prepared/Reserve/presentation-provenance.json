@@ -1,0 +1,15 @@
+{
+  "author": "Original Pinefall meshes",
+  "generator": "Scripts/prepare_presentation_props.py",
+  "license": "MIT (Pinefall repository)",
+  "third_party_vehicle_model": false,
+  "meshes": [
+    "SM_OffroadWheel",
+    "SM_TrailTruck",
+    "SM_RiverBoat",
+    "SM_RangerCabin",
+    "SM_AlpineChalet",
+    "SM_AdobeHouse"
+  ],
+  "notes": "Independent cosmetic wheels; open tested house footprint; world-scale UV mapping."
+}

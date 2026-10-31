@@ -5,6 +5,7 @@
 #include "PFWorldPickup.generated.h"
 class USphereComponent;
 class UStaticMeshComponent;
+class UMaterialInstanceDynamic;
 UCLASS()
 class PINEFALL_API APFWorldPickup : public AActor
 {
@@ -15,6 +16,10 @@ class PINEFALL_API APFWorldPickup : public AActor
     UPROPERTY(VisibleAnywhere) TObjectPtr<USphereComponent> Interaction;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UStaticMeshComponent> Body;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UStaticMeshComponent> Detail;
+    UPROPERTY(VisibleAnywhere) TObjectPtr<UStaticMeshComponent> Beacon;
+    UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> HaloMaterial;
+    UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> BeaconMaterial;
+    void SetFocused(bool Focused);
     void Initialize(const FPFItemStack &Stack);
     UFUNCTION() void RefreshVisual();
     virtual void BeginPlay() override;

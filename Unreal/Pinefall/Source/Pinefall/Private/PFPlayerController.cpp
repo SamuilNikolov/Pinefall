@@ -1,4 +1,6 @@
 #include "PFPlayerController.h"
+#include "GameFramework/PlayerInput.h"
+#include "Framework/Application/SlateApplication.h"
 #include "Net/UnrealNetwork.h"
 #include "PFInterface.h"
 #include "PFCharacter.h"
@@ -48,6 +50,7 @@ void APFPlayerController::ClientClock_Implementation(double Sent, double ServerT
 void APFPlayerController::BeginPlay()
 {
     Super::BeginPlay();
+    if(IsLocalController()&&FSlateApplication::IsInitialized())ActivationHandle=FSlateApplication::Get().OnApplicationActivationStateChanged().AddUObject(this,&APFPlayerController::ApplicationActivation);
     if (!IsLocalController())
         return;
     if (FParse::Param(FCommandLine::Get(),TEXT("PFMovementProbe"))) InitializeMovementProbeGeometry();
@@ -58,6 +61,11 @@ void APFPlayerController::BeginPlay()
     if (GetNetMode() != NM_DedicatedServer)
         GetWorld()->SpawnActor<APFStormVisual>();
     SetMenu(!GetWorld()->URL.HasOption(TEXT("play")) && !FParse::Param(FCommandLine::Get(), TEXT("PFSmoke")));
+    if(FParse::Param(FCommandLine::Get(),TEXT("PFInventoryProbe")))GetWorldTimerManager().SetTimer(InventoryProbeTimer,this,&APFPlayerController::RunInventoryAccessProbe,.1,true);
+    if (FParse::Value(FCommandLine::Get(), TEXT("PFRenderReport="), RenderReportPath))
+    { RenderFrameTimes.Reserve(4096); RenderGPUTimes.Reserve(4096);
+        int32 Peers = 0; FParse::Value(FCommandLine::Get(),TEXT("PFRenderPeers="),Peers);
+        RenderExpectedPlayers = FMath::Clamp(Peers+1,1,20); }
     FString CombatView;
     if (FParse::Value(FCommandLine::Get(), TEXT("PFCombatView="), CombatView))
     {
@@ -71,7 +79,7 @@ void APFPlayerController::BeginPlay()
                     if (auto *Character = Cast<APFCharacter>(PC->GetPawn()))
                         Character->RunCombatViewProbe();
             },
-            20.f, false);
+            6.f, false);
     }
     if (FParse::Param(FCommandLine::Get(), TEXT("PFSmokeFire")))
     {
@@ -85,8 +93,7 @@ void APFPlayerController::BeginPlay()
             },
             12.f, false);
     }
-    FString CapturePath;
-    if (FParse::Value(FCommandLine::Get(), TEXT("PFCapture="), CapturePath))
+    if (FParse::Value(FCommandLine::Get(), TEXT("PFCapture="), CaptureOutputPath))
     {
         bCaptureInventory = FParse::Param(FCommandLine::Get(), TEXT("PFCaptureInventory"));
         if (bCaptureInventory)
@@ -99,27 +106,32 @@ void APFPlayerController::BeginPlay()
                     SetMenu(false);
                     InventoryPressed();
                 },
-                20.f, false);
+                6.f, false);
         }
-        FTimerHandle CaptureTimer;
-        GetWorldTimerManager().SetTimer(
-            CaptureTimer,
-            [CapturePath]() { FScreenshotRequest::RequestScreenshot(CapturePath, true, false); }, 25.f,
-            false);
-        if (FParse::Param(FCommandLine::Get(), TEXT("PFQuitAfterCapture")))
-        {
-            FTimerHandle QuitTimer;
-            GetWorldTimerManager().SetTimer(
-                QuitTimer, []() { FPlatformMisc::RequestExit(false); }, 30.f, false);
-        }
+        bQuitAfterCapture = FParse::Param(FCommandLine::Get(),TEXT("PFQuitAfterCapture"));
+        GetWorldTimerManager().SetTimer(CapturePoll,this,&APFPlayerController::CaptureWhenReady,.5f,true);
+
     }
+}
+void APFPlayerController::ApplicationActivation(bool Active)
+{
+    if(!Active&&bInventoryOpen&&!bCaptureInventory){bInventorySticky=false;InventoryReleased();}
+}
+void APFPlayerController::EndPlay(EEndPlayReason::Type Reason)
+{
+    if(FSlateApplication::IsInitialized()&&ActivationHandle.IsValid())FSlateApplication::Get().OnApplicationActivationStateChanged().Remove(ActivationHandle);
+    Super::EndPlay(Reason);
 }
 void APFPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
+    if(PlayerInput)PlayerInput->DebugExecBindings.RemoveAll([](const FKeyBind &Binding){return Binding.Key==EKeys::F1||Binding.Key==EKeys::F2||Binding.Key==EKeys::F3||Binding.Key==EKeys::F4;});
     InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &APFPlayerController::ToggleMenu);
     InputComponent->BindKey(EKeys::LeftAlt, IE_Pressed, this, &APFPlayerController::InventoryPressed);
-    InputComponent->BindKey(EKeys::LeftAlt, IE_Released, this, &APFPlayerController::InventoryReleased);
+    InputComponent->BindKey(EKeys::LeftAlt, IE_Released, this, &APFPlayerController::AltInventoryReleased);
+    InputComponent->BindKey(EKeys::RightAlt, IE_Pressed, this, &APFPlayerController::InventoryPressed);
+    InputComponent->BindKey(EKeys::RightAlt, IE_Released, this, &APFPlayerController::AltInventoryReleased);
+    InputComponent->BindKey(EKeys::Tab, IE_Pressed, this, &APFPlayerController::ToggleInventory);
     InputComponent->BindKey(EKeys::M, IE_Pressed, this, &APFPlayerController::ToggleMap);
     InputComponent->BindKey(EKeys::E, IE_Pressed, this, &APFPlayerController::InteractPressed);
     InputComponent->BindKey(EKeys::E, IE_Released, this, &APFPlayerController::InteractReleased);
@@ -143,11 +155,11 @@ void APFPlayerController::ToggleMenu()
 void APFPlayerController::SetMenu(bool Open)
 {
     bMenuOpen = Open;
+    if(Open){bInventoryOpen=false;bInventorySticky=false;bMapOpen=false;}
     UE_LOG(LogTemp, Display, TEXT("PF_MENU open=%d"), Open);
     if (auto *RangerPawn = Cast<APFCharacter>(GetPawn()))
     {
-        RangerPawn->StopFire();
-        RangerPawn->StopAim();
+        RangerPawn->ClearOverlayInput();
     }
     RefreshInputMode();
     if (Interface)
@@ -160,6 +172,7 @@ void APFPlayerController::RefreshInputMode()
     if (Open)
     {
         FInputModeGameAndUI Mode;
+        if(Interface)Mode.SetWidgetToFocus(Interface->TakeWidget());
         Mode.SetHideCursorDuringCapture(false);
         Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
         SetInputMode(Mode);
@@ -175,21 +188,30 @@ bool APFPlayerController::RoundPanelOpen() const
     auto *Match = GetWorld()->GetGameState<APFMatchState>();
     return Match && Match->IsBattleRoyale() && Match->Phase != EPFRoundPhase::Active;
 }
+void APFPlayerController::AltInventoryReleased(){if(!bInventorySticky)InventoryReleased();}
+void APFPlayerController::ToggleInventory()
+{
+    if(bInventoryOpen){bInventorySticky=false;InventoryReleased();return;}
+    InventoryPressed();bInventorySticky=bInventoryOpen;
+}
 void APFPlayerController::InventoryPressed()
 {
-    if (bMenuOpen || RoundPanelOpen())
+    bInventorySticky=false;
+    auto *InventoryOwner=Cast<APFCharacter>(GetPawn());
+    if (bMenuOpen || RoundPanelOpen() || !InventoryOwner || InventoryOwner->Health<=0 || InventoryOwner->bDowned)
         return;
     bInventoryOpen = true;
+    if(Interface)Interface->RefreshInventory();
     bMapOpen = false;
     if (auto *RangerPawn = Cast<APFCharacter>(GetPawn()))
-        RangerPawn->StopFire();
+    {RangerPawn->ClearOverlayInput();}
     RefreshInputMode();
 }
 void APFPlayerController::InventoryReleased()
 {
     if (!bInventoryOpen)
         return;
-    bInventoryOpen = false;
+    bInventoryOpen = false;bInventorySticky=false;
     RefreshInputMode();
 }
 void APFPlayerController::ToggleMap()
@@ -202,6 +224,7 @@ void APFPlayerController::ToggleMap()
 }
 void APFPlayerController::InteractPressed()
 {
+    if(bMenuOpen||bInventoryOpen||bMapOpen||RoundPanelOpen())return;
     if (auto *RangerPawn = Cast<APFCharacter>(GetPawn()))
         RangerPawn->BeginInteract();
 }
@@ -220,10 +243,9 @@ void APFPlayerController::PlayerTick(float Delta)
     }
     if (!IsLocalController())
         return;
+    if (!RenderReportPath.IsEmpty()) RecordRenderFrame();
     if (bRoundProbe)
         ProbeRoundInput();
-    if (bInventoryOpen && !bCaptureInventory && !IsInputKeyDown(EKeys::LeftAlt))
-        InventoryReleased();
     bool Round = RoundPanelOpen();
     if (Round != bLastRoundPanel)
     {

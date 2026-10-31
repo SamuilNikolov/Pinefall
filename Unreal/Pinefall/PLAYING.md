@@ -4,17 +4,17 @@ The default map is now Wildfront Reserve: a 2,016 m square region with eight set
 
 Settlements: Cedar Crossing, Willow Wharf, Rusty Rest, Granite Gorge, Sunset Sands, Frosty Falls, Meadow Market and Marshy Mill. Woodland, meadow, sand, rock and snow surfaces establish the first land-cover regions. These are not yet finished biome-specific ecosystems or authored cities.
 
-There are sixteen trail trucks and three riverboats. Look at a vehicle and press E to enter; E exits when a safe place is available. WASD drives, Shift boosts, Ctrl brakes and the mouse looks around independently. Vehicles consume fuel and take weapon damage. Some trucks start empty or broken: R while looking at one uses a vehicle service kit, restoring 150 condition and 35 fuel. A kit can also service the nearest eligible vehicle through inventory. Empty vehicles stop simulation ticks. This first pass has one driver seat, no passenger seating, suspension/wheel animation or final engine audio.
+There are sixteen trail trucks and three riverboats. Look at a vehicle and press E to enter; E exits when a safe place is available. WASD drives, Shift boosts, Ctrl brakes and the mouse looks around independently. Vehicles consume fuel and take weapon damage. Some trucks start empty or broken: R while looking at one uses a vehicle service kit, restoring 150 condition and 35 fuel. A kit can also service the nearest eligible vehicle through inventory. Empty vehicles stop simulation ticks. This first pass has one driver seat, cosmetic steering/rolling wheels, but no passenger seating, physical suspension or final engine audio.
 
 The reserve starts with 208 supply placements inside cabins and around village junctions. Weapons/ammunition, food, medical supplies, armor and service kits use server-owned inventory transactions. Rarity rolls are weighted 40% common, 28% uncommon, 20% rare, 9% epic and 3% legendary; some ordinary supply types explicitly stay common. Rarity currently classifies loot and colors its presentation; it does not yet implement the legacy attachment economy. Two actual guns remain enabled. Supplies use original recognizable 3D models; weapons retain their scanned models.
 
-M opens the full map. Scroll to zoom and middle-drag to pan. The minimap follows you. Teammates and empty/allied vehicles update through an owner-only feed; enemy-occupied vehicles and ordinary enemy positions are excluded. Landing decisions remain public during the turn-based draft. The atlas is a 2K terrain/road/roof/forest bake from the saved layout, not a satellite photograph or an orthographic renderer capture.
+M opens the full map. Scroll to zoom and middle-drag to pan. The minimap follows you. Teammates and empty/allied vehicles update through an owner-only feed; enemy-occupied vehicles and ordinary enemy positions are excluded. Landing decisions remain public during the turn-based draft. The atlas is a 4K terrain/road/roof/forest bake from the saved layout, not a satellite photograph or an orthographic renderer capture.
 
 The active ranger is a textured, stylized hooded adventurer with a readable green outfit, rather than the earlier realistic character. Crouching uses planted ankle rotations, a shallower 35 cm pelvis drop, a matching 72 cm capsule half-height and a gentler camera drop. Proper magazine/bolt animation, first-person arms, full weapon-hand IK, customization and production character art remain unfinished.
 
 ## Playing the native Unreal build
 
-Unreal 5.6.1, native version **0.3.1**. Matching Unreal clients are required. This is a development build launched through the installed editor, not a packaged replacement for the Unity release.
+Unreal 5.6.1, native working version **0.5.0-unreal-construction (unreleased)**. Matching Unreal clients are required. This is a development build launched through the installed editor, not a packaged replacement for the Unity release.
 
 ## Start and join
 
@@ -27,7 +27,7 @@ The host starts a listen server on UDP 7777. Guests enter the host's reachable a
 1. Choose a team and ready up. The host can change solo/duo/squad while in camp. Everyone must be ready before the host starts the five-second countdown. Withdrawing readiness cancels it.
 2. Spend ten points between landing priority and a starting kit. The two native kits currently enabled are Bare essentials (zero points: pistol and one spare magazine) and Ridgeline marksman (seven points: rifle, pistol, three rifle magazines and one medkit). Everyone receives one food item. Other Unity kits have not been migrated.
 3. The highest bid chooses a landing first. Each player has eighteen seconds. Click a safe map point to preview; on your turn it locks the choice. Everyone sees the draft choices, and teammates may land separately. Opposing landing claims require sixty meters of separation. A timeout chooses a valid landing automatically.
-4. Scavenge supplies, hunt and survive the storm. This first native arena uses Cedar Crossing's 480-meter playable bounds, not the full Unity reserve or lobby-sized crops. The storm uses seven wait/close cycles with the source timings and radii scaled to this arena. Waiting periods are 90/60/55/45/40/30/20 seconds; closing periods are 100/140/125/110/85/60/45 seconds. Standing outside the current circle causes health damage that bypasses armor. Closing phases enrage animals.
+4. Scavenge supplies, hunt and survive the storm. The reserve is approximately 2 km across; Cedar Crossing remains the smaller separate practice/regression map. Lobby-sized map crops and the full Unity reserve are still migration work. The storm uses seven wait/close cycles with the source timings and radii scaled to this arena. Waiting periods are 90/60/55/45/40/30/20 seconds; closing periods are 100/140/125/110/85/60/45 seconds. Standing outside the current circle causes health damage that bypasses armor. Closing phases enrage animals.
 5. The last surviving team wins. A one-person session remains a survival session until death. Dead players do not respawn during a round. The host can return everyone to a fresh, unready camp after results.
 
 Late arrivals spectate an ongoing round. In duos/squads, eliminated players spectate living teammates while their team survives, then any survivor after a team wipe. In solos, they may spectate any survivor. Practice range deaths still respawn after six seconds.
@@ -39,9 +39,13 @@ Late arrivals spectate an ongoing round. In duos/squads, eliminated players spec
 | Move / look | WASD / mouse |
 | Sprint / crouch / jump | Hold Shift / hold Ctrl / Space |
 | Fire / aim | Left mouse / hold right mouse; aiming and firing work together |
-| Reload / rifle / pistol | R / 1 / 2 |
+| Reload / pickaxe / Ridgeline / ServiceNine | R / 1 / 2 / 3 |
+| Food / medkit / armor plate / repair kit | 4 / 5 / 6 / 7 |
+| Building / wall / floor / stairs / cone | Q / F1 / F2 / F3 / F4 |
+| Rotate build / change material / edit | R / right mouse / F |
+| Edit selection / confirm / reset | Drag left mouse, release to confirm; F also confirms; right mouse resets |
 | First or third person | V |
-| Inventory | Hold left Alt; release to close |
+| Inventory | Hold Alt, release to close; Tab toggles as an alternative |
 | Equip, use or share inventory | Click a slot to equip/use; Drop shares one, Shift + Drop shares the stack |
 | Pick up / revive | E / hold E beside a downed teammate |
 | Map / close a panel | M / Escape |
@@ -49,7 +53,7 @@ Late arrivals spectate an ongoing round. In duos/squads, eliminated players spec
 
 In water, WASD swims toward your view, Space rises and Ctrl dives. Air lasts about twenty-five seconds while your head is submerged; an empty air supply causes eight health damage per second and bypasses armor. Returning to the surface restores air. These survival ticks run during battle rounds.
 
-The menu blocks local combat input but does not pause physics, the storm or the network. Sensitivity, volume and graphics quality are available. Sliding, bunny hopping, pickaxe/build controls and rebinding are still pending in Unreal.
+The menu blocks local combat input but does not pause physics, the storm or the network. Sensitivity, volume and graphics quality are available. Fast-crouch sliding, chained hops, pickaxe and building are available. Key rebinding remains migration work.
 
 ## Equipment and survival
 
@@ -88,3 +92,17 @@ Hold Space while moving to keep jumping after landings. Timed follow-up jumps wi
 Sprint stamina drain is four points per second, with sixteen-point recovery when not actively sprinting on the ground. Sliding has no walking footstep events; the current slide pose reuses the planted crouch rather than a finished dedicated animation. A modest field-of-view increase conveys speed and yields to weapon aiming.
 
 Use matching 0.3.1 builds: compressed movement input and replicated slide presentation changed. Broad packet loss/jitter and uneven-terrain handling remain validation targets; flat-fixture checks are not a full terrain certification.
+
+## Building and materials (0.5 working tree)
+
+Use 1 for the pickaxe and primary fire to harvest trees/rocks or attack. Wood, stone and metal use separate counters capped at 999; a structure costs 10. The range starts with generous materials; a battle-royale spawn starts with 100 wood, 50 stone and 20 metal. Resources can be shared through the inventory's drop controls.
+
+Q enters building. F1–F4 select wall/floor/stairs/cone; the preview follows your facing and a connected grid. Hold primary fire to build continuously, R rotates and right mouse changes material. First pieces can start on terrain: an unsupported new preview fits nearby ground on slopes, while connected pieces keep their alignment. Elevated pieces still need support and unsupported structures collapse. Wood/stone/metal have 150/300/500 maximum HP and grow into their completed strength.
+
+F edits a targeted friendly structure. Aim at its displayed grid and drag primary fire to select an edit, then release to confirm; F can also confirm. Right mouse resets. Walls use a 3×3 grid, floors/cones use four corners and ramps support the implemented width/turn patterns. E opens a built door. This is an original native implementation of the classic interaction, with remaining parity/playtest gates documented in Design/UNREAL-CONSTRUCTION.md.
+
+The right-side inventory keeps weapon/consumable key positions consistent regardless of pickup order. Empty slots remain visible. Item transactions use actual authoritative slot/revision data even when their display order changes. Esc closes the current panel; settings and inventory block your local combat controls without pausing the shared world.
+
+The minimap and storm/match status sit at the top left. Its outlined white/cyan arrow shows your live position and facing even before a team snapshot arrives; a spectator follows the watched pawn. It remains visible while browsing inventory. Ordinary enemy positions remain hidden.
+
+Built ramps use outward collision normals and a local walkable surface override. On the ground, a new preview moves ahead when centering it on your feet would put you below its midpoint. A same-facing existing ramp targets the next upper grid cell for a continuous staircase. Jumped/connected placement and the existing slide/hop controls remain available.
