@@ -1,5 +1,11 @@
 # Unreal implementation and verification status
 
+## November 1 playability follow-up
+
+Current native work adds grass distance LODs, bounded remote animal animation, persistent substantial cover, lighter build-preview/door updates, corrected upward recoil, hand-attached third-person guns, a smaller solid-color HUD and clearer scope/edit cues. The missing lake was an invalid mesh path; the corrected saved map now has a fitted visible surface and texture-free Single Layer Water shading. The previously requested seven-set photogrammetry ground/geology pass is retained and credited; further textures are frozen at the user's direction.
+
+The final two-client static forest measurement was 61.9 FPS with all 84 animals (p95 20.2 ms, p99 23.8 ms; 1600×900 High/87%, reported battery power). Combat, replicated construction and reserve integration passed 16/40/86 checks; exact latest scope/evidence is in the handoff. These are targeted development checks, not production certification, full Unity parity, human twenty-player stress testing or all-hardware/WAN verification. First-person arm/IK polish and final character/vehicle/animal art remain open gates.
+
 ## October 31 unreleased 0.5 working tree
 
 Native construction/harvesting, editable structures/support, fixed-key inventory/HUD, scanned biome scenery/short ground cover, revised original props, natural coat-detail materials and more visible storm presentation are implemented in the working tree. This is not full Unity parity or a final art release. The animals retain temporary stylized Quaternius meshes.

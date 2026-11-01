@@ -1,0 +1,42 @@
+{
+  "role": "Mud",
+  "asset": "brown_mud_leaves_01",
+  "license": "CC0-1.0",
+  "source": "https://polyhaven.com/a/brown_mud_leaves_01",
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "tile_cm": 129.99998331069946,
+  "files": {
+    "Diffuse": {
+      "path": "Diffuse.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/brown_mud_leaves_01/brown_mud_leaves_01_diff_4k.jpg",
+      "md5": "202df9690c111c6b3c4c5165fc95fb59",
+      "sha256": "bfca3a9db391ac14750705d6903daaf09e221baa2e60e97836efb8a4d3e230a4"
+    },
+    "nor_dx": {
+      "path": "nor_dx.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/brown_mud_leaves_01/brown_mud_leaves_01_nor_dx_2k.png",
+      "md5": "d9ece11098edf7ee8c3ba6afb223a51a",
+      "sha256": "9bbc1abea84c6774ead2153f8444a5ac5675ac4ce19e7e02d1cb869b20b81f26"
+    },
+    "Rough": {
+      "path": "Rough.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/brown_mud_leaves_01/brown_mud_leaves_01_rough_2k.png",
+      "md5": "dd5b4d14072667d7dc6877aa05aff9b8",
+      "sha256": "2814ae484902295dd2b0be31662aada136350874862ec387a7b8aeb2f0454ef2"
+    },
+    "Displacement": {
+      "path": "Displacement.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/brown_mud_leaves_01/brown_mud_leaves_01_disp_2k.png",
+      "md5": "5b89fee9ce8ca0bab40a8e049b70ab6a",
+      "sha256": "a6d41eee4c01717b7b0b71e6fbd9a46b903312ee440c3ada3d3c013cafc65263"
+    },
+    "AO": {
+      "path": "AO.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_mud_leaves_01/brown_mud_leaves_01_ao_2k.jpg",
+      "md5": "63089afd1c1bdbe5506d6d2b3f3942e0",
+      "sha256": "76c342dc7b5ee7dc5f2246e24147f16afcaa2c0b31599da4c385404416e16eb8"
+    }
+  }
+}

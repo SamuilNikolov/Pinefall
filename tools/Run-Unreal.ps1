@@ -24,4 +24,4 @@ if ($Mode -eq 'Join') {
     $travel = $Address
 }
 # This is an explicitly requested interactive game window. Keep the editor out of the way.
-Start-Process -FilePath $editor -ArgumentList @(('"'+$project+'"'),$travel,'-game','-windowed','-ResX=1600','-ResY=900',"-port=$Port") -WorkingDirectory $projectRoot
+Start-Process -FilePath $editor -ArgumentList @(('"'+$project+'"'),$travel,'-game','-windowed','-ResX=1600','-ResY=900','-ExecCmds="DisableAllScreenMessages"',"-port=$Port") -WorkingDirectory $projectRoot

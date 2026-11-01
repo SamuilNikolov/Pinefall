@@ -24,6 +24,20 @@ The ranger and humanoid animations originate from Quaternius' CC0 **Universal Ba
 
 ## Terrain photographs — Poly Haven, CC0
 
+The native reserve biome pass also uses the following Poly Haven CC0 surfaces. **Powered by Poly Haven.** Original downloads, authors, upstream MD5 and local SHA256 checksums are retained in each `Unreal/Pinefall/SourceArt/Terrain/Photogrammetry/<asset>/provenance.json`.
+
+| Surface | Author(s) | Native use |
+| --- | --- | --- |
+| [Forest Leaves 02](https://polyhaven.com/a/forest_leaves_02) | Rob Tuytel | Forest ground |
+| [Leafy Grass](https://polyhaven.com/a/leafy_grass) | Charlotte Baglioni | Meadow ground |
+| [Sand 01](https://polyhaven.com/a/sand_01) | Rob Tuytel | Desert ground |
+| [Snow 02](https://polyhaven.com/a/snow_02) | Rob Tuytel | Alpine/tundra ground |
+| [Rock Boulder Dry](https://polyhaven.com/a/rock_boulder_dry) | Dimitrios Savva (photography), Rico Cilliers (processing) | Slopes and geology |
+| [Brown Mud Leaves 01](https://polyhaven.com/a/brown_mud_leaves_01) | Rob Tuytel | Wet ground |
+| [Sandstone Cracks](https://polyhaven.com/a/sandstone_cracks) | Rob Tuytel | Desert geology |
+
+Derived color textures retain source 4K RGB and store upsampled source AO in alpha. A separate 2K texture packs DirectX normal XY, roughness and normalized relief height. Height affects material blending, not physical terrain displacement. See [native source-art details](Unreal/Pinefall/SourceArt/README.md).
+
 - **Aerial Grass Rock**, Rob Tuytel: https://polyhaven.com/a/aerial_grass_rock
 - **Forest Floor**, eye-candy.xyz: https://polyhaven.com/a/forest_floor
 - Diffuse and OpenGL normal maps downloaded at 1K. License: https://polyhaven.com/license

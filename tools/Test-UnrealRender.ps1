@@ -1,5 +1,6 @@
-param([string]$EngineRoot="$env:ProgramFiles\Epic Games\UE_5.6",[string]$View='Forest',[int]$Width=1600,[int]$Height=900,[int]$Port=18983,[int]$TimeoutSeconds=600,[switch]$Capture,[ValidateRange(0,2)][int]$Peers=2,[switch]$TraceCPU,[switch]$CompareLighting,[string]$RenderCommands="")
+param([string]$EngineRoot="$env:ProgramFiles\Epic Games\UE_5.6",[string]$View='Forest',[int]$Width=1600,[int]$Height=900,[int]$Port=18983,[int]$TimeoutSeconds=600,[switch]$Capture,[ValidateRange(0,2)][int]$Peers=2,[switch]$TraceCPU,[switch]$CompareLighting,[string]$RenderCommands="",[string]$CompareCommands="")
 $ErrorActionPreference='Stop'
+if($CompareLighting -and $CompareCommands){throw 'Choose lighting or command comparison, not both.'}
 $repo=Split-Path $PSScriptRoot -Parent
 $run=Join-Path $repo ('artifacts/unreal-render/'+(Get-Date -Format 'yyyyMMdd-HHmmss')+'-'+$View)
 New-Item -ItemType Directory -Path $run -Force|Out-Null
@@ -17,9 +18,11 @@ function Wait-Marker([string]$Path,[string]$Marker,[datetime]$Deadline) {
 }
 try {
     $argsHost=@(('"'+$project+'"'),'/Game/Pinefall/Maps/WildfrontReserve?listen?play?Name=Ranger','-game','-windowed',"-ResX=$Width","-ResY=$Height",'-ForceRes','-nosound','-unattended','-PFSmoke',"-PFCombatView=$View","-PFRenderPeers=$Peers",('-PFRenderReport="'+$report+'"'),('-abslog="'+$hostLog+'"'),"-port=$Port",'-ExecCmds="r.VSync 0,t.MaxFPS 0,t.IdleWhenNotForeground 0"')
+    $argsHost+='-PFRenderNoDamage'
     if($RenderCommands){$argsHost=$argsHost|ForEach-Object {if($_ -like '-ExecCmds=*'){$_ -replace '"$',(","+$RenderCommands+'"')}else{$_}}}
     if($CompareLighting){$argsHost+='-PFRenderCompareLighting'}
-    if($TraceCPU){$Capture=$true;$argsHost+=@('-trace=cpu,frame,bookmark','-statnamedevents',('-tracefile="'+(Join-Path $run 'cpu.utrace')+'"'),'-PFQuitAfterCapture')}
+    if($CompareCommands){$argsHost+=('-PFRenderExperiment="'+$CompareCommands+'"')}
+    if($TraceCPU){$Capture=$true;$argsHost+=@('-trace=cpu,gpu,frame,bookmark','-statnamedevents',('-tracefile="'+(Join-Path $run 'cpu.utrace')+'"'),'-PFQuitAfterCapture')}
     if($Capture){$argsHost+=('-PFCapture="'+$capturePath+'"')}
     $children+=Start-Process -FilePath $game -ArgumentList $argsHost -WindowStyle Normal -PassThru
     $deadline=(Get-Date).AddSeconds($TimeoutSeconds)
@@ -29,7 +32,7 @@ try {
         $argsClient=@(('"'+$project+'"'),("127.0.0.1:$Port"),'-game','-nullrhi','-nosound','-unattended','-PFSmoke',('-abslog="'+$log+'"'),'-ExecCmds="t.IdleWhenNotForeground 0,t.MaxFPS 30"')
         $children+=Start-Process -FilePath $headless -ArgumentList $argsClient -WindowStyle Hidden -PassThru
     }
-    $finalReport=if($CompareLighting){Join-Path $run 'render-balanced.json'}else{$report}
+    $finalReport=if($CompareLighting){Join-Path $run 'render-balanced.json'}elseif($CompareCommands){Join-Path $run 'render-experiment.json'}else{$report}
     while(!(Test-Path -LiteralPath $finalReport)) {
         if((Get-Date) -gt $deadline){throw "Rendered frame report timeout. Inspect $run"}
         foreach($child in $children){if($child.HasExited){throw "Render process exited. Inspect $run"}};Start-Sleep -Milliseconds 500
@@ -38,7 +41,7 @@ try {
     if($TraceCPU -and !$children[0].WaitForExit(15000)){throw "Trace did not close cleanly: $run"}
     $data=Get-Content -LiteralPath $finalReport -Raw|ConvertFrom-Json
     if(!$data.rendered -or $data.minimum_players -lt ($Peers+1) -or $data.frames -lt 100 -or $data.width -ne $Width -or $data.height -ne $Height){throw "Invalid graphics/peer coverage. Inspect $report"}
-    @{scope="Graphics-enabled listen host with $Peers real headless remote clients capped at 30 FPS on the same machine; static biome view, AI and HUD active. One-machine static-scene evidence; no whole-match, public-WAN or different-hardware claim";view=$View;remote_peers=$Peers;render_commands=$RenderCommands;lighting_comparison=[bool]$CompareLighting;report=(Split-Path -Leaf $finalReport)}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $run 'scope.json') -Encoding utf8
+    @{scope="Graphics-enabled listen host with $Peers real headless remote clients capped at 30 FPS on the same machine; static biome view, AI and HUD active. One-machine static-scene evidence; no whole-match, public-WAN or different-hardware claim";view=$View;remote_peers=$Peers;render_commands=$RenderCommands;compare_commands=$CompareCommands;lighting_comparison=[bool]$CompareLighting;report=(Split-Path -Leaf $finalReport)}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $run 'scope.json') -Encoding utf8
     Write-Output ("Rendered host: {0:N1} FPS average, p95 {1:N1} ms, p99 {2:N1} ms. Evidence: {3}" -f (1000/$data.frame_avg_ms),$data.frame_p95_ms,$data.frame_p99_ms,$run)
     if($CompareLighting){
         $before=Get-Content -LiteralPath $report -Raw|ConvertFrom-Json
@@ -46,4 +49,5 @@ try {
         foreach($key in @('r.Nanite','landscape.RenderNanite','r.ScreenPercentage','foliage.DensityScale','r.ViewDistanceScale','width','height','wildlife_population','minimum_players')){if($before.$key -ne $data.$key){throw "Lighting comparison changed $key : $run"}}
         Write-Output ("Same-process High: {0:N1} FPS; Balanced: {1:N1} FPS" -f (1000/$before.frame_avg_ms),(1000/$data.frame_avg_ms))
     }
+    if($CompareCommands){$before=Get-Content -LiteralPath $report -Raw|ConvertFrom-Json;Write-Output ("Same-process baseline: {0:N1} FPS; experiment: {1:N1} FPS" -f (1000/$before.frame_avg_ms),(1000/$data.frame_avg_ms))}
 } finally {foreach($child in $children){if(!$child.HasExited){Stop-Process -Id $child.Id -Force -ErrorAction SilentlyContinue}}}

@@ -1,0 +1,42 @@
+{
+  "role": "Sand",
+  "asset": "sand_01",
+  "license": "CC0-1.0",
+  "source": "https://polyhaven.com/a/sand_01",
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "tile_cm": 150.0,
+  "files": {
+    "Diffuse": {
+      "path": "Diffuse.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/sand_01/sand_01_diff_4k.jpg",
+      "md5": "5fd525c68fffba0467dd16853854605d",
+      "sha256": "882e10aec3a0dd2eae3bc5c726f2dbb5c1aa8748211ec19d90728430d3253795"
+    },
+    "nor_dx": {
+      "path": "nor_dx.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/sand_01/sand_01_nor_dx_2k.png",
+      "md5": "46c3216d202fb7da0f020328ab14219d",
+      "sha256": "895c40a075dcbf3e02a2a570677cdbb3ee53b2a6073098fa329dd4d028b813c2"
+    },
+    "Rough": {
+      "path": "Rough.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/sand_01/sand_01_rough_2k.png",
+      "md5": "f1fbebee2f060ff63ad170a227c10442",
+      "sha256": "63f33004d2f0f411297d1b79af04dec537624726c53a4264ae2cd0db13f10225"
+    },
+    "Displacement": {
+      "path": "Displacement.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/sand_01/sand_01_disp_2k.png",
+      "md5": "b3405a4242951301a76de11359ea4f79",
+      "sha256": "3a2cfb70b8e688f4b9d09b08684e94e4dfb5ad934d042c8d71879b8b612f3b7a"
+    },
+    "AO": {
+      "path": "AO.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/sand_01/sand_01_ao_2k.jpg",
+      "md5": "fbf955528b2b6bb839a54c4791f2d858",
+      "sha256": "869cb6a93c2fb37fbe37236b33e386871134a5b154354396c7ba000f1be09b22"
+    }
+  }
+}

@@ -11,6 +11,7 @@
 #include "PFUserSettings.h"
 #include "DynamicRHI.h"
 #include "RenderTimer.h"
+#include "ContentStreaming.h"
 #include "HAL/PlatformMemory.h"
 #include "Engine/GameViewportClient.h"
 #include "Engine/Engine.h"
@@ -139,10 +140,22 @@ void APFPlayerController::RecordRenderFrame()
     Stats(TEXT("game_thread"), RenderGameTimes);Stats(TEXT("render_thread"), RenderDrawTimes);Stats(TEXT("rhi_thread"), RenderRHITimes);
     Report->SetNumberField(TEXT("minimum_free_physical_gb"),double(RenderMinimumFreeMemory)/(1024.*1024.*1024.));
     Report->SetNumberField(TEXT("process_physical_gb"),double(FPlatformMemory::GetStats().UsedPhysical)/(1024.*1024.*1024.));
+    Report->SetBoolField(TEXT("on_battery"), FPlatformMisc::IsRunningOnBattery());
+    auto &Streaming = IStreamingManager::Get();
+    if (Streaming.IsTextureStreamingEnabled())
+    {
+        auto &Textures = Streaming.GetTextureStreamingManager();
+        Report->SetNumberField(TEXT("texture_pool_mb"), Textures.GetPoolSize() / (1024. * 1024.));
+        Report->SetNumberField(TEXT("texture_required_mb"), Textures.GetRequiredPoolSize() / (1024. * 1024.));
+        Report->SetNumberField(TEXT("texture_over_budget_mb"), Textures.GetMemoryOverBudget() / (1024. * 1024.));
+        Report->SetNumberField(TEXT("texture_wanting_resources"), Textures.GetNumWantingResources());
+    }
     for (const TCHAR *Name : {TEXT("r.Nanite"), TEXT("r.ScreenPercentage"), TEXT("r.ViewDistanceScale"),
                               TEXT("foliage.DensityScale"), TEXT("t.MaxFPS"), TEXT("r.VSync"),
                               TEXT("landscape.RenderNanite"), TEXT("sg.GlobalIlluminationQuality"),
-                              TEXT("sg.ReflectionQuality")})
+                              TEXT("sg.ReflectionQuality"), TEXT("r.VRS.ContrastAdaptiveShading"),
+                              TEXT("r.VRS.EnableSoftware"), TEXT("r.EarlyZPass"),
+                              TEXT("r.EarlyZPassOnlyMaterialMasking"), TEXT("foliage.ForceLOD")})
         if (auto *Variable = IConsoleManager::Get().FindConsoleVariable(Name))
             Report->SetNumberField(Name, Variable->GetFloat());
     if (auto *Settings = UPFUserSettings::Get())
@@ -153,11 +166,14 @@ void APFPlayerController::RecordRenderFrame()
     bool Saved = FFileHelper::SaveStringToFile(Json, *RenderReportPath);
     UE_LOG(LogTemp, Display, TEXT("PF_RENDER_REPORT rendered=%d saved=%d frames=%d peers=%d"), Rendered,
            Saved, RenderFrameTimes.Num(), Match ? Match->PlayerArray.Num() - 1 : 0);
-    if (!bRenderComparisonDone && FParse::Param(FCommandLine::Get(), TEXT("PFRenderCompareLighting")))
+    FString Experiment;
+    const bool CompareLighting = FParse::Param(FCommandLine::Get(), TEXT("PFRenderCompareLighting"));
+    const bool CompareExperiment = FParse::Value(FCommandLine::Get(), TEXT("PFRenderExperiment="), Experiment);
+    if (!bRenderComparisonDone && (CompareLighting || CompareExperiment))
     {
         bRenderComparisonDone = true;
         auto *Settings = UPFUserSettings::Get();
-        if (Settings)
+        if (CompareLighting && Settings)
         {
             bRenderOriginalBalanced = Settings->bBalancedLighting;
             RenderOriginalGI = Settings->GetGlobalIlluminationQuality();
@@ -168,7 +184,10 @@ void APFPlayerController::RecordRenderFrame()
             if (auto *Cap = IConsoleManager::Get().FindConsoleVariable(TEXT("t.MaxFPS")))
                 Cap->Set(0.f, ECVF_SetByConsole);
         }
-        RenderReportPath = FPaths::GetPath(RenderReportPath) / TEXT("render-balanced.json");
+        if (CompareExperiment && GEngine)
+            GEngine->Exec(GetWorld(), *Experiment);
+        RenderReportPath = FPaths::GetPath(RenderReportPath) /
+            (CompareLighting ? TEXT("render-balanced.json") : TEXT("render-experiment.json"));
         RenderStartedAt = 0;
         RenderReadyAt = Now + 12;
         RenderMinimumPlayers = MAX_int32;
@@ -176,7 +195,7 @@ void APFPlayerController::RecordRenderFrame()
         RenderFrameTimes.Reset();RenderGPUTimes.Reset();RenderGameTimes.Reset();RenderDrawTimes.Reset();RenderRHITimes.Reset();
         return;
     }
-    if (bRenderComparisonDone)
+    if (bRenderComparisonDone && CompareLighting)
         if (auto *Settings = UPFUserSettings::Get())
         {
             // Restore saved-settings state without disturbing the final image.

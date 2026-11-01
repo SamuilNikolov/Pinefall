@@ -19,7 +19,7 @@ foreach ($view in $Views) {
     $log = Join-Path $output "$stem.log"
     $arguments = @('"' + $project + '"', '/Game/Pinefall/Maps/WildfrontReserve?play?Name=Ranger',
         '-game', '-windowed', "-ResX=$Width", "-ResY=$Height", '-ForceRes', '-nosound', '-unattended',
-        "-PFCombatView=$view", '-PFCapture="' + $png + '"', '-PFQuitAfterCapture', '-abslog="' + $log + '"')
+        "-PFCombatView=$view", '-PFRenderNoDamage', '-ExecCmds="DisableAllScreenMessages"', '-PFCapture="' + $png + '"', '-PFQuitAfterCapture', '-abslog="' + $log + '"')
     if ($Inventory) { $arguments += '-PFCaptureInventory' }
     $style = if ($ShowWindow) { 'Normal' } else { 'Hidden' }
     $process = Start-Process -FilePath $editor -ArgumentList $arguments -WindowStyle $style -PassThru

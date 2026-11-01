@@ -1,5 +1,14 @@
 # Pinefall Wildfront changelog
 
+## Native playability and rendering follow-up — 2026-11-01
+
+- Added source-preserving distance LODs for short grass and skipped offscreen cosmetic animal animation on clients. Preserved substantial cover across quality settings; no physics/collision is removed with foliage detail.
+- Kept moving construction previews movable and collision-free, avoided collision rebuilds on material changes, and reused edited door geometry. Edit hovering is frame-responsive and has a distinct pale highlight.
+- Corrected recoil to an explicit upward camera impulse independent of mouse axis inversion. Attached third-person weapons to the animated hand and allowed the hand to drive their reload motion.
+- Removed the redundant gun-information card, reduced survival-panel size and persistent text, added solid selected-slot colors and contextual build resources. Improved center-dot/scope contrast; replaced hundreds of scope-mask draw elements with one mesh.
+- Repaired the reserve's invalid water mesh reference, synchronized its visible surface with its water volume and generated texture-free Single Layer Water shading.
+- Completed the earlier requested seven-surface CC0 biome art pass with source attribution and deterministic packed inputs. Additional texture work is now frozen while performance/mechanics are prioritized. See `docs/PERFORMANCE.md` and the current handoff for measured scope and limitations.
+
 ## Nanite terrain rendering follow-up — 2026-10-31
 
 - Built Nanite Landscape data for the reserve while retaining the collision/fallback heightfield and dense scanned scenery. Excluded short grass from persistent indirect-lighting contributions without reducing density or receiving light.

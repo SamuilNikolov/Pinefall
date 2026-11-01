@@ -20,6 +20,8 @@
 #include "PFReserveWorld.h"
 #include "PFVehicle.h"
 #include "PFWorldPickup.h"
+#include "PFWaterBody.h"
+#include "Components/BoxComponent.h"
 #include "Serialization/JsonSerializer.h"
 #include "TimerManager.h"
 
@@ -179,6 +181,18 @@ void APFGameMode::RunReserveProbe()
     }
     if (ProbeStep == 0)
     {
+        APFWaterBody *Water = nullptr;
+        for(TActorIterator<APFWaterBody> It(GetWorld()); It; ++It){Water=*It;break;}
+        Check(Water && Water->Surface->GetStaticMesh(), TEXT("reserve lake has a real visible surface mesh"));
+        if(Water)
+        {
+            const FVector E=Water->WaterBounds->GetScaledBoxExtent();
+            const FVector Visual=Water->Surface->Bounds.BoxExtent;
+            Check(FMath::IsNearlyEqual(E.X,Visual.X,2.f)&&FMath::IsNearlyEqual(E.Y,Visual.Y,2.f),
+                  TEXT("visible lake footprint matches the swimming and boat volume"));
+            Check(FMath::IsNearlyEqual(Water->SurfaceHeight(),Water->Surface->GetComponentLocation().Z,1.f),
+                  TEXT("boats and swimmers use the visible water level"));
+        }
         Check(Reserve != nullptr, TEXT("larger reserve gameplay actor exists"));
         if (!Reserve)
         {

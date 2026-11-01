@@ -30,9 +30,10 @@ APFBuildPiece::APFBuildPiece()
     Door->bUseComplexAsSimpleCollision=true;Door->bUseAsyncCooking=false;Door->SetCollisionProfileName(TEXT("BlockAll"));
 }
 float APFBuildPiece::Maximum() const { return Build.Request.Material==EPFBuildMaterial::Wood?150:Build.Request.Material==EPFBuildMaterial::Stone?300:500; }
-void APFBuildPiece::Initialize(const FPFBuildState &State,bool Prediction)
+void APFBuildPiece::Initialize(const FPFBuildState &State,bool Prediction,bool PreviewOnly)
 {
-    Build=State;bPrediction=Prediction;Health=Maximum()*.2f;
+    Build=State;bPrediction=Prediction;bPreviewOnly=PreviewOnly;Health=Maximum()*.2f;
+    if(PreviewOnly)SetActorEnableCollision(false);
     if(Prediction){SetReplicates(false);Geometry->SetCastShadow(false);Door->SetCastShadow(false);}
     ApplyGeometry();
     if(HasAuthority()&&!Prediction)SetActorTickEnabled(true);
@@ -60,11 +61,15 @@ void APFBuildPiece::ApplyGeometry()
     FTransform Target=PFBuildGrid::Transform(Build.Request);
     if(!GetActorTransform().Equals(Target,.01f))
     {Geometry->SetMobility(EComponentMobility::Movable);SetActorTransform(Target);}
-    uint32 Hash=HashCombine(HashCombine(uint8(Build.Request.Kind),Build.Mask),HashCombine(Build.RampPattern,uint8(Build.Request.Material)));
+    uint32 Hash=HashCombine(HashCombine(uint8(Build.Request.Kind),Build.Mask),Build.RampPattern);
     if(Hash!=GeometryHash)
     {
         GeometryHash=Hash;
-        Fill(Geometry,PFBuildGeometry::Generate(Build.Request.Kind,Build.Mask,Build.RampPattern),true);
+        Fill(Geometry,PFBuildGeometry::Generate(Build.Request.Kind,Build.Mask,Build.RampPattern),!bPreviewOnly);
+    }
+    if(SurfaceMaterial!=uint8(Build.Request.Material))
+    {
+        SurfaceMaterial=uint8(Build.Request.Material);
         const TCHAR *Names[]={TEXT("Wood"),TEXT("Stone"),TEXT("Metal")};
         auto *Surface=LoadObject<UMaterialInterface>(nullptr,*FString::Printf(TEXT("/Game/Pinefall/Materials/Reserve/M_Reserve_%s.M_Reserve_%s"),Names[uint8(Build.Request.Material)],Names[uint8(Build.Request.Material)]));
         Geometry->SetMaterial(0,Surface);Door->SetMaterial(0,Surface);
@@ -72,7 +77,8 @@ void APFBuildPiece::ApplyGeometry()
     int32 Column=0;bool HasDoor=Build.Request.Kind==EPFBuildKind::Wall&&PFBuildGrid::IsDoor(Build.Mask,Column);
     if(HasDoor)
     {
-        FPFBuildMesh Slab;Slab.Box({0,PFBuildGrid::Tile/6,PFBuildGrid::Storey/3},{12,PFBuildGrid::Tile/3,PFBuildGrid::Storey*2/3});Fill(Door,Slab,true);
+        if(Door->GetNumSections()==0)
+        {FPFBuildMesh Slab;Slab.Box({0,PFBuildGrid::Tile/6,PFBuildGrid::Storey/3},{12,PFBuildGrid::Tile/3,PFBuildGrid::Storey*2/3});Fill(Door,Slab,!bPreviewOnly);}
         Door->SetRelativeLocation({256,-256+Column*PFBuildGrid::Tile/3,0});
         Door->SetRelativeRotation(FRotator(0,Build.bDoorOpen?95:0,0));
     }
@@ -80,14 +86,17 @@ void APFBuildPiece::ApplyGeometry()
     Door->SetVisibility(HasDoor);Door->SetCollisionEnabled(HasDoor?ECollisionEnabled::QueryAndPhysics:ECollisionEnabled::NoCollision);
     Geometry->CanCharacterStepUpOn=ECB_Yes;
     Geometry->SetWalkableSlopeOverride(FWalkableSlopeOverride(Build.Request.Kind==EPFBuildKind::Ramp?WalkableSlope_Increase:WalkableSlope_Default,50.f));
-    Geometry->SetMobility(EComponentMobility::Static); // Predicted static bases send world-space moves, not unknown local NetGUIDs.
+    // A moving preview must stay movable: switching back to Static each frame
+    // repeatedly re-registers its render/physics state. Placed predictions stay
+    // static so movement bases never send unknown local NetGUIDs to the server.
+    Geometry->SetMobility(bPreviewOnly?EComponentMobility::Movable:EComponentMobility::Static);
     OnRep_Condition();
 }
 bool APFBuildPiece::SetEdit(uint16 Mask,uint8 RampPattern,bool DoorOpen)
 {
     if(!HasAuthority()||Health<=0||!PFBuildGrid::ValidEdit(Build.Request.Kind,Mask,RampPattern))return false;
     FlushNetDormancy();Build.Mask=Mask;Build.RampPattern=RampPattern;Build.bDoorOpen=DoorOpen;Build.Revision++;
-    GeometryHash=0;OnRep_Build();ForceNetUpdate();return true;
+    OnRep_Build();ForceNetUpdate();return true;
 }
 bool APFBuildPiece::ToggleDoor(APawn *User)
 {

@@ -43,6 +43,7 @@ void UPFConstructionComponent::BeginPlay()
     ViewPickaxe=CreateTool(TEXT("First person harvesting tool"),Player()->Camera,NAME_None);ViewPickaxe->SetOnlyOwnerSee(true);ViewPickaxe->SetCastShadow(false);ViewPickaxe->SetRelativeLocation({35,20,-30});
     EditGrid=NewObject<UProceduralMeshComponent>(GetOwner(),TEXT("Local edit cells"));GetOwner()->AddInstanceComponent(EditGrid);EditGrid->SetupAttachment(Player()->GetRootComponent());EditGrid->SetAbsolute(true,true,true);EditGrid->SetCollisionEnabled(ECollisionEnabled::NoCollision);EditGrid->SetCastShadow(false);EditGrid->RegisterComponent();EditGrid->SetVisibility(false);
     RemovedEditMaterial=LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/Pinefall/Materials/M_BuildEditRemoved.M_BuildEditRemoved"));
+    HoverEditMaterial=LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/Pinefall/Materials/M_BuildEditHover.M_BuildEditHover"));
     OnRep_Mode();
 }
 APFCharacter *UPFConstructionComponent::Player() const {return Cast<APFCharacter>(GetOwner());}
@@ -182,7 +183,7 @@ void UPFConstructionComponent::UpdatePreview()
     if(!Ghost)
     {
         Ghost=GetWorld()->SpawnActorDeferred<APFBuildPiece>(APFBuildPiece::StaticClass(),PFBuildGrid::Transform(PreviewRequest),P,nullptr,ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-        FPFBuildState Data;Data.Request=PreviewRequest;Data.Mask=PFBuildGrid::FullMask(Selected);Ghost->Initialize(Data,true);Ghost->FinishSpawning(PFBuildGrid::Transform(PreviewRequest));
+        FPFBuildState Data;Data.Request=PreviewRequest;Data.Mask=PFBuildGrid::FullMask(Selected);Ghost->Initialize(Data,true,true);Ghost->FinishSpawning(PFBuildGrid::Transform(PreviewRequest));
         Ghost->SetActorEnableCollision(false);
     }
     FPFBuildState Data;Data.Request=PreviewRequest;Data.Mask=PFBuildGrid::FullMask(Selected);Ghost->Build=Data;Ghost->ApplyGeometry();Ghost->SetActorHiddenInGame(false);
@@ -243,7 +244,7 @@ void UPFConstructionComponent::ServerBeginEdit_Implementation(APFBuildPiece *Tar
 }
 void UPFConstructionComponent::ClientEditing_Implementation(APFBuildPiece *Target,uint32 Revision,const FString &Error)
 {
-    Hint=Error;EditTarget=Target;EditRevision=Revision;if(Target){EditMask=Target->Build.Mask;RampPattern=Target->Build.RampPattern;Visited=0;HoveredCell=-1;PaintedEdit=0;Target->Geometry->SetVisibility(false);Target->Door->SetVisibility(false);if(Ghost)Ghost->SetActorHiddenInGame(true);PaintEditGrid();}
+    Hint=Error;EditTarget=Target;EditRevision=Revision;SetComponentTickInterval(Target?0.f:.05f);if(Target){EditMask=Target->Build.Mask;RampPattern=Target->Build.RampPattern;Visited=0;HoveredCell=-1;PaintedEdit=0;Target->Geometry->SetVisibility(false);Target->Door->SetVisibility(false);if(Ghost)Ghost->SetActorHiddenInGame(true);PaintEditGrid();}
 }
 void UPFConstructionComponent::ConfirmEdit()
 {
@@ -357,6 +358,7 @@ void UPFConstructionComponent::ServerDropMaterial_Implementation(uint8 Kind,int3
 
 void UPFConstructionComponent::RestoreEditVisual()
 {
+    SetComponentTickInterval(.05f);
     if(EditTarget.IsValid()){EditTarget->Geometry->SetVisibility(true);EditTarget->ApplyGeometry();}
     if(EditGrid)EditGrid->SetVisibility(false);PaintedEdit=0;
 }
@@ -384,7 +386,7 @@ void UPFConstructionComponent::PaintEditGrid()
     {
         auto &Mesh=Sections[I];if(Mesh.Vertices.IsEmpty())continue;
         EditGrid->CreateMeshSection_LinearColor(I,Mesh.Vertices,Mesh.Triangles,Mesh.Normals,Mesh.UV,Colors,Tangents,false);
-        EditGrid->SetMaterial(I,I==1&&RemovedEditMaterial?RemovedEditMaterial.Get():ValidPreviewMaterial.Get());
+        EditGrid->SetMaterial(I,I==2&&HoverEditMaterial?HoverEditMaterial.Get():I==1&&RemovedEditMaterial?RemovedEditMaterial.Get():ValidPreviewMaterial.Get());
     }
 }
 

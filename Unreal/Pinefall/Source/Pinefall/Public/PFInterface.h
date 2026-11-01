@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Fonts/SlateFontInfo.h"
 #include "Styling/SlateBrush.h"
+#include "Rendering/RenderingCommon.h"
 #include "PFInterface.generated.h"
 class UCanvasPanel;
 class UBorder;
@@ -46,6 +47,8 @@ class PINEFALL_API UPFInterface : public UUserWidget
   protected:
     float RefreshRemaining = 0;
     mutable TArray<FVector2D> CombatLines;
+    mutable TArray<FSlateVertex> ScopeVertices;
+    mutable TArray<SlateIndex> ScopeIndices;
     FVector2D TargetBarPosition = FVector2D::ZeroVector;
     float TargetBarFraction = 0;
     bool bShowTargetBar = false;

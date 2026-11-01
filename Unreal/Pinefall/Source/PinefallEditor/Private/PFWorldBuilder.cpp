@@ -298,3 +298,35 @@ void UPFWorldBuilder::FinishRenderingPreparation()
         GShaderCompilingManager->FinishAllCompilation();
     FAssetCompilingManager::Get().FinishAllCompilation();
 }
+
+bool UPFWorldBuilder::ConfigureGroundCoverLods(UStaticMesh *Mesh)
+{
+    if (!Mesh || Mesh->GetNumSourceModels() < 1 ||
+        (Mesh->GetName() != TEXT("SM_GrassPatch") && Mesh->GetName() != TEXT("SM_DryGrassPatch")))
+        return false;
+    FAssetCompilingManager::Get().FinishAllCompilation();
+    const int32 OriginalTriangles = Mesh->GetNumTriangles(0);
+    const auto Build = Mesh->GetSourceModel(0).BuildSettings;
+    const auto Reduction = Mesh->GetSourceModel(0).ReductionSettings;
+    const float Ratios[] = {1.f, .5f, .18f};
+    const float Screens[] = {1.f, .18f, .085f};
+    Mesh->Modify();
+    Mesh->SetNumSourceModels(3);
+    Mesh->bAutoComputeLODScreenSize = false;
+    for (int32 I = 0; I < 3; ++I)
+    {
+        auto &Source = Mesh->GetSourceModel(I);
+        Source.BuildSettings = Build;
+        Source.ReductionSettings = Reduction;
+        Source.ReductionSettings.BaseLODModel = 0;
+        Source.ReductionSettings.PercentTriangles = Ratios[I];
+        Source.ScreenSize = Screens[I];
+    }
+    Mesh->Build(false);
+    FAssetCompilingManager::Get().FinishAllCompilation();
+    const bool Valid = Mesh->GetNumLODs() == 3 && Mesh->GetNumTriangles(0) == OriginalTriangles &&
+        Mesh->GetNumTriangles(1) < OriginalTriangles && Mesh->GetNumTriangles(2) < Mesh->GetNumTriangles(1);
+    UE_LOG(LogTemp, Display, TEXT("PF_GRASS_LODS mesh=%s valid=%d triangles=%d,%d,%d"),
+        *Mesh->GetName(), Valid, Mesh->GetNumTriangles(0), Mesh->GetNumTriangles(1), Mesh->GetNumTriangles(2));
+    return Valid;
+}

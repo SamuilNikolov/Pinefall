@@ -53,6 +53,8 @@ if ($RebuildCharacterMaterials -or $passes -contains 'import_stylized_ranger.py'
 $needsReserve=$RebuildReserve -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Maps\WildfrontReserve.umap'))
 if($needsReserve){$passes+='build_reserve.py'}
 if($needsReserve -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Art\T_ReserveAtlas.uasset'))){$passes+='import_reserve_atlas.py'}
+if($RebuildEnvironment -or $needsReserve){$passes+='repair_water.py'}
+if(!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Materials\M_BuildEditHover.uasset'))){$passes+='make_edit_hover.py'}
 foreach ($pass in $passes) {
     $logFolder = Join-Path $repo 'artifacts'
     New-Item -ItemType Directory -Path $logFolder -Force | Out-Null

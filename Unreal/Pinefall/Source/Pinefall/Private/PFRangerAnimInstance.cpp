@@ -1,5 +1,6 @@
 #include "PFRangerAnimInstance.h"
 #include "PFCharacter.h"
+#include "PFConstructionComponent.h"
 #include "Animation/AnimInstanceProxy.h"
 #include "Animation/AnimSequence.h"
 #include "Animation/AnimCurveTypes.h"
@@ -55,7 +56,8 @@ class FPFRangerAnimProxy : public FAnimInstanceProxy
         Rate = Speed < 15 ? 1 : FMath::Clamp(Speed / (Speed > 600 ? 500.f : 220.f), .65f, 2.f);
         if (Player->bIsCrouched && Speed >= 15) Rate = FMath::Clamp(Speed / 150.f, .65f, 1.6f);
         bReloading = Player->bReloading;
-        bArmed = !Player->WeaponId.IsNone() && !Player->Vehicle;
+        bArmed = !Player->WeaponId.IsNone() && !Player->Vehicle &&
+                 (!Player->Construction || Player->Construction->Mode == EPFConstructionMode::Combat);
         bool Pistol = Player->WeaponId == TEXT("ServiceNine");
         UAnimSequence *Hold = Anim->Clips
                                   .FindRef(bReloading ? (Pistol ? TEXT("PistolReload") : TEXT("RifleReload"))

@@ -1,0 +1,9 @@
+{
+  "view": "Forest",
+  "scope": "Graphics-enabled listen host with 2 real headless remote clients capped at 30 FPS on the same machine; static biome view, AI and HUD active. One-machine static-scene evidence; no whole-match, public-WAN or different-hardware claim",
+  "lighting_comparison": false,
+  "remote_peers": 2,
+  "compare_commands": "",
+  "render_commands": "",
+  "report": "render.json"
+}

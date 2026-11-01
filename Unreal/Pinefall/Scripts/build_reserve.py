@@ -200,6 +200,7 @@ for source in sorted((PROJECT / "SourceArt/Prepared/Reserve").glob("*.glb")):
     LIB.save_loaded_asset(mesh, False)
     meshes[name] = mesh
 build_terrain(PROJECT, node, wire, output, material, texture)
+build_terrain(PROJECT, node, wire, output, material, texture, rock=True)
 road = material("M_ReserveRoad")
 output(
     node(
@@ -321,7 +322,7 @@ water = spawn(
 water.get_editor_property("water_bounds").set_box_extent(
     unreal.Vector(22000, 17000, 1000)
 )
-water.surface.set_static_mesh(unreal.load_asset("/Game/Pinefall/Art/World/SM_Lake"))
+water.surface.set_static_mesh(unreal.load_asset("/Game/Pinefall/Art/World/SM_Lake/StaticMeshes/SM_Lake"))
 water.surface.set_relative_scale3d(unreal.Vector(220, 170, 1))
 water.surface.set_material(
     0, unreal.load_asset("/Game/Pinefall/Materials/M_LakeSurface")

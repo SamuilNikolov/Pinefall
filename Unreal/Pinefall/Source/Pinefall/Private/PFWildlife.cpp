@@ -49,6 +49,12 @@ APFWildlife::APFWildlife()
 void APFWildlife::BeginPlay()
 {
     Super::BeginPlay();
+    // Authority needs current attack poses even outside its rendering camera.
+    // Remote clients only need visible cosmetic poses; in particular, headless
+    // clients must not evaluate every replicated animal skeleton continuously.
+    GetMesh()->VisibilityBasedAnimTickOption = HasAuthority()
+        ? EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones
+        : EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
     ApplySpecies();
     if(HasAuthority())GetWorld()->GetSubsystem<UPFAnimalHitQueries>()->Register(this);
     ApplyRage();

@@ -1,12 +1,15 @@
 #include "PFCombatHUD.h"
 #include "Engine/Texture2D.h"
 #include "PFCharacter.h"
+#include "PFConstructionComponent.h"
 #include "PFInterface.h"
 #include "PFInventoryComponent.h"
 #include "PFMatchState.h"
 #include "PFPlayerController.h"
 #include "Rendering/DrawElements.h"
 #include "Styling/CoreStyle.h"
+#include "Framework/Application/SlateApplication.h"
+#include "Rendering/SlateRenderer.h"
 
 int32 UPFCombatHUD::NativePaint(const FPaintArgs &Args, const FGeometry &G, const FSlateRect &Cull,
                                 FSlateWindowElementList &Out, int32 Layer, const FWidgetStyle &Style,
@@ -40,26 +43,31 @@ int32 UPFInterface::PaintCombat(const FGeometry &G, FSlateWindowElementList &Out
         FSlateDrawElement::MakeLines(Out, DrawLayer + 1, G.ToPaintGeometry(), CombatLines,
                                      ESlateDrawEffect::None, Color, true, Width);
     };
-    const bool Scope = Player->Weapon.AimFOV <= 35 && Player->AimAlpha > .92f;
+    const bool Combat = !Player->Construction || Player->Construction->Mode == EPFConstructionMode::Combat;
+    const bool Editing = Player->Construction && Player->Construction->IsEditing();
+    const bool Scope = Combat && Player->Weapon.AimFOV <= 35 && Player->AimAlpha > .92f;
     if (Scope)
     {
         const float Radius = FMath::Min(Size.X, Size.Y) * .38f;
-        // A circular optic keeps its central image sharp. Mask rows stay outside
-        // the lens, with no depth-of-field blur hiding an actual target.
-        const float Row = Size.Y / 256.f;
-        for (int32 I = 0; I < 256; I++)
+        // One reusable mesh replaces hundreds of per-row mask draw elements.
+        // The outer ring lies beyond the viewport; the inner edge is the lens.
+        ScopeVertices.Reset();ScopeIndices.Reset();
+        constexpr int32 Segments = 96;
+        for (int32 I = 0; I <= Segments; I++)
         {
-            float Y = I * Row, NearY = FMath::Max(0.f, FMath::Abs(Y + Row * .5f - Center.Y) - Row * .5f);
-            if (NearY >= Radius)
+            const float A = I * 2 * PI / Segments;
+            const FVector2D Direction(FMath::Cos(A), FMath::Sin(A));
+            for (float R : {Radius, float(Size.Size())})
+                ScopeVertices.Add(FSlateVertex::Make<ESlateVertexRounding::Disabled>(
+                    G.GetAccumulatedRenderTransform(), FVector2f(Center + Direction * R), FVector2f(.5f), FColor(0,0,0,250)));
+            if (I < Segments)
             {
-                Box(FVector2D(0, Y), FVector2D(Size.X, Row + .5f), FLinearColor(0, 0, 0, .98f));
-                continue;
+                const SlateIndex V = I * 2;
+                ScopeIndices.Append({V, SlateIndex(V+1), SlateIndex(V+2), SlateIndex(V+2), SlateIndex(V+1), SlateIndex(V+3)});
             }
-            float X = FMath::Sqrt(Radius * Radius - NearY * NearY);
-            Box(FVector2D(0, Y), FVector2D(Center.X - X, Row + .5f), FLinearColor(0, 0, 0, .98f));
-            Box(FVector2D(Center.X + X, Y), FVector2D(Center.X - X, Row + .5f),
-                FLinearColor(0, 0, 0, .98f));
         }
+        FSlateDrawElement::MakeCustomVerts(Out, DrawLayer,
+            FSlateApplication::Get().GetRenderer()->GetResourceHandle(*White), ScopeVertices, ScopeIndices, nullptr, 0, 0);
         CombatLines.Reset();
         for (int32 I = 0; I <= 64; I++)
         {
@@ -71,6 +79,10 @@ int32 UPFInterface::PaintCombat(const FGeometry &G, FSlateWindowElementList &Out
         for (int32 Sign : {-1, 1})
         {
             Line(Center + FVector2D(Sign * 9, 0), Center + FVector2D(Sign * Radius * .86f, 0),
+                 FLinearColor(1, 1, 1, .8f), 3.2f);
+            Line(Center + FVector2D(0, Sign * 9), Center + FVector2D(0, Sign * Radius * .86f),
+                 FLinearColor(1, 1, 1, .8f), 3.2f);
+            Line(Center + FVector2D(Sign * 9, 0), Center + FVector2D(Sign * Radius * .86f, 0),
                  FLinearColor(0, 0, 0, .9f), 1.2f);
             Line(Center + FVector2D(0, Sign * 9), Center + FVector2D(0, Sign * Radius * .86f),
                  FLinearColor(0, 0, 0, .9f), 1.2f);
@@ -78,14 +90,21 @@ int32 UPFInterface::PaintCombat(const FGeometry &G, FSlateWindowElementList &Out
         for (int32 I = 1; I < 5; I++)
             Line(Center + FVector2D(-4, I * Radius * .12f), Center + FVector2D(4, I * Radius * .12f),
                  FLinearColor(0, 0, 0, .9f), 1);
-        Box(Center - FVector2D(1.5), FVector2D(3), FLinearColor(.85, .18, .12, 1));
+        DrawLayer=Layer+2;
+        Box(Center-FVector2D(2.5),FVector2D(5),FLinearColor::Black);
+        Box(Center-FVector2D(1),FVector2D(2),FLinearColor::White);
         DrawLayer = Layer;
     }
-    else
+    else if (!Editing)
     {
-        float Gap = FMath::Lerp(7.f, 3.f, Player->AimAlpha) + Player->ShotBloom +
-                    FMath::Min(6.f, Player->GetVelocity().Size2D() / 110.f) * (1 - Player->AimAlpha);
-        for (int32 I = 0; I < 4; I++)
+        Box(Center - FVector2D(2.5), FVector2D(5), FLinearColor(0,0,0,.95));
+        const FLinearColor Color = !Combat && Player->Construction->Mode == EPFConstructionMode::Build
+            ? (Player->Construction->CanPreviewPlace() ? FLinearColor(.25,.65,1) : FLinearColor(1,.4,.25))
+            : FLinearColor::White;
+        Box(Center - FVector2D(1), FVector2D(2), Color);
+        float Gap = FMath::Lerp(6.f, 3.f, Player->AimAlpha) + Player->ShotBloom * .35f +
+                    FMath::Min(4.f, Player->GetVelocity().Size2D() / 150.f) * (1 - Player->AimAlpha);
+        for (int32 I = 0; I < (Combat ? 4 : 0); I++)
         {
             FVector2D Direction(I == 0 ? 1 : I == 1 ? -1 : 0, I == 2 ? 1 : I == 3 ? -1 : 0);
             FVector2D A = Center + Direction * Gap, B = Center + Direction * (Gap + 5);
@@ -154,7 +173,7 @@ int32 UPFInterface::PaintExpeditionHUD(const FGeometry &G, FSlateWindowElementLi
     const FVector2D Size = G.GetLocalSize();
     const float S = FMath::Clamp(Size.Y / 900.f, .8f, 1.15f);
     const auto *White = FCoreStyle::Get().GetBrush(TEXT("WhiteBrush"));
-    const FLinearColor Paper(.94, .96, .98), Muted(.65, .72, .8), Ink(.018, .035, .065, .78);
+    const FLinearColor Paper(.94, .96, .98), Muted(.65, .72, .8), Ink(.018, .035, .065, .96);
     const FLinearColor Health(.29, .84, .64), Shield(.25, .57, 1), Amber(.95, .67, .29),
         Storm(.7, .46, 1), Red(.98, .28, .21);
     auto Box = [&](FVector2D P, FVector2D E, FLinearColor C, int32 Z = 0) {
@@ -241,28 +260,29 @@ int32 UPFInterface::PaintExpeditionHUD(const FGeometry &G, FSlateWindowElementLi
     };
     // Lower-left survival plate: the large value and cross always mean health;
     // shield, food and exertion each have a distinct shape as well as a color.
-    FVector2D Self(30, Size.Y - 140 * S);
-    Box(Self, FVector2D(350, 112) * S, Ink);
-    Box(Self, FVector2D(3, 112) * S, bHUDDowned ? Red : Health, 1);
-    Icon(4, Self + FVector2D(14, 14) * S, 1.25f * S, Paper);
-    Text(Self + FVector2D(43, 8) * S, HUDName, bHUDDowned ? HUDSmallFont : HUDLabelFont, Paper);
+    FVector2D Self(30, Size.Y - 112 * S);
+    Box(Self, FVector2D(310, 84) * S, Ink);
+    Box(Self, FVector2D(3, 84) * S, bHUDDowned ? Red : Health, 1);
     if (bHUDDowned)
-        Text(Self + FVector2D(240, 10) * S, TEXT("DOWNED"), HUDSmallFont, Red);
-    Icon(1, Self + FVector2D(14, 43) * S, .95f * S, Shield);
-    Bar(Self + FVector2D(44, 43) * S, FVector2D(235, 13) * S,
+        Text(Self - FVector2D(0, 26) * S, TEXT("DOWNED"), HUDSmallFont, Red);
+    Icon(1, Self + FVector2D(12, 12) * S, .95f * S, Shield);
+    Bar(Self + FVector2D(38, 12) * S, FVector2D(215, 13) * S,
         HUDArmorValue / FMath::Max(1.f, HUDArmorMax), Shield, FMath::RoundToInt(HUDArmorMax / 25));
-    Text(Self + FVector2D(291, 37) * S, HUDArmor, HUDLabelFont, Shield);
-    Icon(0, Self + FVector2D(14, 65) * S, .95f * S, Health);
-    Bar(Self + FVector2D(44, 65) * S, FVector2D(235, 17) * S, HUDHealthValue / 100,
+    Text(Self + FVector2D(265, 6) * S, HUDArmor, HUDLabelFont, Shield);
+    Icon(0, Self + FVector2D(12, 35) * S, .95f * S, Health);
+    Bar(Self + FVector2D(38, 35) * S, FVector2D(215, 17) * S, HUDHealthValue / 100,
         bHUDDowned ? Red : Health);
-    Text(Self + FVector2D(291, 59) * S, HUDHealth, HUDLabelFont, Paper);
-    Icon(3, Self + FVector2D(44, 92) * S, .7f * S, HUDHungerValue < 25 ? Red : Amber);
-    Bar(Self + FVector2D(62, 95) * S, FVector2D(81, 5) * S, HUDHungerValue / 100,
+    Text(Self + FVector2D(265, 29) * S, HUDHealth, HUDLabelFont, Paper);
+    Icon(3, Self + FVector2D(38, 63) * S, .7f * S, HUDHungerValue < 25 ? Red : Amber);
+    Bar(Self + FVector2D(56, 66) * S, FVector2D(72, 5) * S, HUDHungerValue / 100,
         HUDHungerValue < 25 ? Red : Amber);
-    Text(Self + FVector2D(149, 85) * S, HUDHunger, HUDSmallFont, Muted);
-    Icon(2, Self + FVector2D(195, 92) * S, .7f * S, Paper);
-    Bar(Self + FVector2D(213, 95) * S, FVector2D(66, 5) * S, HUDStaminaValue / 100, Paper);
-    Text(Self + FVector2D(291, 85) * S, HUDStamina, HUDSmallFont, Muted);
+    Text(Self + FVector2D(135, 56) * S, HUDHunger, HUDSmallFont, Muted);
+    if(HUDStaminaValue<99)
+    {
+        Icon(2, Self + FVector2D(190, 63) * S, .7f * S, Paper);
+        Bar(Self + FVector2D(208, 66) * S, FVector2D(45, 5) * S, HUDStaminaValue / 100, Paper);
+        Text(Self + FVector2D(265, 56) * S, HUDStamina, HUDSmallFont, Muted);
+    }
     for (int32 I = 0; I < HUDAllies.Num(); I++)
     {
         const auto &Ally = HUDAllies[I];
@@ -319,7 +339,7 @@ int32 UPFInterface::PaintExpeditionHUD(const FGeometry &G, FSlateWindowElementLi
         return Layer + 6;
     const float Tile = 64 * S, Gap = 6 * S;
     FVector2D Start(Size.X - 30 - 6 * Tile - 5 * Gap, Size.Y - 30 - Tile);
-    Box(Start-FVector2D(Tile+Gap+8,52*S),FVector2D(7*Tile+6*Gap+16,Tile+60*S),Ink);
+    Box(Start-FVector2D(Tile+Gap+8,6*S),FVector2D(7*Tile+6*Gap+16,Tile+14*S),Ink);
     // Stable equipment and consumable keys stay visible regardless of pickup order.
     for (int32 I = 0; I < 6; I++)
     {
@@ -328,7 +348,7 @@ int32 UPFInterface::PaintExpeditionHUD(const FGeometry &G, FSlateWindowElementLi
         Box(P, FVector2D(Tile), Ink);
 
         FLinearColor Tint = Item.bOccupied ? Item.Rarity : FLinearColor(.12,.16,.21);
-        Tint.A = .23f;
+        Tint = Item.bEquipped ? FLinearColor(.035,.24,.65) : FLinearColor(.04,.075,.12);
         Box(P, FVector2D(Tile), Tint, 1);
         Box(P + FVector2D(0, Tile - 4), FVector2D(Tile, 4), Item.bOccupied?Item.Rarity:Muted*.3f, 2);
         if (Item.bEquipped)
@@ -348,25 +368,19 @@ int32 UPFInterface::PaintExpeditionHUD(const FGeometry &G, FSlateWindowElementLi
             Text(P + FVector2D(7, 2), Item.Key, HUDSmallFont, FLinearColor(.02, .035, .06));
         }
         Text(P + FVector2D(8, Tile - 23), Item.Count, HUDSmallFont, Paper);
-        if (!Item.Caption.IsEmpty())
-            Text(P + FVector2D(5, -20), Item.Caption, HUDSmallFont, Muted);
     }
-    Text(Start - FVector2D(0, 44), TEXT("ALT HOLD / TAB  INVENTORY     M  MAP"), HUDSmallFont, Muted);
     const FVector2D Axe=Start-FVector2D(Tile+Gap,0);
     Box(Axe,FVector2D(Tile),bHUDPickaxe?FLinearColor(.1,.29,.44,.88):Ink);
     Text(Axe+FVector2D(5,2),TEXT("1"),HUDSmallFont,Paper);
     Line(Axe+FVector2D(20,49)*S,Axe+FVector2D(43,18)*S,Paper,4*S);
     Line(Axe+FVector2D(23,19)*S,Axe+FVector2D(49,33)*S,Paper,5*S);
-    Text(Axe-FVector2D(0,20),TEXT("PICKAXE"),HUDSmallFont,Muted);
-    static const FString BuildNames[]={TEXT("WALL"),TEXT("FLOOR"),TEXT("RAMP"),TEXT("ROOF")};
     static const FString BuildKeys[]={TEXT("F1"),TEXT("F2"),TEXT("F3"),TEXT("F4")};
     for(int32 I=0;I<4;I++)
     {
-        FVector2D P=Start+FVector2D(I*99*S,-106*S);FLinearColor Tint=bHUDBuild&&HUDShape==I?Shield:Muted;
-        Box(P,FVector2D(92,43)*S,Ink);
+        FVector2D P=Axe+FVector2D(I*78*S,-42*S);FLinearColor Tint=bHUDBuild&&HUDShape==I?Paper:Muted;
+        Box(P,FVector2D(72,32)*S,bHUDBuild&&HUDShape==I?FLinearColor(.035,.24,.65):Ink);
         Text(P+FVector2D(5,2)*S,BuildKeys[I],HUDSmallFont,Tint);
-        Text(P+FVector2D(30,22)*S,BuildNames[I],HUDSmallFont,Tint);
-        FVector2D A=P+FVector2D(43,6)*S,B=P+FVector2D(78,20)*S;
+        FVector2D A=P+FVector2D(33,8)*S,B=P+FVector2D(61,23)*S;
         if(I==0){Line(A,{B.X,A.Y},Tint);Line({B.X,A.Y},B,Tint);Line(B,{A.X,B.Y},Tint);Line({A.X,B.Y},A,Tint);}
         else if(I==1||I==3)
         {
@@ -376,31 +390,18 @@ int32 UPFInterface::PaintExpeditionHUD(const FGeometry &G, FSlateWindowElementLi
         }
         else{Line({A.X,B.Y},B,Tint);Line({A.X,B.Y},{B.X,A.Y},Tint);Line({B.X,A.Y},B,Tint);}
     }
-    Box(Start+FVector2D(-4,-141)*S,FVector2D(396,28)*S,Ink);
-    Text(Start-FVector2D(0,135*S),TEXT("WOOD"),HUDSmallFont,Muted);Text(Start+FVector2D(50*S,-135*S),HUDMaterials[0],HUDSmallFont,Paper);
-    Text(Start+FVector2D(108*S,-135*S),TEXT("STONE"),HUDSmallFont,Muted);Text(Start+FVector2D(167*S,-135*S),HUDMaterials[1],HUDSmallFont,Paper);
-    Text(Start+FVector2D(222*S,-135*S),TEXT("METAL"),HUDSmallFont,Muted);Text(Start+FVector2D(283*S,-135*S),HUDMaterials[2],HUDSmallFont,Paper);
     if(bHUDBuild||bHUDPickaxe)
     {
-        Box(Start-FVector2D(8,198*S),FVector2D(404*S,57*S),Ink);
-        Text(Start-FVector2D(0,191*S),bHUDPickaxe?TEXT("PICKAXE"):TEXT("BUILD MODE"),HUDTitleFont,Paper);
-        Text(Start-FVector2D(0,158*S),HUDBuildHint,HUDSmallFont,Muted);
+        Box(Axe-FVector2D(0,102*S),FVector2D(7*Tile+6*Gap,54*S),Ink);
+        const FString Materials=FString::Printf(TEXT("WOOD %s     STONE %s     METAL %s"),*HUDMaterials[0],*HUDMaterials[1],*HUDMaterials[2]);
+        Text(Axe-FVector2D(-8*S,97*S),Materials,HUDSmallFont,Paper);
+        Text(Axe-FVector2D(-8*S,73*S),HUDBuildHint,HUDSmallFont,Muted);
         return Layer+6;
     }
-    const FVector2D Weapon(Size.X - 330 * S - 30, Start.Y - 300 * S);
-    Box(Weapon-FVector2D(12,6)*S,FVector2D(350,161)*S,Ink);
-    Text(Weapon, HUDWeaponName, HUDTitleFont, Paper);
-    Text(Weapon + FVector2D(0, 39) * S, HUDWeaponType, HUDSmallFont, Muted);
-    if (HUDWeaponIcon.GetResourceObject() && !bHUDVehicle)
-        FSlateDrawElement::MakeBox(
-            Out, Layer + 2,
-            G.ToPaintGeometry(FVector2D(124, 64) * S,
-                              FSlateLayoutTransform(Weapon + FVector2D(0, 75) * S)),
-            &HUDWeaponIcon, ESlateDrawEffect::None, Paper);
-    Text(Weapon + FVector2D(151, 63) * S, HUDMagazine, HUDNumberFont, bHUDReloading ? Amber : Paper);
-    Text(Weapon + FVector2D(242, 90) * S, HUDReserve, HUDLabelFont, Muted);
-    Line(Weapon + FVector2D(231, 93) * S, Weapon + FVector2D(237, 115) * S, Muted);
+    const FVector2D Weapon(Size.X-30-160*S, Start.Y-42*S);
+    Box(Weapon,FVector2D(160,32)*S,Ink);
+    Text(Weapon+FVector2D(10,-1)*S,HUDMagazine+(bHUDVehicle?TEXT(" "):TEXT(" / "))+HUDReserve,HUDLabelFont,bHUDReloading?Amber:Paper);
     if (!HUDNotice.IsEmpty())
-        Text(Weapon + FVector2D(151, 129) * S, HUDNotice, HUDSmallFont, Amber);
+        Text(Start-FVector2D(0,70*S),HUDNotice,HUDSmallFont,Amber);
     return Layer + 6;
 }

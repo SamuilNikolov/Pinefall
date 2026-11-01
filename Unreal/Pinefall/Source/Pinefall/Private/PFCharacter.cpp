@@ -90,7 +90,7 @@ APFCharacter::APFCharacter(const FObjectInitializer &Init)
     Camera->SetupAttachment(CameraBoom);
     Camera->FieldOfView = 85;
     WorldWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WorldWeapon"));
-    WorldWeapon->SetupAttachment(GetMesh());
+    WorldWeapon->SetupAttachment(GetMesh(), TEXT("hand_r"));
     WorldWeapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     WorldWeapon->SetRelativeLocation(FVector(8, 0, 0));
     ViewWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ViewWeapon"));
@@ -106,6 +106,7 @@ void APFCharacter::BeginPlay()
     bCombatProbe = FParse::Param(FCommandLine::Get(), TEXT("PFCombatProbe"));
     bReserveProbe = FParse::Param(FCommandLine::Get(), TEXT("PFReserveProbe"));
     bMovementProbe = FParse::Param(FCommandLine::Get(), TEXT("PFMovementProbe"));
+    bRenderNoDamage = HasAuthority() && FParse::Param(FCommandLine::Get(), TEXT("PFRenderNoDamage"));
     if (HasAuthority())
         Inventory->InitializeLoadout(true, 0);
     ApplyWeapon();
@@ -167,7 +168,8 @@ bool APFCharacter::AcceptsInput() const
 void APFCharacter::Tick(float Delta)
 {
     Super::Tick(Delta);
-    if (!Vehicle && Health > 0 && !WeaponId.IsNone())
+    if (!Vehicle && Health > 0 && !WeaponId.IsNone() && !bReloading &&
+        Construction->Mode == EPFConstructionMode::Combat)
     {
         // Mesh centers are not grip sockets: follow the animated wrist with a
         // weapon-specific offset and keep the barrel aligned with the aim.
@@ -610,7 +612,14 @@ void APFCharacter::FireLocal()
         if (double TargetTime = Target->RenderedPoseTime(); TargetTime > 0)
             ViewTime = TargetTime;
     ServerFire(End, ++LocalSequence, ViewTime);
-    AddControllerPitchInput(-.6f);
+    // Recoil is an upward camera impulse, not signed mouse input. Mouse
+    // inversion and legacy axis scales must not reverse it or change its size.
+    if (PC)
+    {
+        FRotator Aim = PC->GetControlRotation();
+        Aim.Pitch = FMath::Clamp(FRotator::NormalizeAxis(Aim.Pitch) + .6f, -85.f, 85.f);
+        PC->SetControlRotation(Aim);
+    }
 }
 void APFCharacter::ServerFire_Implementation(FVector_NetQuantize AimPoint, uint32 Sequence, double ViewTime)
 {
@@ -785,7 +794,7 @@ void APFCharacter::OnRep_Health(float Previous)
 float APFCharacter::TakeDamage(float Amount, FDamageEvent const &Event, AController *EventInstigator,
                                AActor *Causer)
 {
-    if (!HasAuthority() || Health <= 0 || !FMath::IsFinite(Amount) || Amount <= 0)
+    if (!HasAuthority() || bRenderNoDamage || Health <= 0 || !FMath::IsFinite(Amount) || Amount <= 0)
         return 0;
     auto *Mode = GetWorld()->GetAuthGameMode<APFGameMode>();
     auto *Match = GetWorld()->GetGameState<APFMatchState>();
@@ -931,8 +940,16 @@ void APFCharacter::RunCombatViewProbe()
     }
     if (Mode == TEXT("Lake") && HasAuthority())
     {
-        SetActorLocation(FVector(4500, 9000, 400));
-        Controller->SetControlRotation(FRotator(-10, 6, 0));
+        for(TActorIterator<APFWaterBody> It(GetWorld());It;++It)
+        {
+            const FVector Center(It->GetActorLocation().X,It->GetActorLocation().Y,It->SurfaceHeight());
+            const FVector Point=Center+FVector(-It->Surface->Bounds.BoxExtent.X*.85f,0,1800);
+            auto *View=GetWorld()->SpawnActor<ACameraActor>();
+            View->SetActorLocationAndRotation(Point,(Center-Point).Rotation());
+            View->GetCameraComponent()->SetFieldOfView(70);
+            if(auto *PC=Cast<APlayerController>(Controller)){PC->bAutoManageActiveCameraTarget=false;PC->SetViewTarget(View);}
+            break;
+        }
     }
     if(Mode==TEXT("ReserveMap")){if(auto* PC=Cast<APFPlayerController>(Controller)){PC->bMapOpen=true;PC->RefreshInputMode();}}
     if(Mode==TEXT("Village")&&HasAuthority()){

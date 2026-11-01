@@ -24,7 +24,7 @@ class PINEFALL_API APFBuildPiece : public AActor
     bool bPrediction=false, bGrounded=false, bCollapsing=false;
     int32 GroundNode=-1;
     float Maximum() const;
-    void Initialize(const FPFBuildState &State,bool Prediction=false);
+    void Initialize(const FPFBuildState &State,bool Prediction=false,bool PreviewOnly=false);
     void ApplyGeometry();
     bool SetEdit(uint16 Mask,uint8 RampPattern,bool DoorOpen=false);
     bool ToggleDoor(APawn *User);
@@ -33,5 +33,7 @@ class PINEFALL_API APFBuildPiece : public AActor
     UFUNCTION() void OnRep_Condition();
   private:
     uint32 GeometryHash=0;
+    int32 SurfaceMaterial=-1;
+    bool bPreviewOnly=false;
     float Age=0;
 };

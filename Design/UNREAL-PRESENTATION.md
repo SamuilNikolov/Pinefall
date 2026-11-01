@@ -1,5 +1,7 @@
 # Pinefall presentation direction
 
+**November 1 priority:** environment texture additions are paused. Preserve the credited seven-surface biome pass and focus on frame time, gameplay feedback and readability. The HUD now uses solid dark backplates, blue selected slots/armor, green health, compact ammunition and contextual build resources. Scope and edit states must remain distinct and high contrast. Water uses the actual imported disk mesh and texture-free Single Layer Water shading; keep its rendered extent/level aligned with physics. The stylized character direction below still applies; first-person arms and final weapon/character IK remain incomplete.
+
 **Character direction update, October 29:** the user explicitly prefers fun, somewhat cartoony characters over hyperrealistic people. Active TrailRanger uses stylized proportions, readable palette textures and a hooded outdoor silhouette. Keep terrain/light/material ambitions, but do not return to realistic skin/pore-heavy characters. Natural weapon grips, planted crouch and readable peer animations remain art-quality gates.
 
 

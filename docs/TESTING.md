@@ -1,5 +1,7 @@
 # Verification and reproducible checks
 
+The November 1 native reserve probe has **86** checks, including actual lake mesh presence, matching visual/physical water footprint and a shared visible boat/swim level. The combat script additionally requires upward camera recoil in both host/client logs. `Test-UnrealRender.ps1 -CompareCommands` compares isolated console experiments within one settled graphics session; it does not persist quality changes. Capture fixtures use opt-in benchmark immunity, separate from ordinary game behavior. See `tests/baselines/unreal-0.5-playability/README.md` for the current targeted runs and exact limitations.
+
 ## Native traversal checks
 
 `tools/Test-UnrealMovement.ps1` uses two actual processes, ordinary owner input and a shared flat collision fixture. Its 24 assertions check stationary crouch versus fast slide, buffered air-crouch landing, carry speed, real chained jumps and limits, release/menu/hunger behavior, a low ceiling, host-to-client slide state and reset paths. `-PacketLagMs 80` adds artificial per-sender delay; `-Rendered` captures the actual client stance. Keep rendered checks separate from headless latency evidence. Regenerate a fresh checkpoint rather than overwriting prior results.

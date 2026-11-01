@@ -2,6 +2,18 @@
 
 ## Native Unreal 0.5
 
+### November 1 gameplay/rendering follow-up
+
+The grass meshes now retain LOD0 and add 50%/18% distance LODs: live grass 2,176/1,088/392 triangles, dry grass 384/192/70. Their original density and 55/60 m cosmetic fades remain. Actual cover groups disable density thinning and distance removal; non-Nanite fern beds retain a 300 m end distance. These adjustments run once on each reserve machine, including clients. Collision and server hit validation remain independent of rendering quality. Fine low grass is cosmetic, not reliable concealment.
+
+A controlled same-process forest comparison with the new biome surfaces measured **45.4 FPS with forced LOD0, 55.3 FPS with distance LODs**. Frame p95 improved 32.8→26.3 ms, p99 43.8→36.2 ms, GPU 12.9→8.9 ms. Both samples used a graphics host, two local 30-FPS headless clients, 84 animals, High/87% rendering at 1600×900, density .8, and reported battery power. This isolates grass LODs in one static scene, not an all-hardware or whole-match promise. Source reports: `artifacts/unreal-render/20261101-014229-Forest`. The texture pool required ~279 MB of its 800 MB budget with no wanting resources; increasing it was not justified. Disabling software contrast-adaptive shading regressed performance and was rejected.
+
+Additional fixes: remote offscreen wildlife skips cosmetic skeletal animation while authority continues accurate bone evaluation; moving construction ghosts remain movable and never cook collision, avoiding static/movable re-registration churn; material changes no longer rebuild structural collision; edited door slabs are reused; the scope uses one mesh instead of hundreds of mask draw elements. Actual placed predictions remain static to preserve replicated movement-base behavior. Graphics tests use explicit host-only benchmark immunity to prevent animal death/respawn from contaminating samples; ordinary games do not enable it.
+
+`Test-UnrealRender.ps1 -CompareCommands` supports isolated same-session experiments. Do not persist experimental console commands or equate NullRHI integration speed with rendering performance. Current graphics verification and the latest gameplay reports are documented in the handoff; historical reports below retain their original scope.
+
+The final post-repair forest run measured **61.9 FPS, p95 20.2 ms, p99 23.8 ms** with the same 84-animal/two-peer/High-87%/1600×900 conditions. See [retained current evidence](../tests/baselines/unreal-0.5-playability/README.md). Generated Landscape Nanite data passes the editor helper but still produces a stale-data MapCheck warning on uncooked `-game` reload; regular Landscape rendering/collision remains. Active Landscape Nanite on reload is an unresolved validation gate, not an assumed source of the measured gain. No shader fallback or unsupported Nanite water material remains in the final forest log.
+
 ### Nanite terrain follow-up
 
 Wildfront Reserve now has generated Nanite Landscape data, in addition to its existing Nanite scanned trees/rocks. The editor helper checks that built components exist and match the terrain content ID. This changes rendering, not the underlying heightfield collision, roads, instanced population or atlas. Regular Landscape data is still required. Fine-grass indirect-lighting contribution is disabled; receiving light, density scaling and 55/60 m fades remain. High/Epic retain Lumen. The optional Balanced profile preserves High geometry, texture, shadow and foliage settings, but uses level-1 GI/reflections. No experimental render-task configuration is shipped.

@@ -1,0 +1,43 @@
+{
+  "role": "Rock",
+  "asset": "rock_boulder_dry",
+  "license": "CC0-1.0",
+  "source": "https://polyhaven.com/a/rock_boulder_dry",
+  "authors": {
+    "Dimitrios Savva": "Photography",
+    "Rico Cilliers": "Processing"
+  },
+  "tile_cm": 179.99999523162842,
+  "files": {
+    "Diffuse": {
+      "path": "Diffuse.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_boulder_dry/rock_boulder_dry_diff_4k.jpg",
+      "md5": "7a678cbefc5d377b11fa9784e5493bde",
+      "sha256": "2787cfdf899ea12442e67e337e32712d6e25f4a0763ab3df63fd9306a02e156f"
+    },
+    "nor_dx": {
+      "path": "nor_dx.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/rock_boulder_dry/rock_boulder_dry_nor_dx_2k.png",
+      "md5": "7d3f1f4af4c53f1777ba6b728d182220",
+      "sha256": "f2d6c1bb170ab6c2ffd182a4fbe516854ae0f013df15ef7cfa4582d054e0f1a7"
+    },
+    "Rough": {
+      "path": "Rough.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/rock_boulder_dry/rock_boulder_dry_rough_2k.png",
+      "md5": "32987c9755b0584eeec7f90b1e0b5a38",
+      "sha256": "236c8c8bcb210db07fc0dc83ac0de8a843d26ee12766a5bb8ce0b29aa9915def"
+    },
+    "Displacement": {
+      "path": "Displacement.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/rock_boulder_dry/rock_boulder_dry_disp_2k.png",
+      "md5": "d0311db1a3b0fe68b7e634abfdbccef6",
+      "sha256": "e07b06123bda2156f2a0fef79b0edb77280295135cb5063e7794998ff3e69a90"
+    },
+    "AO": {
+      "path": "AO.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rock_boulder_dry/rock_boulder_dry_ao_2k.jpg",
+      "md5": "1b45230f78f21c791ca81f7bb5d7265f",
+      "sha256": "cc27725b9bd4b3482823ced876ea5a4ff4cef8485a8193f6f071b56a3a2bb14d"
+    }
+  }
+}

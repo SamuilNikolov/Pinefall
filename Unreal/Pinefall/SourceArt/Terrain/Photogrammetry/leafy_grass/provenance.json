@@ -1,0 +1,42 @@
+{
+  "role": "Meadow",
+  "asset": "leafy_grass",
+  "license": "CC0-1.0",
+  "source": "https://polyhaven.com/a/leafy_grass",
+  "authors": {
+    "Charlotte Baglioni": "All"
+  },
+  "tile_cm": 200.0,
+  "files": {
+    "Diffuse": {
+      "path": "Diffuse.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/leafy_grass/leafy_grass_diff_4k.jpg",
+      "md5": "d991caaf9c2e333a5a684faab488cbb9",
+      "sha256": "0e57a28949211e2f4a728b094598a4470cce25bc07e138b9bae295f97c5d67f1"
+    },
+    "nor_dx": {
+      "path": "nor_dx.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/leafy_grass/leafy_grass_nor_dx_2k.png",
+      "md5": "47eec13603149d9cbbe7aeaf824a117c",
+      "sha256": "dec96db6a12360e6bd87c69524a236bbc7bf3fe6950886b4bf2d49f362832468"
+    },
+    "Rough": {
+      "path": "Rough.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/leafy_grass/leafy_grass_rough_2k.png",
+      "md5": "fbdf75ebded5133626f67a30277a3efd",
+      "sha256": "71d2c187fd8cb7182c8877710431af23257904fb167c38218ed0abf21c2e73b6"
+    },
+    "Displacement": {
+      "path": "Displacement.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/leafy_grass/leafy_grass_disp_2k.png",
+      "md5": "540555d31b8bf2d674b818a7e2e61125",
+      "sha256": "506ed7d425d9a73f6881e17f03e2a0d2fa57893bb0555a4b86ad905d2cabe510"
+    },
+    "AO": {
+      "path": "AO.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/leafy_grass/leafy_grass_ao_2k.jpg",
+      "md5": "f25065162a26693b29a10587582df688",
+      "sha256": "bcce4368f6a1affe11b4a643e14cfed7dfb46abf6bb9e6a28a3b87c2de2ddb11"
+    }
+  }
+}

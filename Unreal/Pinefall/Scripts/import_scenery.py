@@ -2,6 +2,10 @@
 
 from pathlib import Path
 import json, unreal
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from foliage_budget import configure_ground_cover_lods
 
 PROJECT = Path(__file__).resolve().parents[1]
 RAW = PROJECT / "SourceArt/Scenery"
@@ -347,6 +351,8 @@ for row in rows:
         unreal.PFWorldBuilder.configure_mesh(mesh, nanite)
         if "Rock" in name or "Cliff" in name:
             unreal.PFWorldBuilder.configure_collision(mesh, True)
+    if "GrassPatch" in name:
+        configure_ground_cover_lods(mesh)
     LIB.save_loaded_asset(mesh, False)
     report.append(
         {

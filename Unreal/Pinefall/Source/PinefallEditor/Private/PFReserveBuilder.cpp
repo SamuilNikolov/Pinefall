@@ -261,10 +261,110 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
         G->BuildTreeIfOutdated(false, true);
     for (auto *G : {Trunks, Low, Dry, Brush, Rocks, FieldRocks, Cliffs})
         G->BuildTreeIfOutdated(false, true);
+    ApplyReserveBiomePresentation();
     UE_LOG(LogTemp, Display,
            TEXT("PF_RESERVE_FOLIAGE_OK trees=%d grass=%d dry=%d brush=%d rocks=%d cliffs=%d"), Count,
            Low->GetInstanceCount(), Dry->GetInstanceCount(), Brush->GetInstanceCount(),
            Rocks->GetInstanceCount() + FieldRocks->GetInstanceCount(), Cliffs->GetInstanceCount());
+}
+
+int32 UPFWorldBuilder::ApplyReserveBiomePresentation()
+{
+    UWorld *World = GEditor->GetEditorWorldContext().World();
+    if (!World)
+        return -1;
+    auto Find = [&](const TCHAR *Label) -> UHierarchicalInstancedStaticMeshComponent * {
+        for (TActorIterator<AActor> It(World); It; ++It)
+            if (It->GetActorLabel() == Label)
+                return It->FindComponentByClass<UHierarchicalInstancedStaticMeshComponent>();
+        return nullptr;
+    };
+    auto *Dry = Find(TEXT("Reserve dry short grass"));
+    auto *Brush = Find(TEXT("Reserve scanned understory"));
+    auto *FieldRocks = Find(TEXT("Reserve weathered field stones"));
+    auto *Cliffs = Find(TEXT("Reserve scanned rock faces"));
+    auto *Grass = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Pinefall/Art/Scenery/SM_GrassPatch.SM_GrassPatch"));
+    auto *Fern = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Pinefall/Art/Foliage/SM_Fern.SM_Fern"));
+    auto *Geology = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Pinefall/Materials/M_ReserveGeology.M_ReserveGeology"));
+    if (!Dry || !Brush || !FieldRocks || !Cliffs || !Grass || !Fern || !Geology)
+        return -1;
+    for (auto *Group : {FieldRocks, Cliffs})
+    {
+        Group->Modify();
+        for (int32 Slot = 0; Slot < Group->GetStaticMesh()->GetStaticMaterials().Num(); ++Slot)
+            Group->SetMaterial(Slot, Geology);
+    }
+    const FName Applied(TEXT("PFBiomePresentationV1"));
+    if (Dry->ComponentHasTag(Applied))
+        return 0;
+    auto Create = [&](const TCHAR *Label, UStaticMesh *Mesh, int32 Distance, bool Density) {
+        auto *Actor = World->SpawnActor<AActor>();
+        Actor->SetActorLabel(Label);
+        auto *Group = NewObject<UHierarchicalInstancedStaticMeshComponent>(Actor);
+        Actor->AddInstanceComponent(Group);
+        Actor->SetRootComponent(Group);
+        Group->SetMobility(EComponentMobility::Static);
+        Group->SetStaticMesh(Mesh);
+        Group->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        Group->SetCullDistances(Distance * .8f, Distance);
+        Group->SetCastShadow(false);
+        Group->SetAffectDynamicIndirectLighting(false);
+        Group->SetAffectDistanceFieldLighting(false);
+        Group->bEnableDensityScaling = Density;
+        Group->RegisterComponent();
+        return Group;
+    };
+    auto *Alpine = Create(TEXT("Reserve alpine short grass"), Grass, 5500, true);
+    auto *Tundra = Create(TEXT("Reserve tundra grass pockets"), Grass, 5000, true);
+    auto *Ferns = Create(TEXT("Reserve woodland and wetland ferns"), Fern, 14000, false);
+    TArray<FTransform> Desert, AlpineTransforms, TundraTransforms, Shrubs, FernTransforms;
+    for (int32 I = 0; I < Dry->GetInstanceCount(); ++I)
+    {
+        FTransform T;
+        Dry->GetInstanceTransform(I, T, true);
+        const FVector P = T.GetLocation();
+        const uint8 Biome = FPFReserveLayout::Biome(P.X, P.Y);
+        if (Biome == 2 || Biome == 4)
+        {
+            // A live scan patch contains four times as many plants as the dead
+            // patch. Keep the blade budget bounded rather than quadrupling it.
+            if ((I & 3) != 0)
+                continue;
+            T.SetScale3D(T.GetScale3D() * (Biome == 4 ? .65f : .55f));
+            (Biome == 4 ? TundraTransforms : AlpineTransforms).Add(T);
+        }
+        else
+        {
+            T.SetScale3D(T.GetScale3D() * .55f);
+            Desert.Add(T);
+        }
+    }
+    for (int32 I = 0; I < Brush->GetInstanceCount(); ++I)
+    {
+        FTransform T;
+        Brush->GetInstanceTransform(I, T, true);
+        const FVector P = T.GetLocation();
+        const uint8 Biome = FPFReserveLayout::Biome(P.X, P.Y);
+        if ((Biome == 0 || Biome == 1) && (I & 1) == 0)
+        {
+            T.SetScale3D(T.GetScale3D() * .85f);
+            FernTransforms.Add(T);
+        }
+        else
+            Shrubs.Add(T);
+    }
+    auto Fill = [](UHierarchicalInstancedStaticMeshComponent *Group, const TArray<FTransform> &Transforms) {
+        Group->Modify();
+        Group->ClearInstances();
+        Group->AddInstances(Transforms, false, true);
+        Group->BuildTreeIfOutdated(false, true);
+    };
+    Fill(Dry, Desert);Fill(Alpine, AlpineTransforms);Fill(Tundra, TundraTransforms);
+    Fill(Brush, Shrubs);Fill(Ferns, FernTransforms);
+    Dry->ComponentTags.AddUnique(Applied);
+    UE_LOG(LogTemp, Display, TEXT("PF_BIOME_PRESENTATION_OK desert=%d alpine=%d tundra=%d shrubs=%d ferns=%d"),
+           Desert.Num(), AlpineTransforms.Num(), TundraTransforms.Num(), Shrubs.Num(), FernTransforms.Num());
+    return FernTransforms.Num() + AlpineTransforms.Num() + TundraTransforms.Num();
 }
 
 FString UPFWorldBuilder::ReserveLayoutJson()

@@ -82,8 +82,11 @@ void APFCharacter::RunCombatProbeInput()
                 {
                     if (auto *Player = Weak.Get())
                     {
+                        const float Before=Player->GetControlRotation().Pitch;
                         Player->StartFire();
                         Player->StopFire();
+                        UE_LOG(LogTemp,Display,TEXT("PF_RECOIL_UP delta=%.3f"),
+                            FRotator::NormalizeAxis(Player->GetControlRotation().Pitch-Before));
                     }
                 },
                 .15f, false);

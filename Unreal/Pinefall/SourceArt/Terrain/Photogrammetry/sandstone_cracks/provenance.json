@@ -1,0 +1,42 @@
+{
+  "role": "DesertRock",
+  "asset": "sandstone_cracks",
+  "license": "CC0-1.0",
+  "source": "https://polyhaven.com/a/sandstone_cracks",
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "tile_cm": 200.0,
+  "files": {
+    "Diffuse": {
+      "path": "Diffuse.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/sandstone_cracks/sandstone_cracks_diff_4k.jpg",
+      "md5": "d4b60a31c9bb15e9d1b20dc8028b9b80",
+      "sha256": "3855f296745b1e5ed979b95b06fcd2fa06766db62e02edd0a79837c6936a7679"
+    },
+    "nor_dx": {
+      "path": "nor_dx.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/sandstone_cracks/sandstone_cracks_nor_dx_2k.png",
+      "md5": "e477994074b14adaa12a1aa4cfbc45b6",
+      "sha256": "c95740b61f275225f1f8b04097726be49dfdb3c81f97daee6ae85093b19ff087"
+    },
+    "Rough": {
+      "path": "Rough.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/sandstone_cracks/sandstone_cracks_rough_2k.png",
+      "md5": "73e7fad1c5f61a8cdf70bff35c98d591",
+      "sha256": "89203d7d41964a23a9d0c10d4e674c0b149a1fa8206f42872f99356a04ee5f37"
+    },
+    "Displacement": {
+      "path": "Displacement.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/sandstone_cracks/sandstone_cracks_disp_2k.png",
+      "md5": "d9a2ee3a5abcd66a45c5e43924c4a72a",
+      "sha256": "de23ba7a4e038741ef82fe1eaf2d4cded5c5fd857159c6c914c4014405c575e5"
+    },
+    "AO": {
+      "path": "AO.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/sandstone_cracks/sandstone_cracks_ao_2k.jpg",
+      "md5": "6fb9aef11f30b84c3337286180c2ff70",
+      "sha256": "a58ec86af4beb8c0e6ae1572a02fda97e3f23b768c8da47b0ae6a368de22ddd9"
+    }
+  }
+}

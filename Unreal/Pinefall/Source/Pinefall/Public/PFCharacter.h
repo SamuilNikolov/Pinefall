@@ -171,6 +171,7 @@ class PINEFALL_API APFCharacter : public ACharacter
     bool bDeathPresented = false;
     bool bReloadPresented = false;
     bool bCombatProbe = false, bReserveProbe = false, bMovementProbe = false;
+    bool bRenderNoDamage = false;
     int32 LastMovementCase = -1;
     bool bMovementPeerObserved = false;
     bool bMovementCaptured = false;

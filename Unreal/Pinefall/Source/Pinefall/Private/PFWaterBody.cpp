@@ -2,6 +2,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/BrushComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
+#include "Materials/MaterialInterface.h"
 
 APFWaterBody::APFWaterBody()
 {
@@ -23,6 +25,37 @@ APFWaterBody::APFWaterBody()
     Surface->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     Surface->CastShadow = false;
     Surface->SetCanEverAffectNavigation(false);
+}
+void APFWaterBody::FitSurface()
+{
+    // Interchange imports the mesh inside a StaticMeshes folder, not at the
+    // import folder itself. Repair maps saved with the old, empty mesh path.
+    if (!Surface->GetStaticMesh())
+        Surface->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,
+            TEXT("/Game/Pinefall/Art/World/SM_Lake/StaticMeshes/SM_Lake.SM_Lake")));
+    if (UStaticMesh *Mesh = Surface->GetStaticMesh())
+    {
+        const FVector Extent = WaterBounds->GetUnscaledBoxExtent();
+        const FVector MeshSize = Mesh->GetBoundingBox().GetSize();
+        if (MeshSize.X > 0 && MeshSize.Y > 0)
+            Surface->SetRelativeScale3D(FVector(2 * Extent.X / MeshSize.X, 2 * Extent.Y / MeshSize.Y, 1));
+        Surface->SetRelativeLocation(FVector(0, 0, Extent.Z));
+    }
+    Surface->SetCachedMaxDrawDistance(0);
+}
+void APFWaterBody::OnConstruction(const FTransform &Transform)
+{
+    Super::OnConstruction(Transform);
+    FitSurface();
+}
+void APFWaterBody::BeginPlay()
+{
+    Super::BeginPlay();
+    FitSurface();
+}
+float APFWaterBody::SurfaceHeight() const
+{
+    return Surface->GetComponentLocation().Z;
 }
 bool APFWaterBody::ContainsWater(const FVector &Point) const
 {

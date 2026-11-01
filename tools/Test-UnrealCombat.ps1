@@ -37,6 +37,8 @@ try {
     foreach($role in @('host','client')) {
         $log=Join-Path $run ($role+'.log')
         if(Select-String -LiteralPath $log -Pattern 'Fatal error:|Log.*: Error:|Ensure condition failed' -Quiet){throw "Runtime errors in $role log."}
+        if(!(Select-String -LiteralPath $log -SimpleMatch 'PF_RECOIL_UP delta=0.600' -Quiet)){throw "Missing upward camera recoil on $role."}
+        if(Select-String -LiteralPath $log -Pattern 'PF_RECOIL_UP delta=-' -Quiet){throw "Downward recoil on $role."}
     }
     $clientLog=Join-Path $run 'client.log'
     foreach($pattern in @('PF_CONFIRMED damage=80','PF_CONFIRMED damage=112 .*kill=1 head=1')) {

@@ -8,6 +8,8 @@
 #include "PFVehicle.h"
 #include "PFWorldPickup.h"
 #include "TimerManager.h"
+#include "Components/HierarchicalInstancedStaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
 APFReserveWorld::APFReserveWorld()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -18,6 +20,19 @@ APFReserveWorld::APFReserveWorld()
 void APFReserveWorld::BeginPlay()
 {
     Super::BeginPlay();
+    // Cover must not disappear when a cosmetic distance/quality setting changes.
+    // Run once on each machine, including clients; collision is untouched.
+    for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+        if (auto *Group = It->FindComponentByClass<UHierarchicalInstancedStaticMeshComponent>())
+            if (UStaticMesh *Mesh = Group->GetStaticMesh())
+            {
+                const FString Name = Mesh->GetName();
+                if (Name.Contains(TEXT("GrassPatch")) || Name.Contains(TEXT("TrunkCollision")))
+                    continue;
+                Group->bEnableDensityScaling = false;
+                const bool Fern = Name.Contains(TEXT("Fern"));
+                Group->SetCullDistances(Fern ? 25000 : 0, Fern ? 30000 : 0);
+            }
     if (GetNetMode() == NM_Client || !HasAuthority())
         return;
     if (auto *Match = GetWorld()->GetGameState<APFMatchState>())

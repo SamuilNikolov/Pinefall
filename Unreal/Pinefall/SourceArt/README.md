@@ -15,7 +15,15 @@ Poly Haven assets are CC0: [license](https://polyhaven.com/license). **Powered b
 
 Prepared glTF files preserve material slots and bake selected node transforms. They are generated source intermediates, not hand-edited models. Regenerate with `python tools/prepare_unreal_gltf.py`. The converter currently assumes the selected assets' uniform scales for normal transforms; extend inverse-transpose handling before using arbitrary nonuniform transforms.
 
-## Audio
+## Native biome surface inputs
+
+`Terrain/Photogrammetry` retains seven Poly Haven CC0 sets: `forest_leaves_02`, `leafy_grass`, `sand_01`, `snow_02`, `rock_boulder_dry`, `brown_mud_leaves_01` and `sandstone_cracks`. Their individual provenance records contain authors, source URLs, physical tile sizes, upstream MD5 and local SHA256 values. [Attribution table](../../../THIRD-PARTY-NOTICES.md#terrain-photographs--poly-haven-cc0).
+
+`Scripts/prepare_biome_surfaces.py` prepares `Prepared/BiomeSurfaces`: 4K source RGB with 2K source AO upsampled into alpha, plus a linear 2K packed DirectX-normal-XY/roughness/normalized-height texture. `Scripts/import_biome_surfaces.py` imports BC7 assets and rebuilds the two world-space ground/geology materials. Height is a material-blending input, not a change to collision or geometry. Existing vegetation is rethemed by biome without adding meshes. This art pass predates the user's request to stop adding textures; subsequent optimization/HUD/water changes add none.
+
+The lake uses original disk geometry and a texture-free analytic ripple normal with Unreal's Single Layer Water model. It does not depend on the previously missing Starter Content water normal.
+
+## Audio sources
 
 All five WAVs are byte-identical copies of existing processed clips; they are not new recordings. The root `AUDIO-SOURCES.json` and `THIRD-PARTY-NOTICES.md` retain source selection, authors and processing details.
 

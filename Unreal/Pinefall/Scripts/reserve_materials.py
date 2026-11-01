@@ -4,12 +4,14 @@ from pathlib import Path
 import unreal
 
 
-def build_terrain(project, node, wire, output, material, texture):
-    m = material("M_ReserveTerrain", "/Game/Pinefall/Materials")
+def build_terrain(project, node, wire, output, material, texture, rock=False):
+    m = material("M_ReserveGeology" if rock else "M_ReserveTerrain", "/Game/Pinefall/Materials")
+    m.set_editor_property('tangent_space_normal', False)
+    roles = ["Forest", "Meadow", "Sand", "Snow", "Rock", "Mud", "DesertRock"]
     inputs = []
-    for name in ["P", "N"] + [
+    for name in ["P", "N", "RockMode"] + [
         role + kind
-        for role in ["Forest", "Meadow", "Sand", "Snow", "Rock"]
+        for role in roles
         for kind in ["C", "S"]
     ]:
         i = unreal.CustomInput()
@@ -19,6 +21,7 @@ def build_terrain(project, node, wire, output, material, texture):
     for name, kind in [
         ("OutNormal", unreal.CustomMaterialOutputType.CMOT_FLOAT3),
         ("OutRoughness", unreal.CustomMaterialOutputType.CMOT_FLOAT1),
+        ("OutAO", unreal.CustomMaterialOutputType.CMOT_FLOAT1),
     ]:
         i = unreal.CustomOutput()
         i.set_editor_property("output_name", name)
@@ -27,7 +30,7 @@ def build_terrain(project, node, wire, output, material, texture):
     blend = node(
         m,
         unreal.MaterialExpressionCustom,
-        code=(project / "Scripts/reserve_ground_pbr.hlsl").read_text(
+        code=(project / "Scripts/biome_ground_pbr.hlsl").read_text(
             encoding="utf-8-sig"
         ),
         output_type=unreal.CustomMaterialOutputType.CMOT_FLOAT3,
@@ -36,18 +39,18 @@ def build_terrain(project, node, wire, output, material, texture):
     )
     wire(node(m, unreal.MaterialExpressionWorldPosition), "", blend, "P")
     wire(node(m, unreal.MaterialExpressionVertexNormalWS), "", blend, "N")
-    for role in ["Forest", "Meadow", "Sand", "Snow", "Rock"]:
-        for kind, file in [("C", role + "_Color.jpg"), ("S", role + "_Surface.png")]:
+    wire(node(m, unreal.MaterialExpressionConstant, r=1.0 if rock else 0.0), "", blend, "RockMode")
+    for role in roles:
+        for kind, file in [("C", role + "_Color.png"), ("S", role + "_Surface.png")]:
             t = texture(
-                project / "SourceArt/Prepared/Terrain" / file,
-                "T_ReservePBR_" + role + kind,
+                project / "SourceArt/Prepared/BiomeSurfaces" / file,
+                "T_BiomeScan_" + role + kind,
                 linear=kind == "S",
             )
-            if kind == "S":
-                t.set_editor_property(
-                    "compression_settings", unreal.TextureCompressionSettings.TC_BC7
-                )
-                unreal.EditorAssetLibrary.save_loaded_asset(t, False)
+            t.set_editor_property('max_texture_size', 4096 if kind == 'C' else 2048)
+            t.set_editor_property('compression_settings', unreal.TextureCompressionSettings.TC_BC7)
+            t.set_editor_property('compression_no_alpha', False)
+            unreal.EditorAssetLibrary.save_loaded_asset(t, False)
             obj = node(
                 m,
                 unreal.MaterialExpressionTextureObject,
@@ -62,6 +65,10 @@ def build_terrain(project, node, wire, output, material, texture):
     output(blend, "", m, unreal.MaterialProperty.MP_BASE_COLOR)
     output(blend, "OutNormal", m, unreal.MaterialProperty.MP_NORMAL)
     output(blend, "OutRoughness", m, unreal.MaterialProperty.MP_ROUGHNESS)
+    output(blend, "OutAO", m, unreal.MaterialProperty.MP_AMBIENT_OCCLUSION)
+    if rock:
+        unreal.MaterialEditingLibrary.set_material_usage(m, unreal.MaterialUsage.MATUSAGE_INSTANCED_STATIC_MESHES)
+    unreal.MaterialEditingLibrary.set_material_usage(m, unreal.MaterialUsage.MATUSAGE_NANITE)
     unreal.MaterialEditingLibrary.recompile_material(m)
     unreal.EditorAssetLibrary.save_loaded_asset(m, False)
     return m

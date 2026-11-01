@@ -1,0 +1,42 @@
+{
+  "role": "Snow",
+  "asset": "snow_02",
+  "license": "CC0-1.0",
+  "source": "https://polyhaven.com/a/snow_02",
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "tile_cm": 200.0,
+  "files": {
+    "Diffuse": {
+      "path": "Diffuse.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/snow_02/snow_02_diff_4k.jpg",
+      "md5": "6d516278de635715a36cf87ef7facdad",
+      "sha256": "c4cc87be8833cb73ab154b32da60228e11ae20f91b5057f146d1ffe001b2edc4"
+    },
+    "nor_dx": {
+      "path": "nor_dx.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/snow_02/snow_02_nor_dx_2k.png",
+      "md5": "d128db3a26c40191a49dc5fb87cbc1c1",
+      "sha256": "a9b0ec89592a3ff112e57c7a9d5c4c3c562d6b7ddb3f85567432add9eca793ce"
+    },
+    "Rough": {
+      "path": "Rough.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/snow_02/snow_02_rough_2k.png",
+      "md5": "315f17fbf6cd4573fb500f9a83f5e899",
+      "sha256": "0dcb2775b1220cee03dae5b92b57cc3e55bcece6a7e9fa0ac7a22b56dbbb6863"
+    },
+    "Displacement": {
+      "path": "Displacement.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/snow_02/snow_02_disp_2k.png",
+      "md5": "e7ef934f3ce4e5061a7f937477f07a0e",
+      "sha256": "f2b979bc78989333ebfffb2063ba9ca72edc3ffc929f6a6d94ba39d80eb0358a"
+    },
+    "AO": {
+      "path": "AO.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/snow_02/snow_02_ao_2k.jpg",
+      "md5": "7d41f091dd46e66d6023804d030e682c",
+      "sha256": "3bb1a13af0ce8d5b8a0cc80e1d5b4f36a36b0d612b65b3dc16ebc4b7ea36f4cb"
+    }
+  }
+}

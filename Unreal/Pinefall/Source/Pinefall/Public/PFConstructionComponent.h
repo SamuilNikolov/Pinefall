@@ -37,6 +37,7 @@ class PINEFALL_API UPFConstructionComponent : public UActorComponent
     FVector HarvestBarPoint=FVector::ZeroVector;
     UPROPERTY(Replicated) double LastSwingTime=-10;
     bool IsEditing() const {return EditTarget.IsValid();}
+    bool CanPreviewPlace() const {return bCanPlace;}
     uint16 EditMask=511;
     uint8 RampPattern=0;
     int32 HoveredCell=-1;
@@ -64,6 +65,7 @@ class PINEFALL_API UPFConstructionComponent : public UActorComponent
     void RestoreEditVisual();
     UPROPERTY() TObjectPtr<UProceduralMeshComponent> EditGrid;
     UPROPERTY() TObjectPtr<UMaterialInterface> RemovedEditMaterial;
+    UPROPERTY() TObjectPtr<UMaterialInterface> HoverEditMaterial;
     uint32 PaintedEdit=0;
     UPROPERTY() TObjectPtr<UStaticMeshComponent> WorldPickaxe;
     UPROPERTY() TObjectPtr<UStaticMeshComponent> ViewPickaxe;
