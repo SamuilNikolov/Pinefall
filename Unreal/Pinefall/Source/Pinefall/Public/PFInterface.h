@@ -42,6 +42,9 @@ class PINEFALL_API UPFInterface : public UUserWidget
     int32 PaintCombat(const FGeometry &Geometry, FSlateWindowElementList &Out, int32 Layer) const;
     int32 PaintExpeditionHUD(const FGeometry &Geometry, FSlateWindowElementList &Out, int32 Layer) const;
     void SetMenuVisible(bool bVisible);
+    UFUNCTION() void OpenSettings();
+    UFUNCTION() void BackToMenu();
+    bool IsSettingsOpen() const {return bSettingsOpen;}
     void RefreshInventory(){UpdateExpeditionUI();UpdateHUDData();}
 
   protected:
@@ -90,12 +93,21 @@ class PINEFALL_API UPFInterface : public UUserWidget
     UPROPERTY() TObjectPtr<UEditableTextBox> AddressBox;
     UPROPERTY() TObjectPtr<USlider> VolumeSlider;
     UPROPERTY() TObjectPtr<USlider> SensitivitySlider;
+    UPROPERTY() TObjectPtr<UVerticalBox> PlayMenuPage;
+    UPROPERTY() TObjectPtr<UVerticalBox> SettingsPage;
+    UPROPERTY() TObjectPtr<class UScrollBox> MenuScroll;
+    UPROPERTY() TObjectPtr<UTextBlock> SettingsStatus;
+    UPROPERTY() TObjectPtr<UTextBlock> VolumeReadout;
+    UPROPERTY() TObjectPtr<UTextBlock> SensitivityReadout;
+    UPROPERTY() TObjectPtr<UTextBlock> FrameLimitReadout;
+    bool bSettingsOpen=false;
     UTextBlock *Label(UVerticalBox *Parent, const FString &Text, int32 Size, FLinearColor Color);
     void Button(UVerticalBox *Parent, const FString &Text, FName Handler, bool bPrimary = false);
     UFUNCTION() void Resume();
     UFUNCTION() void Host();
     UFUNCTION() void Join();
     UFUNCTION() void Quality();
+    UFUNCTION() void FrameLimit();
     UFUNCTION() void Quit();
     UFUNCTION() void Volume(float Value);
     UPROPERTY() TObjectPtr<UTextBlock> QualityReadout;

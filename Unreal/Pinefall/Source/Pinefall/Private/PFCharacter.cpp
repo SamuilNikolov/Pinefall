@@ -18,6 +18,7 @@
 #include "PFWildlife.h"
 #include "PFHitHistoryComponent.h"
 #include "PFWaterBody.h"
+#include "PFInterface.h"
 #include "PFVehicle.h"
 #include "PFReserveWorld.h"
 #include "EngineUtils.h"
@@ -901,6 +902,15 @@ void APFCharacter::RunCombatViewProbe()
     FString Mode;
     if (!IsLocallyControlled() || !FParse::Value(FCommandLine::Get(), TEXT("PFCombatView="), Mode))
         return;
+    if(Mode==TEXT("MainMenu")||Mode==TEXT("Settings"))
+    {
+        if(auto *PC=Cast<APFPlayerController>(Controller))
+        {
+            PC->SetMenu(true);
+            if(Mode==TEXT("Settings")&&PC->Interface)PC->Interface->OpenSettings();
+        }
+        return;
+    }
     if(RunConstructionViewProbe(Mode))return;
     struct FBiomeView{const TCHAR *Name;FVector2D Point;float Yaw;float Pitch=-5;};
     const FBiomeView Views[]={

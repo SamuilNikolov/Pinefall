@@ -150,6 +150,7 @@ void APFPlayerController::ToggleMenu()
         InventoryReleased();
         return;
     }
+    if(bMenuOpen&&Interface&&Interface->IsSettingsOpen()){Interface->BackToMenu();return;}
     SetMenu(!bMenuOpen);
 }
 void APFPlayerController::SetMenu(bool Open)

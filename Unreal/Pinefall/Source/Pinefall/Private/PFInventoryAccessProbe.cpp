@@ -4,6 +4,7 @@
 #include "PFInventoryComponent.h"
 #include "PFInventoryLayout.h"
 #include "PFInterface.h"
+#include "PFUserSettings.h"
 #include "PFItemButton.h"
 #include "GameFramework/PlayerInput.h"
 #include "TimerManager.h"
@@ -36,7 +37,30 @@ void APFPlayerController::RunInventoryAccessProbe()
         Interface->NativeOnKeyDown(Geometry,FKeyEvent(EKeys::Tab,Modifiers,0,false,0,0));Check(!bInventoryOpen,TEXT("Tab closes inventory through focused UI"));
         ToggleInventory();Interface->NativeOnKeyDown(Geometry,FKeyEvent(EKeys::Escape,Modifiers,0,false,0,0));Check(!bInventoryOpen&&!bMenuOpen,TEXT("Escape closes inventory without opening another panel"));
         InventoryPressed();ApplicationActivation(false);Check(!bInventoryOpen&&!bShowMouseCursor,TEXT("application focus loss clears held inventory state"));
-        SetMenu(true);InventoryPressed();Check(!bInventoryOpen,TEXT("inventory cannot cover the settings menu"));SetMenu(false);
+        SetMenu(true);InventoryPressed();Check(!bInventoryOpen,TEXT("inventory cannot cover the settings menu"));
+        Interface->OpenSettings();
+        Check(Interface->IsSettingsOpen()&&bMenuOpen&&bShowMouseCursor,TEXT("dedicated settings page opens from the pause menu"));
+        Check(!GetWorld()->IsPaused(),TEXT("opening settings leaves world simulation running"));
+        if(auto *Settings=UPFUserSettings::Get())
+        {
+            const float OriginalVolume=Settings->MasterVolume,OriginalMouse=Settings->MouseSensitivity;
+            const float OriginalLimit=Settings->GetFrameRateLimit();
+            struct FSliderValue{float Value;};FSliderValue Volume{.37f},Mouse{.5f};
+            Interface->ProcessEvent(Interface->FindFunctionChecked(TEXT("Volume")),&Volume);
+            Interface->ProcessEvent(Interface->FindFunctionChecked(TEXT("Sensitivity")),&Mouse);
+            Interface->ProcessEvent(Interface->FindFunctionChecked(TEXT("FrameLimit")),nullptr);
+            Check(Settings->GetFrameRateLimit()!=OriginalLimit,TEXT("frame-limit control applies a different cap"));
+            Interface->NativeOnKeyDown(Geometry,FKeyEvent(EKeys::Escape,Modifiers,0,false,0,0));
+            Check(!Interface->IsSettingsOpen()&&bMenuOpen,TEXT("Escape returns from settings to the menu"));
+            Settings->LoadSettings(true);
+            Check(FMath::IsNearlyEqual(Settings->MasterVolume,.37f)&&FMath::IsNearlyEqual(Settings->MouseSensitivity,.215f),
+                  TEXT("audio and mouse preferences survive closing settings and reloading saved settings"));
+            Interface->OpenSettings();SetMenu(false);
+            Check(!Interface->IsSettingsOpen()&&!bMenuOpen&&!bShowMouseCursor,TEXT("closing the menu resets its settings page and restores game input"));
+            Settings->MasterVolume=OriginalVolume;Settings->MouseSensitivity=OriginalMouse;
+            Settings->SetFrameRateLimit(OriginalLimit);Settings->ApplyNonResolutionSettings();Settings->SaveSettings();
+        }
+        SetMenu(false);
         InventoryProbeStep++;return;
     }
     if(InventoryProbeStep==3)

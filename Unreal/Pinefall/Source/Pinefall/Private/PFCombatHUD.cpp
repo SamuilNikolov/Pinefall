@@ -335,73 +335,140 @@ int32 UPFInterface::PaintExpeditionHUD(const FGeometry &G, FSlateWindowElementLi
         Text(P+FVector2D(10,44)*S,HUDLootDetail,HUDSmallFont,Muted);
         Text(P+FVector2D(10,62)*S,HUDLootAction,HUDSmallFont,bHUDLootCanTake?Paper:Amber);
     }
-    if (PC->bInventoryOpen || PC->RoundPanelOpen() || HUDWeaponName.IsEmpty())
+    if (PC->bInventoryOpen || PC->RoundPanelOpen())
         return Layer + 6;
-    const float Tile = 64 * S, Gap = 6 * S;
-    FVector2D Start(Size.X - 30 - 6 * Tile - 5 * Gap, Size.Y - 30 - Tile);
-    Box(Start-FVector2D(Tile+Gap+8,6*S),FVector2D(7*Tile+6*Gap+16,Tile+14*S),Ink);
-    // Stable equipment and consumable keys stay visible regardless of pickup order.
-    for (int32 I = 0; I < 6; I++)
-    {
-        const auto &Item = HUDItems[I];
-        FVector2D P = Start + FVector2D(I * (Tile + Gap), 0);
-        Box(P, FVector2D(Tile), Ink);
 
-        FLinearColor Tint = Item.bOccupied ? Item.Rarity : FLinearColor(.12,.16,.21);
-        Tint = Item.bEquipped ? FLinearColor(.035,.24,.65) : FLinearColor(.04,.075,.12);
-        Box(P, FVector2D(Tile), Tint, 1);
-        Box(P + FVector2D(0, Tile - 4), FVector2D(Tile, 4), Item.bOccupied?Item.Rarity:Muted*.3f, 2);
-        if (Item.bEquipped)
+    // Three independent, right-aligned tiers, following the supplied concept.
+    // No enclosing dashboard or duplicate weapon-information panel.
+    const float Tile=76*S, Gap=6*S, Right=Size.X-28*S;
+    const FVector2D Axe(Right-7*Tile-6*Gap, Size.Y-28*S-Tile);
+    const FLinearColor Outline(.24,.46,.63,1), Selected(.55,.86,1,1);
+    auto Frame = [&](FVector2D P,FVector2D E,FLinearColor C,float Width) {
+        Box(P,FVector2D(E.X,Width),C,2);
+        Box(P+FVector2D(0,E.Y-Width),FVector2D(E.X,Width),C,2);
+        Box(P,FVector2D(Width,E.Y),C,2);
+        Box(P+FVector2D(E.X-Width,0),FVector2D(Width,E.Y),C,2);
+    };
+    auto Key = [&](FVector2D P,const FString &Value) {
+        Box(P,FVector2D(Value.Len()>1?23*S:17*S,17*S),Ink,3);
+        Text(P+FVector2D(3*S,0),Value,HUDSmallFont,Paper);
+    };
+    for(int32 I=0;I<6;I++)
+    {
+        const auto &Item=HUDItems[I];
+        const FVector2D P=Axe+FVector2D((I+1)*(Tile+Gap),0);
+        FLinearColor Fill=Item.bOccupied?Item.Rarity* .38f:FLinearColor(.025,.055,.085);
+        Fill.A=.96f;
+        Box(P,FVector2D(Tile),Fill);
+        Frame(P,FVector2D(Tile),Item.bEquipped?Selected:Item.bOccupied?Item.Rarity:Outline,
+              (Item.bEquipped?3.f:1.5f)*S);
+        if(Item.Icon.GetResourceObject())
         {
-            Box(P - FVector2D(1), FVector2D(Tile + 2, 2), Paper, 2);
-            Box(P - FVector2D(1), FVector2D(2, Tile + 2), Paper, 2);
-            Box(P + FVector2D(Tile - 1, 0), FVector2D(2, Tile), Paper, 2);
+            const FVector2D Available(Tile-12*S,Tile-25*S);
+            const FVector2D Source(FMath::Max(1.f,Item.Icon.ImageSize.X),FMath::Max(1.f,Item.Icon.ImageSize.Y));
+            const float Fit=FMath::Min(Available.X/Source.X,Available.Y/Source.Y);
+            const FVector2D Extent=Source*Fit;
+            FSlateDrawElement::MakeBox(Out,Layer+2,
+                G.ToPaintGeometry(Extent,FSlateLayoutTransform(P+FVector2D(6*S,5*S)+(Available-Extent)*.5f)),
+                &Item.Icon,ESlateDrawEffect::None,Paper);
         }
-        if (Item.Icon.GetResourceObject())
-            FSlateDrawElement::MakeBox(Out, Layer + 2,
-                                       G.ToPaintGeometry(FVector2D(Tile - 10, Tile - 21),
-                                                         FSlateLayoutTransform(P + FVector2D(5, 2))),
-                                       &Item.Icon, ESlateDrawEffect::None, Paper);
-        if (!Item.Key.IsEmpty())
+        Key(P+FVector2D(4*S,4*S),Item.Key);
+        if(Item.bOccupied)
         {
-            Box(P + FVector2D(4, 4), FVector2D(16, 18), Paper, 3);
-            Text(P + FVector2D(7, 2), Item.Key, HUDSmallFont, FLinearColor(.02, .035, .06));
+            const float CountWidth=Item.Count.Len()*HUDLabelFont.Size*.62f*S;
+            Text(P+FVector2D(FMath::Max(6*S,Tile-7*S-CountWidth),Tile-25*S),Item.Count,HUDLabelFont,Paper);
         }
-        Text(P + FVector2D(8, Tile - 23), Item.Count, HUDSmallFont, Paper);
     }
-    const FVector2D Axe=Start-FVector2D(Tile+Gap,0);
-    Box(Axe,FVector2D(Tile),bHUDPickaxe?FLinearColor(.1,.29,.44,.88):Ink);
-    Text(Axe+FVector2D(5,2),TEXT("1"),HUDSmallFont,Paper);
-    Line(Axe+FVector2D(20,49)*S,Axe+FVector2D(43,18)*S,Paper,4*S);
-    Line(Axe+FVector2D(23,19)*S,Axe+FVector2D(49,33)*S,Paper,5*S);
+    Box(Axe,FVector2D(Tile),FLinearColor(.025,.24,.37,.97));
+    Frame(Axe,FVector2D(Tile),bHUDPickaxe?Selected:Outline,(bHUDPickaxe?3.f:1.5f)*S);
+    Key(Axe+FVector2D(4*S,4*S),TEXT("1"));
+    // A readable, shaped harvesting-tool silhouette instead of a text label.
+    Line(Axe+FVector2D(23,61)*S,Axe+FVector2D(49,21)*S,FLinearColor(.36,.19,.075),6*S);
+    Line(Axe+FVector2D(24,60)*S,Axe+FVector2D(49,21)*S,FLinearColor(.75,.48,.22),2*S);
+    Line(Axe+FVector2D(27,22)*S,Axe+FVector2D(48,22)*S,Paper,6*S);
+    Line(Axe+FVector2D(48,22)*S,Axe+FVector2D(61,35)*S,Paper,5*S);
+    Line(Axe+FVector2D(61,35)*S,Axe+FVector2D(62,41)*S,Muted,3*S);
+
+    const float BuildTile=44*S, BuildGap=5*S;
+    const FVector2D Builds(Right-4*BuildTile-3*BuildGap,Axe.Y-54*S);
     static const FString BuildKeys[]={TEXT("F1"),TEXT("F2"),TEXT("F3"),TEXT("F4")};
     for(int32 I=0;I<4;I++)
     {
-        FVector2D P=Axe+FVector2D(I*78*S,-42*S);FLinearColor Tint=bHUDBuild&&HUDShape==I?Paper:Muted;
-        Box(P,FVector2D(72,32)*S,bHUDBuild&&HUDShape==I?FLinearColor(.035,.24,.65):Ink);
-        Text(P+FVector2D(5,2)*S,BuildKeys[I],HUDSmallFont,Tint);
-        FVector2D A=P+FVector2D(33,8)*S,B=P+FVector2D(61,23)*S;
-        if(I==0){Line(A,{B.X,A.Y},Tint);Line({B.X,A.Y},B,Tint);Line(B,{A.X,B.Y},Tint);Line({A.X,B.Y},A,Tint);}
+        const FVector2D P=Builds+FVector2D(I*(BuildTile+BuildGap),0);
+        const bool Active=bHUDBuild&&HUDShape==I;
+        const FLinearColor Tint=Active?Paper:Selected;
+        Box(P,FVector2D(BuildTile),Active?FLinearColor(.035,.3,.57,.95):Ink);
+        Frame(P,FVector2D(BuildTile),Active?Selected:Outline,(Active?2.5f:1.f)*S);
+        Key(P+FVector2D(2*S,1*S),BuildKeys[I]);
+        const FVector2D A=P+FVector2D(9,20)*S,B=P+FVector2D(35,35)*S;
+        if(I==0)
+        {
+            Line(A,{B.X,A.Y},Tint);Line({B.X,A.Y},B,Tint);
+            Line(B,{A.X,B.Y},Tint);Line({A.X,B.Y},A,Tint);
+        }
         else if(I==1||I==3)
         {
-            FVector2D C((A.X+B.X)*.5,A.Y),D((A.X+B.X)*.5,B.Y);
-            Line({A.X,(A.Y+B.Y)*.5},C,Tint);Line(C,{B.X,(A.Y+B.Y)*.5},Tint);Line({B.X,(A.Y+B.Y)*.5},D,Tint);Line(D,{A.X,(A.Y+B.Y)*.5},Tint);
-            if(I==3){Line(C-FVector2D(0,6*S),{A.X,(A.Y+B.Y)*.5},Tint);Line(C-FVector2D(0,6*S),{B.X,(A.Y+B.Y)*.5},Tint);Line(C-FVector2D(0,6*S),D,Tint);}
+            const FVector2D C((A.X+B.X)*.5,A.Y),D((A.X+B.X)*.5,B.Y);
+            const FVector2D L(A.X,(A.Y+B.Y)*.5),R(B.X,(A.Y+B.Y)*.5);
+            Line(L,C,Tint);Line(C,R,Tint);Line(R,D,Tint);Line(D,L,Tint);
+            if(I==3){const FVector2D Peak=C-FVector2D(0,6*S);Line(Peak,L,Tint);Line(Peak,R,Tint);Line(Peak,D,Tint);}
         }
-        else{Line({A.X,B.Y},B,Tint);Line({A.X,B.Y},{B.X,A.Y},Tint);Line({B.X,A.Y},B,Tint);}
+        else {Line({A.X,B.Y},B,Tint);Line({A.X,B.Y},{B.X,A.Y},Tint);Line({B.X,A.Y},B,Tint);}
     }
+
+    const float MaterialTile=50*S;
+    const FVector2D Materials(Right-3*MaterialTile-2*Gap,Axe.Y-120*S);
+    auto Ring = [&](FVector2D P,float Radius,FLinearColor C) {
+        CombatLines.Reset();
+        for(int32 I=0;I<=12;I++)
+        {const float A=I*2*PI/12;CombatLines.Add(P+FVector2D(FMath::Cos(A),FMath::Sin(A))*Radius);}
+        FSlateDrawElement::MakeLines(Out,Layer+2,G.ToPaintGeometry(),CombatLines,ESlateDrawEffect::None,C,true,1.5*S);
+    };
+    for(int32 I=0;I<3;I++)
+    {
+        const FVector2D P=Materials+FVector2D(I*(MaterialTile+Gap),0);
+        Box(P,FVector2D(MaterialTile,58*S),Ink);
+        Frame(P,FVector2D(MaterialTile,58*S),Outline,1.5*S);
+        const FVector2D O=P+FVector2D(8,4)*S;
+        if(I==0)
+        {
+            for(int32 Log=0;Log<2;Log++)
+            {
+                const FVector2D End=O+FVector2D(7+Log*13,24)*S;
+                Line(End,End+FVector2D(12,-16)*S,FLinearColor(.37,.2,.07),11*S);
+                Line(End,End+FVector2D(12,-16)*S,FLinearColor(.72,.48,.2),7*S);
+                Ring(End,4.2*S,FLinearColor(.96,.77,.44));
+                Ring(End,1.5*S,FLinearColor(.43,.26,.1));
+            }
+        }
+        else if(I==1)
+        {
+            Box(O+FVector2D(2,11)*S,FVector2D(30,18)*S,FLinearColor(.48,.2,.075),2);
+            Box(O+FVector2D(2,8)*S,FVector2D(30,7)*S,FLinearColor(.76,.4,.17),2);
+            for(int32 Hole=0;Hole<3;Hole++)
+                Box(O+FVector2D(6+Hole*8,10)*S,FVector2D(4,4)*S,FLinearColor(.19,.1,.06),2);
+        }
+        else
+        {
+            const FVector2D A=O+FVector2D(8,27)*S,B=O+FVector2D(25,7)*S;
+            Line(A,B,FLinearColor(.3,.38,.47),11*S);
+            Line(A,B,FLinearColor(.63,.72,.81),4*S);
+            Line(A-FVector2D(6,3)*S,A+FVector2D(6,3)*S,Paper,4*S);
+            Line(B-FVector2D(6,3)*S,B+FVector2D(6,3)*S,Paper,4*S);
+        }
+        const float Width=HUDMaterials[I].Len()*HUDLabelFont.Size*.57f*S;
+        Text(P+FVector2D((MaterialTile-Width)*.5f,34*S),HUDMaterials[I],HUDLabelFont,Paper);
+    }
+    // Instructions are temporary context, never a permanent dashboard row.
     if(bHUDBuild||bHUDPickaxe)
     {
-        Box(Axe-FVector2D(0,102*S),FVector2D(7*Tile+6*Gap,54*S),Ink);
-        const FString Materials=FString::Printf(TEXT("WOOD %s     STONE %s     METAL %s"),*HUDMaterials[0],*HUDMaterials[1],*HUDMaterials[2]);
-        Text(Axe-FVector2D(-8*S,97*S),Materials,HUDSmallFont,Paper);
-        Text(Axe-FVector2D(-8*S,73*S),HUDBuildHint,HUDSmallFont,Muted);
-        return Layer+6;
+        const FVector2D P(Axe.X,Materials.Y-30*S);
+        Box(P,FVector2D(Right-Axe.X,25*S),Ink);
+        Text(P+FVector2D(6*S,3*S),HUDBuildHint,HUDSmallFont,Paper);
     }
-    const FVector2D Weapon(Size.X-30-160*S, Start.Y-42*S);
-    Box(Weapon,FVector2D(160,32)*S,Ink);
-    Text(Weapon+FVector2D(10,-1)*S,HUDMagazine+(bHUDVehicle?TEXT(" "):TEXT(" / "))+HUDReserve,HUDLabelFont,bHUDReloading?Amber:Paper);
-    if (!HUDNotice.IsEmpty())
-        Text(Start-FVector2D(0,70*S),HUDNotice,HUDSmallFont,Amber);
+    else if(bHUDVehicle)
+        Text(Axe-FVector2D(0,35*S),HUDMagazine+TEXT(" ")+HUDReserve,HUDLabelFont,Paper);
+    else if(!HUDNotice.IsEmpty())
+        Text(Axe-FVector2D(0,30*S),HUDNotice,HUDSmallFont,Amber);
     return Layer + 6;
 }

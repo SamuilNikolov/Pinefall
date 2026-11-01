@@ -538,9 +538,12 @@ void UPFInterface::UpdateHUDData()
             int32 Index=PFInventoryLayout::FindQuick(Player->Inventory->Slots,Quick);if(Index==INDEX_NONE)continue;
             const auto &Stack=Player->Inventory->Slots[Index];int32 Icon=Quick<2?Quick:Quick==2?3:Quick==3?4:Quick==4?5:7;
             Item.bOccupied=true;Item.bEquipped=Stack.Kind==EPFItemKind::Weapon&&Stack.WeaponId==Player->WeaponId&&Player->Construction->Mode==EPFConstructionMode::Combat;
-            Item.Icon.SetResourceObject(ItemIcons.IsValidIndex(Icon)?ItemIcons[Icon].Get():nullptr);
+            UTexture2D *Texture=ItemIcons.IsValidIndex(Icon)?ItemIcons[Icon].Get():nullptr;
+            Item.Icon.SetResourceObject(Texture);
+            if(Texture)Item.Icon.ImageSize=FVector2D(Texture->GetSizeX(),Texture->GetSizeY());
             Item.Rarity=Tiers[FMath::Min<int32>(Stack.Rarity,4)];
             Item.Count=FString::FromInt(Stack.Kind==EPFItemKind::Weapon?(Item.bEquipped?Player->Ammo:Stack.Magazine):Stack.Count);
+            if(Item.bEquipped&&!Player->Vehicle)Item.Count=HUDMagazine+TEXT("/")+HUDReserve;
         }
     }
     else

@@ -1,5 +1,11 @@
 # Pinefall Wildfront changelog
 
+## Reference HUD and dedicated settings — 2026-11-01
+
+- Reorganized the right-hand HUD into boxed equipment, a smaller build row and three material cards above it, following the supplied reference. Rarity colors, larger icons, selection outlines and fixed bindings replace the enclosing dashboard. Equipped ammo appears once inside its slot; unarmed players retain the quickbar.
+- Added a clearly named Settings entry immediately below Enter the world, available through the same Escape menu during play. Display, audio and controls have a dedicated page with frame limit, graphics quality, live volume/sensitivity values and control help.
+- Escape returns from Settings to the menu, then closes the menu. Preferences now save when closing with Escape as well as through buttons. Graphics/FPS changes preserve the current window resolution; simulation remains active.
+
 ## Native playability and rendering follow-up — 2026-11-01
 
 - Added source-preserving distance LODs for short grass and skipped offscreen cosmetic animal animation on clients. Preserved substantial cover across quality settings; no physics/collision is removed with foliage detail.

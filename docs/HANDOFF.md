@@ -1,5 +1,13 @@
 # Current developer and AI-agent handoff
 
+## November 1 reference HUD and settings
+
+`PFCombatHUD::PaintExpeditionHUD` now follows the user's supplied equipment/build/material structure: seven stable equipment slots (including pickaxe), four smaller build tiles, and three material icon/count cards above them, right aligned. Use actual rarity colors and selected outlines; do not restore the enclosing dashboard or a duplicate gun panel. Equipped ammo is cached in its equipment tile by `UpdateHUDData`; icons retain texture aspect ratio. The bar remains available without a firearm. Material icons are original vector drawing code, with no new textures or scene captures.
+
+`UPFInterface` owns distinct Play and Settings pages in the existing scrollable menu. Settings is the second main-menu action and remains reachable through Escape while playing. Existing graphics/volume/sensitivity preferences now have a dedicated page; frame cap cycles 60/90/120/144/unlimited. Back/Escape save preferences; closing resets the page and restores game input. Graphics/cap callbacks apply only non-resolution settings, preserving window size. Do not pause simulation. Full key rebinding and native voice options remain separate migration work; the Controls section currently provides sensitivity and a binding guide.
+
+Native compilation and 24 UI/transaction checks passed, including settings navigation, saved audio/mouse values, frame-cap changes and unpaused-world state. Real HUD captures at 1280×720 and 1920×1080 plus settings at 720p were reviewed. See `tests/baselines/unreal-0.5-hud-settings/README.md`. Main-menu screenshots containing local network addresses stay in ignored local artifacts. These are UI/persistence checks, not a new whole-match performance certification.
+
 ## November 1 playability follow-up
 
 The current sweep prioritizes performance and mechanics; **do not add more textures/environment art without new user direction**. The preceding requested biome pass is retained: seven credited CC0 surface sets, packed PBR/AO/relief-blend inputs, stochastic ground/geology projection and existing grass/fern placement rethemed by biome. `import_biome_surfaces.py` updates materials and cover without regenerating heights, roads or collision. `PFBiomePresentationV1` prevents repeated destructive rescaling. Preserve source provenance and do not present relief blending as physical displacement.

@@ -1,5 +1,9 @@
 # Pinefall native reserve
 
+Open **Settings** from the main screen or press **Esc** during play and choose **Settings**. The dedicated page has graphics quality, a 60/90/120/144/unlimited frame cap, master volume, mouse sensitivity and a control guide. Changes apply immediately; Back or Escape saves them. Escape returns to the menu first, then closes it. The world continues running while menus are open. Controls currently provides sensitivity/help; full key rebinding remains unfinished.
+
+The lower-right HUD has three tiers: equipment along the bottom (1 pickaxe, 2 rifle, 3 pistol, 4 food, 5 medkit, 6 armor, 7 repair), four structure icons above it, and wood/stone/metal counts above those. The equipped gun shows magazine/reserve ammo in its own slot. Color identifies rarity and the bright outline identifies selection.
+
 In Escape settings, the graphics button cycles **Medium → Balanced → High → Epic** and shows the active preset. Balanced retains High geometry, Nanite, textures, foliage density and shadows, using lighter ambient/indirect lighting and reflections. High/Epic retain Lumen lighting. The choice is saved; the default remains High. The reserve now includes built Nanite terrain alongside scanned trees/rocks and slope-aware scanned ground materials. Unsupported Nanite paths retain regular terrain rendering/collision.
 
 The default map is now Wildfront Reserve: a 2,016 m square region with eight settlements, 64 enterable cabins, graded road links, a boating lake and shore piers. This is the first larger native reserve, not the complete 6 km Unity world. Cedar Crossing remains available through `tools/Run-Unreal.ps1 -Mode Practice` for focused combat tests.

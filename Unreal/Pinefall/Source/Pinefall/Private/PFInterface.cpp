@@ -62,8 +62,11 @@ void UPFInterface::Button(UVerticalBox *Parent, const FString &Value, FName Hand
     auto *Button = WidgetTree->ConstructWidget<UButton>();
     Button->SetBackgroundColor(Primary ? PFStyle::Amber : FLinearColor(.10f, .16f, .17f, 1));
     auto *Text = PFStyle::Text(WidgetTree, Value, 18, Primary ? PFStyle::Ink : PFStyle::Paper);
+    Text->SetAutoWrapText(false); // Short action labels fit the menu width; keep them on one line.
     if (Handler == TEXT("Quality"))
         QualityReadout = Text;
+    if (Handler == TEXT("FrameLimit"))
+        FrameLimitReadout = Text;
     Text->SetMargin(FMargin(14, 12));
     Button->SetContent(Text);
     FScriptDelegate Delegate;
@@ -124,14 +127,21 @@ TSharedRef<SWidget> UPFInterface::RebuildWidget()
     Menu->SetBrushColor(PFStyle::Ink);
     Menu->SetPadding(FMargin(26));
     PFStyle::Place(Canvas, Menu, FAnchors(1, 0, 1, 1), FVector2D::ZeroVector, FMargin(-462, 28, 420, 28));
-    auto *Scroll = WidgetTree->ConstructWidget<UScrollBox>();
-    Menu->SetContent(Scroll);
-    auto *Stack = WidgetTree->ConstructWidget<UVerticalBox>();
-    Scroll->AddChild(Stack);
+    MenuScroll = WidgetTree->ConstructWidget<UScrollBox>();
+    Menu->SetContent(MenuScroll);
+    auto *Pages=WidgetTree->ConstructWidget<UVerticalBox>();
+    MenuScroll->AddChild(Pages);
+    PlayMenuPage=WidgetTree->ConstructWidget<UVerticalBox>();
+    SettingsPage=WidgetTree->ConstructWidget<UVerticalBox>();
+    Pages->AddChildToVerticalBox(PlayMenuPage);
+    Pages->AddChildToVerticalBox(SettingsPage);
+    SettingsPage->SetVisibility(ESlateVisibility::Collapsed);
+    auto *Stack = PlayMenuPage.Get();
     Label(Stack, TEXT("Enter the reserve"), 29, PFStyle::Paper);
     Label(Stack, TEXT("Explore the reserve, follow the roads, scavenge settlements and survive the storm."),
           15, PFStyle::Muted);
     Button(Stack, TEXT("Enter the world"), TEXT("Resume"), true);
+    Button(Stack, TEXT("Settings"), TEXT("OpenSettings"));
     Button(Stack, TEXT("Host exploration · UDP 7777"), TEXT("Host"));
     Button(Stack, TEXT("Host solo battle royale"), TEXT("HostSolo"));
     Button(Stack, TEXT("Host duos"), TEXT("HostDuo"));
@@ -149,35 +159,43 @@ TSharedRef<SWidget> UPFInterface::RebuildWidget()
           TEXT("Internet hosting requires a reachable UDP port. The LAN address shown below does not "
                "establish public reachability."),
           13, PFStyle::Muted);
-    Label(Stack, TEXT("Sound"), 18, PFStyle::Paper);
-    VolumeSlider = WidgetTree->ConstructWidget<USlider>();
-    auto *Settings = UPFUserSettings::Get();
-    VolumeSlider->SetValue(Settings ? Settings->MasterVolume : .8f);
-    VolumeSlider->OnValueChanged.AddDynamic(this, &UPFInterface::Volume);
-    Stack->AddChildToVerticalBox(VolumeSlider)->SetPadding(FMargin(0, 0, 0, 17));
-    Label(Stack, TEXT("Mouse sensitivity"), 18, PFStyle::Paper);
-    SensitivitySlider = WidgetTree->ConstructWidget<USlider>();
-    SensitivitySlider->SetValue(Settings
-                                    ? FMath::GetMappedRangeValueClamped(FVector2D(.03, .4), FVector2D(0, 1),
-                                                                        Settings->MouseSensitivity)
-                                    : .24f);
-    SensitivitySlider->OnValueChanged.AddDynamic(this, &UPFInterface::Sensitivity);
-    Stack->AddChildToVerticalBox(SensitivitySlider)->SetPadding(FMargin(0, 0, 0, 17));
-    const int32 QualityLevel = Settings ? Settings->GetOverallScalabilityLevel() : 2;
-    const TCHAR *QualityName = Settings && Settings->bBalancedLighting ? TEXT("Balanced") :
-        QualityLevel == 1 ? TEXT("Medium") : QualityLevel == 3 ? TEXT("Epic") : TEXT("High");
-    Button(Stack, FString::Printf(TEXT("Graphics: %s  /  Change"), QualityName), TEXT("Quality"));
     Button(Stack, TEXT("Leave session"), TEXT("LeaveSession"));
     Button(Stack, TEXT("Quit"), TEXT("Quit"));
-    MenuStatus = Label(Stack,
-                       TEXT("WASD move · mouse look\nLMB fire · RMB aim · R reload\nShift sprint · Ctrl "
-                            "crouch/slide · hold Space hop\n1 pickaxe · 2 rifle · 3 pistol · V camera\nQ build · F1–F4 pieces · F edit · R rotate · RMB material · Esc menu"),
-                       14, PFStyle::Muted);
+    MenuStatus=Label(Stack,TEXT("Esc opens the pause menu. Alt holds inventory; Tab toggles it."),14,PFStyle::Muted);
+
+    Stack=SettingsPage.Get();
+    Label(Stack,TEXT("Settings"),29,PFStyle::Paper);
+    Button(Stack,TEXT("Back"),TEXT("BackToMenu"));
+    auto *Settings=UPFUserSettings::Get();
+    Label(Stack,TEXT("Display"),20,PFStyle::Paper);
+    const int32 QualityLevel=Settings?Settings->GetOverallScalabilityLevel():2;
+    const TCHAR *QualityName=Settings&&Settings->bBalancedLighting?TEXT("Balanced"):
+        QualityLevel==1?TEXT("Medium"):QualityLevel==3?TEXT("Epic"):TEXT("High");
+    Button(Stack,FString::Printf(TEXT("Graphics: %s  /  Change"),QualityName),TEXT("Quality"));
+    const int32 Limit=Settings?FMath::RoundToInt(Settings->GetFrameRateLimit()):90;
+    Button(Stack,Limit>0?FString::Printf(TEXT("Frame limit: %d FPS"),Limit):TEXT("Frame limit: Unlimited"),TEXT("FrameLimit"));
+    Label(Stack,TEXT("Audio"),20,PFStyle::Paper);
+    const float VolumeValue=Settings?Settings->MasterVolume:.8f;
+    VolumeReadout=Label(Stack,FString::Printf(TEXT("Master volume: %.0f%%"),VolumeValue*100),16,PFStyle::Muted);
+    VolumeSlider=WidgetTree->ConstructWidget<USlider>();
+    VolumeSlider->SetValue(VolumeValue);
+    VolumeSlider->OnValueChanged.AddDynamic(this,&UPFInterface::Volume);
+    Stack->AddChildToVerticalBox(VolumeSlider)->SetPadding(FMargin(0,0,0,20));
+    Label(Stack,TEXT("Controls"),20,PFStyle::Paper);
+    const float MouseValue=Settings?Settings->MouseSensitivity:.12f;
+    SensitivityReadout=Label(Stack,FString::Printf(TEXT("Mouse sensitivity: %.3f"),MouseValue),16,PFStyle::Muted);
+    SensitivitySlider=WidgetTree->ConstructWidget<USlider>();
+    SensitivitySlider->SetValue(FMath::GetMappedRangeValueClamped(FVector2D(.03,.4),FVector2D(0,1),MouseValue));
+    SensitivitySlider->OnValueChanged.AddDynamic(this,&UPFInterface::Sensitivity);
+    Stack->AddChildToVerticalBox(SensitivitySlider)->SetPadding(FMargin(0,0,0,20));
+    Label(Stack,TEXT("WASD move  |  Shift sprint  |  Ctrl crouch/slide\nSpace jump/hop  |  V camera\nLMB fire  |  RMB aim  |  R reload\n1 pickaxe  |  2 rifle  |  3 pistol\n4 food  |  5 medkit  |  6 armor  |  7 repair\nQ build  |  F1-F4 structures  |  F edit\nAlt hold inventory  |  Tab toggle inventory  |  M map"),14,PFStyle::Muted);
+    SettingsStatus=Label(Stack,TEXT("Changes apply immediately and save when you go back or close the menu."),14,PFStyle::Muted);
     BuildExpeditionUI(Canvas, VitalsStack);
     return Super::RebuildWidget();
 }
 void UPFInterface::SetMenuVisible(bool Visible)
 {
+    if(!Visible)BackToMenu();
     if (Menu)
         Menu->SetVisibility(Visible ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 }
@@ -296,14 +314,15 @@ void UPFInterface::Quality()
         Settings->bBalancedLighting = !WasBalanced && (Current == 1 || Current < 0);
         const int32 Next = WasBalanced || Settings->bBalancedLighting ? 2 : Current == 2 ? 3 : 1;
         Settings->SetOverallScalabilityLevel(Next);
-        Settings->ApplySettings(false);
+        Settings->ApplyNonResolutionSettings();
+        Settings->SaveSettings();
         const TCHAR *Name = Settings->bBalancedLighting ? TEXT("Balanced") :
             Next == 1 ? TEXT("Medium") : Next == 2 ? TEXT("High") : TEXT("Epic");
         if (QualityReadout)
             QualityReadout->SetText(FText::FromString(FString::Printf(TEXT("Graphics: %s  /  Change"), Name)));
-        MenuStatus->SetText(FText::FromString(Settings->bBalancedLighting
-            ? TEXT("Balanced: high-detail scenery, textures and shadows. Lighter indirect lighting and reflections for faster play.")
-            : FString::Printf(TEXT("Graphics: %s. Balanced keeps High scenery detail with lighter lighting; High/Epic use Lumen."), Name)));
+        if(SettingsStatus)SettingsStatus->SetText(FText::FromString(Settings->bBalancedLighting
+            ? TEXT("Balanced keeps scenery detail with lighter lighting for smoother play.")
+            : TEXT("Graphics preference saved.")));
     }
 }
 void UPFInterface::Quit()
@@ -318,12 +337,16 @@ void UPFInterface::Volume(float Value)
     {
         Settings->MasterVolume = Value;
         Settings->ApplyNonResolutionSettings();
+        if(VolumeReadout)VolumeReadout->SetText(FText::FromString(FString::Printf(TEXT("Master volume: %.0f%%"),Value*100)));
     }
 }
 void UPFInterface::Sensitivity(float Value)
 {
     if (auto *Settings = UPFUserSettings::Get())
+    {
         Settings->MouseSensitivity = FMath::Lerp(.03f, .4f, Value);
+        if(SensitivityReadout)SensitivityReadout->SetText(FText::FromString(FString::Printf(TEXT("Mouse sensitivity: %.3f"),Settings->MouseSensitivity)));
+    }
 }
 
 FReply UPFInterface::NativeOnKeyDown(const FGeometry &Geometry,const FKeyEvent &Event)
@@ -341,4 +364,32 @@ FReply UPFInterface::NativeOnKeyUp(const FGeometry &Geometry,const FKeyEvent &Ev
     if(Event.GetKey()==EKeys::LeftAlt||Event.GetKey()==EKeys::RightAlt)
         if(auto *PC=Cast<APFPlayerController>(GetOwningPlayer())){PC->AltInventoryReleased();return FReply::Handled();}
     return Super::NativeOnKeyUp(Geometry,Event);
+}
+
+void UPFInterface::OpenSettings()
+{
+    bSettingsOpen=true;
+    if(PlayMenuPage)PlayMenuPage->SetVisibility(ESlateVisibility::Collapsed);
+    if(SettingsPage)SettingsPage->SetVisibility(ESlateVisibility::Visible);
+    if(MenuScroll)MenuScroll->ScrollToStart();
+}
+void UPFInterface::BackToMenu()
+{
+    bSettingsOpen=false;
+    if(SettingsPage)SettingsPage->SetVisibility(ESlateVisibility::Collapsed);
+    if(PlayMenuPage)PlayMenuPage->SetVisibility(ESlateVisibility::Visible);
+    if(MenuScroll)MenuScroll->ScrollToStart();
+    if(auto *Settings=UPFUserSettings::Get())Settings->SaveSettings();
+}
+void UPFInterface::FrameLimit()
+{
+    if(auto *Settings=UPFUserSettings::Get())
+    {
+        const int32 Current=FMath::RoundToInt(Settings->GetFrameRateLimit());
+        const int32 Next=Current==0?60:Current<60?60:Current<90?90:Current<120?120:Current<144?144:0;
+        Settings->SetFrameRateLimit(Next);
+        Settings->ApplyNonResolutionSettings();
+        Settings->SaveSettings();
+        if(FrameLimitReadout)FrameLimitReadout->SetText(FText::FromString(Next>0?FString::Printf(TEXT("Frame limit: %d FPS"),Next):TEXT("Frame limit: Unlimited")));
+    }
 }

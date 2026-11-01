@@ -1,0 +1,30 @@
+{
+	"passed": [
+		"build keys have no development view-mode shortcuts",
+		"hold Alt opens inventory with a visible cursor",
+		"inventory survives input-state flush during UI focus changes",
+		"Alt release reaches the UI root and restores game input",
+		"Tab inventory remains open without holding Alt",
+		"Tab closes inventory through focused UI",
+		"Escape closes inventory without opening another panel",
+		"application focus loss clears held inventory state",
+		"inventory cannot cover the settings menu",
+		"dedicated settings page opens from the pause menu",
+		"opening settings leaves world simulation running",
+		"frame-limit control applies a different cap",
+		"Escape returns from settings to the menu",
+		"audio and mouse preferences survive closing settings and reloading saved settings",
+		"closing the menu resets its settings page and restores game input",
+		"quickbar weapon positions ignore pickup order",
+		"inventory displays rifle then pistol without rearranging authoritative slots",
+		"hotbar shortcuts increase from left to right",
+		"mouse press keeps its original slot when the display reorders",
+		"dropping one backpack item leaves building materials unchanged",
+		"inventory equip exits building and equips the selected gun",
+		"pickup card detects an already-carried weapon",
+		"pickup capacity respects the ration carrying limit",
+		"invalid pickup quantities have zero capacity"
+	],
+	"failed": [],
+	"scope": "Real UI key handlers, focus-state flush, hotbar ordering and revision-checked inventory transactions; no physical keyboard automation claim"
+}
