@@ -465,7 +465,9 @@ int32 UPFInterface::PaintExpeditionHUD(const FGeometry &G, FSlateWindowElementLi
         Text(P+FVector2D((MaterialTile-Width)*.5f,34*S),HUDMaterials[I],HUDLabelFont,Paper);
     }
     // Instructions are temporary context, never a permanent dashboard row.
-    if(bHUDBuild||bHUDPickaxe)
+    if(HUDNotice.StartsWith(TEXT("SURVEY")))
+        Text(Axe-FVector2D(0,30*S),HUDNotice,HUDSmallFont,Amber);
+    else if(bHUDBuild||bHUDPickaxe)
     {
         const FVector2D P(Axe.X,Materials.Y-30*S);
         Box(P,FVector2D(Right-Axe.X,25*S),Ink);

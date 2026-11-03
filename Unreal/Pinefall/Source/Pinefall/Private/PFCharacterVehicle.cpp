@@ -22,7 +22,7 @@ void APFCharacter::OnRep_Vehicle()
         GetCharacterMovement()->DisableMovement();
         GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         AttachToComponent(Vehicle->Collision, FAttachmentTransformRules::KeepWorldTransform);
-        SetActorRelativeLocation(FVector(-25, -35, Vehicle->bBoat ? 75 : 25));
+        SetActorRelativeLocation(Vehicle->bMotorcycle?FVector(-15,0,60):FVector(-25, -35, Vehicle->bBoat ? 75 : 25));
         SetActorRelativeRotation(FRotator::ZeroRotator);
     }
     else

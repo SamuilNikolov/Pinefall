@@ -217,7 +217,7 @@ TSharedRef<SWidget> UPFInterface::RebuildWidget()
     Button(Stack,FString::Printf(TEXT("Crosshair color: %s"),ReticleNames[Settings?FMath::Clamp(Settings->CrosshairColor,0,3):0]),TEXT("CrosshairColor"));
     CrosshairColorReadout->SetColorAndOpacity(Settings?Settings->GetCrosshairColor():FLinearColor::White);
     Label(Stack,TEXT("Aim zoom stays weapon-specific. Crosshair changes are visual and do not change accuracy."),14,PFStyle::Muted);
-    Label(Stack,TEXT("WASD move  |  Shift sprint  |  Ctrl crouch/slide\nSpace jump/hop  |  V camera\nLMB fire  |  RMB aim  |  R reload\n1 pickaxe  |  2 rifle  |  3 pistol\n4 food  |  5 medkit  |  6 armor  |  7 repair\nQ build  |  F1-F4 structures  |  F edit\nAlt hold inventory  |  Tab toggle inventory  |  M map"),14,PFStyle::Muted);
+    Label(Stack,TEXT("WASD move  |  Shift sprint  |  Ctrl crouch/slide\nSpace jump/hop  |  V camera\nLMB fire  |  RMB aim  |  R reload\n1 pickaxe  |  2 rifle  |  3 pistol\n4 food  |  5 medkit  |  6 armor  |  7 repair\nQ build  |  F1-F4 structures  |  F edit\nAlt hold inventory  |  Tab toggle inventory  |  M map\nB survey beacon"),14,PFStyle::Muted);
     SettingsStatus=Label(Stack,TEXT("Changes apply immediately and save when you go back or close the menu."),14,PFStyle::Muted);
     BuildExpeditionUI(Canvas, VitalsStack);
     return Super::RebuildWidget();

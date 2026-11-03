@@ -17,7 +17,8 @@ enum class EPFItemKind : uint8
     ServiceKit,
     Wood,
     Stone,
-    Metal
+    Metal,
+    SurveyBeacon
 };
 USTRUCT(BlueprintType)
 struct FPFItemStack

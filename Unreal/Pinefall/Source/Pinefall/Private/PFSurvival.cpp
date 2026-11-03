@@ -193,9 +193,9 @@ void APFCharacter::EndInteract()
 }
 void APFCharacter::ServerInteract_Implementation(APFWorldPickup *Pickup)
 {
-    if (!CanFight() || !IsValid(Pickup) || Pickup->IsActorBeingDestroyed() ||
-        FVector::DistSquared(GetActorLocation(), Pickup->GetActorLocation()) > 160000)
-        return;
+    if (!CanFight() || !IsValid(Pickup) || Pickup->IsActorBeingDestroyed())return;
+    const float Reach=Pickup->IsA<APFSupplyDrop>()?500.f:400.f;
+    if(FVector::DistSquared(GetActorLocation(),Pickup->GetActorLocation())>FMath::Square(Reach))return;
     FHitResult Hit;
     FCollisionQueryParams Query(SCENE_QUERY_STAT(PFPickupCover), false, this);
     Query.AddIgnoredActor(Pickup);

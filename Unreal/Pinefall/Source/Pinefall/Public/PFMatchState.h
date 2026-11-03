@@ -42,6 +42,8 @@ class PINEFALL_API APFMatchState : public AGameStateBase
     UPROPERTY(Replicated) TArray<FVector_NetQuantize> SupplyDropPoints;
     UPROPERTY(Replicated) FString SupplyAnnouncement;
     UPROPERTY(Replicated) double SupplyAnnouncementUntil = 0;
+    UPROPERTY(Replicated) double SurveyWarningUntil = 0;
+    UFUNCTION(NetMulticast,Reliable) void NarrateSupply(FName Cue);
     bool IsBattleRoyale() const
     {
         return Phase != EPFRoundPhase::Range;

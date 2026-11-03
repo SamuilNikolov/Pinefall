@@ -4,6 +4,7 @@
 #include "PFMatchState.h"
 #include "PFWorldPickup.h"
 #include "PFVehicle.h"
+#include "PFPlayerController.h"
 #include "EngineUtils.h"
 #include "Engine/World.h"
 #include "Net/UnrealNetwork.h"
@@ -11,6 +12,7 @@ FString FPFItemStack::Label() const
 {
     switch (Kind)
     {
+    case EPFItemKind::SurveyBeacon:return TEXT("Survey beacon (B)");
     case EPFItemKind::Wood:return TEXT("Wood");
     case EPFItemKind::Stone:return TEXT("Stone");
     case EPFItemKind::Metal:return TEXT("Metal");
@@ -36,6 +38,7 @@ FString FPFItemStack::Label() const
 }
 int32 FPFItemStack::Capacity() const
 {
+    if(Kind==EPFItemKind::SurveyBeacon)return 2;
     return Kind>=EPFItemKind::Wood&&Kind<=EPFItemKind::Metal ? 999 : Kind == EPFItemKind::ServiceKit ? 3
            : Kind == EPFItemKind::Weapon || (Kind >= EPFItemKind::LightVest && Kind <= EPFItemKind::HeavyVest)
                ? 1
@@ -99,15 +102,15 @@ void UPFInventoryComponent::InitializeLoadout(bool Range, int32 Kit)
 }
 int32 UPFInventoryComponent::CapacityFor(const FPFItemStack &Stack) const
 {
-    if(Stack.Count<=0||Stack.Rarity>4||uint8(Stack.Kind)>uint8(EPFItemKind::Metal))return 0;
-    if(Stack.Kind>=EPFItemKind::Wood)
+    if(Stack.Count<=0||Stack.Rarity>4||uint8(Stack.Kind)>uint8(EPFItemKind::SurveyBeacon))return 0;
+    if(Stack.Kind>=EPFItemKind::Wood&&Stack.Kind<=EPFItemKind::Metal)
     {
         auto *Tools=GetOwner()->FindComponentByClass<UPFConstructionComponent>();
         return Tools?FMath::Min(Stack.Count,FMath::Max(0,PFBuildGrid::ResourceCap-Tools->Resources.Get(int32(Stack.Kind)-int32(EPFItemKind::Wood)))):0;
     }
     if(Stack.Kind==EPFItemKind::Weapon&&(HasWeapon(Stack.WeaponId)||(Stack.WeaponId!=TEXT("Ridgeline")&&Stack.WeaponId!=TEXT("ServiceNine"))))return 0;
     int32 Allowed=Stack.Kind==EPFItemKind::Weapon?1:Stack.Count;
-    if(Stack.Kind==EPFItemKind::Ammo||Stack.Kind==EPFItemKind::Food||Stack.Kind==EPFItemKind::Medkit||Stack.Kind==EPFItemKind::ArmorPlate)
+    if(Stack.Kind==EPFItemKind::Ammo||Stack.Kind==EPFItemKind::Food||Stack.Kind==EPFItemKind::Medkit||Stack.Kind==EPFItemKind::ArmorPlate||Stack.Kind==EPFItemKind::SurveyBeacon)
     {
         int32 Held=0;for(const auto &Slot:Slots)if(Slot.Count>0&&Slot.Kind==Stack.Kind&&(Stack.Kind!=EPFItemKind::Ammo||Slot.WeaponId==Stack.WeaponId))Held+=Slot.Count;
         Allowed=FMath::Min(Allowed,FMath::Max(0,Stack.Capacity()-Held));
@@ -208,6 +211,9 @@ void UPFInventoryComponent::ServerUseSlot_Implementation(int32 Index, uint32 Rev
     bool Consume = false;
     switch (Item.Kind)
     {
+    case EPFItemKind::SurveyBeacon:
+        if(auto *PC=Cast<APFPlayerController>(Character->GetController()))Consume=PC->ActivateSurvey();
+        break;
     case EPFItemKind::ServiceKit:
     {
         APFVehicle* Nearest=nullptr;float Distance=FMath::Square(500.f);

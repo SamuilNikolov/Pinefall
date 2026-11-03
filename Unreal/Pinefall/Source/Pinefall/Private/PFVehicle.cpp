@@ -46,10 +46,10 @@ void APFVehicle::RefreshVisual()
 {
     Body->SetStaticMesh(LoadObject<UStaticMesh>(
         nullptr, bBoat ? TEXT("/Game/Pinefall/Art/Reserve/SM_RiverBoat.SM_RiverBoat")
-                       : TEXT("/Game/Pinefall/Art/Reserve/SM_TrailTruck.SM_TrailTruck")));
-    Body->SetRelativeLocation(FVector(0, 0, bBoat ? -55 : -110));
+                       : bMotorcycle ? TEXT("/Game/Pinefall/Art/Supplies/SM_TrailBike.SM_TrailBike") : TEXT("/Game/Pinefall/Art/Reserve/SM_TrailTruck.SM_TrailTruck")));
+    Body->SetRelativeLocation(FVector(0, 0, bBoat ? -55 : bMotorcycle ? -75 : -110));
     Body->SetRelativeRotation(FRotator(0, 90, 0));
-    Collision->SetBoxExtent(bBoat ? FVector(205, 88, 45) : FVector(200, 100, 100));
+    Collision->SetBoxExtent(bBoat ? FVector(205, 88, 45) : bMotorcycle ? FVector(125,45,65) : FVector(200, 100, 100));
     auto *WheelMesh =
         bBoat ? nullptr
               : LoadObject<UStaticMesh>(
@@ -57,13 +57,14 @@ void APFVehicle::RefreshVisual()
     for (int32 I = 0; I < Wheels.Num(); I++)
     {
         Wheels[I]->SetStaticMesh(WheelMesh);
-        Wheels[I]->SetVisibility(!bBoat);
-        Wheels[I]->SetRelativeLocation(FVector(I % 2 == 0 ? -104 : 104, I < 2 ? -132 : 134, 46));
+        Wheels[I]->SetVisibility(!bBoat&&(!bMotorcycle||I<2));
+        Wheels[I]->SetRelativeScale3D(bMotorcycle?FVector(.65,.78,.78):FVector(1));
+        Wheels[I]->SetRelativeLocation(bMotorcycle?FVector(0,I==0?-95:95,38):FVector(I % 2 == 0 ? -104 : 104, I < 2 ? -132 : 134, 46));
     }
 }
 FString APFVehicle::Label() const
 {
-    return bBoat ? TEXT("Riverboat") : TEXT("Trail truck");
+    return bBoat ? TEXT("Riverboat") : bMotorcycle ? TEXT("Trail motorcycle") : TEXT("Trail truck");
 }
 bool APFVehicle::Enter(APFCharacter *Player)
 {
@@ -176,7 +177,7 @@ void APFVehicle::Tick(float Delta)
     Delta = FMath::Min(Delta, .05f);
     if (GetWorld()->GetTimeSeconds() - LastInput > .3)
         Control = FVector2D::ZeroVector;
-    float Throttle = Fuel > 0 ? Control.Y : 0, Top = bBoat ? 1600 : 2200;
+    float Throttle = Fuel > 0 ? Control.Y : 0, Top = bBoat ? 1600 : bMotorcycle ? 2800 : 2200;
     if (bBoost && Fuel > 0)
         Top *= 1.35f;
     float Target = Throttle * (Throttle < 0 ? Top * .36f : Top);
@@ -185,7 +186,7 @@ void APFVehicle::Tick(float Delta)
     if (bBrake)
         Speed = FMath::FInterpConstantTo(Speed, 0.f, Delta, 2400);
     FRotator Rotation = GetActorRotation();
-    Rotation.Yaw += Control.X * (bBoat ? 70 : 95) * Delta *
+    Rotation.Yaw += Control.X * (bBoat ? 70 : bMotorcycle ? 120 : 95) * Delta *
                     FMath::Clamp(FMath::Abs(Speed) / 500.f, 0.f, 1.f) * (Speed < 0 ? -1 : 1);
     FVector Move = FRotationMatrix(FRotator(0, Rotation.Yaw, 0)).GetUnitAxis(EAxis::X) * Speed * Delta;
     FVector Destination = GetActorLocation() + Move;
@@ -241,7 +242,7 @@ void APFVehicle::Tick(float Delta)
                     Speed = 0;
                     return;
                 }
-        float Z = Hit.ImpactPoint.Z + 110;
+        float Z = Hit.ImpactPoint.Z + (bMotorcycle?75:110);
         Destination.Z = FMath::FInterpTo(GetActorLocation().Z, Z, Delta, 18);
         FVector Forward = FRotationMatrix(FRotator(0, Rotation.Yaw, 0)).GetUnitAxis(EAxis::X);
         FVector Surface = (Forward - FVector::DotProduct(Forward, Hit.ImpactNormal) * Hit.ImpactNormal)
@@ -304,6 +305,7 @@ void APFVehicle::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifeti
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(APFVehicle, bBoat);
+    DOREPLIFETIME(APFVehicle, bMotorcycle);
     DOREPLIFETIME(APFVehicle, Driver);
     DOREPLIFETIME(APFVehicle, Health);
     DOREPLIFETIME(APFVehicle, Fuel);
@@ -315,10 +317,10 @@ void APFVehicle::AnimateWheels(float Delta)
 {
     if (bBoat)
         return;
-    WheelRoll = FMath::Fmod(WheelRoll - Speed / 46.f * FMath::RadiansToDegrees(Delta), 360.f);
+    WheelRoll = FMath::Fmod(WheelRoll - Speed / (bMotorcycle?36.f:46.f) * FMath::RadiansToDegrees(Delta), 360.f);
     WheelSteer = FMath::FInterpTo(WheelSteer, Steering * 28.f, Delta, 12);
     for (int32 I = 0; I < Wheels.Num(); I++)
-        Wheels[I]->SetRelativeRotation(FRotator(0, I < 2 ? WheelSteer : 0, WheelRoll));
+        Wheels[I]->SetRelativeRotation(FRotator(0, (bMotorcycle?I==0:I<2) ? WheelSteer : 0, WheelRoll));
 }
 
 void APFVehicle::PostNetReceiveLocationAndRotation()

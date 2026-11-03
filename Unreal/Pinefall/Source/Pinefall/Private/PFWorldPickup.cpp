@@ -71,6 +71,11 @@ void APFWorldPickup::RefreshVisual()
         if(auto *Model=LoadObject<UStaticMesh>(nullptr,*FString::Printf(TEXT("/Game/Pinefall/Art/Construction/%s.%s"),Name,Name)))
         {Body->SetStaticMesh(Model);Body->SetRelativeScale3D(FVector(1));Body->SetRelativeLocation({0,0,2});return;}
     }
+    if(Item.Kind==EPFItemKind::SurveyBeacon)
+    {
+        Body->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,TEXT("/Game/Pinefall/Art/Supplies/SM_SurveyReceiver.SM_SurveyReceiver")));
+        Body->SetRelativeScale3D(FVector(1));Body->SetRelativeLocation(FVector(0,0,3));return;
+    }
     if (Item.Kind == EPFItemKind::Food)
     {
         Body->SetStaticMesh(LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cylinder.Cylinder")));

@@ -186,7 +186,12 @@ int32 UPFTacticalMap::NativePaint(const FPaintArgs &Args, const FGeometry &G, co
         else
         {
             FLinearColor C = Pin.Condition > 0 ? FLinearColor(.88, .90, .79) : FLinearColor(.9, .58, .2);
-            if (Pin.Kind == 1)
+            if(Pin.Kind==3)
+            {
+                Line({Pos+FVector2D(-5,4),Pos+FVector2D(0,-4),Pos+FVector2D(5,4),Pos+FVector2D(-5,4)},FLinearColor(.3,.7,1));
+                Box(Pos+FVector2D(-7,3),FVector2D(4),C);Box(Pos+FVector2D(3,3),FVector2D(4),C);
+            }
+            else if (Pin.Kind == 1)
             {
                 Box(Pos - FVector2D(7, 4), FVector2D(14, 8), FLinearColor(.02, .04, .05, .9));
                 Line({Pos + FVector2D(-6, -3), Pos + FVector2D(6, -3), Pos + FVector2D(6, 3),
@@ -227,6 +232,13 @@ int32 UPFTacticalMap::NativePaint(const FPaintArgs &Args, const FGeometry &G, co
                 if (!bMini)
                     Text(Pos + FVector2D(7, 4), P->GetPlayerName().Left(20), 11, FLinearColor::White);
             }
+        }
+    if(!Mine->bEliminated&&Match->GetServerWorldTimeSeconds()<PC->SurveyVisibleUntil)
+        for(const auto &Point:PC->SurveyPoints)
+        {
+            const FVector2D At=Project(Point);
+            if(At.X<Origin.X+8||At.X>Origin.X+Side-8||At.Y<Origin.Y+8||At.Y>Origin.Y+Side-8)continue;
+            Line({At+FVector2D(0,-6),At+FVector2D(6,0),At+FVector2D(0,6),At+FVector2D(-6,0),At+FVector2D(0,-6)},FLinearColor(1,.3,.25));
         }
     for(const auto &DropPoint:Match->SupplyDropPoints)
     {

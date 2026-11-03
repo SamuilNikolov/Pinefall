@@ -1,5 +1,14 @@
 # Pinefall Wildfront changelog
 
+## Complete native supply specials and presentation - 2026-11-02
+
+- Added original cargo-plane flyover, authored canopy/suspension ropes and positional low aircraft rumble. Cosmetic delivery is timestamp-synchronized and stops ticking on landing.
+- Ported motorcycle/survey/ordinary special rolls (35%/25%/40%), with survey fallback when a safe bike location cannot be found. Motorcycles have their own model, two animated wheels, faster handling and blue map icon; parked bikes sleep and reset with the round.
+- Added shareable survey receivers (carry two), B/inventory activation, one-charge use, 12-second duration and four-second snapshots sent only to the activating team. Public warnings contain no enemy coordinates; expired/round-reset data is cleared.
+- Added queued prerecorded inbound/landed/claimed calls using the credited existing Kokoro recordings. Local playback is bounded and reset on round transitions. No microphone or runtime TTS dependency.
+- Reviewed 720p motorcycle/aircraft/parachute/survey-map renders. The three-peer integration suite now requires 63 checks plus client-side privacy and narration markers. See the current handoff and retained verification scope.
+
+
 ## Native supply-drop objectives - 2026-11-02
 
 - Ported scheduled supply drops: first at 65 seconds, 140-second spacing, six per round, stopping in small late circles. Landing sites use valid dry terrain inside the safe area.

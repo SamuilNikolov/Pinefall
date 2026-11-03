@@ -14,6 +14,12 @@ public:
     UPROPERTY() TObjectPtr<UStaticMeshComponent> Canopy;
     bool HasLanded() const;
     bool Open(APFCharacter *Player);
+    int32 ReleaseSpecial(float Roll);
+    UPROPERTY() TObjectPtr<UStaticMeshComponent> Aircraft;
+    UPROPERTY() TObjectPtr<class UAudioComponent> FlightAudio;
+    bool bFlightSoundActive = false;
+    bool bLandedAnnounced = false;
+    float PresentationRemaining = -1; // Opt-in screenshot fixture only; never replicated or set by gameplay.
     virtual void RefreshVisual() override;
     virtual void BeginPlay() override;
     virtual void Tick(float Delta) override;

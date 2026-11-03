@@ -339,7 +339,7 @@ void UPFInterface::UpdateExpeditionUI()
                          : Item.Kind == EPFItemKind::Food ? 3
                          : Item.Kind == EPFItemKind::Medkit     ? 4
                          : Item.Kind == EPFItemKind::ArmorPlate ? 5
-                         : Item.Kind == EPFItemKind::ServiceKit ? 7 : 6;
+                         : Item.Kind == EPFItemKind::ServiceKit || Item.Kind == EPFItemKind::SurveyBeacon ? 7 : 6;
             static const FLinearColor Tiers[] = {
                 FLinearColor(.43, .49, .55), FLinearColor(.25, .72, .43), FLinearColor(.25, .55, .98),
                 FLinearColor(.68, .39, .94), FLinearColor(.98, .66, .23)};
@@ -369,6 +369,7 @@ void UPFInterface::UpdateExpeditionUI()
                         Action->SetText(FText::FromString(
                             Item.Kind == EPFItemKind::Ammo         ? TEXT("Reserve ammo")
                             : Item.Kind == EPFItemKind::Weapon     ? TEXT("Equip")
+                            : Item.Kind == EPFItemKind::SurveyBeacon ? TEXT("Activate / B")
                             : Item.Kind == EPFItemKind::ServiceKit ? TEXT("Service nearby")
                                                                    : TEXT("Use")));
             }
@@ -471,7 +472,7 @@ void UPFInterface::UpdateHUDData()
         HUDLootRarity=FMath::Min<uint8>(Focused->Item.Rarity,4);HUDLootColor=Colors[HUDLootRarity];HUDLootName=Focused->Item.Label().ToUpper();HUDLootQuantity=FString::Printf(TEXT("×%d"),Focused->Item.Count);
         bHUDLootCanTake=Player->Inventory->CapacityFor(Focused->Item)>0;
         HUDLootAction=bHUDLootCanTake?TEXT("PICK UP"):Focused->Item.Kind==EPFItemKind::Weapon&&Player->Inventory->HasWeapon(Focused->Item.WeaponId)?TEXT("ALREADY CARRIED"):TEXT("NO SPACE");
-        HUDLootDetail=FString(Rarities[HUDLootRarity])+TEXT("  ·  ")+(Focused->Item.Kind==EPFItemKind::Weapon?TEXT("WEAPON"):Focused->Item.Kind==EPFItemKind::Ammo?TEXT("AMMUNITION"):Focused->Item.Kind>=EPFItemKind::Wood?TEXT("BUILDING MATERIAL"):TEXT("SUPPLIES"));
+        HUDLootDetail=FString(Rarities[HUDLootRarity])+TEXT("  ·  ")+(Focused->Item.Kind==EPFItemKind::Weapon?TEXT("WEAPON"):Focused->Item.Kind==EPFItemKind::Ammo?TEXT("AMMUNITION"):Focused->Item.Kind>=EPFItemKind::Wood&&Focused->Item.Kind<=EPFItemKind::Metal?TEXT("BUILDING MATERIAL"):TEXT("SUPPLIES"));
     }
     if(bHUDLootFocus)if(auto *Supply=Cast<APFSupplyDrop>(Focused))
     {
@@ -540,6 +541,10 @@ void UPFInterface::UpdateHUDData()
     HUDStormClock = Match->IsBattleRoyale() ? FString::Printf(TEXT("%02d:%02d"), Left / 60, Left % 60)
                                             : TEXT("SAFE");
     if(HUDNotice.IsEmpty()&&Match->GetServerWorldTimeSeconds()<Match->SupplyAnnouncementUntil)HUDNotice=Match->SupplyAnnouncement;
+    if(Match->GetServerWorldTimeSeconds()<Match->SurveyWarningUntil)
+        HUDNotice=Match->GetServerWorldTimeSeconds()<PC->SurveyVisibleUntil?TEXT("SURVEY ACTIVE / RED MAP DIAMONDS"):TEXT("SURVEY WARNING / POSITIONS EXPOSED");
+    else if(Player&&HUDNotice.IsEmpty()&&Player->Inventory->CountKind(EPFItemKind::SurveyBeacon)>0)
+        HUDNotice=TEXT("B  ACTIVATE SURVEY");
     HUDStormLabel = Match->Phase == EPFRoundPhase::Active
                         ? FString::Printf(TEXT("STORM %d  %s"), Match->StormStage + 1,
                                           Match->bClosing ? TEXT("CLOSING") : TEXT("HOLDING"))

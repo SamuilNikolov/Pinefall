@@ -23,6 +23,7 @@ class PINEFALL_API APFVehicle : public AActor
     UPROPERTY(VisibleAnywhere) TObjectPtr<UStaticMeshComponent> Body;
     UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<UStaticMeshComponent>> Wheels;
     UPROPERTY(EditAnywhere, ReplicatedUsing = RefreshVisual) bool bBoat = false;
+    UPROPERTY(ReplicatedUsing=RefreshVisual) bool bMotorcycle = false;
     UPROPERTY(ReplicatedUsing = OnRep_Driver) TObjectPtr<APFCharacter> Driver;
     UPROPERTY(Replicated) float Health = 500;
     UPROPERTY(Replicated) float Fuel = 100;

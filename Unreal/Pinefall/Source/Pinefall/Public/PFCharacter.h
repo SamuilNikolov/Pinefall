@@ -82,6 +82,7 @@ class PINEFALL_API APFCharacter : public ACharacter
     bool RunConstructionViewProbe(const FString &Mode);
     void RunCombatProbeInput();
     void RunReserveProbeInput();
+    void RunSupplyProbeInput();
     UFUNCTION(Client,Reliable) void ClientReservePlacement(FVector Point,int32 Token);
     UFUNCTION(Server,Reliable) void ServerReservePlaced(int32 Token);
     bool bReservePlacementReady=false;
@@ -171,6 +172,7 @@ class PINEFALL_API APFCharacter : public ACharacter
     bool bDeathPresented = false;
     bool bReloadPresented = false;
     bool bCombatProbe = false, bReserveProbe = false, bMovementProbe = false;
+    bool bSupplyProbe = false;
     bool bRenderNoDamage = false;
     int32 LastMovementCase = -1;
     bool bMovementPeerObserved = false;

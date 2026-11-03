@@ -9,6 +9,7 @@
 #include "PFInventoryComponent.h"
 #include "PFWorldPickup.h"
 #include "PFSupplyDrop.h"
+#include "PFVehicle.h"
 #include "PFWildlife.h"
 #include "Kismet/GameplayStatics.h"
 #include "EngineUtils.h"
@@ -353,6 +354,7 @@ void APFGameMode::RoundSecond()
         for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
             if (auto *Character = Cast<APFCharacter>(It->Get()->GetPawn()))
             {
+                if(auto *SurveyPC=Cast<APFPlayerController>(It->Get()))SurveyPC->SurveySecond();
                 Character->SurvivalSecond();
                 if (Character->Health > 0 && Round->Outside(Character->GetActorLocation()))
                     Character->EnvironmentalDamage(2 + Round->StormStage * 2);
@@ -531,8 +533,13 @@ void APFGameMode::SpawnFieldLoot()
 
 void APFGameMode::ResetSupplies()
 {
+    Match()->NarrateSupply(TEXT("Reset"));
     for(TActorIterator<APFSupplyDrop> It(GetWorld());It;++It)It->Destroy();
+    for(TActorIterator<APFVehicle> It(GetWorld());It;++It)if(It->bMotorcycle){It->Exit(true);It->Destroy();}
     Match()->SupplyDropPoints.Reset();Match()->SupplyAnnouncement.Empty();Match()->SupplyAnnouncementUntil=0;Match()->ForceNetUpdate();
+    Match()->SurveyWarningUntil=0;
+    for(FConstPlayerControllerIterator It=GetWorld()->GetPlayerControllerIterator();It;++It)
+        if(auto *PC=Cast<APFPlayerController>(It->Get()))PC->ResetSurvey();
     SupplyCount=0;NextSupplyAt=GetWorld()->GetTimeSeconds()+65;
 }
 void APFGameMode::SupplySecond()
@@ -553,6 +560,6 @@ void APFGameMode::SupplySecond()
         if(!Drop)return;
         Drop->LandingAt=Now+26;Drop->FinishSpawning(Transform);
         Round->SupplyDropPoints.Add(Point);Round->Announcement=TEXT("Supply drop inbound. Gold crate marker on your map.");Round->SupplyAnnouncement=Round->Announcement;Round->SupplyAnnouncementUntil=Now+6;Round->ForceNetUpdate();
-        SupplyCount++;return;
+        Round->NarrateSupply(TEXT("Inbound"));SupplyCount++;return;
     }
 }

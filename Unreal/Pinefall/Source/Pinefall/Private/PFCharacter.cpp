@@ -108,6 +108,7 @@ void APFCharacter::BeginPlay()
     Super::BeginPlay();
     bCombatProbe = FParse::Param(FCommandLine::Get(), TEXT("PFCombatProbe"));
     bReserveProbe = FParse::Param(FCommandLine::Get(), TEXT("PFReserveProbe"));
+    bSupplyProbe = FParse::Param(FCommandLine::Get(),TEXT("PFRoundProbe"));
     bMovementProbe = FParse::Param(FCommandLine::Get(), TEXT("PFMovementProbe"));
     bRenderNoDamage = HasAuthority() && FParse::Param(FCommandLine::Get(), TEXT("PFRenderNoDamage"));
     if (HasAuthority())
@@ -189,6 +190,7 @@ void APFCharacter::Tick(float Delta)
     {
         if (!AcceptsInput()) { auto* Movement = CastChecked<UPFMovementComponent>(GetCharacterMovement()); Movement->bWantsHop = false; Movement->bWantsSprint = false; StopJumping(); }
         if (bMovementProbe) RunMovementProbeInput();
+        if (bSupplyProbe) RunSupplyProbeInput();
         if (bReserveProbe)
             RunReserveProbeInput();
         if (Vehicle)
@@ -244,7 +246,7 @@ void APFCharacter::Tick(float Delta)
         const float TravelFOV = BaseFOV + (bSliding ? 4.f : FMath::Clamp((float(GetVelocity().Size2D()) - 940.f) / 1460.f, 0.f, 1.f) * 6.f);
         Camera->SetFieldOfView(
             FMath::FInterpTo(Camera->FieldOfView, bAiming ? Weapon.AimFOV : TravelFOV, Delta, 16));
-        GetMesh()->SetOwnerNoSee(bFirstPerson || Vehicle != nullptr);
+        GetMesh()->SetOwnerNoSee(bFirstPerson);
         WorldWeapon->SetVisibility(!Vehicle && Construction->Mode==EPFConstructionMode::Combat);
         WorldWeapon->SetOwnerNoSee(bFirstPerson);
         ViewWeapon->SetVisibility(Construction->Mode==EPFConstructionMode::Combat && !Vehicle && bFirstPerson && Health > 0 &&
@@ -934,16 +936,36 @@ void APFCharacter::RunCombatViewProbe()
         auto *SceneCamera=GetWorld()->SpawnActor<ACameraActor>();SceneCamera->SetActorLocationAndRotation(ShotPosition,ShotRotation);SceneCamera->GetCameraComponent()->SetFieldOfView(Camera->FieldOfView);
         if(auto *PC=Cast<APlayerController>(Controller)){PC->bAutoManageActiveCameraTarget=false;PC->SetViewTarget(SceneCamera);}
     }
-    if(Mode==TEXT("Supply")&&HasAuthority())
+    if((Mode==TEXT("Supply")||Mode==TEXT("SupplyFlight")||Mode==TEXT("SupplyChute"))&&HasAuthority())
     {
         const FVector Point=GetActorLocation()+GetActorForwardVector()*350-FVector(0,0,80);
         FTransform Transform(FRotator::ZeroRotator,Point);
         auto *Drop=GetWorld()->SpawnActorDeferred<APFSupplyDrop>(APFSupplyDrop::StaticClass(),Transform);
-        Drop->LandingAt=GetWorld()->GetTimeSeconds()-1;Drop->FinishSpawning(Transform);
+        Drop->LandingAt=GetWorld()->GetTimeSeconds()-1;
+        if(Mode!=TEXT("Supply")){Drop->LandingAt=GetWorld()->GetTimeSeconds()+86400;Drop->PresentationRemaining=Mode==TEXT("SupplyFlight")?21.f:8.f;}
+        Drop->FinishSpawning(Transform);
         if(auto *State=GetWorld()->GetGameState<APFMatchState>())State->SupplyDropPoints.Add(Point);
         bFirstPerson=false;auto *View=GetWorld()->SpawnActor<ACameraActor>();
-        View->SetActorLocationAndRotation(Point+FVector(450,360,250),(Point-Point-FVector(450,360,200)).Rotation());View->GetCameraComponent()->SetFieldOfView(55);
+        FVector Offset(450,360,250),Focus=Point+FVector(0,0,50);
+        if(Mode==TEXT("SupplyFlight")){Offset=FVector(900,900,22900);Focus=Point+FVector(0,0,22500);}
+        if(Mode==TEXT("SupplyChute")){Offset=FVector(1000,1000,11300);Focus=Point+FVector(0,0,11200);}
+        View->SetActorLocationAndRotation(Point+Offset,(Focus-Point-Offset).Rotation());View->GetCameraComponent()->SetFieldOfView(65);
         if(auto *PC=Cast<APlayerController>(Controller)){PC->bAutoManageActiveCameraTarget=false;PC->SetViewTarget(View);}
+    }
+    if(Mode==TEXT("Bike")&&HasAuthority())
+    {
+        const FVector Point=GetActorLocation()+GetActorForwardVector()*400-FVector(0,0,20);
+        FTransform Transform(FRotator::ZeroRotator,Point);
+        auto *Bike=GetWorld()->SpawnActorDeferred<APFVehicle>(APFVehicle::StaticClass(),Transform);Bike->bMotorcycle=true;Bike->FinishSpawning(Transform);
+        SetActorLocation(Point+FVector(220,0,100));Bike->Enter(this);
+        auto *View=GetWorld()->SpawnActor<ACameraActor>();const FVector Offset(420,360,190);
+        View->SetActorLocationAndRotation(Point+Offset,(FVector(0,0,40)-Offset).Rotation());View->GetCameraComponent()->SetFieldOfView(55);
+        if(auto *PC=Cast<APlayerController>(Controller)){PC->bAutoManageActiveCameraTarget=false;PC->SetViewTarget(View);}
+    }
+    if(Mode==TEXT("SurveyMap"))if(auto *PC=Cast<APFPlayerController>(Controller))
+    {
+        PC->SurveyPoints={GetActorLocation()+FVector(10000,4000,0),GetActorLocation()+FVector(-6000,-5000,0)};
+        PC->SurveyVisibleUntil=GetWorld()->GetTimeSeconds()+100;PC->bMapOpen=true;PC->RefreshInputMode();
     }
     if (Mode == TEXT("Scope"))
         StartAim();

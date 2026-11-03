@@ -7,7 +7,10 @@
 #include "PFMatchState.h"
 #include "PFWorldPickup.h"
 #include "PFSupplyDrop.h"
+#include "PFVehicle.h"
+#include "PFNarratorComponent.h"
 #include "Components/SphereComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "EngineUtils.h"
 #include "Engine/DamageEvents.h"
 #include "TimerManager.h"
@@ -44,6 +47,20 @@ void APFPlayerController::ProbeRoundInput()
             for(TActorIterator<APFSupplyDrop> It(GetWorld());It;++It)
                 if(!It->bOpened&&It->HasLanded()&&FVector::DistSquared(LocalRanger->GetActorLocation(),It->GetActorLocation())<160000)
                     LocalRanger->ServerInteract(*It);
+    }
+    if(Match->Phase==EPFRoundPhase::Active)
+    {
+        if(ProbePhase!=int32(EPFRoundPhase::Active))InitializeMovementProbeGeometry();
+        if(Match->GetServerWorldTimeSeconds()<Match->SurveyWarningUntil&&LastSurveyProbeCount!=SurveyPoints.Num())
+        {LastSurveyProbeCount=SurveyPoints.Num();UE_LOG(LogTemp,Display,TEXT("PF_SURVEY_VIEW role=%s count=%d"),*ProbeRole,SurveyPoints.Num());}
+        if(ProbeRole==TEXT("ally")&&Match->Announcement==TEXT("Survey test ready")&&!bProbeSurveySent)
+        {if(auto *Ranger=Cast<APFCharacter>(GetPawn());Ranger&&Ranger->Inventory->CountKind(EPFItemKind::SurveyBeacon)>0){UseSurvey();bProbeSurveySent=true;}}
+        if(ProbeRole==TEXT("ally")&&Match->Announcement==TEXT("Bike test ready")&&GetWorld()->GetTimeSeconds()>=NextProbeBikeInput)
+            if(auto *LocalRanger=Cast<APFCharacter>(GetPawn()))
+            {
+                NextProbeBikeInput=GetWorld()->GetTimeSeconds()+.1;
+                if(!LocalRanger->Vehicle)for(TActorIterator<APFVehicle> It(GetWorld());It;++It)if(It->bMotorcycle)LocalRanger->ServerVehicleInteract(*It,false);
+            }
     }
     int32 Phase = int32(Match->Phase);
     if (Phase != ProbePhase && Match->Phase == EPFRoundPhase::Bidding)
@@ -294,10 +311,57 @@ void APFGameMode::RunRoundProbe()
             int32 Rewards=0;bool Weapon=false,Ammo=false,Armor=false;
             for(TActorIterator<APFWorldPickup> It(GetWorld());It;++It)if(It->GetOwner()==ProbeSupply)
             {Rewards++;Weapon|=It->Item.Kind==EPFItemKind::Weapon&&It->Item.Rarity>=3;Ammo|=It->Item.Kind==EPFItemKind::Ammo&&It->Item.Count>=15;Armor|=It->Item.Kind==EPFItemKind::HeavyVest;}
-            Check(Rewards==6&&Weapon&&Ammo&&Armor,TEXT("crate releases six shared rewards including rare weapon matching ammo and armor"));
+            Check(Rewards>=6&&Rewards<=7&&Weapon&&Ammo&&Armor,TEXT("crate releases six shared rewards including rare weapon matching ammo and armor"));
             Check(!ProbeSupply->Open(AllyPawn),TEXT("duplicate opening cannot issue another reward set"));
             Check(Round->SupplyDropPoints.IsEmpty(),TEXT("claim removes the public marker"));
-            SupplyProbeStep=2;
+            Check(ProbeSupply->ReleaseSpecial(.9f)==0,TEXT("ordinary supply roll adds no special reward"));
+            Check(ProbeSupply->ReleaseSpecial(.5f)==2,TEXT("survey special roll releases a receiver pickup"));
+            ProbeSupply->SetActorLocation(FVector(0,0,10065)); // Shared static driving fixture, independently created on each peer.
+            Check(ProbeSupply->ReleaseSpecial(0.f)==1,TEXT("motorcycle special roll finds clear dry delivery ground"));
+            for(TActorIterator<APFVehicle> It(GetWorld());It;++It)if(It->bMotorcycle)ProbeVehicle=*It;
+            Check(ProbeVehicle&&ProbeVehicle->Body->GetStaticMesh(),TEXT("delivered motorcycle has its own model"));
+            Check(HostPC->Narrator&&HostPC->Narrator->HasRecordedCues(),TEXT("three recorded supply narration clips are available"));
+            FPFItemStack Survey;Survey.Kind=EPFItemKind::SurveyBeacon;Survey.Count=5;
+            Check(AllyPawn->Inventory->Add(Survey)==2,TEXT("survey receivers cap at two carried charges"));
+            Round->Announcement=TEXT("Survey test ready");Round->ForceNetUpdate();AllyPawn->Health=100;
+            SupplyProbeStep=2;ProbeAfter=Now+2;return;
+        }
+        if(SupplyProbeStep==2)
+        {
+            Check(AllyPawn->Inventory->CountKind(EPFItemKind::SurveyBeacon)==1,TEXT("owning client activates survey through inventory and consumes one charge"));
+            Check(HostPC->SurveyPoints.Num()==1&&AllyPC->SurveyPoints.Num()==1&&EnemyPC->SurveyPoints.IsEmpty(),TEXT("survey coordinates route only to the activating team"));
+            Check(Round->SurveyWarningUntil>Now,TEXT("survey activation publishes a global warning without public coordinates"));
+            const double Ends=AllyPC->SurveyEnds;
+            AllyPawn->Inventory->ServerUseSlot(AllyPawn->Inventory->Slots.IndexOfByPredicate([](const FPFItemStack& S){return S.Kind==EPFItemKind::SurveyBeacon&&S.Count>0;}),0);
+            Check(AllyPC->SurveyEnds==Ends&&AllyPawn->Inventory->CountKind(EPFItemKind::SurveyBeacon)==1,TEXT("stale survey use cannot consume another charge"));
+            ProbeRemoteOrigin=EnemyPawn->GetActorLocation();EnemyPawn->SetActorLocation(ProbeRemoteOrigin+FVector(500,0,0));
+            AllyPC->SurveySecond();
+            Check(HostPC->SurveyPoints.Num()==1&&FVector::DistSquared(HostPC->SurveyPoints[0],ProbeRemoteOrigin)<100,TEXT("survey holds snapshots between four-second pulses"));
+            SupplyProbeStep=3;ProbeAfter=Now+5;return;
+        }
+        if(SupplyProbeStep==3)
+        {
+            Check(HostPC->SurveyPoints.Num()==1&&FVector::DistSquared(HostPC->SurveyPoints[0],EnemyPawn->GetActorLocation())<100,TEXT("next survey pulse refreshes the moving enemy snapshot"));
+            SupplyProbeStep=4;ProbeAfter=AllyPC->SurveyEnds+1.5;return;
+        }
+        if(SupplyProbeStep==4)
+        {
+            Check(HostPC->SurveyPoints.IsEmpty()&&AllyPC->SurveyPoints.IsEmpty()&&Now>Round->SurveyWarningUntil,TEXT("survey coordinates and warning expire after twelve seconds"));
+            EnemyPawn->SetActorLocation(ProbeRemoteOrigin);
+            if(ProbeVehicle)
+            {
+                AllyPawn->SetActorLocation(ProbeVehicle->GetActorLocation()+FVector(220,0,100));
+                ReserveProbeOrigin=ProbeVehicle->GetActorLocation();Round->Announcement=TEXT("Bike test ready");Round->ForceNetUpdate();
+            }
+            SupplyProbeStep=5;ProbeAfter=Now+3;return;
+        }
+        if(SupplyProbeStep==5)
+        {
+            Check(ProbeVehicle&&ProbeVehicle->Driver==AllyPawn,TEXT("remote client boards the delivered motorcycle"));
+            Check(ProbeVehicle&&FVector::DistSquared(ProbeVehicle->GetActorLocation(),ReserveProbeOrigin)>40000,TEXT("remote throttle moves the delivered motorcycle"));
+            Round->Announcement=TEXT("Bike test complete");Round->ForceNetUpdate();
+            if(ProbeVehicle)ProbeVehicle->Exit(true);
+            SupplyProbeStep=6;
         }
         // Exercise the real storm clock without waiting an entire match in a test.
         Round->PhaseEnds = Now;
@@ -328,9 +392,17 @@ void APFGameMode::RunRoundProbe()
         ReturnToLobby(HostPC);
         Check(Round->Phase == EPFRoundPhase::Lobby && !HostState->bEliminated && !HostState->bReady,
               TEXT("host returns everyone to a clean unready lobby"));
+        Check(HostPC->SurveyPoints.IsEmpty()&&AllyPC->SurveyPoints.IsEmpty(),TEXT("lobby reset clears survey history"));
         Check(Round->SupplyDropPoints.IsEmpty()&&SupplyCount==0,TEXT("return to lobby clears supply state"));
         Check(HostPC->GetPawn() && AllyPC->GetPawn() && EnemyPC->GetPawn(),
               TEXT("all participants receive new lobby pawns"));
         Finish();
     }
+}
+
+void APFCharacter::RunSupplyProbeInput()
+{
+    if(!bSupplyProbe||HasAuthority()||!IsLocallyControlled()||!Vehicle)return;
+    if(auto *State=GetWorld()->GetGameState<APFMatchState>();State&&State->Announcement==TEXT("Bike test ready"))
+        Move(FInputActionValue(FVector2D(0,1)));
 }

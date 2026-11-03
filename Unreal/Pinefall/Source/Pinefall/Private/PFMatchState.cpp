@@ -1,4 +1,6 @@
 #include "PFMatchState.h"
+#include "PFPlayerController.h"
+#include "PFNarratorComponent.h"
 #include "Net/UnrealNetwork.h"
 float APFMatchState::SafeRadius() const
 {
@@ -48,4 +50,18 @@ void APFMatchState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLif
     DOREPLIFETIME(APFMatchState, SupplyDropPoints);
     DOREPLIFETIME(APFMatchState, SupplyAnnouncement);
     DOREPLIFETIME(APFMatchState, SupplyAnnouncementUntil);
+    DOREPLIFETIME(APFMatchState, SurveyWarningUntil);
+}
+
+void APFMatchState::NarrateSupply_Implementation(FName Cue)
+{
+    if(Cue==TEXT("Reset"))
+    {
+        for(FConstPlayerControllerIterator It=GetWorld()->GetPlayerControllerIterator();It;++It)
+            if(auto *PC=Cast<APFPlayerController>(It->Get());PC&&PC->IsLocalController()&&PC->Narrator)PC->Narrator->Clear();
+        return;
+    }
+    if(Cue!=TEXT("Inbound")&&Cue!=TEXT("Landed")&&Cue!=TEXT("Claimed"))return;
+    for(FConstPlayerControllerIterator It=GetWorld()->GetPlayerControllerIterator();It;++It)
+        if(auto *PC=Cast<APFPlayerController>(It->Get());PC&&PC->IsLocalController()&&PC->Narrator)PC->Narrator->Enqueue(Cue);
 }

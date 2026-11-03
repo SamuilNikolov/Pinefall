@@ -1,4 +1,5 @@
 #include "PFPlayerController.h"
+#include "PFNarratorComponent.h"
 #include "GameFramework/PlayerInput.h"
 #include "Framework/Application/SlateApplication.h"
 #include "Net/UnrealNetwork.h"
@@ -14,6 +15,7 @@
 #include "TimerManager.h"
 APFPlayerController::APFPlayerController()
 {
+    Narrator=CreateDefaultSubobject<UPFNarratorComponent>(TEXT("Narrator"));
     PlayerCameraManagerClass = APlayerCameraManager::StaticClass();
 }
 double APFPlayerController::ShotViewTime(float SmoothingSeconds) const
@@ -132,6 +134,7 @@ void APFPlayerController::SetupInputComponent()
     InputComponent->BindKey(EKeys::RightAlt, IE_Pressed, this, &APFPlayerController::InventoryPressed);
     InputComponent->BindKey(EKeys::RightAlt, IE_Released, this, &APFPlayerController::AltInventoryReleased);
     InputComponent->BindKey(EKeys::Tab, IE_Pressed, this, &APFPlayerController::ToggleInventory);
+    InputComponent->BindKey(EKeys::B, IE_Pressed, this, &APFPlayerController::UseSurvey);
     InputComponent->BindKey(EKeys::M, IE_Pressed, this, &APFPlayerController::ToggleMap);
     InputComponent->BindKey(EKeys::E, IE_Pressed, this, &APFPlayerController::InteractPressed);
     InputComponent->BindKey(EKeys::E, IE_Released, this, &APFPlayerController::InteractReleased);
@@ -367,4 +370,6 @@ void APFPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME_CONDITION(APFPlayerController, MapMarkers, COND_OwnerOnly);
+    DOREPLIFETIME_CONDITION(APFPlayerController, SurveyPoints, COND_OwnerOnly);
+    DOREPLIFETIME_CONDITION(APFPlayerController, SurveyVisibleUntil, COND_OwnerOnly);
 }

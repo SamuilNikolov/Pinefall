@@ -3,6 +3,7 @@ param(
     [switch]$RebuildEnvironment,
     [switch]$RebuildRoundAssets,
     [switch]$RebuildReserve,
+    [switch]$RebuildSupplySpecials,
     [switch]$RebuildCharacterMaterials
 )
 $ErrorActionPreference = 'Stop'
@@ -68,3 +69,9 @@ foreach ($pass in $passes) {
     }
 }
 Write-Host 'Unreal round ready. Run tools\Run-Unreal.ps1 or open Unreal\Pinefall\Pinefall.uproject.'
+
+if ($RebuildSupplySpecials -or !(Test-Path (Join-Path $content 'Pinefall/Art/Supplies/SM_CargoPlane.uasset'))) {
+    $script = Join-Path $projectRoot 'Scripts/import_supply_specials.py'
+    & $editor $project -run=pythonscript "-script=$script" -unattended -nullrhi -SCCProvider=None
+    if ($LASTEXITCODE -ne 0) { throw 'Supply special asset import failed.' }
+}

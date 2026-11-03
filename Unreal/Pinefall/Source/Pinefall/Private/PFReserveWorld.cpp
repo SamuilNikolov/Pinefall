@@ -160,7 +160,7 @@ void APFReserveWorld::RefreshMapFeed()
                     continue; // Never reveal an enemy through transport.
                 FPFMapMarker Pin;
                 Pin.Position = Vehicle->GetActorLocation();
-                Pin.Kind = Vehicle->bBoat ? 2 : 1;
+                Pin.Kind = Vehicle->bBoat ? 2 : Vehicle->bMotorcycle ? 3 : 1;
                 Pin.Condition = Vehicle->Health > 0 ? Vehicle->Fuel : -1;
                 PC->MapMarkers.Add(Pin);
             }

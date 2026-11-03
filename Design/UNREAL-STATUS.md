@@ -1,5 +1,9 @@
 # Unreal implementation and verification status
 
+## November 2 supply completion
+
+Native supplies now include cosmetic cargo-aircraft flyover, authored canopy/ropes, positional rumble, queued recorded global calls, usable faster motorcycles and shareable survey receivers. Surveys carry two, consume one, last twelve seconds and update every four seconds for the activating team only; public warnings carry no coordinates. The supply integration requires 63 three-process checks plus client-side privacy/narration markers. See the current handoff and supply-completion evidence. This closes the supply gaps listed in the preceding checkpoint; it does not claim all remaining Unity features or final production art.
+
 ## November 2 supply-drop migration
 
 Native battle rounds now schedule up to six shared supply objectives, with synchronized descent, landing/claim notices, public gold map markers and server-validated one-time opening. Rewards use the two implemented gun families plus matching ammo, armor, plates, medkits and food. The service-case crate and simple canopy are interim presentation. Aircraft flyover, voiced announcements, motorcycle/survey bonuses and relays remain unported. Read the supply checkpoint and handoff for verification and matching-build requirements.

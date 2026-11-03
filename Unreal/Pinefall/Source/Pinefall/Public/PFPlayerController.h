@@ -24,6 +24,13 @@ class PINEFALL_API APFPlayerController : public APlayerController
   public:
     APFPlayerController();
     UPROPERTY(Replicated) TArray<FPFMapMarker> MapMarkers;
+    UPROPERTY(Replicated) TArray<FVector_NetQuantize> SurveyPoints;
+    UPROPERTY(Replicated) double SurveyVisibleUntil = 0;
+    bool ActivateSurvey();
+    void SurveySecond();
+    void ResetSurvey();
+    void UseSurvey();
+    double SurveyEnds = 0, NextSurveyPulse = 0;
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &Out) const override;
     virtual void BeginPlay() override;
     virtual void EndPlay(EEndPlayReason::Type Reason) override;
@@ -37,6 +44,7 @@ class PINEFALL_API APFPlayerController : public APlayerController
     UPROPERTY(BlueprintReadOnly) bool bInventoryOpen = false;
     UPROPERTY(BlueprintReadOnly) bool bMapOpen = false;
     UPROPERTY() TObjectPtr<UPFInterface> Interface;
+    UPROPERTY() TObjectPtr<class UPFNarratorComponent> Narrator;
     UFUNCTION(Server, Reliable) void ServerReady();
     UFUNCTION(Server, Reliable) void ServerTeamSize(int32 Size);
     UFUNCTION(Server, Reliable) void ServerTeam(int32 Team);
@@ -90,8 +98,9 @@ class PINEFALL_API APFPlayerController : public APlayerController
     bool bLastRoundPanel = false;
     float SpectatePoll = 0;
     void ProbeRoundInput();
-    bool bRoundProbe = false, bProbeReadySent = false;
-    int32 ProbePhase = -1;
+    bool bRoundProbe = false, bProbeReadySent = false, bProbeSurveySent = false;
+    int32 ProbePhase = -1, LastSurveyProbeCount = -1;
+    double NextProbeBikeInput = 0;
     float LandingRetry = 0;
     bool bCaptureInventory = false;
     bool bHasClock = false;

@@ -1,0 +1,80 @@
+{
+  "scope": "Native headless regression sweep on the completed supply build. Battle uses three actual processes and validates owner-client survey privacy/narration markers; construction uses 80 ms artificial packet lag. No physical keyboard, audio listening, WAN or new FPS claim.",
+  "checks": [
+    {
+      "script": "Test-UnrealBattle.ps1",
+      "result": "passed",
+      "source": "artifacts/unreal-battle/20261102-205558",
+      "reports": [
+        "test-unrealbattle-round.json"
+      ]
+    },
+    {
+      "script": "Test-Unreal.ps1",
+      "result": "passed",
+      "source": "artifacts/unreal-tests/20261102-205712",
+      "reports": [
+        "test-unreal-result.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealInventory.ps1",
+      "result": "passed",
+      "source": "artifacts/unreal-inventory/20261102-205757",
+      "reports": [
+        "test-unrealinventory-inventory.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealCombat.ps1",
+      "result": "passed",
+      "source": "artifacts/unreal-combat/20261102-205814",
+      "reports": [
+        "test-unrealcombat-combat.json",
+        "test-unrealcombat-summary.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealWorld.ps1",
+      "result": "passed",
+      "source": "artifacts/unreal-world/20261102-205932",
+      "reports": [
+        "test-unrealworld-world.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealWildlife.ps1",
+      "result": "passed",
+      "source": "artifacts/unreal-wildlife/20261102-205958",
+      "reports": [
+        "test-unrealwildlife-wildlife.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealReserve.ps1",
+      "result": "passed",
+      "source": "artifacts/unreal-reserve/20261102-210045",
+      "reports": [
+        "test-unrealreserve-reserve.json",
+        "test-unrealreserve-summary.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealMovement.ps1",
+      "result": "passed",
+      "source": "artifacts/unreal-movement/20261102-210146",
+      "reports": [
+        "test-unrealmovement-movement.json",
+        "test-unrealmovement-summary.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealConstruction.ps1",
+      "result": "passed",
+      "source": "artifacts/unreal-construction/20261102-210256",
+      "reports": [
+        "test-unrealconstruction-construction.json"
+      ]
+    }
+  ]
+}
