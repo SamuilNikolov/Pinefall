@@ -1,5 +1,12 @@
 # Pinefall Wildfront changelog
 
+## Native control feel and UI refresh - 2026-11-02
+
+- Added saved field of view, independent ADS sensitivity, crosshair size and four readable colors. Weapon zoom/accuracy and build-validity cues retain their existing rules.
+- Made confirmed damage text update immediately on widget tick, formatting only changed hits. Removed hidden lobby/legacy HUD text work during play and added an Insights UI scope.
+- New installations default to Balanced; existing saved quality preferences remain. No new textures or scenery reductions.
+- Reviewed/installed optional Unreal profiling and movement skills; see `docs/DEVELOPMENT-SKILLS.md`. Evidence and scope are in `tests/baselines/unreal-0.5-control-feel`.
+
 ## Reference HUD and dedicated settings — 2026-11-01
 
 - Reorganized the right-hand HUD into boxed equipment, a smaller build row and three material cards above it, following the supplied reference. Rarity colors, larger icons, selection outlines and fixed bindings replace the enclosing dashboard. Equipped ammo appears once inside its slot; unarmed players retain the quickbar.

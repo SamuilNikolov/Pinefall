@@ -6,6 +6,7 @@
 #include "PFInventoryComponent.h"
 #include "PFMatchState.h"
 #include "PFPlayerController.h"
+#include "PFUserSettings.h"
 #include "Rendering/DrawElements.h"
 #include "Styling/CoreStyle.h"
 #include "Framework/Application/SlateApplication.h"
@@ -46,6 +47,10 @@ int32 UPFInterface::PaintCombat(const FGeometry &G, FSlateWindowElementList &Out
     const bool Combat = !Player->Construction || Player->Construction->Mode == EPFConstructionMode::Combat;
     const bool Editing = Player->Construction && Player->Construction->IsEditing();
     const bool Scope = Combat && Player->Weapon.AimFOV <= 35 && Player->AimAlpha > .92f;
+    const auto *Settings = UPFUserSettings::Get();
+    const float ReticleScale = Settings && FMath::IsFinite(Settings->CrosshairScale)
+        ? FMath::Clamp(Settings->CrosshairScale,.75f,2.f) : 1.f;
+    const FLinearColor ReticleColor = Settings ? Settings->GetCrosshairColor() : FLinearColor::White;
     if (Scope)
     {
         const float Radius = FMath::Min(Size.X, Size.Y) * .38f;
@@ -92,24 +97,24 @@ int32 UPFInterface::PaintCombat(const FGeometry &G, FSlateWindowElementList &Out
                  FLinearColor(0, 0, 0, .9f), 1);
         DrawLayer=Layer+2;
         Box(Center-FVector2D(2.5),FVector2D(5),FLinearColor::Black);
-        Box(Center-FVector2D(1),FVector2D(2),FLinearColor::White);
+        Box(Center-FVector2D(1),FVector2D(2),ReticleColor);
         DrawLayer = Layer;
     }
     else if (!Editing)
     {
-        Box(Center - FVector2D(2.5), FVector2D(5), FLinearColor(0,0,0,.95));
+        Box(Center - FVector2D(2.5)*ReticleScale, FVector2D(5)*ReticleScale, FLinearColor(0,0,0,.95));
         const FLinearColor Color = !Combat && Player->Construction->Mode == EPFConstructionMode::Build
             ? (Player->Construction->CanPreviewPlace() ? FLinearColor(.25,.65,1) : FLinearColor(1,.4,.25))
-            : FLinearColor::White;
-        Box(Center - FVector2D(1), FVector2D(2), Color);
+            : ReticleColor;
+        Box(Center - FVector2D(1)*ReticleScale, FVector2D(2)*ReticleScale, Color);
         float Gap = FMath::Lerp(6.f, 3.f, Player->AimAlpha) + Player->ShotBloom * .35f +
                     FMath::Min(4.f, Player->GetVelocity().Size2D() / 150.f) * (1 - Player->AimAlpha);
         for (int32 I = 0; I < (Combat ? 4 : 0); I++)
         {
             FVector2D Direction(I == 0 ? 1 : I == 1 ? -1 : 0, I == 2 ? 1 : I == 3 ? -1 : 0);
-            FVector2D A = Center + Direction * Gap, B = Center + Direction * (Gap + 5);
-            Line(A, B, FLinearColor(0, 0, 0, .8f), 3.5f);
-            Line(A, B, FLinearColor(.92, .96, .94, .92), 1.5f);
+            FVector2D A = Center + Direction * Gap * ReticleScale, B = Center + Direction * (Gap + 5) * ReticleScale;
+            Line(A, B, FLinearColor(0, 0, 0, .8f), 3.5f*ReticleScale);
+            Line(A, B, ReticleColor, 1.5f*ReticleScale);
         }
     }
     float Now = GetWorld()->GetTimeSeconds();

@@ -49,6 +49,8 @@ class PINEFALL_API UPFInterface : public UUserWidget
 
   protected:
     float RefreshRemaining = 0;
+    float DisplayedHitUntil = -1.f;
+    bool bHitTextVisible = false;
     mutable TArray<FVector2D> CombatLines;
     mutable TArray<FSlateVertex> ScopeVertices;
     mutable TArray<SlateIndex> ScopeIndices;
@@ -100,6 +102,10 @@ class PINEFALL_API UPFInterface : public UUserWidget
     UPROPERTY() TObjectPtr<UTextBlock> VolumeReadout;
     UPROPERTY() TObjectPtr<UTextBlock> SensitivityReadout;
     UPROPERTY() TObjectPtr<UTextBlock> FrameLimitReadout;
+    UPROPERTY() TObjectPtr<UTextBlock> FieldOfViewReadout;
+    UPROPERTY() TObjectPtr<UTextBlock> AimSensitivityReadout;
+    UPROPERTY() TObjectPtr<UTextBlock> CrosshairSizeReadout;
+    UPROPERTY() TObjectPtr<UTextBlock> CrosshairColorReadout;
     bool bSettingsOpen=false;
     UTextBlock *Label(UVerticalBox *Parent, const FString &Text, int32 Size, FLinearColor Color);
     void Button(UVerticalBox *Parent, const FString &Text, FName Handler, bool bPrimary = false);
@@ -112,6 +118,10 @@ class PINEFALL_API UPFInterface : public UUserWidget
     UFUNCTION() void Volume(float Value);
     UPROPERTY() TObjectPtr<UTextBlock> QualityReadout;
     UFUNCTION() void Sensitivity(float Value);
+    UFUNCTION() void FieldOfView(float Value);
+    UFUNCTION() void AimSensitivity(float Value);
+    UFUNCTION() void CrosshairSize(float Value);
+    UFUNCTION() void CrosshairColor();
     void BuildExpeditionUI(UCanvasPanel *Canvas, UVerticalBox *Vitals);
     void UpdateExpeditionUI();
     UPROPERTY() TObjectPtr<UBorder> RoundPanel;

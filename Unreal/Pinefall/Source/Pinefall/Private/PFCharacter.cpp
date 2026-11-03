@@ -237,7 +237,9 @@ void APFCharacter::Tick(float Delta)
             FMath::VInterpTo(ViewWeapon->GetRelativeLocation(), WeaponPose, Delta, 18));
         ViewWeapon->SetRelativeRotation(
             FRotator(WeaponKick * 2 - (bReloading ? 20 : 0), 0, bReloading ? -18 : 0));
-        const float TravelFOV = bSliding ? 89.f : 85.f + FMath::Clamp((float(GetVelocity().Size2D()) - 940.f) / 1460.f, 0.f, 1.f) * 6.f;
+        const auto *ViewSettings = UPFUserSettings::Get();
+        const float BaseFOV = ViewSettings ? ViewSettings->GetHipFieldOfView() : 85.f;
+        const float TravelFOV = BaseFOV + (bSliding ? 4.f : FMath::Clamp((float(GetVelocity().Size2D()) - 940.f) / 1460.f, 0.f, 1.f) * 6.f);
         Camera->SetFieldOfView(
             FMath::FInterpTo(Camera->FieldOfView, bAiming ? Weapon.AimFOV : TravelFOV, Delta, 16));
         GetMesh()->SetOwnerNoSee(bFirstPerson || Vehicle != nullptr);
@@ -404,7 +406,8 @@ void APFCharacter::Look(const FInputActionValue &Value)
     auto Axis = Value.Get<FVector2D>();
     auto *Settings = UPFUserSettings::Get();
     float Sensitivity = Settings ? Settings->MouseSensitivity : .12f;
-    float AimSensitivity = FMath::Lerp(1.f, FMath::Clamp(Weapon.AimFOV / 85.f, .25f, 1.f), AimAlpha);
+    float AimSensitivity = Settings ? Settings->GetAimSensitivity(Weapon.AimFOV, AimAlpha)
+        : FMath::Lerp(1.f, FMath::Clamp(Weapon.AimFOV / 85.f, .25f, 1.f), AimAlpha);
     AddControllerYawInput(Axis.X * Sensitivity * AimSensitivity);
     AddControllerPitchInput(Axis.Y * Sensitivity * AimSensitivity);
 }
@@ -902,12 +905,12 @@ void APFCharacter::RunCombatViewProbe()
     FString Mode;
     if (!IsLocallyControlled() || !FParse::Value(FCommandLine::Get(), TEXT("PFCombatView="), Mode))
         return;
-    if(Mode==TEXT("MainMenu")||Mode==TEXT("Settings"))
+    if(Mode==TEXT("MainMenu")||Mode==TEXT("Settings")||Mode==TEXT("SettingsControls"))
     {
         if(auto *PC=Cast<APFPlayerController>(Controller))
         {
             PC->SetMenu(true);
-            if(Mode==TEXT("Settings")&&PC->Interface)PC->Interface->OpenSettings();
+            if(Mode!=TEXT("MainMenu")&&PC->Interface)PC->Interface->OpenSettings();
         }
         return;
     }

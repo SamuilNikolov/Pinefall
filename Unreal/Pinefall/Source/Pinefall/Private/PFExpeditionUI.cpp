@@ -245,59 +245,39 @@ void UPFInterface::UpdateExpeditionUI()
             Match->Phase == EPFRoundPhase::Lobby || Match->Phase == EPFRoundPhase::Countdown);
     Visible(BidControls, Match->Phase == EPFRoundPhase::Bidding);
     Visible(FinishedControls, Match->Phase == EPFRoundPhase::Finished);
-    FString Mode = Match->TeamSize == 1   ? TEXT("Solo")
-                   : Match->TeamSize == 2 ? TEXT("Duos")
-                                          : TEXT("Squads");
-    FString Title = Match->Phase == EPFRoundPhase::Bidding    ? TEXT("Priority or supplies?")
-                    : Match->Phase == EPFRoundPhase::Landing  ? TEXT("Choose your landing")
-                    : Match->Phase == EPFRoundPhase::Finished ? TEXT("Expedition complete")
-                                                              : TEXT("Expedition lobby");
-    FString Clock = Match->Phase == EPFRoundPhase::Lobby ? TEXT("Waiting for everyone to ready up.")
-                    : Match->Phase == EPFRoundPhase::Finished
-                        ? TEXT("")
-                        : FString::Printf(TEXT("%.0f seconds"), Match->SecondsLeft());
-    RoundTitle->SetText(FText::FromString(Title));
-    RoundInfo->SetText(
-        FText::FromString(FString::Printf(TEXT("%s  ·  Team %d\n%s\n%s"), *Mode,
-                                          Mine ? Mine->TeamId + 1 : 1, *Match->Announcement, *Clock)));
-    FString Players, Team;
-    for (APlayerState *Entry : Match->PlayerArray)
-        if (auto *State = Cast<APFPlayerState>(Entry))
-        {
-            Players += FString::Printf(TEXT("%s  ·  T%d  ·  %s\n"), *State->GetPlayerName().Left(24),
-                                       State->TeamId + 1,
-                                       State->bEliminated      ? TEXT("Spectating")
-                                       : State->bLandingLocked ? TEXT("Landing locked")
-                                       : State->bReady         ? TEXT("Ready")
-                                                               : TEXT("Not ready"));
-            if (Mine && State != Mine && Match->TeamSize > 1 && State->TeamId == Mine->TeamId)
-            {
-                auto *Pawn = Cast<APFCharacter>(State->GetPawn());
-                Team += FString::Printf(
-                    TEXT("%s  %s\n"), *State->GetPlayerName().Left(20),
-                    State->bEliminated      ? TEXT("Eliminated")
-                    : Pawn && Pawn->bDowned ? TEXT("Downed")
-                    : Pawn ? *FString::Printf(TEXT("%.0f HP / %.0f armor"), Pawn->Health, Pawn->Armor)
-                           : TEXT("Joining"));
-            }
-        }
-    Roster->SetText(FText::FromString(Players));
-    TeamText->SetText(FText::FromString(Team));
-    BidReadout->SetText(FText::FromString(FString::Printf(TEXT("Bid %d  +  kit %d  =  %d / 10"),
-                                                          ChosenBid, ChosenKit == 5 ? 7 : 0,
-                                                          ChosenBid + (ChosenKit == 5 ? 7 : 0))));
-    FString Banner;
-    if (Match->Phase == EPFRoundPhase::Active)
+    if (Round)
     {
-        int32 Left = FMath::CeilToInt(Match->SecondsLeft());
-        Banner =
-            FString::Printf(TEXT("%d survivors  ·  %d teams\nStorm %d %s  %02d:%02d"),
-                            Match->AlivePlayers, Match->AliveTeams, Match->StormStage + 1,
-                            Match->bClosing ? TEXT("closing") : TEXT("waiting"), Left / 60, Left % 60);
+        FString Mode = Match->TeamSize == 1   ? TEXT("Solo")
+                       : Match->TeamSize == 2 ? TEXT("Duos")
+                                              : TEXT("Squads");
+        FString Title = Match->Phase == EPFRoundPhase::Bidding    ? TEXT("Priority or supplies?")
+                        : Match->Phase == EPFRoundPhase::Landing  ? TEXT("Choose your landing")
+                        : Match->Phase == EPFRoundPhase::Finished ? TEXT("Expedition complete")
+                                                                  : TEXT("Expedition lobby");
+        FString Clock = Match->Phase == EPFRoundPhase::Lobby ? TEXT("Waiting for everyone to ready up.")
+                        : Match->Phase == EPFRoundPhase::Finished
+                            ? TEXT("")
+                            : FString::Printf(TEXT("%.0f seconds"), Match->SecondsLeft());
+        RoundTitle->SetText(FText::FromString(Title));
+        RoundInfo->SetText(
+            FText::FromString(FString::Printf(TEXT("%s  ·  Team %d\n%s\n%s"), *Mode,
+                                              Mine ? Mine->TeamId + 1 : 1, *Match->Announcement, *Clock)));
+        FString Players;
+        for (APlayerState *Entry : Match->PlayerArray)
+            if (auto *State = Cast<APFPlayerState>(Entry))
+            {
+                Players += FString::Printf(TEXT("%s  ·  T%d  ·  %s\n"), *State->GetPlayerName().Left(24),
+                                           State->TeamId + 1,
+                                           State->bEliminated      ? TEXT("Spectating")
+                                           : State->bLandingLocked ? TEXT("Landing locked")
+                                           : State->bReady         ? TEXT("Ready")
+                                                                   : TEXT("Not ready"));
+            }
+        Roster->SetText(FText::FromString(Players));
+        BidReadout->SetText(FText::FromString(FString::Printf(TEXT("Bid %d  +  kit %d  =  %d / 10"),
+                                                              ChosenBid, ChosenKit == 5 ? 7 : 0,
+                                                              ChosenBid + (ChosenKit == 5 ? 7 : 0))));
     }
-    else if (Match->IsBattleRoyale())
-        Banner = Match->Announcement;
-    RoundBanner->SetText(FText::FromString(Banner));
     if (!Player)
     {
         PickupPrompt->SetText(FText::FromString(TEXT("] Next spectator target")));

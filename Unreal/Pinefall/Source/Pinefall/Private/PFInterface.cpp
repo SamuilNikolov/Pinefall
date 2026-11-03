@@ -26,6 +26,7 @@
 #include "GameFramework/GameStateBase.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Styling/CoreStyle.h"
+#include "ProfilingDebugging/CpuProfilerTrace.h"
 
 namespace PFStyle
 {
@@ -67,6 +68,8 @@ void UPFInterface::Button(UVerticalBox *Parent, const FString &Value, FName Hand
         QualityReadout = Text;
     if (Handler == TEXT("FrameLimit"))
         FrameLimitReadout = Text;
+    if (Handler == TEXT("CrosshairColor"))
+        CrosshairColorReadout = Text;
     Text->SetMargin(FMargin(14, 12));
     Button->SetContent(Text);
     FScriptDelegate Delegate;
@@ -117,6 +120,9 @@ TSharedRef<SWidget> UPFInterface::RebuildWidget()
     PFStyle::Place(Canvas, SessionText, FAnchors(0, 0), FVector2D::ZeroVector, FMargin(44, 137, 620, 70));
     CombatLines.Reserve(65);
     HitText = PFStyle::Text(WidgetTree, TEXT(""), 23, PFStyle::Paper);
+    HitText->SetRenderOpacity(0);
+    bHitTextVisible = false;
+    DisplayedHitUntil = -1.f;
     HitText->SetJustification(ETextJustify::Center);
     PFStyle::Place(Canvas, HitText, FAnchors(.5f, .5f), FVector2D(.5, .5), FMargin(0, -55, 350, 46));
     DamageText = PFStyle::Text(WidgetTree, TEXT("Taking fire"), 20, FLinearColor(.9f, .35f, .24f, 1));
@@ -188,6 +194,29 @@ TSharedRef<SWidget> UPFInterface::RebuildWidget()
     SensitivitySlider->SetValue(FMath::GetMappedRangeValueClamped(FVector2D(.03,.4),FVector2D(0,1),MouseValue));
     SensitivitySlider->OnValueChanged.AddDynamic(this,&UPFInterface::Sensitivity);
     Stack->AddChildToVerticalBox(SensitivitySlider)->SetPadding(FMargin(0,0,0,20));
+    // These controls use the existing scrollable settings page, never gameplay input.
+    auto Slider = [&](float Value, FName Handler) {
+        auto *Control = WidgetTree->ConstructWidget<USlider>();
+        Control->SetValue(Value);
+        FScriptDelegate Delegate;
+        Delegate.BindUFunction(this, Handler);
+        Control->OnValueChanged.Add(Delegate);
+        Stack->AddChildToVerticalBox(Control)->SetPadding(FMargin(0,0,0,20));
+    };
+    const float AimValue = Settings ? Settings->AimSensitivityMultiplier : 1.f;
+    AimSensitivityReadout = Label(Stack,FString::Printf(TEXT("Aim sensitivity: %.2fx"),AimValue),16,PFStyle::Muted);
+    Slider(FMath::GetMappedRangeValueClamped(FVector2D(.25,2),FVector2D(0,1),AimValue),TEXT("AimSensitivity"));
+    Label(Stack,TEXT("Camera and crosshair"),20,PFStyle::Paper);
+    const float FOV = Settings ? Settings->GetHipFieldOfView() : 85.f;
+    FieldOfViewReadout = Label(Stack,FString::Printf(TEXT("Field of view: %.0f degrees"),FOV),16,PFStyle::Muted);
+    Slider((FOV-75.f)/35.f,TEXT("FieldOfView"));
+    const float ReticleScale = Settings ? Settings->CrosshairScale : 1.f;
+    CrosshairSizeReadout = Label(Stack,FString::Printf(TEXT("Crosshair size: %.0f%%"),ReticleScale*100),16,PFStyle::Muted);
+    Slider(FMath::GetMappedRangeValueClamped(FVector2D(.75,2),FVector2D(0,1),ReticleScale),TEXT("CrosshairSize"));
+    static const TCHAR *ReticleNames[] = {TEXT("White"),TEXT("Cyan"),TEXT("Lime"),TEXT("Pink")};
+    Button(Stack,FString::Printf(TEXT("Crosshair color: %s"),ReticleNames[Settings?FMath::Clamp(Settings->CrosshairColor,0,3):0]),TEXT("CrosshairColor"));
+    CrosshairColorReadout->SetColorAndOpacity(Settings?Settings->GetCrosshairColor():FLinearColor::White);
+    Label(Stack,TEXT("Aim zoom stays weapon-specific. Crosshair changes are visual and do not change accuracy."),14,PFStyle::Muted);
     Label(Stack,TEXT("WASD move  |  Shift sprint  |  Ctrl crouch/slide\nSpace jump/hop  |  V camera\nLMB fire  |  RMB aim  |  R reload\n1 pickaxe  |  2 rifle  |  3 pistol\n4 food  |  5 medkit  |  6 armor  |  7 repair\nQ build  |  F1-F4 structures  |  F edit\nAlt hold inventory  |  Tab toggle inventory  |  M map"),14,PFStyle::Muted);
     SettingsStatus=Label(Stack,TEXT("Changes apply immediately and save when you go back or close the menu."),14,PFStyle::Muted);
     BuildExpeditionUI(Canvas, VitalsStack);
@@ -201,17 +230,37 @@ void UPFInterface::SetMenuVisible(bool Visible)
 }
 void UPFInterface::NativeTick(const FGeometry &Geometry, float Delta)
 {
+    TRACE_CPUPROFILER_EVENT_SCOPE(Pinefall_UIRefresh);
     Super::NativeTick(Geometry, Delta);
+    auto *Character = Cast<APFCharacter>(GetOwningPlayerPawn());
+    // Confirmation text must not wait behind the 10 Hz inventory/lobby refresh.
+    // Format only on a new confirmed hit, not every frame or every UI refresh.
+    const float Now = GetWorld()->GetTimeSeconds();
+    if(Character && HitText)
+    {
+        if(Character->HitUntil != DisplayedHitUntil)
+        {
+            DisplayedHitUntil = Character->HitUntil;
+            HitText->SetText(FText::FromString(Character->bLastHitKill ? TEXT("Eliminated")
+                : FString::Printf(TEXT("%.0f%s"),Character->LastDamageAmount,Character->bLastHitArmor?TEXT(" armor"):TEXT(""))));
+            HitText->SetColorAndOpacity(Character->bLastHitKill?PFStyle::Amber:Character->bLastHitArmor?PFStyle::Ice:PFStyle::Paper);
+        }
+    }
+    const auto *PC = Cast<APFPlayerController>(GetOwningPlayer());
+    const bool ShowHit = Character && Now < Character->HitUntil && PC && !PC->bMenuOpen && !PC->bMapOpen && !PC->bInventoryOpen;
+    if(HitText && ShowHit != bHitTextVisible)
+    {
+        bHitTextVisible = ShowHit;
+        HitText->SetRenderOpacity(ShowHit?1.f:0.f);
+    }
     RefreshRemaining -= Delta;
     if (RefreshRemaining > 0)
         return;
     RefreshRemaining = .1f;
     UpdateExpeditionUI();
     UpdateHUDData();
-    auto *Character = Cast<APFCharacter>(GetOwningPlayerPawn());
     if (!Character)
         return;
-    float Now = GetWorld()->GetTimeSeconds();
     bShowTargetBar = false;
     if (auto *Target = Character->ConfirmedTarget.Get())
         if (Now < Character->TargetBarUntil)
@@ -248,38 +297,16 @@ void UPFInterface::NativeTick(const FGeometry &Geometry, float Delta)
         if(UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(GetOwningPlayer(),Character->Construction->HarvestBarPoint,Point,false))
         {bShowTargetBar=true;TargetBarPosition=Point;TargetBarFraction=Character->Construction->HarvestBarFraction;}
     }
-    HealthBar->SetPercent(Character->Health / 100.f);
-    HealthText->SetText(FText::FromString(
-        FString::Printf(TEXT("Health %.0f   Armor %.0f"), Character->Health, Character->Armor)));
-    WeaponText->SetText(FText::FromString(
-        Character->Vehicle
-            ? FString::Printf(TEXT("%s   %.0f km/h\nFuel %.0f%%   Condition %.0f%%"),
-                              *Character->Vehicle->Label(), FMath::Abs(Character->Vehicle->Speed) * .036f,
-                              Character->Vehicle->Fuel, Character->Vehicle->Health / 5)
-            : FString::Printf(TEXT("%s   %02d / %d%s"), *Character->Weapon.DisplayName.ToString(),
-                              Character->Ammo, Character->Inventory->Reserve(Character->WeaponId),
-                              Character->bReloading ? TEXT("   Reloading") : TEXT(""))));
-    HitText->SetRenderOpacity(Now < Character->HitUntil ? 1 : 0);
-    HitText->SetText(FText::FromString(
-        Character->bLastHitKill ? TEXT("Eliminated")
-                                : FString::Printf(TEXT("%.0f%s"), Character->LastDamageAmount,
-                                                  Character->bLastHitArmor ? TEXT(" armor") : TEXT(""))));
-    HitText->SetColorAndOpacity(Character->bLastHitKill    ? PFStyle::Amber
-                                : Character->bLastHitArmor ? PFStyle::Ice
-                                                           : PFStyle::Paper);
-    DamageText->SetRenderOpacity(0); // Directional/color feedback carries this; avoid redundant center text.
-    DamageText->SetText(FText::FromString(Character->bDamageWasEnvironmental ? TEXT("Survival damage")
-                                          : Character->bDamageWasArmor       ? TEXT("Armor hit")
-                                                                             : TEXT("Taking damage")));
-    DamageText->SetColorAndOpacity(Character->bDamageWasArmor ? PFStyle::Ice
-                                                              : FLinearColor(.95, .35, .25, 1));
-    int32 Players = GetWorld()->GetGameState() ? GetWorld()->GetGameState()->PlayerArray.Num() : 1;
-    SessionText->SetText(
-        FText::FromString(FString::Printf(TEXT("%s  /  %d connected"),
-                                          GetWorld()->GetNetMode() == NM_Client         ? TEXT("Guest")
-                                          : GetWorld()->GetNetMode() == NM_ListenServer ? TEXT("Hosting")
-                                                                                        : TEXT("Practice"),
-                                          Players)));
+    if (PC && PC->bMenuOpen)
+    {
+        int32 Players = GetWorld()->GetGameState() ? GetWorld()->GetGameState()->PlayerArray.Num() : 1;
+        SessionText->SetText(
+            FText::FromString(FString::Printf(TEXT("%s  /  %d connected"),
+                                              GetWorld()->GetNetMode() == NM_Client         ? TEXT("Guest")
+                                              : GetWorld()->GetNetMode() == NM_ListenServer ? TEXT("Hosting")
+                                                                                            : TEXT("Practice"),
+                                              Players)));
+    }
 }
 void UPFInterface::Resume()
 {
@@ -348,6 +375,43 @@ void UPFInterface::Sensitivity(float Value)
         if(SensitivityReadout)SensitivityReadout->SetText(FText::FromString(FString::Printf(TEXT("Mouse sensitivity: %.3f"),Settings->MouseSensitivity)));
     }
 }
+void UPFInterface::FieldOfView(float Value)
+{
+    if(auto *Settings=UPFUserSettings::Get())
+    {
+        Settings->HipFieldOfView=FMath::Lerp(75.f,110.f,FMath::Clamp(Value,0.f,1.f));
+        if(FieldOfViewReadout)FieldOfViewReadout->SetText(FText::FromString(FString::Printf(TEXT("Field of view: %.0f degrees"),Settings->HipFieldOfView)));
+    }
+}
+void UPFInterface::AimSensitivity(float Value)
+{
+    if(auto *Settings=UPFUserSettings::Get())
+    {
+        Settings->AimSensitivityMultiplier=FMath::Lerp(.25f,2.f,FMath::Clamp(Value,0.f,1.f));
+        if(AimSensitivityReadout)AimSensitivityReadout->SetText(FText::FromString(FString::Printf(TEXT("Aim sensitivity: %.2fx"),Settings->AimSensitivityMultiplier)));
+    }
+}
+void UPFInterface::CrosshairSize(float Value)
+{
+    if(auto *Settings=UPFUserSettings::Get())
+    {
+        Settings->CrosshairScale=FMath::Lerp(.75f,2.f,FMath::Clamp(Value,0.f,1.f));
+        if(CrosshairSizeReadout)CrosshairSizeReadout->SetText(FText::FromString(FString::Printf(TEXT("Crosshair size: %.0f%%"),Settings->CrosshairScale*100)));
+    }
+}
+void UPFInterface::CrosshairColor()
+{
+    if(auto *Settings=UPFUserSettings::Get())
+    {
+        Settings->CrosshairColor=(FMath::Clamp(Settings->CrosshairColor,0,3)+1)%4;
+        static const TCHAR *Names[]={TEXT("White"),TEXT("Cyan"),TEXT("Lime"),TEXT("Pink")};
+        if(CrosshairColorReadout)
+        {
+            CrosshairColorReadout->SetText(FText::FromString(FString::Printf(TEXT("Crosshair color: %s"),Names[Settings->CrosshairColor])));
+            CrosshairColorReadout->SetColorAndOpacity(Settings->GetCrosshairColor());
+        }
+    }
+}
 
 FReply UPFInterface::NativeOnKeyDown(const FGeometry &Geometry,const FKeyEvent &Event)
 {
@@ -371,7 +435,13 @@ void UPFInterface::OpenSettings()
     bSettingsOpen=true;
     if(PlayMenuPage)PlayMenuPage->SetVisibility(ESlateVisibility::Collapsed);
     if(SettingsPage)SettingsPage->SetVisibility(ESlateVisibility::Visible);
-    if(MenuScroll)MenuScroll->ScrollToStart();
+    if(MenuScroll)
+    {
+        FString View;
+        if(FParse::Value(FCommandLine::Get(),TEXT("PFCombatView="),View)&&View==TEXT("SettingsControls"))
+            MenuScroll->ScrollToEnd(); // Explicit presentation fixture for lower-page readability.
+        else MenuScroll->ScrollToStart();
+    }
 }
 void UPFInterface::BackToMenu()
 {

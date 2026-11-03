@@ -1,5 +1,9 @@
 # Unreal implementation and verification status
 
+## November 2 control-feel checkpoint
+
+Native Settings now exposes saved field of view, independent ADS sensitivity and crosshair size/color. Confirmed damage text updates before the slower inventory/lobby refresh; hidden legacy HUD/lobby formatting is skipped during play. Balanced is the default for new installations, preserving existing saved preferences. Compilation, 30 UI/settings checks and 16 delayed combat checks passed; rendered controls/HUD were reviewed at 720p. See [checkpoint evidence and performance limits](../tests/baselines/unreal-0.5-control-feel/README.md). A two-peer static forest experiment reached 74.1 FPS with lighter indirect lighting; severe baseline memory pressure prevents a universal speedup claim. Full Unity parity, first-person arm/IK work and broad match performance remain unfinished.
+
 ## November 1 playability follow-up
 
 Current native work adds grass distance LODs, bounded remote animal animation, persistent substantial cover, lighter build-preview/door updates, corrected upward recoil, hand-attached third-person guns, a smaller solid-color HUD and clearer scope/edit cues. The missing lake was an invalid mesh path; the corrected saved map now has a fitted visible surface and texture-free Single Layer Water shading. The previously requested seven-set photogrammetry ground/geology pass is retained and credited; further textures are frozen at the user's direction.

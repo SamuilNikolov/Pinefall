@@ -1,5 +1,15 @@
 # Current developer and AI-agent handoff
 
+## November 2 control-feel pass
+
+`UPFUserSettings` now stores hip FOV (75-110), independent ADS multiplier (0.25-2x), crosshair scale (75-200%) and four colors. Camera FOV and zoom-compensated mouse input read these preferences; weapon zoom/damage/spread stay authoritative and unchanged. Native Settings remains scrollable; lower controls have an explicit `SettingsControls` capture fixture. Build validity colors and scope fine lines remain distinct from cosmetic crosshair choices. New installs default to Balanced; existing saved preferences are not overwritten. Full rebinding/voice options and first-person arms/IK remain unfinished.
+
+`PFInterface::NativeTick` displays changed confirmed-hit text before the 10 Hz refresh gate and avoids formatting unchanged hit text. Hidden gun/vitals/damage legacy widgets are no longer refreshed. `UpdateExpeditionUI` formats lobby/draft/results only while their panel is visible; it no longer rebuilds hidden legacy team/banner strings. Native minimal squad data remains in `UpdateHUDData`. `Pinefall_UIRefresh` is an opt-in CPU trace scope. No protocol, authoritative simulation or scenery changes.
+
+Native compilation, 30 UI/settings checks and 16 combat checks at 80 ms per-sender lag passed. The two-peer static forest experiment reached 74.1 FPS with lighter indirect lighting, p95 16.5 ms/p99 19.4 ms. Baseline memory pressure and differing graphics settings prevent claiming a universal speedup; exact constraints and retained reports are in `tests/baselines/unreal-0.5-control-feel/README.md`. The experiment's comma-separated command string executed only its first command: GI became 1, reflections stayed 2. Do not label this actual Balanced application; use `-CompareLighting` for preset evidence.
+
+Optional community profiling/movement skills were installed locally. They target UE5.8, so validate advice against 5.6.1 headers; see `docs/DEVELOPMENT-SKILLS.md`. Preserve the current environment-art freeze and custom movement prediction. Continue with actual first-person/third-person hand alignment, moving-route performance tails, uphill vehicle handling and remaining gameplay parity rather than treating settings additions as completion of the 120-rule ledger.
+
 ## November 1 reference HUD and settings
 
 `PFCombatHUD::PaintExpeditionHUD` now follows the user's supplied equipment/build/material structure: seven stable equipment slots (including pickaxe), four smaller build tiles, and three material icon/count cards above them, right aligned. Use actual rarity colors and selected outlines; do not restore the enclosing dashboard or a duplicate gun panel. Equipped ammo is cached in its equipment tile by `UpdateHUDData`; icons retain texture aspect ratio. The bar remains available without a firearm. Material icons are original vector drawing code, with no new textures or scene captures.

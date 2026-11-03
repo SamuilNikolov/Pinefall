@@ -45,19 +45,36 @@ void APFPlayerController::RunInventoryAccessProbe()
         {
             const float OriginalVolume=Settings->MasterVolume,OriginalMouse=Settings->MouseSensitivity;
             const float OriginalLimit=Settings->GetFrameRateLimit();
+            const float OriginalFOV=Settings->HipFieldOfView,OriginalAim=Settings->AimSensitivityMultiplier,OriginalScale=Settings->CrosshairScale;
+            const int32 OriginalColor=Settings->CrosshairColor;
             struct FSliderValue{float Value;};FSliderValue Volume{.37f},Mouse{.5f};
             Interface->ProcessEvent(Interface->FindFunctionChecked(TEXT("Volume")),&Volume);
             Interface->ProcessEvent(Interface->FindFunctionChecked(TEXT("Sensitivity")),&Mouse);
             Interface->ProcessEvent(Interface->FindFunctionChecked(TEXT("FrameLimit")),nullptr);
+            FSliderValue Wide{1.f},HalfAim{1.f/7.f},Large{1.f};
+            Interface->ProcessEvent(Interface->FindFunctionChecked(TEXT("FieldOfView")),&Wide);
+            Interface->ProcessEvent(Interface->FindFunctionChecked(TEXT("AimSensitivity")),&HalfAim);
+            Interface->ProcessEvent(Interface->FindFunctionChecked(TEXT("CrosshairSize")),&Large);
+            Interface->ProcessEvent(Interface->FindFunctionChecked(TEXT("CrosshairColor")),nullptr);
+            const int32 ChosenColor=Settings->CrosshairColor;
+            Check(FMath::IsNearlyEqual(Settings->GetHipFieldOfView(),110.f),TEXT("field-of-view slider applies the wide-view endpoint"));
+            Check(FMath::IsNearlyEqual(Settings->GetAimSensitivity(55.f,0),1.f)&&FMath::IsNearlyEqual(Settings->GetAimSensitivity(55.f,1),.25f),TEXT("ADS preference changes scoped sensitivity without changing hip-fire look"));
+            Check(FMath::IsNearlyEqual(Settings->GetAimSensitivity(55.f,.5f),.625f),TEXT("ADS sensitivity blends during the aim transition"));
+            Check(FMath::IsNearlyEqual(Settings->CrosshairScale,2.f)&&ChosenColor!=OriginalColor,TEXT("crosshair controls change size and cycle color"));
             Check(Settings->GetFrameRateLimit()!=OriginalLimit,TEXT("frame-limit control applies a different cap"));
             Interface->NativeOnKeyDown(Geometry,FKeyEvent(EKeys::Escape,Modifiers,0,false,0,0));
             Check(!Interface->IsSettingsOpen()&&bMenuOpen,TEXT("Escape returns from settings to the menu"));
             Settings->LoadSettings(true);
+            Check(FMath::IsNearlyEqual(Settings->GetHipFieldOfView(),110.f)&&FMath::IsNearlyEqual(Settings->AimSensitivityMultiplier,.5f)&&FMath::IsNearlyEqual(Settings->CrosshairScale,2.f)&&Settings->CrosshairColor==ChosenColor,
+                  TEXT("camera aim and crosshair preferences survive settings reload"));
+            Settings->HipFieldOfView=500.f;
+            Check(FMath::IsNearlyEqual(Settings->GetHipFieldOfView(),110.f),TEXT("out-of-range camera configuration cannot create an invalid projection"));
             Check(FMath::IsNearlyEqual(Settings->MasterVolume,.37f)&&FMath::IsNearlyEqual(Settings->MouseSensitivity,.215f),
                   TEXT("audio and mouse preferences survive closing settings and reloading saved settings"));
             Interface->OpenSettings();SetMenu(false);
             Check(!Interface->IsSettingsOpen()&&!bMenuOpen&&!bShowMouseCursor,TEXT("closing the menu resets its settings page and restores game input"));
             Settings->MasterVolume=OriginalVolume;Settings->MouseSensitivity=OriginalMouse;
+            Settings->HipFieldOfView=OriginalFOV;Settings->AimSensitivityMultiplier=OriginalAim;Settings->CrosshairScale=OriginalScale;Settings->CrosshairColor=OriginalColor;
             Settings->SetFrameRateLimit(OriginalLimit);Settings->ApplyNonResolutionSettings();Settings->SaveSettings();
         }
         SetMenu(false);
