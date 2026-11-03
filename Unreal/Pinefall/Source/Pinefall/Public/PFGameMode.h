@@ -66,12 +66,18 @@ class PINEFALL_API APFGameMode : public AGameModeBase
     void UpdateAlive();
     void BeginStormClose();
     void SpawnFieldLoot();
+    void SupplySecond();
+    void ResetSupplies();
+    double NextSupplyAt = 0;
+    int32 SupplyCount = 0;
     bool GroundPoint(FVector &Point) const;
     TWeakObjectPtr<APlayerController> Host;
     TArray<TWeakObjectPtr<APFPlayerState>> DraftOrder;
     int32 TurnIndex = 0, StartingTeams = 0;
     FTimerHandle RoundTimer;
     FTimerHandle ProbeTimer;
+    int32 SupplyProbeStep = 0;
+    UPROPERTY() TObjectPtr<class APFSupplyDrop> ProbeSupply;
     int32 ProbeStep = 0;
     double ProbeAfter = 0;
     int32 ProbeReserve = 0, ProbeFoodSlot = -1;

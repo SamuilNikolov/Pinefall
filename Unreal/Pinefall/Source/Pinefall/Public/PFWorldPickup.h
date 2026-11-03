@@ -21,7 +21,7 @@ class PINEFALL_API APFWorldPickup : public AActor
     UPROPERTY() TObjectPtr<UMaterialInstanceDynamic> BeaconMaterial;
     void SetFocused(bool Focused);
     void Initialize(const FPFItemStack &Stack);
-    UFUNCTION() void RefreshVisual();
+    UFUNCTION() virtual void RefreshVisual();
     virtual void BeginPlay() override;
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const override;
 };

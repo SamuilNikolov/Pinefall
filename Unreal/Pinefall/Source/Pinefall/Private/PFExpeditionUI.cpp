@@ -31,6 +31,7 @@
 #include "PFTacticalMap.h"
 #include "PFVehicle.h"
 #include "PFWorldPickup.h"
+#include "PFSupplyDrop.h"
 #include "Styling/CoreStyle.h"
 namespace PFExpeditionStyle
 {
@@ -472,6 +473,13 @@ void UPFInterface::UpdateHUDData()
         HUDLootAction=bHUDLootCanTake?TEXT("PICK UP"):Focused->Item.Kind==EPFItemKind::Weapon&&Player->Inventory->HasWeapon(Focused->Item.WeaponId)?TEXT("ALREADY CARRIED"):TEXT("NO SPACE");
         HUDLootDetail=FString(Rarities[HUDLootRarity])+TEXT("  ·  ")+(Focused->Item.Kind==EPFItemKind::Weapon?TEXT("WEAPON"):Focused->Item.Kind==EPFItemKind::Ammo?TEXT("AMMUNITION"):Focused->Item.Kind>=EPFItemKind::Wood?TEXT("BUILDING MATERIAL"):TEXT("SUPPLIES"));
     }
+    if(bHUDLootFocus)if(auto *Supply=Cast<APFSupplyDrop>(Focused))
+    {
+        HUDLootName=TEXT("SUPPLY CRATE");HUDLootQuantity=TEXT("");HUDLootRarity=4;HUDLootColor=FLinearColor(1,.65,.15);
+        bHUDLootCanTake=Supply->HasLanded()&&!Supply->bOpened;
+        HUDLootAction=Supply->bOpened?TEXT("CLAIMED"):bHUDLootCanTake?TEXT("OPEN"):TEXT("INBOUND");
+        HUDLootDetail=TEXT("RARE GEAR  /  SHARED WORLD LOOT");
+    }
     bHUDBuild=Player&&Player->Construction->Mode==EPFConstructionMode::Build;
     bHUDPickaxe=Player&&Player->Construction->Mode==EPFConstructionMode::Pickaxe;
     if(Player)
@@ -531,6 +539,7 @@ void UPFInterface::UpdateHUDData()
     int32 Left = FMath::Max(0, FMath::CeilToInt(Match->SecondsLeft()));
     HUDStormClock = Match->IsBattleRoyale() ? FString::Printf(TEXT("%02d:%02d"), Left / 60, Left % 60)
                                             : TEXT("SAFE");
+    if(HUDNotice.IsEmpty()&&Match->GetServerWorldTimeSeconds()<Match->SupplyAnnouncementUntil)HUDNotice=Match->SupplyAnnouncement;
     HUDStormLabel = Match->Phase == EPFRoundPhase::Active
                         ? FString::Printf(TEXT("STORM %d  %s"), Match->StormStage + 1,
                                           Match->bClosing ? TEXT("CLOSING") : TEXT("HOLDING"))

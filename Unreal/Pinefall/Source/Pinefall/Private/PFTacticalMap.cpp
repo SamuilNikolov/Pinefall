@@ -228,6 +228,15 @@ int32 UPFTacticalMap::NativePaint(const FPaintArgs &Args, const FGeometry &G, co
                     Text(Pos + FVector2D(7, 4), P->GetPlayerName().Left(20), 11, FLinearColor::White);
             }
         }
+    for(const auto &DropPoint:Match->SupplyDropPoints)
+    {
+        const FVector2D At=Project(DropPoint);
+        if(At.X<Origin.X+10||At.X>Origin.X+Side-10||At.Y<Origin.Y+10||At.Y>Origin.Y+Side-10)continue;
+        Box(At-FVector2D(7),FVector2D(14),FLinearColor(.025,.035,.045,1));
+        Box(At-FVector2D(5),FVector2D(10),FLinearColor(1,.65,.15,1));
+        Box(At-FVector2D(1,5),FVector2D(2,10),FLinearColor(.15,.12,.06,1));
+        if(!bMini)Text(At+FVector2D(10,-7),TEXT("SUPPLY"),11,FLinearColor(1,.8,.35));
+    }
     // The local arrow never depends on a delayed team feed and is painted last.
     APawn *Tracked=GetOwningPlayerPawn();
     if(!Tracked&&PC)Tracked=Cast<APawn>(PC->GetViewTarget());

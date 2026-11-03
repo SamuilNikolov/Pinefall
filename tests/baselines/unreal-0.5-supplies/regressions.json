@@ -1,0 +1,72 @@
+{
+  "scope": "Sequential native headless regression sweep; no new rendered FPS, WAN or microphone claim. The subsequent crate-only focus fix receives its own final three-process round check.",
+  "results": [
+    {
+      "script": "Test-Unreal.ps1",
+      "result": "passed",
+      "evidence": "artifacts/unreal-tests/20261102-195413",
+      "reports": [
+        "test-unreal-result.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealInventory.ps1",
+      "result": "passed",
+      "evidence": "artifacts/unreal-inventory/20261102-195442",
+      "reports": [
+        "test-unrealinventory-inventory.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealCombat.ps1",
+      "result": "passed",
+      "evidence": "artifacts/unreal-combat/20261102-195454",
+      "reports": [
+        "test-unrealcombat-combat.json",
+        "test-unrealcombat-summary.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealWorld.ps1",
+      "result": "passed",
+      "evidence": "artifacts/unreal-world/20261102-195603",
+      "reports": [
+        "test-unrealworld-world.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealWildlife.ps1",
+      "result": "passed",
+      "evidence": "artifacts/unreal-wildlife/20261102-195614",
+      "reports": [
+        "test-unrealwildlife-wildlife.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealReserve.ps1",
+      "result": "passed",
+      "evidence": "artifacts/unreal-reserve/20261102-195635",
+      "reports": [
+        "test-unrealreserve-reserve.json",
+        "test-unrealreserve-summary.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealMovement.ps1",
+      "result": "passed",
+      "evidence": "artifacts/unreal-movement/20261102-195727",
+      "reports": [
+        "test-unrealmovement-movement.json",
+        "test-unrealmovement-summary.json"
+      ]
+    },
+    {
+      "script": "Test-UnrealConstruction.ps1",
+      "result": "passed",
+      "evidence": "artifacts/unreal-construction/20261102-195835",
+      "reports": [
+        "test-unrealconstruction-construction.json"
+      ]
+    }
+  ]
+}

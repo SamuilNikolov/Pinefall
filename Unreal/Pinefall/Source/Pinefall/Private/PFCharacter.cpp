@@ -12,6 +12,8 @@
 #include "PFGameMode.h"
 #include "PFRangeTarget.h"
 #include "PFUserSettings.h"
+#include "PFSupplyDrop.h"
+#include "PFMatchState.h"
 #include "PFInventoryComponent.h"
 #include "PFMatchState.h"
 #include "PFWorldPickup.h"
@@ -931,6 +933,17 @@ void APFCharacter::RunCombatViewProbe()
         if(GetWorld()->LineTraceSingleByChannel(Cover,Anchor,ShotPosition,ECC_Camera,Query))ShotPosition=Cover.ImpactPoint+Cover.ImpactNormal*15;
         auto *SceneCamera=GetWorld()->SpawnActor<ACameraActor>();SceneCamera->SetActorLocationAndRotation(ShotPosition,ShotRotation);SceneCamera->GetCameraComponent()->SetFieldOfView(Camera->FieldOfView);
         if(auto *PC=Cast<APlayerController>(Controller)){PC->bAutoManageActiveCameraTarget=false;PC->SetViewTarget(SceneCamera);}
+    }
+    if(Mode==TEXT("Supply")&&HasAuthority())
+    {
+        const FVector Point=GetActorLocation()+GetActorForwardVector()*350-FVector(0,0,80);
+        FTransform Transform(FRotator::ZeroRotator,Point);
+        auto *Drop=GetWorld()->SpawnActorDeferred<APFSupplyDrop>(APFSupplyDrop::StaticClass(),Transform);
+        Drop->LandingAt=GetWorld()->GetTimeSeconds()-1;Drop->FinishSpawning(Transform);
+        if(auto *State=GetWorld()->GetGameState<APFMatchState>())State->SupplyDropPoints.Add(Point);
+        bFirstPerson=false;auto *View=GetWorld()->SpawnActor<ACameraActor>();
+        View->SetActorLocationAndRotation(Point+FVector(450,360,250),(Point-Point-FVector(450,360,200)).Rotation());View->GetCameraComponent()->SetFieldOfView(55);
+        if(auto *PC=Cast<APlayerController>(Controller)){PC->bAutoManageActiveCameraTarget=false;PC->SetViewTarget(View);}
     }
     if (Mode == TEXT("Scope"))
         StartAim();

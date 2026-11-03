@@ -6,6 +6,8 @@
 #include "PFInventoryComponent.h"
 #include "PFMatchState.h"
 #include "PFWorldPickup.h"
+#include "PFSupplyDrop.h"
+#include "Components/SphereComponent.h"
 #include "EngineUtils.h"
 #include "Engine/DamageEvents.h"
 #include "TimerManager.h"
@@ -33,6 +35,15 @@ void APFPlayerController::ProbeRoundInput()
         }
         ServerReady();
         bProbeReadySent = true;
+    }
+    if(Match->Phase==EPFRoundPhase::Active&&ProbeRole==TEXT("ally")&&GetWorld()->GetTimeSeconds()>=LandingRetry)
+    {
+        LandingRetry=GetWorld()->GetTimeSeconds()+.3;
+        if(Match->SupplyDropPoints.Num()>0)UE_LOG(LogTemp,Display,TEXT("PF_SUPPLY_CLIENT_MARKER count=%d"),Match->SupplyDropPoints.Num());
+        if(auto *LocalRanger=Cast<APFCharacter>(GetPawn()))
+            for(TActorIterator<APFSupplyDrop> It(GetWorld());It;++It)
+                if(!It->bOpened&&It->HasLanded()&&FVector::DistSquared(LocalRanger->GetActorLocation(),It->GetActorLocation())<160000)
+                    LocalRanger->ServerInteract(*It);
     }
     int32 Phase = int32(Match->Phase);
     if (Phase != ProbePhase && Match->Phase == EPFRoundPhase::Bidding)
@@ -261,8 +272,33 @@ void APFGameMode::RunRoundProbe()
     }
     else if (ProbeStep == 4)
     {
-        Check(!AllyPawn->bDowned && AllyPawn->Health == 35,
-              TEXT("held nearby revive completes after three seconds"));
+        if(SupplyProbeStep==0)
+        {
+            Check(!AllyPawn->bDowned && AllyPawn->Health == 35,TEXT("held nearby revive completes after three seconds"));
+            Check(SupplyCount==0&&Round->SupplyDropPoints.IsEmpty(),TEXT("no scheduled supply before the initial delay"));
+            NextSupplyAt=Now;SupplySecond();
+            for(TActorIterator<APFSupplyDrop> It(GetWorld());It;++It)ProbeSupply=*It;
+            if(!Check(IsValid(ProbeSupply),TEXT("active round scheduler spawns a supply objective"))){Finish();return;}
+            Check(Round->SupplyDropPoints.Num()==1&&SupplyCount==1,TEXT("scheduled drop publishes one public landing marker"));
+            Check(!Round->Outside(ProbeSupply->GetActorLocation()),TEXT("drop landing is inside the current safe circle"));
+            Check(!ProbeSupply->Open(HostPawn),TEXT("airborne crate rejects opening"));
+            AllyPawn->SetActorLocation(ProbeSupply->GetActorLocation()+FVector(150,0,95));
+            ProbeSupply->LandingAt=Now+2;ProbeSupply->ForceNetUpdate();
+            SupplyProbeStep=1;ProbeAfter=Now+3;return;
+        }
+        if(SupplyProbeStep==1)
+        {
+            if(!ProbeSupply->bOpened&&Now<ProbeAfter+4)return;
+            Check(ProbeSupply->bOpened,TEXT("remote owning-client interaction opens the landed crate"));
+            Check(ProbeSupply->Interaction->GetCollisionEnabled()==ECollisionEnabled::NoCollision,TEXT("claimed crate no longer intercepts pickup focus"));
+            int32 Rewards=0;bool Weapon=false,Ammo=false,Armor=false;
+            for(TActorIterator<APFWorldPickup> It(GetWorld());It;++It)if(It->GetOwner()==ProbeSupply)
+            {Rewards++;Weapon|=It->Item.Kind==EPFItemKind::Weapon&&It->Item.Rarity>=3;Ammo|=It->Item.Kind==EPFItemKind::Ammo&&It->Item.Count>=15;Armor|=It->Item.Kind==EPFItemKind::HeavyVest;}
+            Check(Rewards==6&&Weapon&&Ammo&&Armor,TEXT("crate releases six shared rewards including rare weapon matching ammo and armor"));
+            Check(!ProbeSupply->Open(AllyPawn),TEXT("duplicate opening cannot issue another reward set"));
+            Check(Round->SupplyDropPoints.IsEmpty(),TEXT("claim removes the public marker"));
+            SupplyProbeStep=2;
+        }
         // Exercise the real storm clock without waiting an entire match in a test.
         Round->PhaseEnds = Now;
         RoundSecond();
@@ -292,6 +328,7 @@ void APFGameMode::RunRoundProbe()
         ReturnToLobby(HostPC);
         Check(Round->Phase == EPFRoundPhase::Lobby && !HostState->bEliminated && !HostState->bReady,
               TEXT("host returns everyone to a clean unready lobby"));
+        Check(Round->SupplyDropPoints.IsEmpty()&&SupplyCount==0,TEXT("return to lobby clears supply state"));
         Check(HostPC->GetPawn() && AllyPC->GetPawn() && EnemyPC->GetPawn(),
               TEXT("all participants receive new lobby pawns"));
         Finish();

@@ -1,5 +1,16 @@
 # Current developer and AI-agent handoff
 
+## November 2 supply objectives
+
+`APFSupplyDrop` extends the existing pickup interaction channel. `APFGameMode::SupplySecond` runs only during Active rounds through the existing one-second timer: 65-second first delay, 140-second spacing, at most six, no new drop below a 200 m next-circle radius. It samples up to sixteen dry Landscape points inside the smaller safe radius, rejecting steep ground/water/out-of-arena positions. Reset runs on deployment and return to lobby. Public pins and six-second supply notices live on MatchState; they expose world objectives, never enemy positions.
+
+Descent is cosmetic from a replicated landing timestamp plus server world time, stopping visual ticking on landing. The existing service-case mesh and native sphere canopy are interim art; no new textures, lights or source assets. `ServerInteract` delegates crates to their own authority/Active/landing/distance/cover/state checks before ordinary inventory pickup. Lock `bOpened` before reward creation. Six separate pickups are shared by all teams and use existing inventory/capacity checks; opening is allowed with a full backpack. Claimed markers disappear and the empty actor expires after five seconds. EndPlay removes unclaimed pins and cancels its timer.
+
+Protocol review: this appends replicated fields on MatchState and introduces a replicated native actor class. Match all players to this build; no compatibility with prior native binaries is promised. Item enum/inventory layouts, weapon definitions, movement and damage RPCs are unchanged. Unity stays frozen. The original Unity supply feature also has a flyover, voiced narrator and motorcycle/survey specials: those remain missing, as do survey privacy/activation mechanics themselves.
+
+Verification and remaining limits are retained under `tests/baselines/unreal-0.5-supplies`. Native build and final 47-check round passed; host/join smoke plus all eight existing regression groups passed (235 assertions across inventory/combat/world/wildlife/reserve/movement/construction). Actual 720p crate rendering was reviewed. No new FPS claim. The three-process round probe arranges a short landing time and moves an actual remote owner near the crate; its normal owned-character interaction RPC opens it. This is not a natural-duration match, twenty-human/WAN test or new FPS certification. Keep remaining work in the native status ledger.
+
+
 ## November 2 control-feel pass
 
 `UPFUserSettings` now stores hip FOV (75-110), independent ADS multiplier (0.25-2x), crosshair scale (75-200%) and four colors. Camera FOV and zoom-compensated mouse input read these preferences; weapon zoom/damage/spread stay authoritative and unchanged. Native Settings remains scrollable; lower controls have an explicit `SettingsControls` capture fixture. Build validity colors and scope fine lines remain distinct from cosmetic crosshair choices. New installs default to Balanced; existing saved preferences are not overwritten. Full rebinding/voice options and first-person arms/IK remain unfinished.

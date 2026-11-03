@@ -45,4 +45,7 @@ void APFMatchState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLif
     DOREPLIFETIME(APFMatchState, CenterFrom);
     DOREPLIFETIME(APFMatchState, CenterTo);
     DOREPLIFETIME(APFMatchState, Announcement);
+    DOREPLIFETIME(APFMatchState, SupplyDropPoints);
+    DOREPLIFETIME(APFMatchState, SupplyAnnouncement);
+    DOREPLIFETIME(APFMatchState, SupplyAnnouncementUntil);
 }

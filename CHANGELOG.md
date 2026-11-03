@@ -1,5 +1,13 @@
 # Pinefall Wildfront changelog
 
+## Native supply-drop objectives - 2026-11-02
+
+- Ported scheduled supply drops: first at 65 seconds, 140-second spacing, six per round, stopping in small late circles. Landing sites use valid dry terrain inside the safe area.
+- Added shared 26-second descent, public gold map markers, short inbound/landed/claimed HUD announcements and an E-to-open crate card.
+- Server validates landing, range, line of sight and combat state; one claim releases six world pickups including an epic/legendary weapon, compatible ammo, heavy armor, plates, healing and food. Full inventory does not prevent opening shared loot.
+- Added remote interaction/marker/duplicate-claim/reset checks to the three-process round probe. Use matching native builds: the replicated match-state/actor schema changed. Aircraft, voiced calls, motorcycle/survey specials remain unported.
+
+
 ## Native control feel and UI refresh - 2026-11-02
 
 - Added saved field of view, independent ADS sensitivity, crosshair size and four readable colors. Weapon zoom/accuracy and build-validity cues retain their existing rules.

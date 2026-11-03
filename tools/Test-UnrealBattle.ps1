@@ -27,10 +27,11 @@ try {
         if((Get-Date) -gt $deadline){throw "Battle test timed out. Inspect $run"};Start-Sleep -Milliseconds 500
     }
     $data=Get-Content -LiteralPath $report -Raw | ConvertFrom-Json
-    if($data.failed.Count -gt 0 -or $data.passed.Count -lt 25){throw "Battle rules failed: $($data.failed -join ', ')"}
+    if($data.failed.Count -gt 0 -or $data.passed.Count -lt 47){throw "Battle rules failed: $($data.failed -join ', ')"}
     foreach($role in @('host','ally','enemy')) {
         if(Select-String -LiteralPath (Join-Path $run ($role+'.log')) -Pattern 'Fatal error:|Log.*: Error:|Ensure condition failed' -Quiet){throw "Runtime errors in $role log."}
     }
+    if(!(Select-String -LiteralPath (Join-Path $run "ally.log") -SimpleMatch "PF_SUPPLY_CLIENT_MARKER count=1" -Quiet)){throw "Remote client did not observe the public supply marker."}
     Write-Output "Battle round passed $($data.passed.Count) assertions across three real processes. Evidence: $run"
 } finally {
     foreach($child in $children){if(!$child.HasExited){Stop-Process -Id $child.Id -Force -ErrorAction SilentlyContinue}}

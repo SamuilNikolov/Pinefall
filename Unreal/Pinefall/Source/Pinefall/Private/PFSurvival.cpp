@@ -6,6 +6,7 @@
 #include "PFMatchState.h"
 #include "PFInventoryComponent.h"
 #include "PFWorldPickup.h"
+#include "PFSupplyDrop.h"
 #include "PFMovementComponent.h"
 #include "PFWaterBody.h"
 #include "Components/CapsuleComponent.h"
@@ -202,6 +203,7 @@ void APFCharacter::ServerInteract_Implementation(APFWorldPickup *Pickup)
                                              Pickup->GetActorLocation() + FVector(0, 0, 20), ECC_Visibility,
                                              Query))
         return;
+    if(auto *Supply=Cast<APFSupplyDrop>(Pickup)){Supply->Open(this);return;}
     int32 Accepted = Inventory->Add(Pickup->Item);
     if (Accepted <= 0)
         return;

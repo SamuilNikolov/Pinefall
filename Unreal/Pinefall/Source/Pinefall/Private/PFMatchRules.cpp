@@ -8,6 +8,7 @@
 #include "PFMatchState.h"
 #include "PFInventoryComponent.h"
 #include "PFWorldPickup.h"
+#include "PFSupplyDrop.h"
 #include "PFWildlife.h"
 #include "Kismet/GameplayStatics.h"
 #include "EngineUtils.h"
@@ -256,6 +257,7 @@ bool APFGameMode::SelectLanding(APlayerController *Player, FVector Point, bool C
 }
 void APFGameMode::StartBattle()
 {
+    ResetSupplies();
     if(auto *Registry=GetWorld()->GetSubsystem<UPFConstructionSubsystem>();Registry&&Registry->Manager)Registry->Manager->Reset();
     auto *Round = Match();
     Round->Phase = EPFRoundPhase::Active;
@@ -358,6 +360,7 @@ void APFGameMode::RoundSecond()
         UpdateAlive();
         if (Round->Phase != EPFRoundPhase::Active)
             return;
+        SupplySecond();
         if (Now >= Round->PhaseEnds)
         {
             if (!Round->bClosing)
@@ -446,6 +449,7 @@ void APFGameMode::ReturnToLobby(APlayerController *Player)
 {
     if (Player != Host.Get() || Match()->Phase != EPFRoundPhase::Finished)
         return;
+    ResetSupplies();
     auto *Round = Match();
     Round->Phase = EPFRoundPhase::Lobby;
     Round->Announcement = TEXT("Back at camp. Ready for another expedition?");
@@ -522,5 +526,33 @@ void APFGameMode::SpawnFieldLoot()
         Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
         if (auto *Loot = GetWorld()->SpawnActor<APFWorldPickup>(Point, FRotator::ZeroRotator, Params))
             Loot->Initialize(Item);
+    }
+}
+
+void APFGameMode::ResetSupplies()
+{
+    for(TActorIterator<APFSupplyDrop> It(GetWorld());It;++It)It->Destroy();
+    Match()->SupplyDropPoints.Reset();Match()->SupplyAnnouncement.Empty();Match()->SupplyAnnouncementUntil=0;Match()->ForceNetUpdate();
+    SupplyCount=0;NextSupplyAt=GetWorld()->GetTimeSeconds()+65;
+}
+void APFGameMode::SupplySecond()
+{
+    auto *Round=Match();const double Now=GetWorld()->GetTimeSeconds();
+    if(Round->Phase!=EPFRoundPhase::Active||Now<NextSupplyAt||SupplyCount>=6)return;
+    NextSupplyAt=Now+140;
+    const float Radius=FMath::Min(Round->SafeRadius(),Round->RadiusTo);
+    if(Radius<20000)return;
+    for(int32 Attempt=0;Attempt<16;Attempt++)
+    {
+        const float Angle=FMath::FRand()*2*PI,Distance=FMath::Sqrt(FMath::FRand())*Radius*.7f;
+        FVector Point=FVector(Round->CenterTo)+FVector(FMath::Cos(Angle)*Distance,FMath::Sin(Angle)*Distance,0);
+        if(FMath::Abs(Point.X)>Round->ArenaHalfExtent-500||FMath::Abs(Point.Y)>Round->ArenaHalfExtent-500||!GroundPoint(Point))continue;
+        Point.Z-=85;
+        FTransform Transform(FRotator::ZeroRotator,Point);
+        auto *Drop=GetWorld()->SpawnActorDeferred<APFSupplyDrop>(APFSupplyDrop::StaticClass(),Transform,nullptr,nullptr,ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+        if(!Drop)return;
+        Drop->LandingAt=Now+26;Drop->FinishSpawning(Transform);
+        Round->SupplyDropPoints.Add(Point);Round->Announcement=TEXT("Supply drop inbound. Gold crate marker on your map.");Round->SupplyAnnouncement=Round->Announcement;Round->SupplyAnnouncementUntil=Now+6;Round->ForceNetUpdate();
+        SupplyCount++;return;
     }
 }

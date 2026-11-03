@@ -112,3 +112,11 @@ The right-side inventory keeps weapon/consumable key positions consistent regard
 The minimap and storm/match status sit at the top left. Its outlined white/cyan arrow shows your live position and facing even before a team snapshot arrives; a spectator follows the watched pawn. It remains visible while browsing inventory. Ordinary enemy positions remain hidden.
 
 Built ramps use outward collision normals and a local walkable surface override. On the ground, a new preview moves ahead when centering it on your feet would put you below its midpoint. A same-facing existing ramp targets the next upper grid cell for a continuous staircase. Jumped/connected placement and the existing slide/hop controls remain available.
+
+## Supply drops
+
+In battle royale, look for a gold crate marker on the map/minimap. The first drop is scheduled 65 seconds after deployment, then every 140 seconds, with at most six per round. New drops stop when the next safe circle is smaller than 200 m. A crate descends for 26 seconds; inbound, landing and claim notices briefly appear on the HUD.
+
+Approach a landed crate, look at it and press **E** to open. It scatters an epic/legendary rifle or pistol, matching ammunition, heavy armor, plates, medkits and food. Anyone can collect these shared pickups; opening does not require free inventory space. Crates cannot be opened through walls, from vehicles or before landing. The marker disappears when claimed. Current supply drops do not contain motorcycles or survey devices and do not have voiced/aircraft announcements yet.
+
+This update changes replicated native actor/state data. Friends should all use the same current build.

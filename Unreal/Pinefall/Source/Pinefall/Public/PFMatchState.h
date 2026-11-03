@@ -39,6 +39,9 @@ class PINEFALL_API APFMatchState : public AGameStateBase
     UPROPERTY(Replicated, BlueprintReadOnly) FVector_NetQuantize CenterFrom = FVector::ZeroVector;
     UPROPERTY(Replicated, BlueprintReadOnly) FVector_NetQuantize CenterTo = FVector::ZeroVector;
     UPROPERTY(Replicated, BlueprintReadOnly) FString Announcement;
+    UPROPERTY(Replicated) TArray<FVector_NetQuantize> SupplyDropPoints;
+    UPROPERTY(Replicated) FString SupplyAnnouncement;
+    UPROPERTY(Replicated) double SupplyAnnouncementUntil = 0;
     bool IsBattleRoyale() const
     {
         return Phase != EPFRoundPhase::Range;

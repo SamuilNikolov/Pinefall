@@ -1,0 +1,22 @@
+{
+	"passed": [
+		"remote scoped torso shot damages actual standing player",
+		"remote player shot spends exactly one server round",
+		"target crouch is authoritative",
+		"remote shooter crouch reaches authority",
+		"remote shot hits crouched player skeletal collision",
+		"solid current cover prevents player damage",
+		"blocked shot still spends ammunition",
+		"third-person scoped shot hits player under crosshair",
+		"host torso shot uses the same player damage",
+		"delayed remote shot hits a moving player's rendered torso",
+		"target actually crosses the scene through CharacterMovement",
+		"moving-player rewind cannot bypass current solid cover",
+		"blocked moving-target shot consumes one round",
+		"host shot hits a moving client using its displayed torso",
+		"remote target actually moves through predicted CharacterMovement",
+		"remote head shot eliminates an unarmored player"
+	],
+	"failed": [],
+	"scope": "Two real processes shoot actual player skeletal collision through ordinary local trigger/server validation. Positions, health and cover are arranged. Stationary and moving targets with current-cover checks; not general latency/loss or WAN evidence."
+}

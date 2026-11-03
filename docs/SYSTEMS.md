@@ -1,5 +1,7 @@
 # System and file map
 
+Native supply objectives now live in `PFSupplyDrop`, `PFMatchRules`/`PFMatchState` (schedule/public pins), `PFSurvival` (owned-character interaction), `PFExpeditionUI` and `PFTacticalMap` (presentation). See the current handoff for authority, cleanup and matching-build requirements.
+
 Active Unreal 0.3 domains are listed in [the Unreal README](../Unreal/Pinefall/README.md) and [the handoff](HANDOFF.md). `PFReserveWorld` / `PFReserveLayout` own reserve stock/layout/private map feeds; `PFVehicle` / `PFCharacterVehicle` own truck/boat simulation and seat/service transactions. `PFRangerAnimInstance` and the stylized preparation/import scripts own visible stance. The table below describes frozen Unity reference code.
 
 All runtime files below are under `Assets/Scripts/` unless otherwise stated. Names are a navigation aid, not a substitute for reading the current implementation. Several classes span files and still live in Unity's default assemblies.

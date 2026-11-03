@@ -80,3 +80,7 @@ The saved reserve uses scanned canopy/rocks, short biome-specific instanced grou
 Additional checks are `tools/Test-UnrealConstruction.ps1` (three real processes with simulated latency), `tools/Test-UnrealInventory.ps1` (UI/revision/control paths), and `tools/Test-UnrealRender.ps1` (a graphics-enabled host with two real headless clients). Run graphics measurement alone, with shaders/assets settled; cold editor startup may take minutes. Do not describe NullRHI integration speed as rendering FPS or a single static scene as whole-match performance. `Capture-UnrealPresentation.ps1 -ShowWindow` captures actual rendered views; hidden-window UI capture is unreliable on this machine.
 
 Imported content is committed; Blender is needed only to modify/rebuild the 3D preparation sources. See SourceArt/README.md and root third-party notices. The broader sweep still has visual/performance and migration gates; earlier baseline reports remain historical.
+
+## Native supply objectives
+
+`APFSupplyDrop` extends `APFWorldPickup` and uses the existing character interaction RPC. `PFMatchRules` schedules a bounded population; `PFMatchState` replicates objective pins and short notices; `PFTacticalMap` and `PFExpeditionUI` display them. The timestamp-driven descent stops ticking at landing. Claims release regular shared inventory pickups and are authority-validated once. See `PLAYING.md` and `tests/baselines/unreal-0.5-supplies` for controls and evidence. Replicated schema changed: use matching native binaries. Aircraft/narrator/motorcycle/survey variants remain future work.

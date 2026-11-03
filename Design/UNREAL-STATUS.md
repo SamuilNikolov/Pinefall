@@ -1,5 +1,10 @@
 # Unreal implementation and verification status
 
+## November 2 supply-drop migration
+
+Native battle rounds now schedule up to six shared supply objectives, with synchronized descent, landing/claim notices, public gold map markers and server-validated one-time opening. Rewards use the two implemented gun families plus matching ammo, armor, plates, medkits and food. The service-case crate and simple canopy are interim presentation. Aircraft flyover, voiced announcements, motorcycle/survey bonuses and relays remain unported. Read the supply checkpoint and handoff for verification and matching-build requirements.
+
+
 ## November 2 control-feel checkpoint
 
 Native Settings now exposes saved field of view, independent ADS sensitivity and crosshair size/color. Confirmed damage text updates before the slower inventory/lobby refresh; hidden legacy HUD/lobby formatting is skipped during play. Balanced is the default for new installations, preserving existing saved preferences. Compilation, 30 UI/settings checks and 16 delayed combat checks passed; rendered controls/HUD were reviewed at 720p. See [checkpoint evidence and performance limits](../tests/baselines/unreal-0.5-control-feel/README.md). A two-peer static forest experiment reached 74.1 FPS with lighter indirect lighting; severe baseline memory pressure prevents a universal speedup claim. Full Unity parity, first-person arm/IK work and broad match performance remain unfinished.
