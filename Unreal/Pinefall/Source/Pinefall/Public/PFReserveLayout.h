@@ -14,6 +14,9 @@ struct PINEFALL_API FPFReserveLayout
     static constexpr float WaterLevel = -300;
     static TConstArrayView<FPFReserveSite> Sites();
     static TConstArrayView<FIntPoint> Roads();
+    static const TArray<TArray<FVector2D>> &RoadPaths();
+    static float RoadDistance(float X,float Y);
+    static float UngradedHeight(float X,float Y);
     static float Height(float X, float Y);
     static uint8 Biome(float X, float Y);
     static bool Water(float X, float Y);

@@ -41,4 +41,5 @@ class UPFWorldBuilder : public UBlueprintFunctionLibrary
     UFUNCTION(BlueprintPure, Category = "Pinefall|Editor") static float ReserveHeight(float X, float Y);
     UFUNCTION(BlueprintPure, Category = "Pinefall|Editor") static FString ReserveLayoutJson();
     UFUNCTION(BlueprintCallable, Category = "Pinefall|Editor") static int32 BuildReserveRoads();
+    UFUNCTION(BlueprintCallable, Category = "Pinefall|Editor") static int32 BuildReserveVillageDetails();
 };

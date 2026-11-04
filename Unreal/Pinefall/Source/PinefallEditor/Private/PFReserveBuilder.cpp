@@ -24,8 +24,8 @@ void UPFWorldBuilder::BuildReserveLandscape()
     for (int32 Y = 0; Y < Size; Y++)
         for (int32 X = 0; X < Size; X++)
             Heights[Y * Size + X] = uint16(FMath::Clamp(
-                FMath::RoundToInt(
-                    32768 + FPFReserveLayout::Height(-100800 + X * 400, -100800 + Y * 400) * 1.28f),
+                FMath::RoundToInt(32768 +
+                                  FPFReserveLayout::Height(-100800 + X * 400, -100800 + Y * 400) * 1.28f),
                 0, 65535));
     auto *Land = World->SpawnActor<ALandscape>();
     Land->SetActorLabel(TEXT("Wildfront Reserve - 2016 metre landscape"));
@@ -74,7 +74,8 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
     UWorld *World = GEditor->GetEditorWorldContext().World();
     if (!World)
         return;
-    auto Create = [&](UStaticMesh *Mesh, const TCHAR *Label, int32 Cull, bool Block) {
+    auto Create = [&](UStaticMesh *Mesh, const TCHAR *Label, int32 Cull, bool Block)
+    {
         auto *Actor = World->SpawnActor<AActor>();
         Actor->SetActorLabel(Label);
         auto *Group = NewObject<UHierarchicalInstancedStaticMeshComponent>(Actor);
@@ -93,14 +94,13 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
     if (Canopies.Num() >= 5)
         for (int32 I = 0; I < Trees[4]->GetStaticMaterials().Num(); I++)
             Canopies[4]->SetMaterial(
-                I, LoadObject<UMaterialInterface>(
-                       nullptr,
-                       *FString::Printf(
-                           TEXT("/Game/Pinefall/Materials/Scenery/M_SnowFir_%d.M_SnowFir_%d"), I, I)));
-    auto *Trunks =
-        Create(LoadObject<UStaticMesh>(
-                   nullptr, TEXT("/Game/Pinefall/Art/World/SM_TrunkCollision.SM_TrunkCollision")),
-               TEXT("Reserve trunk collision"), 50000, true);
+                I,
+                LoadObject<UMaterialInterface>(
+                    nullptr, *FString::Printf(
+                                 TEXT("/Game/Pinefall/Materials/Scenery/M_SnowFir_%d.M_SnowFir_%d"), I, I)));
+    auto *Trunks = Create(LoadObject<UStaticMesh>(
+                              nullptr, TEXT("/Game/Pinefall/Art/World/SM_TrunkCollision.SM_TrunkCollision")),
+                          TEXT("Reserve trunk collision"), 50000, true);
     Trunks->SetVisibility(false);
     Trunks->SetHiddenInGame(true);
     Trunks->SetCastShadow(false);
@@ -111,23 +111,21 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
     Low->SetAffectDynamicIndirectLighting(false);
     Low->SetAffectDistanceFieldLighting(false);
     Low->bEnableDensityScaling = true;
-    auto LoadScenery = [](const TCHAR *Name) {
+    auto LoadScenery = [](const TCHAR *Name)
+    {
         return LoadObject<UStaticMesh>(
             nullptr, *FString::Printf(TEXT("/Game/Pinefall/Art/Scenery/%s.%s"), Name, Name));
     };
-    auto *Dry =
-        Create(LoadScenery(TEXT("SM_DryGrassPatch")), TEXT("Reserve dry short grass"), 6000, false);
+    auto *Dry = Create(LoadScenery(TEXT("SM_DryGrassPatch")), TEXT("Reserve dry short grass"), 6000, false);
     Dry->SetCastShadow(false);
     Dry->SetAffectDynamicIndirectLighting(false);
     Dry->SetAffectDistanceFieldLighting(false);
     Dry->bEnableDensityScaling = true;
     auto *Brush = Create(Fern, TEXT("Reserve scanned understory"), 18000, false);
-    auto *Rocks =
-        Create(LoadScenery(TEXT("SM_MossRock")), TEXT("Reserve scanned boulders"), 60000, true);
+    auto *Rocks = Create(LoadScenery(TEXT("SM_MossRock")), TEXT("Reserve scanned boulders"), 60000, true);
     auto *FieldRocks =
         Create(LoadScenery(TEXT("SM_FieldRock")), TEXT("Reserve weathered field stones"), 60000, true);
-    auto *Cliffs =
-        Create(LoadScenery(TEXT("SM_CliffFace")), TEXT("Reserve scanned rock faces"), 70000, true);
+    auto *Cliffs = Create(LoadScenery(TEXT("SM_CliffFace")), TEXT("Reserve scanned rock faces"), 70000, true);
     // Quantized landscape vertices are shared by every placement. Interpolating
     // the actual 4 m triangles prevents short plants floating above a different
     // analytic height field, and avoids repeated expensive terrain synthesis.
@@ -137,22 +135,23 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
     for (int32 Y = 0; Y < Grid; Y++)
         for (int32 X = 0; X < Grid; X++)
             Surface[Y * Grid + X] =
-                FMath::RoundToInt(FPFReserveLayout::Height(-100800 + X * 400, -100800 + Y * 400) *
-                                  1.28f) /
+                FMath::RoundToInt(FPFReserveLayout::Height(-100800 + X * 400, -100800 + Y * 400) * 1.28f) /
                 1.28f;
-    auto Ground = [&](float X, float Y) {
+    auto Ground = [&](float X, float Y)
+    {
         float GX = (X + 100800) / 400, GY = (Y + 100800) / 400;
         int32 IX = FMath::Clamp(FMath::FloorToInt(GX), 0, Grid - 2),
               IY = FMath::Clamp(FMath::FloorToInt(GY), 0, Grid - 2);
         float U = FMath::Clamp(GX - IX, 0.f, 1.f), V = FMath::Clamp(GY - IY, 0.f, 1.f);
-        float A = Surface[IY * Grid + IX], B = Surface[IY * Grid + IX + 1],
-              C = Surface[(IY + 1) * Grid + IX], D = Surface[(IY + 1) * Grid + IX + 1];
+        float A = Surface[IY * Grid + IX], B = Surface[IY * Grid + IX + 1], C = Surface[(IY + 1) * Grid + IX],
+              D = Surface[(IY + 1) * Grid + IX + 1];
         return U > V ? A + (B - A) * U + (D - B) * V : A + (D - C) * U + (C - A) * V;
     };
     FRandomStream Random(31809);
     // Keep the exact house footprint and approach clear. Short grass may fill
     // verges and yards; a whole village is no longer one empty exclusion disc.
-    auto Clear = [&](FVector2D P, bool Tree) {
+    auto Clear = [&](FVector2D P, bool Tree)
+    {
         for (const auto &S : FPFReserveLayout::Sites())
         {
             FVector2D Local = P - S.Point;
@@ -164,15 +163,8 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
                         FMath::Abs(Local.Y - Row) < (Tree ? 760 : 440))
                         return true;
         }
-        auto Sites = FPFReserveLayout::Sites();
-        for (const auto &R : FPFReserveLayout::Roads())
-        {
-            FVector2D A = Sites[R.X].Point, B = Sites[R.Y].Point;
-            float T =
-                FMath::Clamp(FVector2D::DotProduct(P - A, B - A) / (B - A).SizeSquared(), 0.f, 1.f);
-            if (FVector2D::Distance(P, FMath::Lerp(A, B, T)) < (Tree ? 700 : 430))
-                return true;
-        }
+        if (FPFReserveLayout::RoadDistance(P.X, P.Y) < (Tree ? 650.f : 340.f))
+            return true;
         return false;
     };
     int32 Count = 0;
@@ -208,7 +200,10 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
                         : Biome == 3 ? .14f
                         : Biome == 4 ? .42f
                                      : .14f;
-        if (Biome == 4 && Z > 8500)
+        // Large ecological patches make glades and groves rather than uniform planting.
+        const float Patch = FMath::Clamp(.75f + FMath::PerlinNoise2D(P / 8700) * 1.25f, .30f, 1.25f);
+        Density = FMath::Min(.99f, Density * Patch);
+        if (Biome == 4 && Z > 15500)
             Density *= .1f; // Windswept ice country above the treeline.
         if (I < 52000 && Slope < 180 && Random.FRand() < Density && Canopies.Num() >= 5)
         {
@@ -218,7 +213,7 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
                       : Biome == 2           ? 0
                       : Random.FRand() < .4f ? 0
                                              : 1;
-            float Scale = Random.FRandRange(.78f, 1.22f);
+            float Scale = Random.FRandRange(.65f, 1.35f);
             T.SetScale3D(FVector(Scale));
             Canopies[N]->AddInstance(T);
             float H = FMath::Min(800.f, Trees[N]->GetBounds().BoxExtent.Z * 1.1f) * Scale;
@@ -232,7 +227,7 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
             T.SetScale3D(FVector(Random.FRandRange(.55f, 1.2f)));
             Brush->AddInstance(T);
         }
-        else if (I >= 68000 && Slope < 150 && (Biome != 4 || (Z < 8000 && Random.FRand() < .1f)))
+        else if (I >= 68000 && Slope < 150 && (Biome != 4 || (Z < 15000 && Random.FRand() < .1f)))
         {
             auto *Group = Biome == 2 || Biome == 3 || Biome == 4 ? Dry : Low;
             int32 Patches = Biome == 3 || Biome == 4 ? 1 : 3;
@@ -243,7 +238,8 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
             float Understory = Biome == 1 ? .10f : Biome == 0 ? .035f : Biome == 5 ? .006f : 0.f;
             if (Understory > 0 && Random.FRand() < Understory)
             {
-                T.SetScale3D(FVector(Biome == 1 ? Random.FRandRange(.7f, 1.1f) : Random.FRandRange(.35f, .75f)));
+                T.SetScale3D(
+                    FVector(Biome == 1 ? Random.FRandRange(.7f, 1.1f) : Random.FRandRange(.35f, .75f)));
                 Brush->AddInstance(T);
             }
             for (int32 K = 0; K < Patches; K++)
@@ -251,9 +247,9 @@ void UPFWorldBuilder::PopulateReserve(const TArray<UStaticMesh *> &Trees, UStati
                 float GX = X + Random.FRandRange(-180, 180), GY = Y + Random.FRandRange(-180, 180);
                 if (Clear(FVector2D(GX, GY), false) || FPFReserveLayout::Water(GX, GY))
                     continue;
-                Group->AddInstance(FTransform(FRotator(0, Random.FRandRange(0, 360), 0),
-                                              FVector(GX, GY, Ground(GX, GY)),
-                                              FVector(Biome == 4 ? Random.FRandRange(.45f, .7f) : Random.FRandRange(.9f, 1.4f))));
+                Group->AddInstance(FTransform(
+                    FRotator(0, Random.FRandRange(0, 360), 0), FVector(GX, GY, Ground(GX, GY)),
+                    FVector(Biome == 4 ? Random.FRandRange(.45f, .7f) : Random.FRandRange(.9f, 1.4f))));
             }
         }
     }
@@ -273,7 +269,8 @@ int32 UPFWorldBuilder::ApplyReserveBiomePresentation()
     UWorld *World = GEditor->GetEditorWorldContext().World();
     if (!World)
         return -1;
-    auto Find = [&](const TCHAR *Label) -> UHierarchicalInstancedStaticMeshComponent * {
+    auto Find = [&](const TCHAR *Label) -> UHierarchicalInstancedStaticMeshComponent *
+    {
         for (TActorIterator<AActor> It(World); It; ++It)
             if (It->GetActorLabel() == Label)
                 return It->FindComponentByClass<UHierarchicalInstancedStaticMeshComponent>();
@@ -283,9 +280,11 @@ int32 UPFWorldBuilder::ApplyReserveBiomePresentation()
     auto *Brush = Find(TEXT("Reserve scanned understory"));
     auto *FieldRocks = Find(TEXT("Reserve weathered field stones"));
     auto *Cliffs = Find(TEXT("Reserve scanned rock faces"));
-    auto *Grass = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Pinefall/Art/Scenery/SM_GrassPatch.SM_GrassPatch"));
+    auto *Grass =
+        LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Pinefall/Art/Scenery/SM_GrassPatch.SM_GrassPatch"));
     auto *Fern = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Pinefall/Art/Foliage/SM_Fern.SM_Fern"));
-    auto *Geology = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Pinefall/Materials/M_ReserveGeology.M_ReserveGeology"));
+    auto *Geology = LoadObject<UMaterialInterface>(
+        nullptr, TEXT("/Game/Pinefall/Materials/M_ReserveGeology.M_ReserveGeology"));
     if (!Dry || !Brush || !FieldRocks || !Cliffs || !Grass || !Fern || !Geology)
         return -1;
     for (auto *Group : {FieldRocks, Cliffs})
@@ -297,7 +296,8 @@ int32 UPFWorldBuilder::ApplyReserveBiomePresentation()
     const FName Applied(TEXT("PFBiomePresentationV1"));
     if (Dry->ComponentHasTag(Applied))
         return 0;
-    auto Create = [&](const TCHAR *Label, UStaticMesh *Mesh, int32 Distance, bool Density) {
+    auto Create = [&](const TCHAR *Label, UStaticMesh *Mesh, int32 Distance, bool Density)
+    {
         auto *Actor = World->SpawnActor<AActor>();
         Actor->SetActorLabel(Label);
         auto *Group = NewObject<UHierarchicalInstancedStaticMeshComponent>(Actor);
@@ -353,17 +353,22 @@ int32 UPFWorldBuilder::ApplyReserveBiomePresentation()
         else
             Shrubs.Add(T);
     }
-    auto Fill = [](UHierarchicalInstancedStaticMeshComponent *Group, const TArray<FTransform> &Transforms) {
+    auto Fill = [](UHierarchicalInstancedStaticMeshComponent *Group, const TArray<FTransform> &Transforms)
+    {
         Group->Modify();
         Group->ClearInstances();
         Group->AddInstances(Transforms, false, true);
         Group->BuildTreeIfOutdated(false, true);
     };
-    Fill(Dry, Desert);Fill(Alpine, AlpineTransforms);Fill(Tundra, TundraTransforms);
-    Fill(Brush, Shrubs);Fill(Ferns, FernTransforms);
+    Fill(Dry, Desert);
+    Fill(Alpine, AlpineTransforms);
+    Fill(Tundra, TundraTransforms);
+    Fill(Brush, Shrubs);
+    Fill(Ferns, FernTransforms);
     Dry->ComponentTags.AddUnique(Applied);
-    UE_LOG(LogTemp, Display, TEXT("PF_BIOME_PRESENTATION_OK desert=%d alpine=%d tundra=%d shrubs=%d ferns=%d"),
-           Desert.Num(), AlpineTransforms.Num(), TundraTransforms.Num(), Shrubs.Num(), FernTransforms.Num());
+    UE_LOG(LogTemp, Display,
+           TEXT("PF_BIOME_PRESENTATION_OK desert=%d alpine=%d tundra=%d shrubs=%d ferns=%d"), Desert.Num(),
+           AlpineTransforms.Num(), TundraTransforms.Num(), Shrubs.Num(), FernTransforms.Num());
     return FernTransforms.Num() + AlpineTransforms.Num() + TundraTransforms.Num();
 }
 
@@ -388,7 +393,52 @@ FString UPFWorldBuilder::ReserveLayoutJson()
         First = false;
         Json += FString::Printf(TEXT("[%d,%d]"), Road.X, Road.Y);
     }
-    return Json + TEXT("]}");
+    Json += TEXT("],\"road_paths\":[");
+    First = true;
+    for (const auto &Path : FPFReserveLayout::RoadPaths())
+    {
+        if (!First)
+            Json += TEXT(",");
+        First = false;
+        Json += TEXT("[");
+        bool FirstPoint = true;
+        for (const auto &P : Path)
+        {
+            if (!FirstPoint)
+                Json += TEXT(",");
+            FirstPoint = false;
+            Json += FString::Printf(TEXT("[%.1f,%.1f]"), P.X, P.Y);
+        }
+        Json += TEXT("]");
+    }
+    double Length = 0, Straight = 0;
+    float Grade = 0, Cut = 0;
+    const auto &Paths = FPFReserveLayout::RoadPaths();
+    for (int32 K = 0; K < Paths.Num(); K++)
+    {
+        const auto &Path = Paths[K];
+        Straight += FVector2D::Distance(Path[0], Path.Last());
+        for (int32 I = 0; I < Path.Num(); I++)
+        {
+            const auto &P = Path[I];
+            const float Z = FPFReserveLayout::Height(P.X, P.Y);
+            Cut = FMath::Max(Cut, FMath::Abs(Z - FPFReserveLayout::UngradedHeight(P.X, P.Y)));
+            if (I)
+            {
+                const float D = FVector2D::Distance(P, Path[I - 1]);
+                if (D > 1)
+                {
+                    Length += D;
+                    Grade = FMath::Max(
+                        Grade, FMath::Abs(Z - FPFReserveLayout::Height(Path[I - 1].X, Path[I - 1].Y)) / D);
+                }
+            }
+        }
+    }
+    Json += FString::Printf(TEXT("],\"road_metrics\":{\"route_length_cm\":%.1f,\"straight_length_cm\":%.1f,"
+                                 "\"max_grade\":%.4f,\"max_center_cut_fill_cm\":%.2f}}"),
+                            Length, Straight, Grade, Cut);
+    return Json;
 }
 
 int32 UPFWorldBuilder::BuildReserveRoads()
@@ -397,35 +447,38 @@ int32 UPFWorldBuilder::BuildReserveRoads()
     if (!World)
         return 0;
     auto *Actor = World->SpawnActor<AActor>();
-    Actor->SetActorLabel(TEXT("Connected graded roads"));
+    Actor->SetActorLabel(TEXT("Connected contour tracks"));
     auto *Group = NewObject<UHierarchicalInstancedStaticMeshComponent>(Actor);
     Actor->AddInstanceComponent(Group);
     Actor->SetRootComponent(Group);
     Group->SetMobility(EComponentMobility::Static);
     Group->SetStaticMesh(LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube")));
-    Group->SetMaterial(
-        0, LoadObject<UMaterialInterface>(
-               nullptr, TEXT("/Game/Pinefall/Materials/Reserve/M_ReserveRoad.M_ReserveRoad")));
+    Group->SetMaterial(0, LoadObject<UMaterialInterface>(
+                              nullptr, TEXT("/Game/Pinefall/Materials/Reserve/M_ReserveRoad.M_ReserveRoad")));
     Group->SetCollisionProfileName(TEXT("NoCollision"));
     Group->RegisterComponent();
-    int32 Count = 0;
-    auto Sites = FPFReserveLayout::Sites();
-    for (const auto &Link : FPFReserveLayout::Roads())
+    int32 Count = 0, Index = 0;
+    for (const auto &Path : FPFReserveLayout::RoadPaths())
     {
-        FVector2D A = Sites[Link.X].Point, B = Sites[Link.Y].Point, D = B - A;
-        float Length = D.Size();
-        auto Direction = D.GetSafeNormal();
-        int32 Steps = FMath::CeilToInt(Length / 400);
-        for (int32 I = 0; I < Steps; I++)
+        const auto Link = FPFReserveLayout::Roads()[Index++];
+        const float Width = (Link.X == 6 || Link.Y == 6) ? 600.f : 480.f;
+        for (int32 I = 0; I < Path.Num() - 1; I++)
         {
-            FVector2D P = FMath::Lerp(A, B, (I + .5f) / Steps);
-            float Z = FPFReserveLayout::Height(P.X, P.Y) + 3;
-            float H = FPFReserveLayout::Height(P.X + Direction.X * 200, P.Y + Direction.Y * 200) -
-                      FPFReserveLayout::Height(P.X - Direction.X * 200, P.Y - Direction.Y * 200);
-            FRotator Rotation(FMath::RadiansToDegrees(FMath::Atan2(H, 400.f)),
-                              FMath::RadiansToDegrees(FMath::Atan2(D.Y, D.X)), 0);
-            Group->AddInstance(FTransform(Rotation, FVector(P.X, P.Y, Z),
-                                          FVector(Length / Steps / 100 + .08f, 8, .045f)));
+            const FVector2D A = Path[I], B = Path[I + 1], P = (A + B) * .5;
+            FVector Direction(B.X - A.X, B.Y - A.Y,
+                              FPFReserveLayout::Height(B.X, B.Y) - FPFReserveLayout::Height(A.X, A.Y));
+            const float Length = Direction.Size();
+            if (Length < 1)
+                continue;
+            const float DX =
+                FPFReserveLayout::Height(P.X + 100, P.Y) - FPFReserveLayout::Height(P.X - 100, P.Y);
+            const float DY =
+                FPFReserveLayout::Height(P.X, P.Y + 100) - FPFReserveLayout::Height(P.X, P.Y - 100);
+            const FVector Normal = FVector(-DX, -DY, 200).GetSafeNormal();
+            const FRotator Rotation =
+                FRotationMatrix::MakeFromXZ(Direction.GetSafeNormal(), Normal).Rotator();
+            Group->AddInstance(FTransform(Rotation, FVector(P.X, P.Y, FPFReserveLayout::Height(P.X, P.Y) + 7),
+                                          FVector(Length / 100 + .06f, Width / 100, .025f)));
             Count++;
         }
     }

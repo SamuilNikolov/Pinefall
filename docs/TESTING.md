@@ -1,5 +1,7 @@
 # Verification and reproducible checks
 
+The November 3 native reserve probe requires **88** checks, adding actual capsule entry/porch approaches and blocking rear walls across all 64 houses/three styles. Run `Scripts/validate_reserve_layout.py` after exporting a regenerated map for 42 independent authoring checks: native height range, relief, low banks, all town links, dry road paths and bounded grading. These do not establish driving quality or rendering performance; retain the native integration results and rendered views separately.
+
 The November 1 native reserve probe has **86** checks, including actual lake mesh presence, matching visual/physical water footprint and a shared visible boat/swim level. The combat script additionally requires upward camera recoil in both host/client logs. `Test-UnrealRender.ps1 -CompareCommands` compares isolated console experiments within one settled graphics session; it does not persist quality changes. Capture fixtures use opt-in benchmark immunity, separate from ordinary game behavior. See `tests/baselines/unreal-0.5-playability/README.md` for the current targeted runs and exact limitations.
 
 ## Native traversal checks

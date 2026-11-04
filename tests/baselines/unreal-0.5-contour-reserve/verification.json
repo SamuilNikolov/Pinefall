@@ -1,0 +1,71 @@
+{
+  "Unreal": {
+    "source": "artifacts/unreal-tests/20261103-101256",
+    "reports": [
+      "unreal-result.json"
+    ]
+  },
+  "UnrealReserve": {
+    "source": "artifacts/unreal-reserve/20261103-101055",
+    "reports": [
+      "unrealreserve-reserve.json",
+      "unrealreserve-summary.json"
+    ]
+  },
+  "UnrealInventory": {
+    "source": "artifacts/unreal-inventory/20261103-101340",
+    "reports": [
+      "unrealinventory-inventory.json"
+    ]
+  },
+  "UnrealCombat": {
+    "source": "artifacts/unreal-combat/20261103-101358",
+    "reports": [
+      "unrealcombat-combat.json",
+      "unrealcombat-summary.json"
+    ]
+  },
+  "UnrealWorld": {
+    "source": "artifacts/unreal-world/20261103-101524",
+    "reports": [
+      "unrealworld-world.json"
+    ]
+  },
+  "UnrealWildlife": {
+    "source": "artifacts/unreal-wildlife/20261103-101546",
+    "reports": [
+      "unrealwildlife-wildlife.json"
+    ]
+  },
+  "UnrealMovement": {
+    "source": "artifacts/unreal-movement/20261103-101629",
+    "reports": [
+      "unrealmovement-movement.json",
+      "unrealmovement-summary.json"
+    ]
+  },
+  "UnrealConstruction": {
+    "source": "artifacts/unreal-construction/20261103-102808",
+    "reports": [
+      "unrealconstruction-construction.json"
+    ]
+  },
+  "UnrealBattle": {
+    "source": "artifacts/unreal-battle/20261103-103326",
+    "reports": [
+      "unrealbattle-round.json"
+    ]
+  },
+  "three-process": {
+    "source": "artifacts/unreal-render/20261103-103738-Forest",
+    "reports": [
+      "render-three-process.json"
+    ]
+  },
+  "host-only": {
+    "source": "artifacts/unreal-render/20261103-193418-Forest",
+    "reports": [
+      "render-host-only.json"
+    ]
+  }
+}

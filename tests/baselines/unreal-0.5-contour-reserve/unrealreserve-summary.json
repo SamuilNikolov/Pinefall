@@ -1,0 +1,6 @@
+{
+  "packet_lag_ms_each_sender": 0,
+  "passed": 88,
+  "scope": "Two-process reserve fixture: all 64 house entries/rear walls, 51 first-piece terrain checks across three biomes, remote driving/steering, settings, fuel/service, boat, loot, replicated crouch and private map feed; no rendered FPS, audible mix or general WAN claim",
+  "failed": 0
+}

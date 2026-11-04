@@ -1,5 +1,9 @@
 # Unreal implementation and verification status
 
+## November 3 geography follow-up
+
+The reserve has larger mountain/valley relief, independent house foundations and eleven contour-road links instead of endpoint-height highway berms. Roads are 4.8–6 m wide; grading is bounded to 1.6 m, with 68.99 cm maximum centre adjustment in the current export. Actual curves feed the 4K atlas. Existing scan foliage varies by local density and tree size. Original enterable houses gain credited 1K PBR surfaces and a batched architecture kit; these are not production scanned buildings. Vehicle support checks its rotated chassis footprint and never eases beneath rising terrain. See the current handoff for verification scope; full migration/production-art gates below still apply.
+
 ## November 2 supply completion
 
 Native supplies now include cosmetic cargo-aircraft flyover, authored canopy/ropes, positional rumble, queued recorded global calls, usable faster motorcycles and shareable survey receivers. Surveys carry two, consume one, last twelve seconds and update every four seconds for the activating team only; public warnings carry no coordinates. The supply integration requires 63 three-process checks plus client-side privacy/narration markers. See the current handoff and supply-completion evidence. This closes the supply gaps listed in the preceding checkpoint; it does not claim all remaining Unity features or final production art.

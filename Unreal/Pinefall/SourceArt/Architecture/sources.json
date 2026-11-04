@@ -1,0 +1,67 @@
+[
+  {
+    "id": "plastered_wall_02",
+    "name": "Plastered Wall 02",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/plastered_wall_02",
+    "authors": {
+      "Charlotte Baglioni": "All"
+    },
+    "files": {
+      "Diffuse": {
+        "file": "plastered_wall_02_Diffuse.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/plastered_wall_02/plastered_wall_02_diff_1k.jpg",
+        "md5": "3ca0d02e87ad5c6eb21efa4b05b7748e",
+        "sha256": "0a316ffd3f953a902325c06afb5a5863bbf71d13a353f9d85378562adca79603",
+        "bytes": 436395
+      },
+      "nor_dx": {
+        "file": "plastered_wall_02_nor_dx.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/plastered_wall_02/plastered_wall_02_nor_dx_1k.jpg",
+        "md5": "edc8714847f47549cbb92c699cf2f0a0",
+        "sha256": "c3df801fdadf2e4c579445853e17add3c7f217e44c0b9810303e51474cd33119",
+        "bytes": 956792
+      },
+      "Rough": {
+        "file": "plastered_wall_02_Rough.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/plastered_wall_02/plastered_wall_02_rough_1k.jpg",
+        "md5": "2d4a4a40491eb5a115c086bb65aba32c",
+        "sha256": "6c317c0e647b02259601690bd33501bbc825858c6d1715cd0f8f46a5b51f6db4",
+        "bytes": 173930
+      }
+    }
+  },
+  {
+    "id": "worn_corrugated_iron",
+    "name": "Worn Corrugated Iron",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/worn_corrugated_iron",
+    "authors": {
+      "Jenelle van Heerden": "Processing",
+      "Dimitrios Savva": "Photography"
+    },
+    "files": {
+      "Diffuse": {
+        "file": "worn_corrugated_iron_Diffuse.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_corrugated_iron/worn_corrugated_iron_diff_1k.jpg",
+        "md5": "dee4306e2c337afcb3a815eb3345c7bd",
+        "sha256": "8980bec97815510c828cb6b3d840c05345eb44212e34c212c39ec54c0abecaa3",
+        "bytes": 868207
+      },
+      "nor_dx": {
+        "file": "worn_corrugated_iron_nor_dx.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_corrugated_iron/worn_corrugated_iron_nor_dx_1k.jpg",
+        "md5": "7029f71d89d6d52ee16e881269d8bca5",
+        "sha256": "950f4b8df09e2257728fec0a3fe22a05663ddc27a060a843e5aea5091260c3df",
+        "bytes": 1032217
+      },
+      "Rough": {
+        "file": "worn_corrugated_iron_Rough.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_corrugated_iron/worn_corrugated_iron_rough_1k.jpg",
+        "md5": "78ed19c7b13281d6bfcf12fc9ee27dc3",
+        "sha256": "aad215f1b076f763e2d239b5312a80d9fee3d2f4b39768abec8bb1b667e9e86c",
+        "bytes": 553083
+      }
+    }
+  }
+]

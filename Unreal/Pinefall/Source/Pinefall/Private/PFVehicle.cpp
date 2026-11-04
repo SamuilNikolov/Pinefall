@@ -8,6 +8,7 @@
 #include "Net/UnrealNetwork.h"
 #include "PFCharacter.h"
 #include "PFWaterBody.h"
+#include "ProfilingDebugging/CpuProfilerTrace.h"
 
 APFVehicle::APFVehicle()
 {
@@ -226,6 +227,7 @@ void APFVehicle::Tick(float Delta)
     }
     else
     {
+        TRACE_CPUPROFILER_EVENT_SCOPE(Pinefall_VehicleGroundSupport);
         FHitResult Hit;
         if (!GetWorld()->LineTraceSingleByObjectType(Hit, Destination + FVector(0, 0, 200),
                                                      Destination - FVector(0, 0, 750),
@@ -242,14 +244,28 @@ void APFVehicle::Tick(float Delta)
                     Speed = 0;
                     return;
                 }
-        float Z = Hit.ImpactPoint.Z + (bMotorcycle?75:110);
-        Destination.Z = FMath::FInterpTo(GetActorLocation().Z, Z, Delta, 18);
         FVector Forward = FRotationMatrix(FRotator(0, Rotation.Yaw, 0)).GetUnitAxis(EAxis::X);
         FVector Surface = (Forward - FVector::DotProduct(Forward, Hit.ImpactNormal) * Hit.ImpactNormal)
                               .GetSafeNormal();
         FRotator Slope = FRotationMatrix::MakeFromXZ(Surface, Hit.ImpactNormal).Rotator();
         Rotation.Pitch = FMath::FInterpTo(Rotation.Pitch, Slope.Pitch, Delta, 7);
         Rotation.Roll = FMath::FInterpTo(Rotation.Roll, Slope.Roll, Delta, 7);
+        // Suspension may ease down, but never lag beneath rising ground. Use the
+        // actual rotated chassis footprint, not just a centre ray on a slope.
+        float RequiredZ = Hit.ImpactPoint.Z + (bMotorcycle ? 75 : 110);
+        const FVector Extent = Collision->GetScaledBoxExtent();
+        for (float X : {-1.f, 1.f})
+            for (float Y : {-1.f, 1.f})
+            {
+                const FVector Bottom = Rotation.RotateVector(FVector(X*Extent.X,Y*Extent.Y,-Extent.Z));
+                const FVector At(Destination.X+Bottom.X,Destination.Y+Bottom.Y,Destination.Z);
+                FHitResult Support;
+                if (GetWorld()->LineTraceSingleByObjectType(Support,At+FVector(0,0,400),
+                    At-FVector(0,0,900),FCollisionObjectQueryParams(ECC_WorldStatic),Q) &&
+                    Support.GetComponent()==Hit.GetComponent() && Support.ImpactNormal.Z>=.50f)
+                    RequiredZ=FMath::Max(RequiredZ,float(Support.ImpactPoint.Z-Bottom.Z+12));
+            }
+        Destination.Z=FMath::Max(RequiredZ,FMath::FInterpTo(GetActorLocation().Z,RequiredZ,Delta,18));
     }
     FHitResult Hit;
     SetActorLocationAndRotation(Destination, Rotation, true, &Hit);

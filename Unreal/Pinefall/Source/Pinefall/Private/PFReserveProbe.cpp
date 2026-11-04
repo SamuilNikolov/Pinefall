@@ -238,6 +238,33 @@ void APFGameMode::RunReserveProbe()
             Check(!Door, TEXT("actual player capsule fits through cabin doorway"));
             Check(Wall, TEXT("actual player capsule cannot cross cabin rear wall"));
         }
+        int32 Houses = 0;
+        bool AllEntriesClear = true, AllRearWallsSolid = true;
+        for (TActorIterator<AStaticMeshActor> It(GetWorld()); It; ++It)
+        {
+            const auto Mesh = It->GetStaticMeshComponent()->GetStaticMesh();
+            if (!Mesh || !(Mesh->GetName() == TEXT("SM_RangerCabin") ||
+                          Mesh->GetName() == TEXT("SM_AlpineChalet") ||
+                          Mesh->GetName() == TEXT("SM_AdobeHouse"))) continue;
+            ++Houses;
+            const FTransform Frame = It->GetActorTransform();
+            FCollisionQueryParams Query(SCENE_QUERY_STAT(PFAllVillageDoors));
+            const auto Shape = FCollisionShape::MakeCapsule(34, 90);
+            FHitResult EntryHit;
+            const bool EntryBlocked = GetWorld()->SweepSingleByChannel(EntryHit,
+                Frame.TransformPosition(FVector(0,-650,130)),
+                Frame.TransformPosition(FVector(0,-250,130)),FQuat::Identity,ECC_Pawn,Shape,Query);
+            AllEntriesClear &= !EntryBlocked;
+            if (EntryBlocked)
+                UE_LOG(LogTemp,Display,TEXT("PF_VILLAGE_ENTRY_BLOCK house=%s location=%s obstacle=%s component=%s impact=%s"),
+                    *Mesh->GetName(),*It->GetActorLocation().ToCompactString(),*GetNameSafe(EntryHit.GetActor()),
+                    *GetNameSafe(EntryHit.GetComponent()),*EntryHit.ImpactPoint.ToCompactString());
+            AllRearWallsSolid &= GetWorld()->SweepTestByChannel(
+                Frame.TransformPosition(FVector(0,650,130)),
+                Frame.TransformPosition(FVector(0,250,130)),FQuat::Identity,ECC_Pawn,Shape,Query);
+        }
+        Check(Houses == 64 && AllEntriesClear, TEXT("all 64 village entries and porch approaches fit player capsule"));
+        Check(Houses == 64 && AllRearWallsSolid, TEXT("all three house styles retain blocking rear walls"));
         if (auto *Registry = GetWorld()->GetSubsystem<UPFConstructionSubsystem>();
             Registry && Registry->Manager)
         {

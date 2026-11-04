@@ -4,6 +4,8 @@
 
 Read the [migration plan](Design/UNREAL-MIGRATION.md), [120 source-linked game rules](Design/RULES-CATALOG.md), [presentation direction](Design/UNREAL-PRESENTATION.md), and [current Unreal status](Design/UNREAL-STATUS.md). Unity development was stopped by the user; its unfinished 0.9.1 edits and historical evidence remain intact below as a reference.
 
+The November 3 reserve update replaces raised straight highways with textured contour tracks, adds stronger terrain relief and gentler lake banks, varies scanned foliage, and improves the original villages with credited PBR surfaces and batched architecture details. Uphill chassis support now follows its rotated footprint. Native supply aircraft, voiced calls, motorcycles and temporary team-only survey receivers are also implemented. See the [latest developer handoff](docs/HANDOFF.md) for exact testing and remaining migration limits.
+
 The November 1 follow-up fixes missing water, upward recoil and construction-preview rendering overhead, simplifies the HUD and adds grass distance LODs while retaining substantial cover. A rendered forest host with two local test clients and 84 animals measured 61.9 FPS at 1600×900 High/87%; this is a static-scene result, not an all-hardware or whole-match promise. [Current handoff and verification](docs/HANDOFF.md#november-1-playability-follow-up).
 
 ## Legacy Unity project

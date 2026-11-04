@@ -68,12 +68,17 @@ for index, tree in enumerate(data.get("trees", [])):
     )
     d.ellipse((u - r + 2, v - r + 2, u + r + 3, v + r + 3), fill=shade)
     d.ellipse((u - r, v - r, u + r, v + r), fill=canopy)
-for ai, bi in data["roads"]:
-    a, b = data["sites"][ai], data["sites"][bi]
-    points = [pos(a["x"], a["y"]), pos(b["x"], b["y"])]
-    d.line(points, fill=(49, 54, 51), width=20)
-    d.line(points, fill=(129, 128, 110), width=13)
-    d.line(points, fill=(176, 166, 134), width=1)
+paths = data.get("road_paths") or [
+    [
+        (data["sites"][a]["x"], data["sites"][a]["y"]),
+        (data["sites"][b]["x"], data["sites"][b]["y"]),
+    ]
+    for a, b in data["roads"]
+]
+for path in paths:
+    points = [pos(x, y) for x, y in path]
+    d.line(points, fill=(72, 65, 49), width=13, joint="curve")
+    d.line(points, fill=(155, 139, 105), width=8, joint="curve")
 for building in data["buildings"]:
     u, v = pos(building["x"], building["y"])
     d.rectangle((u - 11, v - 9, u + 12, v + 10), fill=(43, 48, 42))

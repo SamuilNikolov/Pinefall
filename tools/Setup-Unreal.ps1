@@ -52,7 +52,7 @@ if (!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Audio\GrassStep4.uass
 if (!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Art\Fauna\Alpaca\Walk.uasset'))) {$passes += 'import_wildlife.py'}
 if ($RebuildCharacterMaterials -or $passes -contains 'import_stylized_ranger.py' -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Materials\Characters\M_Ranger_MI_Ranger.uasset'))) {$passes += 'fix_stylized_materials.py'}
 $needsReserve=$RebuildReserve -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Maps\WildfrontReserve.umap'))
-if($needsReserve){$passes+='build_reserve.py'}
+if($needsReserve){$passes+=@('build_reserve.py','upgrade_villages.py')}
 if($needsReserve -or !(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Art\T_ReserveAtlas.uasset'))){$passes+='import_reserve_atlas.py'}
 if($RebuildEnvironment -or $needsReserve){$passes+='repair_water.py'}
 if(!(Test-Path -LiteralPath (Join-Path $content 'Pinefall\Materials\M_BuildEditHover.uasset'))){$passes+='make_edit_hover.py'}
@@ -66,6 +66,8 @@ foreach ($pass in $passes) {
     if($pass -eq 'build_reserve.py'){
         & python -X utf8 (Join-Path $projectRoot 'Scripts\bake_reserve_atlas.py')
         if($LASTEXITCODE -ne 0){throw 'Atlas authoring requires Python with NumPy and Pillow. Normal play/build uses committed assets.'}
+        & python -X utf8 (Join-Path $projectRoot 'Scripts\validate_reserve_layout.py')
+        if($LASTEXITCODE -ne 0){throw 'Reserve geography validation failed.'}
     }
 }
 Write-Host 'Unreal round ready. Run tools\Run-Unreal.ps1 or open Unreal\Pinefall\Pinefall.uproject.'

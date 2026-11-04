@@ -2,6 +2,8 @@
 
 **Unreal 5.6.1 / Windows / native C++**. This is the active migration project. The repository root still contains the frozen Unity reference implementation.
 
+The reserve geography now uses narrower contour tracks, independently levelled house foundations and larger mountain/valley relief. Village surfaces use credited 1K scan maps plus an instanced original porch/shutter kit. To regenerate, use `tools/Setup-Unreal.ps1 -RebuildReserve`; this also reapplies biome cover and rebuilds the matching 4K atlas/water. Python + NumPy/Pillow are required only for atlas authoring. Source checksums are retained in `SourceArt/Architecture/sources.json`. Normal play uses the committed map/assets.
+
 Install Unreal 5.6.1 with **templates and Starter Content**, plus Visual Studio 2022's **Game development with C++** workload and a Windows SDK. No paid marketplace assets or Python package installation is required. Epic template/Starter Content files are copied from your installation and remain subject to Epic's terms.
 
 From the repository root:

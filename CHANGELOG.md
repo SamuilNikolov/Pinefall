@@ -1,5 +1,12 @@
 # Pinefall Wildfront changelog
 
+## Native contour roads and villages — 2026-11-03
+
+- Replaced straight endpoint-graded highways with contour routes, dry shoreline approaches, short terrain-following segments and bounded cut/fill. Independent house foundations preserve hilly village surroundings; larger mountains/valleys add verticality. The 4K atlas follows actual road curves.
+- Rebalanced scanned vegetation into varied-density pockets with a wider tree-size range and higher alpine treeline. Existing grass LODs, substantial cover and collision remain.
+- Added credited 1K plaster/corrugated-metal surfaces, darker timber and batched porches, shutters, sills and courtyard stonework to the existing enterable buildings. Source hashes and regeneration steps are included.
+- Fixed uphill chassis clearance: suspension cannot ease below rising terrain and checks the rotated footprint against the same supporting surface. Parked vehicles still sleep; obstacle sweeps remain authoritative.
+
 ## Complete native supply specials and presentation - 2026-11-02
 
 - Added original cargo-plane flyover, authored canopy/suspension ropes and positional low aircraft rumble. Cosmetic delivery is timestamp-synchronized and stops ticking on landing.

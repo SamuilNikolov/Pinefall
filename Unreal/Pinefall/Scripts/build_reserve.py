@@ -4,13 +4,16 @@ from pathlib import Path
 import json, math, unreal, sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from reserve_materials import build_terrain
+from reserve_materials import build_terrain, build_track
 
 PROJECT = Path(__file__).resolve().parents[1]
 REPO = PROJECT.parents[1]
 LIB = unreal.EditorAssetLibrary
 MEL = unreal.MaterialEditingLibrary
 TOOLS = unreal.AssetToolsHelpers.get_asset_tools()
+preflight = json.loads(unreal.PFWorldBuilder.reserve_layout_json())
+if preflight['road_metrics']['max_grade'] >= .32:
+    raise RuntimeError('Road preflight exceeds drivable grade: '+str(preflight['road_metrics']))
 for folder in ["Art/Reserve", "Materials/Reserve"]:
     LIB.make_directory("/Game/Pinefall/" + folder)
 
@@ -206,7 +209,7 @@ output(
     node(
         road,
         unreal.MaterialExpressionConstant3Vector,
-        constant=unreal.LinearColor(0.09, 0.095, 0.085, 1),
+        constant=unreal.LinearColor(0.19, 0.145, 0.085, 1),
     ),
     "",
     road,
@@ -221,6 +224,7 @@ output(
 MEL.set_material_usage(road, unreal.MaterialUsage.MATUSAGE_INSTANCED_STATIC_MESHES)
 MEL.recompile_material(road)
 LIB.save_loaded_asset(road)
+build_track()
 world = unreal.EditorLoadingAndSavingUtils.new_blank_map(False)
 actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 unreal.PFWorldBuilder.build_reserve_landscape()

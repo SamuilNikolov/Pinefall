@@ -1,5 +1,9 @@
 # Third-party notices
 
+## Native village surfaces — November 2026
+
+**Powered by Poly Haven.** The village upgrade uses CC0 [Plastered Wall 02](https://polyhaven.com/a/plastered_wall_02) by Charlotte Baglioni and [Worn Corrugated Iron](https://polyhaven.com/a/worn_corrugated_iron), photographed by Dimitrios Savva and processed by Jenelle van Heerden. Six selected 1K diffuse, DirectX normal and roughness JPEGs are retained under `Unreal/Pinefall/SourceArt/Architecture`, with upstream URLs/MD5 and verified local SHA256/size in `sources.json`. Native materials change tint, roughness and metallic response. The porch/shutter/courtyard kit is original instanced geometry; the existing enterable house models remain original game geometry, not purchased or scanned buildings. No asset service is contacted at runtime.
+
 ## Unreal migration foundation
 
 The Unreal project adds [Pine Sapling Small](https://polyhaven.com/a/pine_sapling_small), Poly Haven, CC0, with 1K bark/needle/normal/roughness/opacity maps. Powered by Poly Haven. Source checksums, prepared-model modifications and the five reused audio sources are documented in [Unreal source-art provenance](Unreal/Pinefall/SourceArt/README.md). The rifle, pistol, fern, grass and terrain sources retain the licenses credited below.
